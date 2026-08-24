@@ -31,11 +31,18 @@ export default function Footer() {
               Liên hệ
             </h4>
             <ul className="space-y-4 text-haq-ink/80">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-haq-orange mt-0.5 shrink-0" strokeWidth={1.8} />
-                <span className="leading-snug">
-                  Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
-                </span>
+              <li>
+                <a
+                  href="https://maps.app.goo.gl/McrVepx9uMcUc1pKA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 hover:text-haq-orange transition-colors"
+                >
+                  <MapPin className="w-5 h-5 text-haq-orange mt-0.5 shrink-0" strokeWidth={1.8} />
+                  <span className="leading-snug">
+                    Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
+                  </span>
+                </a>
               </li>
               <li>
                 <a

@@ -103,8 +103,13 @@ export default function LeadForm() {
                 </span>
               </a>
 
-              <div className="flex items-start gap-4">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10">
+              <a
+                href="https://maps.app.goo.gl/McrVepx9uMcUc1pKA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-4 group"
+              >
+                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
                   <MapPin className="w-5 h-5 text-white" strokeWidth={1.8} />
                 </span>
                 <span>
@@ -116,7 +121,7 @@ export default function LeadForm() {
                     Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
                   </span>
                 </span>
-              </div>
+              </a>
             </div>
           </div>
 
