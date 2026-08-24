@@ -239,12 +239,10 @@ export default function Products() {
       // Instantly position on the incoming side
       setAnimState(direction === 'right' ? 'in-right' : 'in-left')
       
-      // Animate back to idle in the next frame
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setAnimState('idle')
-        })
-      })
+      // Animate back to idle after the browser registers the incoming position
+      setTimeout(() => {
+        setAnimState('idle')
+      }, 50)
     }, 300)
   }
 
