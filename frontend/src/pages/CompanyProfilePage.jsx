@@ -16,7 +16,7 @@ function RevealBlock({ children, className = '' }) {
 
 export default function CompanyProfilePage() {
   const handleContactClick = () => {
-    window.location.href = '/#contact'
+    window.location.href = '/#lead'
   }
 
   return (
@@ -197,8 +197,7 @@ export default function CompanyProfilePage() {
           <RevealBlock>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {['WinCommerce', 'Circle K', 'GS25', 'Kmart', 'Go!', 'Bách Hóa Xanh'].map((partner, index) => (
-                <div key={index} className="group relative border border-black/10 p-8 md:p-10 flex flex-col items-start justify-between hover:bg-haq-ink hover:border-haq-ink transition-colors duration-500 min-h-[160px]">
-                  <div className="w-2 h-2 rounded-full bg-haq-red mb-6 group-hover:bg-haq-orange transition-colors" />
+                <div key={index} className="group relative border border-black/10 p-8 md:p-10 flex items-center justify-center text-center hover:bg-haq-ink hover:border-haq-ink transition-colors duration-500 min-h-[140px]">
                   <span className="font-heading font-extrabold text-3xl md:text-4xl tracking-tight text-haq-ink/80 group-hover:text-white transition-colors">
                     {partner}
                   </span>
