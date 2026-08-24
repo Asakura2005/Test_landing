@@ -6,9 +6,9 @@ export default function Footer() {
   return (
     <footer className="bg-haq-bone border-t border-black/10 pt-16 pb-10">
       <div className="mx-auto max-w-site px-6 md:px-12">
-        <div className="grid grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           {/* Brand */}
-          <div className="col-span-12 md:col-span-5">
+          <div className="md:col-span-5">
             <div className="flex items-center gap-3">
               <img
                 src={logoImg}
@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="col-span-6 md:col-span-4">
+          <div className="md:col-span-4 mt-8 md:mt-0">
             <h4 className="font-mono text-[11px] uppercase tracking-widest text-haq-red mb-5">
               Liên hệ
             </h4>
@@ -59,7 +59,7 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          <div className="col-span-6 md:col-span-3">
+          <div className="md:col-span-3 mt-8 md:mt-0">
             <h4 className="font-mono text-[11px] uppercase tracking-widest text-haq-red mb-5">
               Khám phá
             </h4>

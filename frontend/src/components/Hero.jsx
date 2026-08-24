@@ -19,9 +19,9 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-y-0 right-[8.33%] hidden md:block w-px bg-black/10" />
 
       <div className="mx-auto max-w-site px-6 md:px-12 pt-28 md:pt-40 pb-20 md:pb-28">
-        <div className="grid grid-cols-12 gap-6 md:gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-center">
           {/* Left content */}
-          <div ref={ref} className="reveal col-span-12 lg:col-span-7">
+          <div ref={ref} className="reveal lg:col-span-7">
             {/* Tagline */}
             <div className="flex items-center gap-3 mb-6">
               <span className="h-px w-10 bg-haq-orange" />
@@ -81,7 +81,7 @@ export default function Hero() {
           </div>
 
           {/* Right — Hero image */}
-          <div className="col-span-12 lg:col-span-5 relative mt-4 lg:mt-0">
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
             <div className="relative z-0">
               <div className="aspect-[4/5] w-full overflow-hidden bg-white shadow-2xl">
                 <img

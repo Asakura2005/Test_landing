@@ -54,9 +54,9 @@ export default function LeadForm() {
       <div className="pointer-events-none absolute inset-y-0 right-[8.33%] w-px bg-white/10" />
 
       <div className="mx-auto max-w-site px-6 md:px-12">
-        <div className="grid grid-cols-12 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
           {/* Left — info */}
-          <div ref={ref} className="reveal col-span-12 lg:col-span-5 text-white">
+          <div ref={ref} className="reveal lg:col-span-5 text-white">
             <div className="flex items-center gap-3 mb-5">
               <span className="h-px w-10 bg-haq-gold" />
               <span className="font-mono text-xs tracking-[0.25em] uppercase text-haq-gold">
@@ -122,7 +122,7 @@ export default function LeadForm() {
           </div>
 
           {/* Right — form */}
-          <div className="col-span-12 lg:col-span-7">
+          <div className="lg:col-span-7">
             <div className="bg-white/10 backdrop-blur-md border border-white/15 p-6 md:p-10">
               {status === 'done' ? (
                 /* Success state */

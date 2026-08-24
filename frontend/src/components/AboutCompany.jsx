@@ -28,10 +28,10 @@ export default function AboutCompany() {
   return (
     <section className="bg-white py-24 md:py-32 border-y border-black/10">
       <div className="mx-auto max-w-site px-6 md:px-12">
-        <div ref={ref} className="reveal grid grid-cols-12 gap-12 md:gap-16 items-start">
+        <div ref={ref} className="reveal grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-start">
           
           {/* Left Column */}
-          <div className="col-span-12 lg:col-span-5">
+          <div className="lg:col-span-5">
             <div className="flex items-center gap-3 mb-5">
               <span className="h-px w-10 bg-haq-red" />
               <span className="font-mono text-xs tracking-[0.25em] uppercase text-haq-red">
@@ -59,14 +59,14 @@ export default function AboutCompany() {
               ].map(([label, value]) => (
                 <div key={label} className="border border-black/10 p-5 bg-haq-bone/40 hover:bg-haq-ink hover:text-white group transition-colors">
                   <div className="font-mono text-[11px] uppercase tracking-widest text-haq-ink/50 group-hover:text-white/60 transition-colors">{label}</div>
-                  <div className="mt-2 font-heading font-extrabold text-xl text-haq-ink group-hover:text-white transition-colors">{value}</div>
+                  <div className="mt-2 font-heading font-extrabold text-xl text-haq-ink group-hover:text-white transition-colors break-words">{value}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right Column */}
-          <div className="col-span-12 lg:col-span-6 lg:col-start-7 space-y-12 mt-16 lg:mt-0">
+          <div className="lg:col-span-6 lg:col-start-7 space-y-12 mt-16 lg:mt-0">
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <span className="font-mono text-xs tracking-widest uppercase text-haq-orange font-bold">Định Hướng</span>
