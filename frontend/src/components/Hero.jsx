@@ -66,10 +66,10 @@ export default function Hero() {
             </div>
 
             {/* Stats */}
-            <div className="mt-14 grid grid-cols-3 gap-6 max-w-lg">
+            <div className="mt-12 md:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-lg mb-12 lg:mb-0">
               {STATS.map((s) => (
                 <div key={s.v} className="border-l-2 border-haq-gold pl-3">
-                  <div className="font-heading font-extrabold text-2xl text-haq-ink">
+                  <div className="font-heading font-extrabold text-2xl text-haq-ink break-words">
                     {s.k}
                   </div>
                   <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/60 mt-1">
@@ -81,8 +81,8 @@ export default function Hero() {
           </div>
 
           {/* Right — Hero image */}
-          <div className="col-span-12 lg:col-span-5">
-            <div className="relative">
+          <div className="col-span-12 lg:col-span-5 relative mt-4 lg:mt-0">
+            <div className="relative z-0">
               <div className="aspect-[4/5] w-full overflow-hidden bg-white shadow-2xl">
                 <img
                   src={heroImg}
@@ -91,7 +91,7 @@ export default function Hero() {
                 />
               </div>
               {/* Overlay badge — bottom left */}
-              <div className="absolute -bottom-6 -left-6 hidden sm:block bg-haq-gold px-5 py-4 shadow-xl">
+              <div className="absolute -bottom-6 -left-4 sm:-left-6 hidden sm:block bg-haq-gold px-5 py-4 shadow-xl z-10">
                 <div className="font-mono text-[11px] uppercase tracking-widest text-haq-ink/70">
                   Dây chuyền vô trùng
                 </div>
@@ -100,7 +100,7 @@ export default function Hero() {
                 </div>
               </div>
               {/* Overlay badge — top right */}
-              <div className="absolute -top-5 -right-5 bg-haq-red text-white px-4 py-2 font-mono text-xs tracking-widest uppercase shadow-xl">
+              <div className="absolute -top-4 -right-2 sm:-top-5 sm:-right-5 bg-haq-red text-white px-4 py-2 font-mono text-xs tracking-widest uppercase shadow-xl z-10">
                 HACCP Verified
               </div>
             </div>
