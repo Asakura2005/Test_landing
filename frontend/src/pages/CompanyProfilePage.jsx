@@ -3,6 +3,8 @@ import { ArrowRight, CheckCircle2, ShieldCheck, Factory, Box, Users, ChevronRigh
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { useReveal } from '../hooks/useReveal'
+import isoImg from '../assets/iso.png'
+import haccpImg from '../assets/haccp.png'
 
 // Reusable Reveal Wrapper for scroll animations
 function RevealBlock({ children, className = '' }) {
@@ -136,8 +138,8 @@ export default function CompanyProfilePage() {
               
               <div className="space-y-6">
                 <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center shrink-0">
-                    <span className="font-heading font-bold text-haq-ink">ISO</span>
+                  <div className="w-14 h-14 bg-white flex items-center justify-center shrink-0 rounded shadow-sm p-1">
+                    <img src={isoImg} alt="ISO" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <h4 className="font-bold text-xl text-haq-ink">ISO 22000:2018</h4>
@@ -146,8 +148,8 @@ export default function CompanyProfilePage() {
                 </div>
                 
                 <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 bg-white border border-black/10 flex items-center justify-center shrink-0">
-                    <span className="font-heading font-bold text-haq-ink text-sm">HACCP</span>
+                  <div className="w-14 h-14 bg-white flex items-center justify-center shrink-0 rounded shadow-sm p-1">
+                    <img src={haccpImg} alt="HACCP" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <h4 className="font-bold text-xl text-haq-ink">Tiêu chuẩn HACCP</h4>
