@@ -33,7 +33,7 @@ export default function CompanyProfilePage() {
             <div className="flex items-center gap-4 mb-8">
               <span className="h-px w-16 bg-haq-orange" />
               <span className="font-mono text-sm tracking-[0.3em] uppercase text-haq-orange font-bold">
-                Hồ Sơ Năng Lực 2024
+                Company Profile 2024
               </span>
             </div>
             <h1 className="font-heading font-extrabold text-5xl md:text-7xl lg:text-[5.5rem] tracking-tight leading-[1.05] text-white">
@@ -195,10 +195,11 @@ export default function CompanyProfilePage() {
           </RevealBlock>
 
           <RevealBlock>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {['WinCommerce', 'Circle K', 'GS25', 'Kmart', 'Go!', 'Bách Hóa Xanh'].map((partner, index) => (
-                <div key={index} className="aspect-square bg-haq-bone border border-black/5 flex items-center justify-center p-6 text-center hover:bg-haq-ink hover:text-white transition-colors duration-500 group">
-                  <span className="font-heading font-bold text-xl md:text-2xl text-haq-ink/80 group-hover:text-white transition-colors">
+                <div key={index} className="group relative border border-black/10 p-8 md:p-10 flex flex-col items-start justify-between hover:bg-haq-ink hover:border-haq-ink transition-colors duration-500 min-h-[160px]">
+                  <div className="w-2 h-2 rounded-full bg-haq-red mb-6 group-hover:bg-haq-orange transition-colors" />
+                  <span className="font-heading font-extrabold text-3xl md:text-4xl tracking-tight text-haq-ink/80 group-hover:text-white transition-colors">
                     {partner}
                   </span>
                 </div>

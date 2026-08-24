@@ -66,7 +66,7 @@ export default function Footer() {
             <ul className="space-y-3 text-haq-ink/80">
               <li>
                 <a href="/company-profile" className="hover:text-haq-orange transition-colors">
-                  Hồ sơ năng lực
+                  Company Profile
                 </a>
               </li>
               <li>

@@ -3,7 +3,7 @@ import { Phone } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 const NAV_LINKS = [
-  { label: 'Hồ sơ năng lực', href: '/company-profile' },
+  { label: 'Company Profile', href: '/company-profile' },
   { label: 'Bảo chứng', href: '/#certs' },
   { label: 'Sản phẩm', href: '/#products' },
   { label: 'Đối tác', href: '/#partners' },
