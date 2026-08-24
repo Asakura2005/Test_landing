@@ -1,7 +1,7 @@
 import React from 'react'
 
 const PARTNER_NAMES = [
-  'WinCommerce',
+  'WinMart',
   'Circle K',
   'GS25',
   'Kmart',

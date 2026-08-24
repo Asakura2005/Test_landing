@@ -132,8 +132,8 @@ export default function AboutCompany() {
               ))}
             </div>
             <p className="text-haq-ink/75 leading-[1.8]">
-              Công ty là đối tác của nhiều hệ thống như WinCommerce, Circle K, GS25, Kmart, GO!, WinMart,
-              Big C và Bách Hóa Xanh.
+              Công ty là đối tác của nhiều hệ thống như WinMart, Circle K, GS25, Kmart, GO!
+              và Bách Hóa Xanh.
             </p>
           </div>
         </div>
