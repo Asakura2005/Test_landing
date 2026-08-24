@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle2, ShieldCheck, Factory, Box, Users, ChevronRigh
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { useReveal } from '../hooks/useReveal'
-import { useNavigate } from 'react-router-dom' // React Router assuming it's used in App? Wait, App.jsx uses standard window.location. Let's just use anchor tags or href.
+import { useNavigate } from 'react-router-dom' 
 
 // Reusable Reveal Wrapper for scroll animations
 function RevealBlock({ children, className = '' }) {

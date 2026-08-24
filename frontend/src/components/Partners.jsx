@@ -5,9 +5,8 @@ const PARTNER_NAMES = [
   'Circle K',
   'GS25',
   'Kmart',
-  'Go',
-  'Bách Hóa Xanh',
-  'các hệ thống bán lẻ lớn',
+  'Go!',
+  'Bách Hóa Xanh'
 ]
 
 function PartnerLogo({ name }) {
@@ -29,11 +28,11 @@ export default function Partners() {
         <div className="flex items-center gap-3">
           <span className="h-px w-10 bg-haq-gold" />
           <span className="font-mono text-xs tracking-[0.25em] uppercase text-haq-ink/60">
-            Đối Tác Tiêu Biểu
+            Mạng Lưới Phân Phối
           </span>
         </div>
-        <h2 className="mt-4 font-heading font-extrabold text-2xl md:text-3xl text-haq-ink tracking-[-0.02em]">
-          Được tin dùng bởi WinCommerce, Circle K, GS25, Kmart, Go và Bách Hóa Xanh, các hệ thống bán lẻ lớn.
+        <h2 className="mt-4 font-heading font-extrabold text-2xl md:text-3xl text-haq-ink tracking-[-0.02em] max-w-2xl">
+          Đối tác chiến lược của các hệ thống bán lẻ hiện đại hàng đầu Việt Nam.
         </h2>
       </div>
 
