@@ -34,6 +34,7 @@ export async function getProducts() {
       *,
       variants:product_variants(*)
     `)
+    .order('is_pinned', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
 
   if (error) throw error

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { X, Plus, Trash2 } from 'lucide-react'
+import { X, Plus, Trash2, Pin } from 'lucide-react'
 
-export default function ProductModal({ product, onClose, onSave }) {
+export default function ProductModal({ product, onClose, onSave, currentPinnedCount }) {
   const [formData, setFormData] = useState({
     slug: '',
     name: '',
@@ -9,6 +9,7 @@ export default function ProductModal({ product, onClose, onSave }) {
     description: '',
     tag: '',
     highlights: [''],
+    is_pinned: false,
   })
   const [variants, setVariants] = useState([])
   const [isSaving, setIsSaving] = useState(false)
@@ -22,6 +23,7 @@ export default function ProductModal({ product, onClose, onSave }) {
         description: product.description || '',
         tag: product.tag || '',
         highlights: product.highlights?.length ? product.highlights : [''],
+        is_pinned: product.is_pinned || false,
       })
       setVariants(product.variants || [])
     }
@@ -59,9 +61,15 @@ export default function ProductModal({ product, onClose, onSave }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate pinned count locally before sending to Admin
+    if (formData.is_pinned && !product?.is_pinned && currentPinnedCount >= 6) {
+      alert("Không thể ghim! Bạn đã ghim tối đa 6 sản phẩm. Vui lòng bỏ ghim sản phẩm khác trước.")
+      return
+    }
+
     setIsSaving(true)
     try {
-      // Clean up highlights
       const cleanedHighlights = formData.highlights.filter(h => h.trim() !== '')
       await onSave({ ...formData, highlights: cleanedHighlights }, variants)
     } catch (err) {
@@ -86,7 +94,21 @@ export default function ProductModal({ product, onClose, onSave }) {
           
           {/* Thông tin chung */}
           <div>
-            <h3 className="font-bold text-lg mb-4 text-haq-orange">1. Thông tin chung</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-lg text-haq-orange">1. Thông tin chung</h3>
+              
+              <label className="flex items-center gap-2 bg-haq-bone px-4 py-2 rounded-lg cursor-pointer hover:bg-black/5 transition-colors border border-black/10">
+                <input 
+                  type="checkbox" 
+                  checked={formData.is_pinned}
+                  onChange={(e) => setFormData({...formData, is_pinned: e.target.checked})}
+                  className="w-4 h-4 text-haq-red rounded border-black/20 focus:ring-haq-red"
+                />
+                <Pin className={`w-4 h-4 ${formData.is_pinned ? 'text-haq-red fill-haq-red' : 'text-haq-ink/50'}`} />
+                <span className="text-sm font-semibold text-haq-ink">Ghim trang chủ (Max 6)</span>
+              </label>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-sm font-semibold">Tên sản phẩm *</label>

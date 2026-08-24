@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw } from 'lucide-react'
+import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin } from 'lucide-react'
 import { getProducts, deleteProduct, createProduct, updateProduct } from '../services/supabase'
 import ProductModal from '../components/admin/ProductModal'
 
@@ -11,6 +11,8 @@ export default function Admin() {
   
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
+
+  const currentPinnedCount = products.filter(p => p.is_pinned).length
 
   // Login handler
   const handleLogin = (e) => {
@@ -90,6 +92,20 @@ export default function Admin() {
     setIsAuthenticated(false)
   }
 
+  const togglePin = async (product) => {
+    if (!product.is_pinned && currentPinnedCount >= 6) {
+      alert("Đã đạt tối đa 6 sản phẩm ghim. Vui lòng bỏ ghim sản phẩm khác trước.")
+      return
+    }
+    try {
+      // Just updating the product's is_pinned status, we don't need to touch variants
+      await updateProduct(product.id, { is_pinned: !product.is_pinned }, product.variants)
+      await fetchData()
+    } catch(err) {
+      alert("Lỗi khi đổi trạng thái ghim: " + err.message)
+    }
+  }
+
   // --- Render Login ---
   if (!isAuthenticated) {
     return (
@@ -141,7 +157,7 @@ export default function Admin() {
         <header className="bg-white border-b border-black/10 p-4 md:p-6 flex items-center justify-between sticky top-0 z-10">
           <div>
             <h1 className="font-heading font-bold text-2xl text-haq-ink">Danh sách Sản phẩm</h1>
-            <p className="text-sm text-haq-ink/60 mt-1">Quản lý thông tin, phân loại và quy cách đóng gói</p>
+            <p className="text-sm text-haq-ink/60 mt-1">Đã ghim: <strong className="text-haq-red">{currentPinnedCount}/6</strong> sản phẩm (Hiển thị đầu trang chủ)</p>
           </div>
           <button onClick={openNewModal} className="bg-haq-orange text-white px-4 py-2 rounded font-semibold flex items-center gap-2 hover:bg-orange-600 transition-colors shadow-sm">
             <Plus className="w-5 h-5" /> <span className="hidden md:inline">Thêm sản phẩm</span>
@@ -170,16 +186,26 @@ export default function Admin() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-haq-bone border-b border-black/10 text-xs uppercase tracking-wider text-haq-ink/60">
+                      <th className="p-4 font-mono w-[5%] text-center">Ghim</th>
                       <th className="p-4 font-mono w-[30%]">Sản phẩm</th>
                       <th className="p-4 font-mono w-[15%]">Tag</th>
-                      <th className="p-4 font-mono w-[35%]">Mô tả ngắn</th>
+                      <th className="p-4 font-mono w-[30%]">Mô tả ngắn</th>
                       <th className="p-4 font-mono w-[10%] text-center">Variants</th>
                       <th className="p-4 font-mono w-[10%] text-right">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
                     {products.map(p => (
-                      <tr key={p.id} className="border-b border-black/5 hover:bg-black/[0.02] transition-colors group">
+                      <tr key={p.id} className={`border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${p.is_pinned ? 'bg-orange-50/50' : ''}`}>
+                        <td className="p-4 text-center">
+                          <button 
+                            onClick={() => togglePin(p)} 
+                            className={`p-2 rounded-full transition-colors ${p.is_pinned ? 'text-haq-red hover:bg-red-100' : 'text-black/20 hover:bg-black/5 hover:text-black/50'}`}
+                            title={p.is_pinned ? "Bỏ ghim" : "Ghim lên đầu"}
+                          >
+                            <Pin className={`w-5 h-5 ${p.is_pinned ? 'fill-haq-red' : ''}`} />
+                          </button>
+                        </td>
                         <td className="p-4">
                           <div className="font-bold text-haq-ink">{p.name}</div>
                           <div className="text-xs text-haq-ink/50 mt-1">{p.slug}</div>
@@ -229,6 +255,7 @@ export default function Admin() {
           product={editingProduct}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
+          currentPinnedCount={currentPinnedCount}
         />
       )}
     </div>

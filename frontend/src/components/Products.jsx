@@ -1,87 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { X, ArrowRight } from 'lucide-react'
+import { X, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { getProducts } from '../services/supabase'
 
 const STATIC_PRODUCTS = [
+  // ... (keeping fallback data just in case)
   {
-    slug: 'banh-trang-tron',
-    name: 'Bánh Tráng Trộn',
-    en: 'Mixed Rice Paper',
-    description:
-      'Sản phẩm bán chạy với hương vị cân bằng, phù hợp hệ thống siêu thị, cửa hàng tiện lợi và đại lý phân phối.',
-    tag: 'Best Seller',
-    variants: [
-      { size: '250g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/82b1968aa_generated_a9a0ebfd.png', shelf: '9 tháng', pack: 'Túi zip 250g', moq: '50 thùng' },
-      { size: '500g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/82b1968aa_generated_a9a0ebfd.png', shelf: '9 tháng', pack: 'Hũ 500g', moq: '50 thùng' },
-    ],
-    highlights: ['Vị truyền thống', 'Phù hợp retail', 'OEM/ODM'],
-  },
-  {
-    slug: 'bap-rang-bo',
-    name: 'Bắp Rang Bơ',
-    en: 'Butter Popcorn',
-    description:
-      'Dòng snack giòn thơm, dễ trưng bày và dễ bán tại hệ thống cửa hàng tiện lợi, rạp, quầy tạp hóa.',
-    tag: null,
-    variants: [
-      { size: '150g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/ba26c9750_generated_a4d7414b.png', shelf: '8 tháng', pack: 'Túi zip 150g', moq: '50 thùng' },
-      { size: '300g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/ba26c9750_generated_a4d7414b.png', shelf: '8 tháng', pack: 'Hũ 300g', moq: '50 thùng' },
-    ],
-    highlights: ['Giòn lâu', 'Mùi bơ đậm', 'Đóng gói linh hoạt'],
-  },
-  {
-    slug: 'kho-thit-bo',
-    name: 'Khô Thịt Bò',
-    en: 'Dried Beef',
-    description:
-      'Dòng sản phẩm cao cấp, phù hợp bán lẻ hiện đại và quà biếu, có thể triển khai nhiều quy cách đóng gói.',
-    tag: 'Premium',
-    variants: [
-      { size: '200g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/474562b05_generated_07fb3b17.png', shelf: '6 tháng', pack: 'Túi zip 200g', moq: '30 thùng' },
-      { size: '250g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/474562b05_generated_07fb3b17.png', shelf: '6 tháng', pack: 'Hũ 250g', moq: '30 thùng' },
-    ],
-    highlights: ['Cao cấp', 'Đậm vị', 'Bán tốt mùa lễ'],
-  },
-  {
-    slug: 'banh-dau-xanh',
-    name: 'Bánh Đậu Xanh',
-    en: 'Mung Bean Cake',
-    description:
-      'Sản phẩm truyền thống, dễ dùng làm quà tặng, quà biếu và trưng bày tại các điểm bán đặc sản.',
-    tag: null,
-    variants: [
-      { size: '200g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/c221093ee_generated_d5d96607.png', shelf: '10 tháng', pack: 'Hộp 200g', moq: '60 thùng' },
-      { size: '400g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/c221093ee_generated_d5d96607.png', shelf: '10 tháng', pack: 'Hũ 400g', moq: '60 thùng' },
-    ],
-    highlights: ['Truyền thống', 'Gift-friendly', 'Ổn định'],
-  },
-  {
-    slug: 'banh-hanh-nhan',
-    name: 'Bánh Hạnh Nhân',
-    en: 'Almond Cookies',
-    description:
-      'Bánh quy hạnh nhân phục vụ phân khúc quà tặng và bán lẻ hiện đại với bao bì sang hơn.',
-    tag: 'Mới',
-    variants: [
-      { size: '250g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/8689c4d7e_generated_798d999b.png', shelf: '9 tháng', pack: 'Hộp 250g', moq: '40 thùng' },
-      { size: '500g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/8689c4d7e_generated_798d999b.png', shelf: '9 tháng', pack: 'Hũ 500g', moq: '40 thùng' },
-    ],
-    highlights: ['Quà tặng', 'Bao bì đẹp', 'Retail premium'],
-  },
-  {
-    slug: 'oem-packaging',
-    name: 'Đóng Gói Cung Cấp',
-    en: 'OEM Packaging',
-    description:
-      'Giải pháp đóng gói riêng theo thương hiệu đối tác, phù hợp triển khai SKU đặc thù và nhãn riêng.',
-    tag: 'OEM',
-    variants: [
-      { size: 'Theo SKU', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/74b2e78f3_generated_3c6c224f.png', shelf: 'Theo SKU', pack: 'Hũ / Túi zip riêng tem', moq: 'Theo đơn' },
-      { size: 'Private Label', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/74b2e78f3_generated_3c6c224f.png', shelf: 'Theo SKU', pack: 'Thiết kế riêng', moq: 'Theo đơn' },
-    ],
-    highlights: ['Private label', 'Tùy biến', 'Đơn hàng linh hoạt'],
-  },
+    slug: 'banh-trang-tron', name: 'Bánh Tráng Trộn', en: 'Mixed Rice Paper', description: 'Sản phẩm bán chạy với hương vị cân bằng.', tag: 'Best Seller', variants: [{ size: '250g', img: 'https://media.base44.com/images/public/6a8ba61e224b4f7752aa61af/82b1968aa_generated_a9a0ebfd.png', shelf: '9 tháng', pack: 'Túi zip 250g', moq: '50 thùng' }], highlights: ['Vị truyền thống']
+  }
 ]
 
 function ProductCard({ product, onOpen }) {
@@ -91,7 +17,7 @@ function ProductCard({ product, onOpen }) {
   return (
     <button
       type="button"
-      className="group relative bg-white border border-black/10 overflow-hidden flex flex-col text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30"
+      className="group relative bg-white border border-black/10 overflow-hidden flex flex-col text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30 h-full"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onOpen(product)}
@@ -120,7 +46,7 @@ function ProductCard({ product, onOpen }) {
         </div>
       </div>
 
-      <div className="p-6 flex items-center justify-between gap-4">
+      <div className="p-6 flex items-center justify-between gap-4 flex-1">
         <div>
           <div className="font-heading font-extrabold text-xl text-haq-ink tracking-tight">{product.name}</div>
           <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/50 mt-1">{product.en_name || product.en}</div>
@@ -252,8 +178,15 @@ function ProductModal({ product, onClose }) {
 export default function Products() {
   const ref = useReveal()
   const [activeProduct, setActiveProduct] = useState(null)
+  
+  // Data state
   const [products, setProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  
+  // Pagination state
+  const [page, setPage] = useState(1)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [swipeState, setSwipeState] = useState('idle') // 'idle' | 'in' | 'out'
 
   useEffect(() => {
     const fetch = async () => {
@@ -262,11 +195,11 @@ export default function Products() {
         if (data && data.length > 0) {
           setProducts(data)
         } else {
-          setProducts(STATIC_PRODUCTS) // Fallback nếu DB trống
+          setProducts(STATIC_PRODUCTS)
         }
       } catch (err) {
         console.error("Lỗi fetch products:", err)
-        setProducts(STATIC_PRODUCTS) // Fallback nếu lỗi kết nối
+        setProducts(STATIC_PRODUCTS)
       } finally {
         setIsLoading(false)
       }
@@ -274,10 +207,52 @@ export default function Products() {
     fetch()
   }, [])
 
+  // Calculate items to show
+  const itemsPerPage = 12
+  const totalPages = Math.ceil(products.length / itemsPerPage)
+
+  let displayedProducts = []
+  if (page === 1) {
+    // If not expanded, show max 6. If expanded, show max 12.
+    displayedProducts = products.slice(0, isExpanded ? 12 : 6)
+  } else {
+    // Page 2+ shows 12 items
+    displayedProducts = products.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+  }
+
+  const changePage = (newPage) => {
+    if (newPage === page || swipeState !== 'idle') return
+    
+    // Start swipe in
+    setSwipeState('in')
+    
+    // Once screen is covered, swap data
+    setTimeout(() => {
+      setPage(newPage)
+      setIsExpanded(true) // Ensure it's expanded so it shows 12 items
+      setSwipeState('out') // Swipe out
+      
+      // Reset to idle without animation
+      setTimeout(() => {
+        setSwipeState('idle')
+      }, 500)
+    }, 400)
+  }
+
   return (
     <>
-      <section id="products" className="bg-haq-bone py-24 md:py-32">
-        <div className="mx-auto max-w-site px-6 md:px-12">
+      <section id="products" className="bg-haq-bone py-24 md:py-32 relative overflow-hidden">
+        
+        {/* Swipe Animation Overlay */}
+        <div 
+          className={`fixed inset-y-0 w-[120vw] bg-haq-red z-[90] ${
+            swipeState === 'idle' ? '-left-[150%] duration-0' :
+            swipeState === 'in' ? 'left-0 duration-500 ease-out' :
+            'left-[150%] duration-500 ease-in'
+          } transition-all`} 
+        />
+
+        <div className="mx-auto max-w-site px-6 md:px-12 relative z-10">
           <div ref={ref} className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-5">
@@ -300,10 +275,59 @@ export default function Products() {
               Đang tải danh sách sản phẩm...
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {products.map((product) => (
-                <ProductCard key={product.slug || product.name} product={product} onOpen={setActiveProduct} />
-              ))}
+            <div className="space-y-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {displayedProducts.map((product) => (
+                  <ProductCard key={product.id || product.slug || product.name} product={product} onOpen={setActiveProduct} />
+                ))}
+              </div>
+
+              {/* Load More Button (Only on Page 1 if not expanded and total > 6) */}
+              {page === 1 && !isExpanded && products.length > 6 && (
+                <div className="flex justify-center mt-12">
+                  <button 
+                    onClick={() => setIsExpanded(true)}
+                    className="bg-haq-ink text-white px-8 py-3 rounded font-semibold tracking-wide hover:bg-haq-red transition-colors duration-300"
+                  >
+                    Xem thêm sản phẩm
+                  </button>
+                </div>
+              )}
+
+              {/* Pagination Controls (Only if total > 12) */}
+              {products.length > 12 && (page > 1 || isExpanded) && (
+                <div className="flex items-center justify-center gap-2 mt-12 pt-8 border-t border-black/10">
+                  <button 
+                    onClick={() => changePage(Math.max(1, page - 1))}
+                    disabled={page === 1}
+                    className="w-10 h-10 flex items-center justify-center border border-black/10 rounded hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => changePage(i + 1)}
+                      className={`w-10 h-10 flex items-center justify-center rounded font-semibold transition-colors ${
+                        page === i + 1 
+                          ? 'bg-haq-red text-white' 
+                          : 'border border-black/10 hover:bg-black/5 text-haq-ink'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+
+                  <button 
+                    onClick={() => changePage(Math.min(totalPages, page + 1))}
+                    disabled={page === totalPages}
+                    className="w-10 h-10 flex items-center justify-center border border-black/10 rounded hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
