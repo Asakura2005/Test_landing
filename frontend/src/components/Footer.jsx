@@ -65,17 +65,22 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 text-haq-ink/80">
               <li>
-                <a href="#products" className="hover:text-haq-orange transition-colors">
+                <a href="/company-profile" className="hover:text-haq-orange transition-colors">
+                  Hồ sơ năng lực
+                </a>
+              </li>
+              <li>
+                <a href="/#products" className="hover:text-haq-orange transition-colors">
                   Danh mục sản phẩm
                 </a>
               </li>
               <li>
-                <a href="#lead" className="hover:text-haq-orange transition-colors">
+                <a href="/#lead" className="hover:text-haq-orange transition-colors">
                   Nhận báo giá sỉ
                 </a>
               </li>
               <li>
-                <a href="#certs" className="hover:text-haq-orange transition-colors">
+                <a href="/#certs" className="hover:text-haq-orange transition-colors">
                   Bảo chứng chất lượng
                 </a>
               </li>

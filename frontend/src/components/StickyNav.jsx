@@ -3,10 +3,11 @@ import { Phone } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 const NAV_LINKS = [
-  { label: 'Bảo chứng', href: '#certs' },
-  { label: 'Đối tác', href: '#partners' },
-  { label: 'Sản phẩm', href: '#products' },
-  { label: 'Liên hệ', href: '#lead' },
+  { label: 'Hồ sơ năng lực', href: '/company-profile' },
+  { label: 'Bảo chứng', href: '/#certs' },
+  { label: 'Sản phẩm', href: '/#products' },
+  { label: 'Đối tác', href: '/#partners' },
+  { label: 'Liên hệ', href: '/#lead' },
 ]
 
 export default function StickyNav() {
