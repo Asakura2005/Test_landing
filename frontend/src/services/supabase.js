@@ -25,6 +25,45 @@ export async function submitLead(leadData) {
 }
 
 /**
+ * Lấy danh sách Leads
+ */
+export async function getLeads() {
+  const { data, error } = await supabase
+    .from('leads')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Cập nhật trạng thái Lead (ví dụ: 'contacted')
+ */
+export async function updateLeadStatus(id, status) {
+  const { data, error } = await supabase
+    .from('leads')
+    .update({ status })
+    .eq('id', id)
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Xóa một Lead
+ */
+export async function deleteLead(id) {
+  const { error } = await supabase
+    .from('leads')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw error
+  return true
+}
+
+/**
  * Lấy danh sách sản phẩm (kèm variants)
  */
 export async function getProducts() {
