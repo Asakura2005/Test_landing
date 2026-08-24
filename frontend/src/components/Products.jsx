@@ -46,13 +46,13 @@ function ProductCard({ product, onOpen }) {
         </div>
       </div>
 
-      <div className="p-6 flex items-center justify-between gap-4 flex-1">
+      <div className="p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 flex-1">
         <div>
-          <div className="font-heading font-extrabold text-xl text-haq-ink tracking-tight">{product.name}</div>
-          <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/50 mt-1">{product.en_name || product.en}</div>
+          <div className="font-heading font-extrabold text-lg md:text-xl text-haq-ink tracking-tight line-clamp-2">{product.name}</div>
+          <div className="font-mono text-[10px] md:text-[11px] uppercase tracking-wider text-haq-ink/50 mt-1 line-clamp-1">{product.en_name || product.en}</div>
         </div>
-        <span className="font-mono text-xs text-haq-orange inline-flex items-center gap-2">
-          Chi tiết <ArrowRight className="w-4 h-4" />
+        <span className="font-mono text-[10px] md:text-xs text-haq-orange inline-flex items-center gap-1.5 md:gap-2 mt-1 md:mt-0 whitespace-nowrap">
+          Chi tiết <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
         </span>
       </div>
     </button>
@@ -289,7 +289,7 @@ export default function Products() {
                           : 'translate-x-full opacity-0 duration-0'
                 }`}
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
                   {displayedProducts.map((product) => (
                     <ProductCard key={product.id || product.slug || product.name} product={product} onOpen={setActiveProduct} />
                   ))}
