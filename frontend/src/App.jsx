@@ -5,7 +5,13 @@ import Admin from './pages/Admin.jsx'
 
 export default function App() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
-  if (path.startsWith('/admin')) return <Admin />
-  if (path === '/company-profile') return <CompanyProfilePage />
-  return <Home />
+  let content = <Home />
+  if (path.startsWith('/admin')) content = <Admin />
+  if (path === '/company-profile') content = <CompanyProfilePage />
+
+  return (
+    <div className="w-full overflow-x-hidden">
+      {content}
+    </div>
+  )
 }
