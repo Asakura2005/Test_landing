@@ -113,7 +113,7 @@ export default function LeadForm() {
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
                     Số 30, Ngõ 1 Phạm Tuấn Tài,<br/>
-                    Phường Nghĩa Đô, Thành Phố Hà Nội Việt Nam
+                    Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
                   </span>
                 </span>
               </div>
