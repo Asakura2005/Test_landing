@@ -50,7 +50,7 @@ export default function AboutCompany() {
               người tiêu dùng hiện đại và các đối tác phân phối B2B. Triết lý xuyên suốt của doanh nghiệp là <strong>“Chất lượng là cốt lõi của thương hiệu”</strong>.
             </p>
 
-            <div className="mt-10 grid grid-cols-2 gap-4">
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 ['Thành lập', '2021'],
                 ['Thị trường', 'VN · KR · TW'],
@@ -66,7 +66,7 @@ export default function AboutCompany() {
           </div>
 
           {/* Right Column */}
-          <div className="col-span-12 lg:col-span-6 lg:col-start-7 space-y-12">
+          <div className="col-span-12 lg:col-span-6 lg:col-start-7 space-y-12 mt-16 lg:mt-0">
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <span className="font-mono text-xs tracking-widest uppercase text-haq-orange font-bold">Định Hướng</span>
