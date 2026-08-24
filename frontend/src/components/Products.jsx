@@ -275,13 +275,13 @@ export default function Products() {
           ) : (
             <div className="space-y-12 overflow-hidden px-1">
               <div 
-                className={`transition-all duration-300 transform ${
+                className={`transition-all transform ${
                   animState === 'idle' 
-                    ? 'translate-x-0 opacity-100' 
+                    ? 'translate-x-0 opacity-100 duration-300' 
                     : animState === 'out-left' 
-                      ? '-translate-x-full opacity-0' 
+                      ? '-translate-x-full opacity-0 duration-300' 
                       : animState === 'out-right'
-                        ? 'translate-x-full opacity-0'
+                        ? 'translate-x-full opacity-0 duration-300'
                         : animState === 'in-left'
                           ? '-translate-x-full opacity-0 duration-0'
                           : 'translate-x-full opacity-0 duration-0'
