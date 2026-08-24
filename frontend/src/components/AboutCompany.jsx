@@ -9,19 +9,6 @@ const VALUES = [
   'Lấy khách hàng làm trung tâm – Customer-centric Approach.',
 ]
 
-const TIMELINE = [
-  { year: '2021', text: 'Thành lập công ty; hoàn thiện dây chuyền bánh tráng trộn và ký kết khách hàng đầu tiên.' },
-  { year: '2022', text: 'Mở rộng sang bánh đậu xanh, bánh hạnh nhân, bắp rang bơ và thịt khô.' },
-  { year: '2023', text: 'Phủ sóng tại Go, WinMart, Circle K, GS25, Kmart, Bách Hóa Xanh.' },
-  { year: '2024', text: 'Xuất khẩu sang Hàn Quốc và Đài Loan.' },
-  { year: '2025', text: 'Tham gia Hội chợ Giao thương Việt – Trung.' },
-]
-
-const DISTRIBUTION = [
-  'WinMart', 'Big C – GO!', 'Circle K',
-  'GS25', 'Kmart', 'Bách Hóa Xanh',
-]
-
 export default function AboutCompany() {
   const ref = useReveal()
 
@@ -102,39 +89,6 @@ export default function AboutCompany() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
-          </div>
-        </div>
-
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 pt-16 border-t border-black/10">
-          <div className="bg-haq-bone p-8 md:p-12">
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-haq-red font-bold mb-8">Hành trình phát triển</div>
-            <div className="space-y-6">
-              {TIMELINE.map((item) => (
-                <div key={item.year} className="grid grid-cols-[80px_1fr] gap-4 items-start group">
-                  <div className="font-heading font-extrabold text-2xl text-haq-ink group-hover:text-haq-orange transition-colors">{item.year}</div>
-                  <p className="text-haq-ink/75 leading-[1.7] text-base">{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-haq-bone p-8 md:p-12">
-            <div className="font-mono text-xs uppercase tracking-[0.25em] text-haq-red font-bold mb-8">Hệ thống phân phối</div>
-            <p className="text-haq-ink/75 leading-[1.8] text-lg mb-8">
-              HAQ Hà Nội hiện diện tại nhiều chuỗi bán lẻ lớn trong nước và đang mở rộng sang thị trường quốc tế
-              như Hàn Quốc, Đài Loan; đồng thời hướng tới Nhật Bản và các thị trường châu Á tiêu chuẩn cao.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-8">
-              {DISTRIBUTION.map((item) => (
-                <span key={item} className="px-5 py-2.5 bg-white border border-black/10 text-sm font-semibold text-haq-ink/80 hover:bg-haq-ink hover:text-white transition-colors cursor-default">
-                  {item}
-                </span>
-              ))}
-            </div>
-            <p className="text-haq-ink/75 leading-[1.8]">
-              Công ty là đối tác của nhiều hệ thống như WinMart, Circle K, GS25, Kmart, GO!
-              và Bách Hóa Xanh.
-            </p>
           </div>
         </div>
       </div>

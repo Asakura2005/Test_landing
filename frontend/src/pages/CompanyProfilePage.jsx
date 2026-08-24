@@ -6,6 +6,14 @@ import { useReveal } from '../hooks/useReveal'
 import isoImg from '../assets/iso.png'
 import haccpImg from '../assets/haccp.png'
 
+const TIMELINE = [
+  { year: '2021', text: 'Thành lập công ty; hoàn thiện dây chuyền bánh tráng trộn và ký kết khách hàng đầu tiên.' },
+  { year: '2022', text: 'Mở rộng sang bánh đậu xanh, bánh hạnh nhân, bắp rang bơ và thịt khô.' },
+  { year: '2023', text: 'Phủ sóng tại Go, WinMart, Circle K, GS25, Kmart, Bách Hóa Xanh.' },
+  { year: '2024', text: 'Xuất khẩu sang Hàn Quốc và Đài Loan.' },
+  { year: '2025', text: 'Tham gia Hội chợ Giao thương Việt – Trung.' },
+]
+
 // Reusable Reveal Wrapper for scroll animations
 function RevealBlock({ children, className = '' }) {
   const ref = useReveal()
@@ -78,6 +86,25 @@ export default function CompanyProfilePage() {
                 </p>
               </div>
             </RevealBlock>
+          </div>
+        </div>
+      </section>
+
+      {/* 2.5 HÀNH TRÌNH PHÁT TRIỂN */}
+      <section className="py-20 md:py-28 bg-haq-bone border-t border-black/10">
+        <div className="mx-auto max-w-site px-6 md:px-12">
+          <RevealBlock className="text-center mb-16">
+            <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-haq-ink tracking-tight">Hành Trình Phát Triển</h2>
+            <div className="w-16 h-1 bg-haq-orange mx-auto mt-6" />
+          </RevealBlock>
+          
+          <div className="max-w-4xl mx-auto space-y-8">
+            {TIMELINE.map((item, i) => (
+              <RevealBlock key={item.year} delay={i * 100} className="grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr] gap-6 items-center bg-white p-6 md:p-8 border border-black/5 hover:border-haq-orange/30 transition-colors shadow-sm">
+                <div className="font-heading font-extrabold text-3xl md:text-4xl text-haq-orange">{item.year}</div>
+                <p className="text-haq-ink/80 leading-[1.7] text-base md:text-lg">{item.text}</p>
+              </RevealBlock>
+            ))}
           </div>
         </div>
       </section>
