@@ -223,6 +223,13 @@ export default function Products() {
     
     // Animate out to the opposite side
     setAnimState(direction === 'right' ? 'out-left' : 'out-right')
+
+    // Scroll to top of products section
+    const productsSection = document.getElementById('products')
+    if (productsSection) {
+      const topOffset = productsSection.getBoundingClientRect().top + window.scrollY - 80 // 80px offset for header
+      window.scrollTo({ top: topOffset, behavior: 'smooth' })
+    }
     
     // Wait for slide-out to finish
     setTimeout(() => {
