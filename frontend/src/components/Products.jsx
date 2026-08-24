@@ -1,8 +1,9 @@
-﻿import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { X, ArrowRight } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
+import { getProducts } from '../services/supabase'
 
-const PRODUCTS = [
+const STATIC_PRODUCTS = [
   {
     slug: 'banh-trang-tron',
     name: 'Bánh Tráng Trộn',
@@ -85,7 +86,7 @@ const PRODUCTS = [
 
 function ProductCard({ product, onOpen }) {
   const [hovered, setHovered] = useState(false)
-  const current = product.variants[0]
+  const current = product.variants?.[0] || { img: '' }
 
   return (
     <button
@@ -100,6 +101,9 @@ function ProductCard({ product, onOpen }) {
           src={current.img}
           alt={`Sản phẩm ${product.name} của HAQ FOOD`}
           className={`w-full h-full object-cover transition-all duration-700 ${hovered ? 'scale-105' : 'scale-100'}`}
+          onError={(e) => {
+            e.target.src = 'https://placehold.co/400x400/f3f2ef/1e1e1e?text=No+Image'
+          }}
         />
 
         {product.tag && (
@@ -119,7 +123,7 @@ function ProductCard({ product, onOpen }) {
       <div className="p-6 flex items-center justify-between gap-4">
         <div>
           <div className="font-heading font-extrabold text-xl text-haq-ink tracking-tight">{product.name}</div>
-          <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/50 mt-1">{product.en}</div>
+          <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/50 mt-1">{product.en_name || product.en}</div>
         </div>
         <span className="font-mono text-xs text-haq-orange inline-flex items-center gap-2">
           Chi tiết <ArrowRight className="w-4 h-4" />
@@ -130,15 +134,15 @@ function ProductCard({ product, onOpen }) {
 }
 
 function ProductModal({ product, onClose }) {
-  const [selectedSize, setSelectedSize] = useState(product.variants[0].size)
+  const [selectedSize, setSelectedSize] = useState(product.variants?.[0]?.size)
   const selectedVariant = useMemo(
-    () => product.variants.find((variant) => variant.size === selectedSize) || product.variants[0],
+    () => product.variants?.find((variant) => variant.size === selectedSize) || product.variants?.[0] || {},
     [product, selectedSize],
   )
   const [imageKey, setImageKey] = useState(selectedVariant.img)
 
   useEffect(() => {
-    setSelectedSize(product.variants[0].size)
+    setSelectedSize(product.variants?.[0]?.size)
   }, [product])
 
   useEffect(() => {
@@ -164,7 +168,15 @@ function ProductModal({ product, onClose }) {
             </button>
 
             <div className="relative aspect-square overflow-hidden bg-white border border-black/10">
-              <img key={imageKey} src={selectedVariant.img} alt={`${product.name} ${selectedVariant.size}`} className="product-fade-image w-full h-full object-cover" />
+              <img 
+                key={imageKey} 
+                src={selectedVariant.img} 
+                alt={`${product.name} ${selectedVariant.size}`} 
+                className="product-fade-image w-full h-full object-cover" 
+                onError={(e) => {
+                  e.target.src = 'https://placehold.co/800x800/f3f2ef/1e1e1e?text=No+Image'
+                }}
+              />
               {product.tag && (
                 <span className="absolute top-4 left-4 bg-haq-red text-white font-mono text-[10px] tracking-widest uppercase px-3 py-1">
                   {product.tag}
@@ -173,8 +185,8 @@ function ProductModal({ product, onClose }) {
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
-              {product.highlights.map((item) => (
-                <span key={item} className="px-4 py-2 bg-white border border-black/10 text-sm text-haq-ink/80">{item}</span>
+              {product.highlights?.map((item, index) => (
+                <span key={index} className="px-4 py-2 bg-white border border-black/10 text-sm text-haq-ink/80">{item}</span>
               ))}
             </div>
           </div>
@@ -182,50 +194,52 @@ function ProductModal({ product, onClose }) {
           <div className="p-6 md:p-8 flex flex-col">
             <div className="font-mono text-[11px] tracking-[0.25em] uppercase text-haq-orange">Chi tiết sản phẩm</div>
             <h3 className="mt-4 font-heading font-extrabold text-3xl md:text-4xl tracking-[-0.02em] text-haq-ink">{product.name}</h3>
-            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.25em] text-haq-ink/50">{product.en}</p>
-            <p className="mt-5 text-haq-ink/70 leading-[1.75]">{product.description}</p>
+            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.25em] text-haq-ink/50">{product.en_name || product.en}</p>
+            <p className="mt-5 text-haq-ink/70 leading-[1.75] whitespace-pre-wrap">{product.description}</p>
 
-            <div className="mt-8">
-              <div className="font-mono text-[11px] uppercase tracking-[0.25em] text-haq-red">Chọn size / quy cách</div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {product.variants.map((variant) => {
-                  const active = variant.size === selectedSize
-                  return (
-                    <button
-                      key={variant.size}
-                      type="button"
-                      onClick={() => {
-                        setSelectedSize(variant.size)
-                        setImageKey(variant.img)
-                      }}
-                      className={`min-h-[44px] px-4 py-2 border text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30 ${active ? 'bg-haq-ink text-white border-haq-ink' : 'bg-white text-haq-ink/70 border-black/10 hover:border-haq-ink/30 hover:bg-haq-bone/60'}`}
-                    >
-                      {variant.size}
-                    </button>
-                  )
-                })}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mt-8">
+                <div className="font-mono text-[11px] uppercase tracking-[0.25em] text-haq-red">Chọn size / quy cách</div>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {product.variants.map((variant) => {
+                    const active = variant.size === selectedSize
+                    return (
+                      <button
+                        key={variant.size}
+                        type="button"
+                        onClick={() => {
+                          setSelectedSize(variant.size)
+                          setImageKey(variant.img)
+                        }}
+                        className={`min-h-[44px] px-4 py-2 border text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30 ${active ? 'bg-haq-ink text-white border-haq-ink' : 'bg-white text-haq-ink/70 border-black/10 hover:border-haq-ink/30 hover:bg-haq-bone/60'}`}
+                      >
+                        {variant.size}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="mt-8 grid gap-4 border-t border-black/10 pt-6">
               <div className="flex items-center justify-between gap-4 text-sm">
                 <span className="text-haq-ink/55">Quy cách</span>
-                <span className="font-heading font-bold text-haq-ink text-right">{selectedVariant.pack}</span>
+                <span className="font-heading font-bold text-haq-ink text-right">{selectedVariant.pack || '-'}</span>
               </div>
               <div className="flex items-center justify-between gap-4 text-sm">
                 <span className="text-haq-ink/55">Hạn sử dụng</span>
-                <span className="font-heading font-bold text-haq-ink text-right">{selectedVariant.shelf}</span>
+                <span className="font-heading font-bold text-haq-ink text-right">{selectedVariant.shelf || '-'}</span>
               </div>
               <div className="flex items-center justify-between gap-4 text-sm">
                 <span className="text-haq-ink/55">MOQ</span>
-                <span className="font-heading font-bold text-haq-orange text-right">{selectedVariant.moq}</span>
+                <span className="font-heading font-bold text-haq-orange text-right">{selectedVariant.moq || '-'}</span>
               </div>
             </div>
 
             <div className="mt-8 border border-black/10 bg-haq-bone/50 p-5">
               <div className="font-mono text-[11px] uppercase tracking-[0.25em] text-haq-ink/50">Ghi chú</div>
               <p className="mt-3 text-sm leading-[1.75] text-haq-ink/70">
-                Ảnh theo size hiện tại đang dùng ảnh minh họa sẵn có. Cấu trúc đã sẵn sàng để sau này thay bằng ảnh thật cho từng quy cách.
+                Sản phẩm có thể được gia công tùy chỉnh (OEM/ODM) hoặc thay đổi quy cách đóng gói theo yêu cầu của đối tác. Vui lòng liên hệ để nhận báo giá sỉ.
               </p>
             </div>
           </div>
@@ -238,11 +252,27 @@ function ProductModal({ product, onClose }) {
 export default function Products() {
   const ref = useReveal()
   const [activeProduct, setActiveProduct] = useState(null)
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (!activeProduct) return undefined
-    return undefined
-  }, [activeProduct])
+    const fetch = async () => {
+      try {
+        const data = await getProducts()
+        if (data && data.length > 0) {
+          setProducts(data)
+        } else {
+          setProducts(STATIC_PRODUCTS) // Fallback nếu DB trống
+        }
+      } catch (err) {
+        console.error("Lỗi fetch products:", err)
+        setProducts(STATIC_PRODUCTS) // Fallback nếu lỗi kết nối
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetch()
+  }, [])
 
   return (
     <>
@@ -265,11 +295,17 @@ export default function Products() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {PRODUCTS.map((product) => (
-              <ProductCard key={product.slug} product={product} onOpen={setActiveProduct} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="h-48 flex items-center justify-center text-haq-ink/50">
+              Đang tải danh sách sản phẩm...
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {products.map((product) => (
+                <ProductCard key={product.slug || product.name} product={product} onOpen={setActiveProduct} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
