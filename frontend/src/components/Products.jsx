@@ -178,15 +178,13 @@ function ProductModal({ product, onClose }) {
 export default function Products() {
   const ref = useReveal()
   const [activeProduct, setActiveProduct] = useState(null)
-  
-  // Data state
   const [products, setProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  
-  // Pagination state
   const [page, setPage] = useState(1)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [swipeState, setSwipeState] = useState('idle') // 'idle' | 'in' | 'out'
+  
+  // Animation states: 'idle', 'out-left', 'out-right', 'in-left', 'in-right'
+  const [animState, setAnimState] = useState('idle')
 
   useEffect(() => {
     const fetch = async () => {
@@ -213,45 +211,40 @@ export default function Products() {
 
   let displayedProducts = []
   if (page === 1) {
-    // If not expanded, show max 6. If expanded, show max 12.
     displayedProducts = products.slice(0, isExpanded ? 12 : 6)
   } else {
-    // Page 2+ shows 12 items
     displayedProducts = products.slice((page - 1) * itemsPerPage, page * itemsPerPage)
   }
 
   const changePage = (newPage) => {
-    if (newPage === page || swipeState !== 'idle') return
+    if (newPage === page || animState !== 'idle') return
     
-    // Start swipe in
-    setSwipeState('in')
+    const direction = newPage > page ? 'right' : 'left'
     
-    // Once screen is covered, swap data
+    // Animate out to the opposite side
+    setAnimState(direction === 'right' ? 'out-left' : 'out-right')
+    
+    // Wait for slide-out to finish
     setTimeout(() => {
       setPage(newPage)
-      setIsExpanded(true) // Ensure it's expanded so it shows 12 items
-      setSwipeState('out') // Swipe out
+      setIsExpanded(true)
       
-      // Reset to idle without animation
-      setTimeout(() => {
-        setSwipeState('idle')
-      }, 500)
-    }, 400)
+      // Instantly position on the incoming side
+      setAnimState(direction === 'right' ? 'in-right' : 'in-left')
+      
+      // Animate back to idle in the next frame
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimState('idle')
+        })
+      })
+    }, 300)
   }
 
   return (
     <>
       <section id="products" className="bg-haq-bone py-24 md:py-32 relative overflow-hidden">
         
-        {/* Swipe Animation Overlay */}
-        <div 
-          className={`fixed inset-y-0 w-[120vw] bg-haq-red z-[90] ${
-            swipeState === 'idle' ? '-left-[150%] duration-0' :
-            swipeState === 'in' ? 'left-0 duration-500 ease-out' :
-            'left-[150%] duration-500 ease-in'
-          } transition-all`} 
-        />
-
         <div className="mx-auto max-w-site px-6 md:px-12 relative z-10">
           <div ref={ref} className="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div className="max-w-2xl">
@@ -275,11 +268,25 @@ export default function Products() {
               Đang tải danh sách sản phẩm...
             </div>
           ) : (
-            <div className="space-y-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {displayedProducts.map((product) => (
-                  <ProductCard key={product.id || product.slug || product.name} product={product} onOpen={setActiveProduct} />
-                ))}
+            <div className="space-y-12 overflow-hidden px-1">
+              <div 
+                className={`transition-all duration-300 transform ${
+                  animState === 'idle' 
+                    ? 'translate-x-0 opacity-100' 
+                    : animState === 'out-left' 
+                      ? '-translate-x-full opacity-0' 
+                      : animState === 'out-right'
+                        ? 'translate-x-full opacity-0'
+                        : animState === 'in-left'
+                          ? '-translate-x-full opacity-0 duration-0'
+                          : 'translate-x-full opacity-0 duration-0'
+                }`}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                  {displayedProducts.map((product) => (
+                    <ProductCard key={product.id || product.slug || product.name} product={product} onOpen={setActiveProduct} />
+                  ))}
+                </div>
               </div>
 
               {/* Load More Button (Only on Page 1 if not expanded and total > 6) */}
