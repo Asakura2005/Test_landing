@@ -87,11 +87,11 @@ function ProductModal({ product, onClose }) {
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-4 py-6">
       <button type="button" className="absolute inset-0 bg-haq-ink/65 backdrop-blur-sm" onClick={onClose} aria-label="Đóng chi tiết sản phẩm" />
       <div className="relative z-[81] w-full max-w-5xl max-h-[92vh] overflow-auto bg-white shadow-2xl border border-black/10">
+        <button type="button" onClick={onClose} className="absolute top-4 right-4 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-haq-ink shadow-sm border border-black/10 hover:bg-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30" aria-label="Đóng">
+          <X className="w-5 h-5" />
+        </button>
         <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="relative bg-haq-bone/50 p-6 md:p-8">
-            <button type="button" onClick={onClose} className="absolute top-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-haq-ink shadow-sm hover:bg-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/30" aria-label="Đóng">
-              <X className="w-5 h-5" />
-            </button>
+          <div className="relative bg-haq-bone/50 p-6 md:p-8 pt-14 lg:pt-8">
 
             <div className="relative aspect-square overflow-hidden bg-white border border-black/10">
               <img 
