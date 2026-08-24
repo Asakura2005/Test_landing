@@ -3,7 +3,6 @@ import { ArrowRight, CheckCircle2, ShieldCheck, Factory, Box, Users, ChevronRigh
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { useReveal } from '../hooks/useReveal'
-import { useNavigate } from 'react-router-dom' 
 
 // Reusable Reveal Wrapper for scroll animations
 function RevealBlock({ children, className = '' }) {
