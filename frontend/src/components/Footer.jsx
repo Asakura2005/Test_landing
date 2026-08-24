@@ -34,7 +34,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-haq-orange mt-0.5 shrink-0" strokeWidth={1.8} />
                 <span className="leading-snug">
-                  Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam.
+                  Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
                 </span>
               </li>
               <li>

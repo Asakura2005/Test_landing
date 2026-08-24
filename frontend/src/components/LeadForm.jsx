@@ -109,12 +109,11 @@ export default function LeadForm() {
                 </span>
                 <span>
                   <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Trụ sở Cầu Giấy
+                    Trụ sở chính
                   </span>
-                  <span className="font-heading font-bold text-lg text-white leading-snug">
-                    Tổ 6, Phường Cầu Giấy,
-                    <br />
-                    Thành Phố Hà Nội, Việt Nam.
+                  <span className="font-heading font-bold text-lg text-white">
+                    Số 30, Ngõ 1 Phạm Tuấn Tài,<br/>
+                    Phường Nghĩa Đô, Thành Phố Hà Nội Việt Nam
                   </span>
                 </span>
               </div>
