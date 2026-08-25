@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { X, Plus, Trash2, Pin } from 'lucide-react'
+import { X, Plus, Trash2, Pin, Upload } from 'lucide-react'
+import { uploadProductImage, deleteProductImage } from '../../services/supabase'
 
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     is_pinned: false,
   })
   const [variants, setVariants] = useState([])
+  const [newImages, setNewImages] = useState({})
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -51,12 +53,29 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     setVariants(newVariants)
   }
 
+  const handleFileChange = (index, e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setNewImages({ ...newImages, [index]: file })
+      
+      const previewUrl = URL.createObjectURL(file)
+      const newVariants = [...variants]
+      newVariants[index].imgPreview = previewUrl
+      setVariants(newVariants)
+    }
+  }
+
   const addVariant = () => {
     setVariants([...variants, { size: '', img: '', shelf: '', pack: '', moq: '' }])
   }
 
   const removeVariant = (index) => {
     setVariants(variants.filter((_, i) => i !== index))
+    
+    // Xóa file khỏi state nếu đã chọn file mới
+    const updatedImages = { ...newImages }
+    delete updatedImages[index]
+    setNewImages(updatedImages)
   }
 
   const handleSubmit = async (e) => {
@@ -70,8 +89,25 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
 
     setIsSaving(true)
     try {
+      const slug = formData.slug || `product-${Date.now()}`
+      const processedVariants = [...variants]
+      
+      for (let i = 0; i < processedVariants.length; i++) {
+        if (newImages[i]) {
+          // Xóa ảnh cũ nếu có
+          if (processedVariants[i].img) {
+            await deleteProductImage(processedVariants[i].img)
+          }
+          // Upload ảnh mới
+          const newUrl = await uploadProductImage(newImages[i], slug)
+          processedVariants[i].img = newUrl
+        }
+        // Xóa URL tạm
+        delete processedVariants[i].imgPreview
+      }
+
       const cleanedHighlights = formData.highlights.filter(h => h.trim() !== '')
-      await onSave({ ...formData, highlights: cleanedHighlights }, variants)
+      await onSave({ ...formData, highlights: cleanedHighlights }, processedVariants)
     } catch (err) {
       console.error(err)
       alert("Có lỗi xảy ra khi lưu: " + err.message)
@@ -178,8 +214,13 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                       <input type="text" value={v.moq} onChange={e => handleVariantChange(index, 'moq', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
                     </div>
                     <div className="col-span-2 space-y-1">
-                      <label className="text-xs font-semibold">Link Hình ảnh (URL)</label>
-                      <input type="url" value={v.img} onChange={e => handleVariantChange(index, 'img', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" placeholder="https://..." />
+                      <label className="text-xs font-semibold">Hình ảnh (Từ thiết bị)</label>
+                      <input type="file" accept="image/*" onChange={e => handleFileChange(index, e)} className="w-full border border-black/20 p-1.5 rounded text-sm bg-white" />
+                      {(v.imgPreview || v.img) && (
+                        <div className="mt-2 relative inline-block">
+                          <img src={v.imgPreview || v.img} alt="Preview" className="h-20 object-cover rounded border border-black/10" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -150,3 +150,39 @@ export async function updateProduct(id, productData, variantsData) {
 
   return true
 }
+
+/**
+ * Tải ảnh lên Supabase Storage bucket 'assets'
+ */
+export async function uploadProductImage(file, productSlug) {
+  const fileExt = file.name.split('.').pop()
+  const fileName = `${productSlug}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+  
+  const { error } = await supabase.storage
+    .from('assets')
+    .upload(fileName, file)
+    
+  if (error) throw error
+  
+  const { data: publicUrlData } = supabase.storage
+    .from('assets')
+    .getPublicUrl(fileName)
+    
+  return publicUrlData.publicUrl
+}
+
+/**
+ * Xóa ảnh từ bucket 'assets'
+ */
+export async function deleteProductImage(imageUrl) {
+  if (!imageUrl) return
+  const match = imageUrl.match(/\/storage\/v1\/object\/public\/assets\/(.+)$/)
+  if (match && match[1]) {
+    const path = match[1]
+    const { error } = await supabase.storage
+      .from('assets')
+      .remove([path])
+      
+    if (error) console.error("Error deleting old image:", error)
+  }
+}
