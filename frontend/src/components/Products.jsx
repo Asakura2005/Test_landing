@@ -66,9 +66,11 @@ function ProductModal({ product, onClose }) {
     [product, selectedSize],
   )
   const [imageKey, setImageKey] = useState(selectedVariant.img)
+  const [viewMode, setViewMode] = useState(product.model_3d ? '3d' : 'image')
 
   useEffect(() => {
     setSelectedSize(product.variants?.[0]?.size)
+    setViewMode(product.model_3d ? '3d' : 'image')
   }, [product])
 
   useEffect(() => {
@@ -94,15 +96,35 @@ function ProductModal({ product, onClose }) {
           <div className="relative bg-haq-bone/50 p-6 md:p-8 pt-14 lg:pt-8">
 
             <div className="relative aspect-square overflow-hidden bg-white border border-black/10">
-              <img 
-                key={imageKey} 
-                src={selectedVariant.img} 
-                alt={`${product.name} ${selectedVariant.size}`} 
-                className="product-fade-image w-full h-full object-cover" 
-                onError={(e) => {
-                  e.target.src = 'https://placehold.co/800x800/f3f2ef/1e1e1e?text=No+Image'
-                }}
-              />
+              
+              {product.model_3d && (
+                <div className="absolute top-4 right-4 z-10 flex bg-white/90 backdrop-blur border border-black/10 rounded-lg p-1 shadow-sm">
+                  <button onClick={() => setViewMode('image')} className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${viewMode === 'image' ? 'bg-haq-ink text-white' : 'text-haq-ink/60 hover:bg-black/5'}`}>Ảnh 2D</button>
+                  <button onClick={() => setViewMode('3d')} className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${viewMode === '3d' ? 'bg-haq-ink text-white' : 'text-haq-ink/60 hover:bg-black/5'}`}>Xoay 3D</button>
+                </div>
+              )}
+
+              {viewMode === '3d' && product.model_3d ? (
+                <model-viewer 
+                  src={product.model_3d} 
+                  auto-rotate 
+                  camera-controls 
+                  shadow-intensity="1" 
+                  class="w-full h-full"
+                  style={{ width: '100%', height: '100%', '--poster-color': 'transparent' }}
+                ></model-viewer>
+              ) : (
+                <img 
+                  key={imageKey} 
+                  src={selectedVariant.img} 
+                  alt={`${product.name} ${selectedVariant.size}`} 
+                  className="product-fade-image w-full h-full object-cover" 
+                  onError={(e) => {
+                    e.target.src = 'https://placehold.co/800x800/f3f2ef/1e1e1e?text=No+Image'
+                  }}
+                />
+              )}
+
               {product.tag && (
                 <span className="absolute top-4 left-4 bg-haq-red text-white font-mono text-[10px] tracking-widest uppercase px-3 py-1">
                   {product.tag}

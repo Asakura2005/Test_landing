@@ -11,9 +11,11 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     tag: '',
     highlights: [''],
     is_pinned: false,
+    model_3d: '',
   })
   const [variants, setVariants] = useState([])
   const [newImages, setNewImages] = useState({})
+  const [newModel3d, setNewModel3d] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         tag: product.tag || '',
         highlights: product.highlights?.length ? product.highlights : [''],
         is_pinned: product.is_pinned || false,
+        model_3d: product.model_3d || '',
       })
       setVariants(product.variants || [])
     }
@@ -92,6 +95,15 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
       const slug = formData.slug || `product-${Date.now()}`
       const processedVariants = [...variants]
       
+      // Xử lý upload file 3D nếu có
+      let finalModel3d = formData.model_3d
+      if (newModel3d) {
+        if (finalModel3d) {
+          await deleteProductImage(finalModel3d)
+        }
+        finalModel3d = await uploadProductImage(newModel3d, slug)
+      }
+
       for (let i = 0; i < processedVariants.length; i++) {
         if (newImages[i]) {
           // Xóa ảnh cũ nếu có
@@ -107,7 +119,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
       }
 
       const cleanedHighlights = formData.highlights.filter(h => h.trim() !== '')
-      await onSave({ ...formData, highlights: cleanedHighlights }, processedVariants)
+      await onSave({ ...formData, highlights: cleanedHighlights, model_3d: finalModel3d }, processedVariants)
     } catch (err) {
       console.error(err)
       alert("Có lỗi xảy ra khi lưu: " + err.message)
@@ -165,6 +177,14 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
               <div className="col-span-2 space-y-1">
                 <label className="text-sm font-semibold">Mô tả</label>
                 <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-black/20 p-2 rounded" />
+              </div>
+              
+              <div className="col-span-2 space-y-1 mt-2 p-3 bg-haq-bone/30 rounded border border-black/10">
+                <label className="text-sm font-semibold text-haq-orange flex items-center gap-2">Mô hình 3D (.glb / .gltf) - Tùy chọn</label>
+                <div className="text-xs text-haq-ink/60 mb-2">Tải lên file 3D để khách hàng có thể xoay xem sản phẩm 360 độ.</div>
+                <input type="file" accept=".glb,.gltf" onChange={e => e.target.files && setNewModel3d(e.target.files[0])} className="w-full border border-black/20 p-1.5 rounded text-sm bg-white" />
+                {formData.model_3d && !newModel3d && <div className="text-xs text-green-600 mt-1 font-semibold">✓ Sản phẩm này đang có mô hình 3D.</div>}
+                {newModel3d && <div className="text-xs text-blue-600 mt-1 font-semibold">✓ Đã chọn file 3D: {newModel3d.name}</div>}
               </div>
             </div>
           </div>
