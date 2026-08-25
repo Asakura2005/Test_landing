@@ -12,6 +12,9 @@ export default {
         'haq-orange': '#F26522',
         'haq-red': '#BE1E2D',
         'haq-gold': '#FFD200',
+        'haq-gold-dark': '#DAA520',
+        'haq-cream': '#FFF8E7',
+        'haq-brown': '#7A3E26',
       },
       fontFamily: {
         heading: ['"Manrope"', 'ui-sans-serif', 'system-ui', 'sans-serif'],

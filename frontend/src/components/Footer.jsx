@@ -1,105 +1,81 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 export default function Footer() {
   return (
-    <footer className="bg-haq-bone border-t border-black/10 pt-16 pb-10">
+    <footer className="bg-haq-red pt-16 pb-8 border-t-4 border-haq-gold text-white/90">
       <div className="mx-auto max-w-site px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           {/* Brand */}
-          <div className="md:col-span-5">
-            <div className="flex items-center gap-3">
-              <img
-                src={logoImg}
-                alt="HAQ FOOD Logo"
-                className="h-14 w-auto object-contain"
-              />
-            </div>
-            <p className="mt-2 font-heading font-bold text-sm text-haq-gold tracking-wide uppercase">
-              Chất lượng vượt niềm tin
-            </p>
-            <p className="mt-4 text-haq-ink/70 leading-[1.6] max-w-sm">
-              Nhà sản xuất &amp; cung ứng sỉ thực phẩm ăn vặt theo tiêu chuẩn ISO &amp; HACCP.
-              Đồng hành cùng hệ thống siêu thị, chuỗi tiện lợi và đối tác xuất khẩu trên toàn quốc.
-            </p>
-          </div>
-
-          {/* Contact */}
-          <div className="md:col-span-4 mt-8 md:mt-0">
-            <h4 className="font-mono text-[11px] uppercase tracking-widest text-haq-red mb-5">
-              Liên hệ
-            </h4>
-            <ul className="space-y-4 text-haq-ink/80">
-              <li>
-                <a
-                  href="https://maps.app.goo.gl/McrVepx9uMcUc1pKA"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start gap-3 hover:text-haq-orange transition-colors"
-                >
-                  <MapPin className="w-5 h-5 text-haq-orange mt-0.5 shrink-0" strokeWidth={1.8} />
-                  <span className="leading-snug">
-                    Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
-                  </span>
-                </a>
+          <div className="md:col-span-4">
+            <Link to="/" className="inline-block mb-6 bg-white p-2 rounded shadow-md">
+              <img src={logoImg} alt="HAQ FOOD Logo" className="h-16 w-auto object-contain" />
+            </Link>
+            <h3 className="font-heading font-extrabold text-lg text-white mb-4">CÔNG TY CỔ PHẦN HAQ HÀ NỘI</h3>
+            <ul className="space-y-4 text-sm leading-relaxed">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-haq-gold mt-0.5 shrink-0" />
+                <span>Tổ 6, Phường Cầu Giấy, Thành phố Hà Nội, Việt Nam</span>
               </li>
-              <li>
-                <a
-                  href="tel:+84901234567"
-                  className="flex items-center gap-3 hover:text-haq-orange transition-colors"
-                >
-                  <Phone className="w-5 h-5 text-haq-orange shrink-0" strokeWidth={1.8} />
-                  024 23 23 56 56
-                </a>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-haq-gold shrink-0" />
+                <a href="tel:02423235656" className="hover:text-haq-gold transition-colors font-bold text-white">024 23 23 56 56</a>
               </li>
-              <li>
-                <a
-                  href="mailto:wholesale@haqfood.vn"
-                  className="flex items-center gap-3 hover:text-haq-orange transition-colors"
-                >
-                  <Mail className="w-5 h-5 text-haq-orange shrink-0" strokeWidth={1.8} />
-                  info@haq.com.vn
-                </a>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-haq-gold shrink-0" />
+                <a href="mailto:info@haq.com.vn" className="hover:text-haq-gold transition-colors">info@haq.com.vn</a>
               </li>
             </ul>
           </div>
 
-          {/* Links */}
-          <div className="md:col-span-3 mt-8 md:mt-0">
-            <h4 className="font-mono text-[11px] uppercase tracking-widest text-haq-red mb-5">
-              Khám phá
+          {/* Links 1 */}
+          <div className="md:col-span-2 md:col-start-6 mt-8 md:mt-0">
+            <h4 className="font-heading font-bold text-base uppercase text-haq-gold mb-6 border-b border-white/20 pb-2">
+              Về Chúng Tôi
             </h4>
-            <ul className="space-y-3 text-haq-ink/80">
-              <li>
-                <a href="/company-profile" className="hover:text-haq-orange transition-colors">
-                  Company Profile
-                </a>
-              </li>
-              <li>
-                <a href="/#products" className="hover:text-haq-orange transition-colors">
-                  Danh mục sản phẩm
-                </a>
-              </li>
-              <li>
-                <a href="/#lead" className="hover:text-haq-orange transition-colors">
-                  Nhận báo giá sỉ
-                </a>
-              </li>
-              <li>
-                <a href="/#certs" className="hover:text-haq-orange transition-colors">
-                  Bảo chứng chất lượng
-                </a>
-              </li>
+            <ul className="space-y-3 text-sm font-medium">
+              <li><Link to="/gioi-thieu" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Giới thiệu HAQ</Link></li>
+              <li><a href="/gioi-thieu#nang-luc" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Năng lực sản xuất</a></li>
+              <li><a href="/gioi-thieu#phan-phoi" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Hệ thống phân phối</a></li>
+              <li><Link to="/tin-tuc" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Tin tức & Sự kiện</Link></li>
+            </ul>
+          </div>
+
+          {/* Links 2 */}
+          <div className="md:col-span-3 mt-8 md:mt-0">
+            <h4 className="font-heading font-bold text-base uppercase text-haq-gold mb-6 border-b border-white/20 pb-2">
+              Sản Phẩm
+            </h4>
+            <ul className="space-y-3 text-sm font-medium">
+              <li><Link to="/san-pham" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Bánh tráng trộn</Link></li>
+              <li><Link to="/san-pham" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Bánh đậu xanh</Link></li>
+              <li><Link to="/san-pham" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Bánh hạnh nhân</Link></li>
+              <li><Link to="/san-pham" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Bắp rang bơ và thịt khô</Link></li>
+            </ul>
+          </div>
+
+          {/* Customer Support */}
+          <div className="md:col-span-3 mt-8 md:mt-0">
+            <h4 className="font-heading font-bold text-base uppercase text-haq-gold mb-6 border-b border-white/20 pb-2">
+              Chính Sách
+            </h4>
+            <ul className="space-y-3 text-sm font-medium">
+              <li><a href="#" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Chính sách bảo mật</a></li>
+              <li><a href="#" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Chính sách giao hàng</a></li>
+              <li><a href="#" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Chính sách đổi trả</a></li>
+              <li><a href="#" className="hover:text-haq-gold hover:translate-x-1 inline-block transition-transform">Điều khoản dịch vụ</a></li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 pt-6 border-t border-black/10 flex flex-col md:flex-row justify-between gap-3 font-mono text-[11px] uppercase tracking-widest text-haq-ink/50">
-          <span>© {new Date().getFullYear()} HAQ FOOD. All rights reserved.</span>
+        <div className="mt-16 pt-6 border-t border-white/20 flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-white/60">
+          <p>© {new Date().getFullYear()} CÔNG TY CỔ PHẦN HAQ HÀ NỘI.</p>
         </div>
       </div>
     </footer>
   )
 }
+

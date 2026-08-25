@@ -64,17 +64,45 @@ export async function deleteLead(id) {
 }
 
 /**
- * Lấy danh sách sản phẩm (kèm variants)
+ * Lấy danh sách sản phẩm (kèm variants và categories)
  */
 export async function getProducts() {
   const { data, error } = await supabase
     .from('products')
     .select(`
       *,
+      categories(*),
       variants:product_variants(*)
     `)
     .order('is_pinned', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Lấy chi tiết 1 sản phẩm theo slug hoặc id (fallback)
+ */
+export async function getProductBySlug(slug) {
+  // Kiểm tra xem slug có phải là UUID không (dùng cho các sản phẩm cũ chưa có slug)
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
+  let query = supabase
+    .from('products')
+    .select(`
+      *,
+      categories(*),
+      variants:product_variants(*)
+    `)
+
+  if (isUUID) {
+    query = query.eq('id', slug)
+  } else {
+    query = query.eq('slug', slug)
+  }
+
+  const { data, error } = await query.single()
 
   if (error) throw error
   return data
@@ -185,4 +213,66 @@ export async function deleteProductImage(imageUrl) {
       
     if (error) console.error("Error deleting old image:", error)
   }
+}
+
+/**
+ * ==================================================
+ * CATEGORY APIS
+ * ==================================================
+ */
+
+/**
+ * Lấy danh sách danh mục
+ */
+export async function getCategories() {
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Tạo danh mục mới
+ */
+export async function createCategory(categoryData) {
+  const { data, error } = await supabase
+    .from('categories')
+    .insert([categoryData])
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Cập nhật danh mục
+ */
+export async function updateCategory(id, categoryData) {
+  const { data, error } = await supabase
+    .from('categories')
+    .update(categoryData)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Xóa danh mục
+ */
+export async function deleteCategory(id) {
+  const { error } = await supabase
+    .from('categories')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw error
+  return true
 }

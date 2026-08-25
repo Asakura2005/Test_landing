@@ -1,235 +1,207 @@
 import React from 'react'
-import { ArrowRight, CheckCircle2, ShieldCheck, Factory, Box, Users, ChevronRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  Factory,
+  Globe2,
+  Mail,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  Store,
+} from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { useReveal } from '../hooks/useReveal'
-import isoImg from '../assets/iso.png'
-import haccpImg from '../assets/haccp.png'
+import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
+import circleKLogo from '../assets/pictures_doitac/circle_k.png'
+import goLogo from '../assets/pictures_doitac/go!.png'
+import gs25Logo from '../assets/pictures_doitac/gs25.png'
+import kmartLogo from '../assets/pictures_doitac/kmart.png'
+import winmartLogo from '../assets/pictures_doitac/winmart.png'
 
-const TIMELINE = [
-  { year: '2021', text: 'Thành lập công ty; hoàn thiện dây chuyền bánh tráng trộn và ký kết khách hàng đầu tiên.' },
-  { year: '2022', text: 'Mở rộng sang bánh đậu xanh, bánh hạnh nhân, bắp rang bơ và thịt khô.' },
-  { year: '2023', text: 'Phủ sóng tại Go, WinMart, Circle K, GS25, Kmart, Bách Hóa Xanh.' },
-  { year: '2024', text: 'Xuất khẩu sang Hàn Quốc và Đài Loan.' },
-  { year: '2025', text: 'Tham gia Hội chợ Giao thương Việt – Trung.' },
+const COMPANY_FACTS = [
+  ['Năm thành lập', '2021'],
+  ['Lĩnh vực', 'Sản xuất - phân phối thực phẩm'],
+  ['Thị trường', 'Việt Nam, Hàn Quốc, Đài Loan'],
+  ['Chứng nhận', 'ISO - HACCP'],
 ]
 
-// Reusable Reveal Wrapper for scroll animations
+const TIMELINE = [
+  ['2021', 'Thành lập công ty; hoàn thiện dây chuyền sản xuất bánh tráng trộn và bắt đầu ký kết hợp đồng với nhiều đơn vị khách hàng.'],
+  ['2022', 'Mở rộng sản phẩm: bánh đậu xanh, bánh hạnh nhân, bắp rang bơ, thịt khô.'],
+  ['2023', 'Phủ sóng tại GO!, WinMart, Circle K, GS25, Kmart, Bách Hóa Xanh và các hệ thống bán lẻ lớn.'],
+  ['2024', 'Xuất khẩu sang Hàn Quốc và Đài Loan.'],
+  ['2025', 'Tham gia Hội chợ Giao thương Việt - Trung.'],
+]
+
+const VALUES = [
+  'Chất lượng là nền tảng - Quality First.',
+  'Minh bạch quy trình - Transparency.',
+  'Đổi mới sản phẩm - Innovation.',
+  'Hợp tác bền vững - Sustainable Partnership.',
+  'Lấy khách hàng làm trung tâm - Customer-centric Approach.',
+]
+
+const CAPABILITIES = [
+  'Nhà xưởng đạt ISO - HACCP.',
+  'Kiểm soát chặt chẽ từ nguyên liệu đến lưu mẫu.',
+  'Có khả năng đáp ứng đơn hàng lớn và liên tục.',
+  'Nhận sản xuất theo yêu cầu đối tác (OEM/ODM).',
+  'Quy trình xuất kho và logistics minh bạch.',
+]
+
+const DOMESTIC_PARTNERS = [
+  { name: 'WinMart', logo: winmartLogo },
+  { name: 'GO!', logo: goLogo },
+  { name: 'Circle K', logo: circleKLogo },
+  { name: 'GS25', logo: gs25Logo },
+  { name: 'Kmart', logo: kmartLogo },
+  { name: 'Bách Hóa Xanh', logo: bachHoaXanhLogo },
+]
+
+const INTERNATIONAL_MARKETS = [
+  { country: 'Hàn Quốc', code: 'kr' },
+  { country: 'Đài Loan', code: 'tw' },
+]
+
 function RevealBlock({ children, className = '' }) {
   const ref = useReveal()
+  return <div ref={ref} className={`reveal ${className}`}>{children}</div>
+}
+
+function SectionEyebrow({ children }) {
   return (
-    <div ref={ref} className={`reveal ${className}`}>
-      {children}
+    <div className="flex items-center gap-3 mb-5">
+      <span className="h-px w-10 bg-haq-red" />
+      <span className="font-mono text-xs tracking-[0.22em] uppercase text-haq-red">{children}</span>
     </div>
   )
 }
 
-export default function CompanyProfilePage() {
-  const handleContactClick = () => {
-    window.location.href = '/#lead'
+function CountryFlag({ code, country }) {
+  if (code === 'kr') {
+    return (
+      <svg viewBox="0 0 30 20" className="h-5 w-[30px] shrink-0 rounded-sm shadow-sm" role="img" aria-label={`Cờ ${country}`}>
+        <rect width="30" height="20" fill="#fff" />
+        <g transform="rotate(33 15 10)" fill="none" stroke="#1a1a1a" strokeWidth="1.15" strokeLinecap="square">
+          <path d="M4 4h5M4 6h5M4 8h5M21 12h5M21 14h5M21 16h5" />
+          <path d="M21 4h5M21 8h5M4 12h5M4 16h5" />
+        </g>
+        <path d="M15 6a4 4 0 0 1 0 8 2 2 0 0 0 0-4 2 2 0 0 1 0-4" fill="#cd2e3a" />
+        <path d="M15 14a4 4 0 0 1 0-8 2 2 0 0 0 0 4 2 2 0 0 1 0 4" fill="#0f64b3" />
+      </svg>
+    )
   }
 
+  return (
+    <svg viewBox="0 0 30 20" className="h-5 w-[30px] shrink-0 rounded-sm shadow-sm" role="img" aria-label={`Cờ ${country}`}>
+      <rect width="30" height="20" fill="#d91023" />
+      <rect width="14" height="10" fill="#012169" />
+      <g fill="#fff" transform="translate(7 5)">
+        <path d="M0-4.1 0.78-1.22 2.9-2.9 1.22-.78 4.1 0 1.22.78 2.9 2.9.78 1.22 0 4.1-.78 1.22-2.9 2.9-1.22.78-4.1 0-1.22-.78-2.9-2.9-.78-1.22Z" />
+        <circle r="1.7" fill="#012169" />
+      </g>
+    </svg>
+  )
+}
+
+export default function CompanyProfilePage() {
   return (
     <main id="top" className="bg-haq-bone min-h-screen font-inter selection:bg-haq-orange selection:text-white">
       <StickyNav />
 
-      {/* 1. HERO SECTION (Bìa Catalogue) */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 bg-haq-ink text-white overflow-hidden">
-        {/* Background Texture/Pattern (Subtle) */}
+      <section className="relative pt-32 pb-24 md:pt-44 md:pb-32 bg-haq-ink text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-        
         <div className="mx-auto max-w-site px-6 md:px-12 relative z-10">
           <RevealBlock className="max-w-4xl">
             <div className="flex items-center gap-4 mb-8">
               <span className="h-px w-16 bg-haq-orange" />
-              <span className="font-mono text-sm tracking-[0.3em] uppercase text-haq-orange font-bold">
-                Company Profile 2024
-              </span>
+              <span className="font-mono text-sm tracking-[0.25em] uppercase text-haq-orange font-bold">Giới thiệu doanh nghiệp</span>
             </div>
             <h1 className="font-heading font-extrabold text-5xl md:text-7xl lg:text-[5.5rem] tracking-tight leading-[1.05] text-white">
-              CÔNG TY CỔ PHẦN <br className="hidden md:block" />
+              CÔNG TY CỔ PHẦN<br />
               <span className="text-haq-red">HAQ HÀ NỘI</span>
             </h1>
             <p className="mt-8 text-xl md:text-2xl text-white/70 leading-[1.6] max-w-3xl font-medium">
-              Nhà sản xuất và phân phối thực phẩm ăn vặt chuyên nghiệp. Đối tác chiến lược của các hệ thống bán lẻ hàng đầu Việt Nam.
+              Sản xuất - phân phối thực phẩm; cung cấp đồ ăn vặt đóng gói và các sản phẩm thực phẩm.
             </p>
           </RevealBlock>
         </div>
       </section>
 
-      {/* 2. LỜI GIỚI THIỆU (Editorial Layout) */}
-      <section className="py-24 md:py-32 bg-haq-bone">
+      <section id="gioi-thieu" className="scroll-mt-24 py-24 md:py-32 bg-haq-bone">
         <div className="mx-auto max-w-site px-6 md:px-12">
-          <div className="grid md:grid-cols-12 gap-12 md:gap-24">
-            <RevealBlock className="md:col-span-5 flex flex-col justify-between">
-              <div>
-                <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink leading-[1.1] tracking-tight mb-6">
-                  Từ truyền thống <br /> đến chuẩn mực <br /> <span className="text-haq-orange">quốc tế.</span>
-                </h2>
-                <div className="w-16 h-2 bg-haq-red mb-8" />
-              </div>
-              <div className="font-mono text-xs uppercase tracking-[0.2em] text-haq-ink/50 mt-8 md:mt-0">
-                Thành lập 2024 (Tiền thân 2012)
-              </div>
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-24">
+            <RevealBlock className="lg:col-span-5">
+              <SectionEyebrow>Về HAQ Hà Nội</SectionEyebrow>
+              <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink leading-[1.1] tracking-tight">
+                Chất lượng là cốt lõi của thương hiệu.
+              </h2>
+              <div className="w-16 h-2 bg-haq-red mt-8" />
             </RevealBlock>
-            
-            <RevealBlock className="md:col-span-7">
-              <div className="prose prose-lg prose-p:text-haq-ink/80 prose-p:leading-[1.8] prose-p:mb-6 max-w-none">
-                <p className="text-xl font-medium text-haq-ink">
-                  Với tiền thân là cơ sở sản xuất bánh kẹo truyền thống được thành lập từ năm 2012, đến năm 2024, Công ty Cổ phần HAQ Hà Nội chính thức ra đời mang theo khát vọng nâng tầm ẩm thực ăn vặt Việt Nam trên bản đồ phân phối hiện đại.
-                </p>
-                <p>
-                  Chúng tôi nhận thức sâu sắc rằng, trong bối cảnh thị trường bán lẻ ngày càng khắt khe, chất lượng sản phẩm không chỉ là lời hứa mà phải được chứng minh bằng các tiêu chuẩn đo lường minh bạch. Tại HAQ Food, chúng tôi theo đuổi triết lý kinh doanh <strong>"An Toàn - Chất Lượng - Bền Vững"</strong>.
-                </p>
-                <p>
-                  Sự kết hợp giữa công thức hương vị truyền thống đậm đà và hệ thống kiểm soát chất lượng đạt chuẩn quốc tế chính là chìa khóa giúp HAQ Food tự tin đồng hành cùng các chuỗi siêu thị, cửa hàng tiện lợi và đối tác phân phối B2B trên toàn quốc.
-                </p>
-              </div>
+            <RevealBlock className="lg:col-span-7 text-lg text-haq-ink/75 leading-[1.85] space-y-6">
+              <p>HAQ Hà Nội được thành lập trong bối cảnh thị trường thực phẩm ngày càng yêu cầu cao về an toàn thực phẩm, tính minh bạch, chất lượng sản phẩm và sự đa dạng về khẩu vị.</p>
+              <p>Công ty được thành lập với mong muốn cung cấp các sản phẩm đồ ăn vặt mang hương vị Việt Nam, đồng thời đáp ứng các tiêu chuẩn về vệ sinh an toàn thực phẩm và phù hợp với nhu cầu đa dạng của người tiêu dùng hiện đại.</p>
+              <p>Từ triết lý này, HAQ Hà Nội tập trung liên tục cải tiến quy trình, nâng cao năng lực sản xuất và đa dạng hóa sản phẩm; đồng thời từng bước mở rộng vị thế tại thị trường quốc tế.</p>
             </RevealBlock>
           </div>
+
+          <RevealBlock className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 border border-black/10 bg-black/10 gap-px">
+            {COMPANY_FACTS.map(([label, value]) => (
+              <div key={label} className="bg-white p-6 md:p-8">
+                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-haq-ink/50">{label}</div>
+                <div className="mt-3 font-heading font-bold text-lg md:text-xl text-haq-ink leading-snug">{value}</div>
+              </div>
+            ))}
+          </RevealBlock>
         </div>
       </section>
 
-      {/* 2.5 HÀNH TRÌNH PHÁT TRIỂN */}
-      <section className="py-20 md:py-28 bg-haq-bone border-t border-black/10">
+      <section id="hanh-trinh" className="scroll-mt-24 py-24 md:py-32 bg-white border-y border-black/10">
         <div className="mx-auto max-w-site px-6 md:px-12">
-          <RevealBlock className="text-center mb-16">
-            <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-haq-ink tracking-tight">Hành Trình Phát Triển</h2>
-            <div className="w-16 h-1 bg-haq-orange mx-auto mt-6" />
+          <RevealBlock className="max-w-3xl">
+            <SectionEyebrow>Hành trình phát triển</SectionEyebrow>
+            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight">Các dấu mốc của HAQ Hà Nội</h2>
           </RevealBlock>
-          
-          <div className="max-w-4xl mx-auto space-y-8">
-            {TIMELINE.map((item, i) => (
-              <RevealBlock key={item.year} delay={i * 100} className="grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr] gap-6 items-center bg-white p-6 md:p-8 border border-black/5 hover:border-haq-orange/30 transition-colors shadow-sm">
-                <div className="font-heading font-extrabold text-3xl md:text-4xl text-haq-orange">{item.year}</div>
-                <p className="text-haq-ink/80 leading-[1.7] text-base md:text-lg">{item.text}</p>
+          <div className="mt-14 max-w-4xl space-y-4">
+            {TIMELINE.map(([year, text]) => (
+              <RevealBlock key={year} className="grid grid-cols-[86px_1fr] md:grid-cols-[132px_1fr] gap-5 md:gap-8 items-start bg-haq-bone border border-black/5 p-6 md:p-8">
+                <div className="font-heading font-extrabold text-3xl md:text-4xl text-haq-orange">{year}</div>
+                <p className="text-haq-ink/80 leading-[1.75] pt-1">{text}</p>
               </RevealBlock>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 3. TẦM NHÌN, SỨ MỆNH & GIÁ TRỊ CỐT LÕI */}
-      <section className="py-24 md:py-32 bg-white border-y border-black/10">
-        <div className="mx-auto max-w-site px-6 md:px-12">
-          <RevealBlock className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight mb-6">Định Hướng Phát Triển</h2>
-            <p className="text-lg text-haq-ink/70">Kim chỉ nam cho mọi hoạt động nghiên cứu, sản xuất và phân phối tại HAQ Food.</p>
-          </RevealBlock>
-
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Vision */}
-            <RevealBlock className="bg-haq-bone p-10 md:p-14 border border-black/5 hover:border-haq-orange/30 transition-colors">
-              <div className="w-14 h-14 bg-haq-orange text-white flex items-center justify-center rounded-xl shadow-lg mb-8">
-                <ShieldCheck className="w-7 h-7" />
-              </div>
-              <h3 className="font-heading font-bold text-3xl text-haq-ink mb-4">Tầm Nhìn</h3>
-              <p className="text-haq-ink/70 leading-[1.8] text-lg">
-                Trở thành nhà sản xuất và đối tác phân phối tin cậy hàng đầu trong lĩnh vực thực phẩm ăn vặt đóng gói tại Việt Nam. Xây dựng thương hiệu bảo chứng cho chất lượng, an toàn vệ sinh và năng lực cung ứng vững vàng cho kênh bán lẻ hiện đại (MT).
-              </p>
-            </RevealBlock>
-
-            {/* Mission */}
-            <RevealBlock className="bg-haq-ink p-10 md:p-14 border border-black/5">
-              <div className="w-14 h-14 bg-haq-red text-white flex items-center justify-center rounded-xl shadow-lg mb-8">
-                <Users className="w-7 h-7" />
-              </div>
-              <h3 className="font-heading font-bold text-3xl text-white mb-4">Sứ Mệnh</h3>
-              <ul className="space-y-4 text-white/70 leading-[1.8] text-lg">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-haq-red shrink-0 mt-1" />
-                  <span><strong>Đối với đối tác:</strong> Cung cấp giải pháp trọn gói, linh hoạt và ổn định (từ OEM/ODM đến hàng nhãn riêng).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-haq-red shrink-0 mt-1" />
-                  <span><strong>Đối với người tiêu dùng:</strong> Mang lại trải nghiệm ẩm thực trọn vị, an toàn tuyệt đối cho sức khỏe.</span>
-                </li>
-              </ul>
-            </RevealBlock>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. NĂNG LỰC SẢN XUẤT & CHỨNG NHẬN (The Core) */}
-      <section className="py-24 md:py-32 bg-haq-bone">
-        <div className="mx-auto max-w-site px-6 md:px-12">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <RevealBlock>
-              <div className="font-mono text-xs tracking-[0.25em] uppercase text-haq-red font-bold mb-6">Năng lực cốt lõi</div>
-              <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight leading-[1.1] mb-8">
-                Hệ thống sản xuất <br /> đạt chuẩn Quốc Tế.
-              </h2>
-              <p className="text-lg text-haq-ink/75 leading-[1.8] mb-10">
-                Nhà máy sản xuất của HAQ Food được đầu tư bài bản, đáp ứng các tiêu chuẩn khắt khe nhất trong ngành công nghiệp thực phẩm. Chúng tôi minh bạch trong quy trình và tự hào sở hữu các chứng nhận uy tín.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-5">
-                  <div className="w-14 h-14 bg-white flex items-center justify-center shrink-0 rounded shadow-sm p-1">
-                    <img src={isoImg} alt="ISO" className="w-full h-full object-contain" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-xl text-haq-ink">ISO 22000:2018</h4>
-                    <p className="text-haq-ink/60 mt-2 leading-[1.6]">Hệ thống quản lý an toàn thực phẩm toàn diện. Kiểm soát chặt chẽ các mối nguy từ khâu nguyên liệu đầu vào đến khi thành phẩm đến tay khách hàng.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-5">
-                  <div className="w-14 h-14 bg-white flex items-center justify-center shrink-0 rounded shadow-sm p-1">
-                    <img src={haccpImg} alt="HACCP" className="w-full h-full object-contain" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-xl text-haq-ink">Tiêu chuẩn HACCP</h4>
-                    <p className="text-haq-ink/60 mt-2 leading-[1.6]">Phân tích mối nguy và điểm kiểm soát tới hạn. Đảm bảo mọi sản phẩm xuất xưởng đều đạt chuẩn vệ sinh an toàn thực phẩm mức cao nhất.</p>
-                  </div>
-                </div>
-              </div>
-            </RevealBlock>
-
-            <RevealBlock className="relative">
-              <div className="aspect-[4/5] bg-haq-ink p-8 flex flex-col justify-center">
-                <Factory className="w-16 h-16 text-haq-orange mb-8" />
-                <h3 className="font-heading font-bold text-4xl text-white mb-6">Giải pháp Gia công <br className="hidden sm:block" />OEM & ODM</h3>
-                <p className="text-white/70 text-lg leading-[1.8] mb-8">
-                  Với kinh nghiệm R&D và quy trình đóng gói linh hoạt, HAQ Food là đối tác gia công lý tưởng cho các doanh nghiệp muốn phát triển nhãn hàng riêng (Private Label).
-                </p>
-                <ul className="space-y-4 text-white/90">
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-haq-orange shrink-0" />
-                    Tùy biến công thức hương vị theo yêu cầu
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-haq-orange shrink-0" />
-                    Đa dạng quy cách đóng gói (Túi zip, hũ nhựa PET, hộp giấy)
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-haq-orange shrink-0" />
-                    Bảo mật thông tin khách hàng tuyệt đối
-                  </li>
-                </ul>
-              </div>
-            </RevealBlock>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. MẠNG LƯỚI ĐỐI TÁC */}
-      <section className="py-24 md:py-32 bg-white">
+      <section id="dinh-huong" className="scroll-mt-24 py-24 md:py-32 bg-haq-bone">
         <div className="mx-auto max-w-site px-6 md:px-12">
           <RevealBlock className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight mb-6">Mạng Lưới Đối Tác</h2>
-            <p className="text-lg text-haq-ink/70">
-              Sản phẩm của HAQ Food hiện đã có mặt tại các hệ thống siêu thị và cửa hàng tiện lợi lớn nhất Việt Nam, chứng minh sức hút của sản phẩm và năng lực cung ứng vững vàng của công ty.
-            </p>
+            <SectionEyebrow>Định hướng phát triển</SectionEyebrow>
+            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight">Tầm nhìn, sứ mệnh và giá trị cốt lõi</h2>
           </RevealBlock>
-
-          <RevealBlock>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-              {['WinMart', 'Circle K', 'GS25', 'Kmart', 'Go!', 'Bách Hóa Xanh'].map((partner, index) => (
-                <div key={index} className="group relative border border-black/10 p-8 md:p-10 flex items-center justify-center text-center hover:bg-haq-ink hover:border-haq-ink transition-colors duration-500 min-h-[140px]">
-                  <span className="font-heading font-extrabold text-3xl md:text-4xl tracking-tight text-haq-ink/80 group-hover:text-white transition-colors">
-                    {partner}
-                  </span>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <RevealBlock className="bg-white p-8 md:p-12 border border-black/5">
+              <Globe2 className="w-12 h-12 text-haq-orange mb-7" strokeWidth={1.6} />
+              <h3 className="font-heading font-bold text-3xl text-haq-ink mb-4">Tầm nhìn</h3>
+              <p className="text-haq-ink/70 leading-[1.8] text-lg">Trở thành doanh nghiệp tiên phong và dẫn đầu trong lĩnh vực sản xuất - phân phối đồ ăn vặt tại Việt Nam; mở rộng sang các thị trường tiêu chuẩn cao như Nhật Bản, Hàn Quốc và các quốc gia châu Á.</p>
+            </RevealBlock>
+            <RevealBlock className="bg-haq-ink p-8 md:p-12 border border-black/5">
+              <Building2 className="w-12 h-12 text-haq-orange mb-7" strokeWidth={1.6} />
+              <h3 className="font-heading font-bold text-3xl text-white mb-4">Sứ mệnh</h3>
+              <p className="text-white/75 leading-[1.8] text-lg">Mang đến các sản phẩm ngon - an toàn - đạt chuẩn, đáp ứng nhu cầu ngày càng cao của người tiêu dùng.</p>
+            </RevealBlock>
+          </div>
+          <RevealBlock className="mt-8 bg-white border border-black/5 p-8 md:p-12">
+            <h3 className="font-heading font-bold text-3xl text-haq-ink mb-8">Giá trị cốt lõi</h3>
+            <div className="grid md:grid-cols-2 gap-x-10 gap-y-5">
+              {VALUES.map((value) => (
+                <div key={value} className="flex items-start gap-3 text-haq-ink/80 leading-relaxed">
+                  <CheckCircle2 className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
+                  <span>{value}</span>
                 </div>
               ))}
             </div>
@@ -237,23 +209,92 @@ export default function CompanyProfilePage() {
         </div>
       </section>
 
-      {/* 6. CTA Cuối Trang */}
-      <section className="py-24 md:py-32 bg-haq-red text-white text-center border-t-8 border-haq-orange">
-        <div className="mx-auto max-w-3xl px-6">
+      <section id="nang-luc" className="scroll-mt-24 py-24 md:py-32 bg-white border-y border-black/10">
+        <div className="mx-auto max-w-site px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           <RevealBlock>
-            <h2 className="font-heading font-extrabold text-4xl md:text-5xl tracking-tight mb-8">
-              Bắt đầu hợp tác cùng HAQ Food
-            </h2>
-            <p className="text-xl text-white/90 leading-[1.6] mb-12">
-              Chúng tôi luôn sẵn sàng lắng nghe nhu cầu của bạn, cung cấp báo giá sỉ tốt nhất và thảo luận về các giải pháp OEM/ODM chuyên biệt.
-            </p>
-            <button 
-              onClick={handleContactClick}
-              className="inline-flex items-center gap-3 bg-white text-haq-ink px-10 py-5 text-lg font-bold hover:bg-haq-bone transition-colors shadow-2xl hover:shadow-none hover:translate-y-1 transform duration-300"
-            >
-              Yêu Cầu Báo Giá B2B <ArrowRight className="w-6 h-6 text-haq-orange" />
-            </button>
+            <SectionEyebrow>Năng lực sản xuất</SectionEyebrow>
+            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight leading-[1.1]">Nền tảng sản xuất và kiểm soát chất lượng</h2>
+            <div className="mt-10 space-y-5">
+              {CAPABILITIES.map((item) => (
+                <div key={item} className="flex gap-4 text-lg text-haq-ink/75 leading-relaxed">
+                  <CheckCircle2 className="w-6 h-6 text-haq-red shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </RevealBlock>
+          <RevealBlock className="bg-haq-ink text-white p-8 md:p-12">
+            <Factory className="w-14 h-14 text-haq-orange mb-8" strokeWidth={1.5} />
+            <h3 className="font-heading font-bold text-3xl md:text-4xl">Sản xuất theo yêu cầu đối tác</h3>
+            <p className="mt-6 text-white/75 text-lg leading-[1.8]">HAQ Hà Nội nhận sản xuất theo yêu cầu đối tác (OEM/ODM).</p>
+            <div className="mt-10 grid sm:grid-cols-2 gap-4">
+              {['ISO', 'HACCP'].map((cert) => (
+                <div key={cert} className="border border-white/20 p-5">
+                  <ShieldCheck className="w-6 h-6 text-haq-orange mb-4" />
+                  <div className="font-heading font-bold text-xl">{cert}</div>
+                </div>
+              ))}
+            </div>
+          </RevealBlock>
+        </div>
+      </section>
+
+      <section id="phan-phoi" className="scroll-mt-24 py-24 md:py-32 bg-haq-bone">
+        <div className="mx-auto max-w-site px-6 md:px-12">
+          <RevealBlock className="max-w-3xl">
+            <SectionEyebrow>Hệ thống phân phối</SectionEyebrow>
+            <h2 className="font-heading font-extrabold text-4xl md:text-5xl text-haq-ink tracking-tight">Thị trường trong nước và quốc tế</h2>
+            <p className="mt-6 text-lg text-haq-ink/70 leading-[1.8]">HAQ Hà Nội phân phối sản phẩm tới các hệ thống bán lẻ lớn và đưa sản phẩm ra thị trường Hàn Quốc, Đài Loan.</p>
+          </RevealBlock>
+          <RevealBlock className="mt-14">
+            <div className="flex items-center justify-between gap-5 mb-8">
+              <div className="flex items-center gap-3"><Store className="w-6 h-6 text-haq-red" /><h3 className="font-heading font-bold text-2xl text-haq-ink">Thị trường trong nước</h3></div>
+              <span className="hidden sm:block font-mono text-[10px] tracking-[0.16em] uppercase text-haq-ink/45">Đối tác phân phối</span>
+            </div>
+            <div className="relative overflow-hidden py-2">
+              <div className="distribution-marquee flex w-max items-center gap-12 pr-12 sm:gap-20 sm:pr-20">
+                {[...DOMESTIC_PARTNERS, ...DOMESTIC_PARTNERS].map((partner, index) => (
+                  <div key={`${partner.name}-${index}`} aria-hidden={index >= DOMESTIC_PARTNERS.length} className="flex h-24 w-40 shrink-0 items-center justify-center sm:w-48">
+                    <img src={partner.logo} alt={index < DOMESTIC_PARTNERS.length ? `Logo ${partner.name}` : ''} className="h-full w-full object-contain mix-blend-multiply" />
+                  </div>
+                ))}
+              </div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-haq-bone via-haq-bone/90 to-transparent sm:w-24" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-haq-bone via-haq-bone/90 to-transparent sm:w-24" />
+            </div>
+            <div className="mt-12 grid gap-7 border-t border-black/10 pt-8 lg:grid-cols-[0.9fr_1.1fr_auto] lg:items-center">
+              <div className="flex items-center gap-3 text-haq-ink">
+                <Globe2 className="w-6 h-6 text-haq-red" />
+                <h3 className="font-heading font-bold text-2xl">Thị trường quốc tế</h3>
+              </div>
+              <ul className="flex flex-wrap gap-x-8 gap-y-3">
+                {INTERNATIONAL_MARKETS.map(({ country, code }) => (
+                  <li key={country} className="flex items-center gap-3 text-lg font-medium text-haq-ink/80">
+                    <CountryFlag code={code} country={country} />
+                    <span>{country}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="max-w-sm text-sm leading-relaxed text-haq-ink/60 lg:text-right">Định hướng dài hạn: mở rộng sang Nhật Bản và các thị trường châu Á có tiêu chuẩn cao.</p>
+            </div>
+          </RevealBlock>
+        </div>
+      </section>
+
+      <section id="lien-he" className="scroll-mt-24 py-24 md:py-28 bg-haq-ink text-white">
+        <div className="mx-auto max-w-site px-6 md:px-12 grid lg:grid-cols-[1fr_auto] gap-10 items-end">
+          <RevealBlock>
+            <SectionEyebrow>Thông tin liên hệ</SectionEyebrow>
+            <h2 className="font-heading font-extrabold text-4xl md:text-5xl tracking-tight">CÔNG TY CỔ PHẦN HAQ HÀ NỘI</h2>
+            <div className="mt-10 grid md:grid-cols-3 gap-6 text-white/75">
+              <div className="flex gap-3"><MapPin className="w-5 h-5 text-haq-gold shrink-0 mt-1" /><span>Tổ 6, Phường Cầu Giấy, Thành phố Hà Nội, Việt Nam</span></div>
+              <a href="tel:02423235656" className="flex gap-3 hover:text-white"><Phone className="w-5 h-5 text-haq-gold shrink-0 mt-1" /><span>024 23 23 56 56</span></a>
+              <a href="mailto:info@haq.com.vn" className="flex gap-3 hover:text-white"><Mail className="w-5 h-5 text-haq-gold shrink-0 mt-1" /><span>info@haq.com.vn</span></a>
+            </div>
+          </RevealBlock>
+          <Link to="/lien-he" className="inline-flex items-center justify-center gap-3 min-h-[54px] px-8 bg-haq-orange text-haq-ink font-heading font-bold hover:bg-white transition-colors">
+            Liên hệ với chúng tôi <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 

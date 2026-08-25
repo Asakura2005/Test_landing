@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import { X, Plus, Trash2, Pin, Upload } from 'lucide-react'
-import { uploadProductImage, deleteProductImage } from '../../services/supabase'
+import { X, Plus, Trash2, Pin, Upload, Image as ImageIcon } from 'lucide-react'
+import { uploadProductImage, deleteProductImage, getCategories } from '../../services/supabase'
 
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount }) {
+  const [categories, setCategories] = useState([])
   const [formData, setFormData] = useState({
     slug: '',
     name: '',
     en_name: '',
     description: '',
     tag: '',
+    category: '', // for backward compatibility
+    category_id: '',
     highlights: [''],
     is_pinned: false,
-    model_3d: '',
+    images: [], // Global gallery
   })
   const [variants, setVariants] = useState([])
-  const [newImages, setNewImages] = useState({})
-  const [newModel3d, setNewModel3d] = useState(null)
+  const [galleryFiles, setGalleryFiles] = useState([]) // Files to be uploaded
+  const [galleryPreviews, setGalleryPreviews] = useState([]) // URLs for preview
+  const [imagesToDelete, setImagesToDelete] = useState([]) // URLs of old images to delete
   const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const data = await getCategories()
+        setCategories(data || [])
+      } catch (err) {
+        console.error("Lỗi tải danh mục:", err)
+      }
+    }
+    fetchCats()
+  }, [])
 
   useEffect(() => {
     if (product) {
@@ -26,9 +42,11 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         en_name: product.en_name || '',
         description: product.description || '',
         tag: product.tag || '',
+        category: product.category || '',
+        category_id: product.category_id || '',
         highlights: product.highlights?.length ? product.highlights : [''],
         is_pinned: product.is_pinned || false,
-        model_3d: product.model_3d || '',
+        images: product.images || [],
       })
       setVariants(product.variants || [])
     }
@@ -56,30 +74,42 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     setVariants(newVariants)
   }
 
-  const handleFileChange = (index, e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      setNewImages({ ...newImages, [index]: file })
-      
-      const previewUrl = URL.createObjectURL(file)
-      const newVariants = [...variants]
-      newVariants[index].imgPreview = previewUrl
-      setVariants(newVariants)
-    }
-  }
-
   const addVariant = () => {
-    setVariants([...variants, { size: '', img: '', shelf: '', pack: '', moq: '' }])
+    setVariants([...variants, { size: '', pack: '', shelf: '', moq: '' }])
   }
 
   const removeVariant = (index) => {
     setVariants(variants.filter((_, i) => i !== index))
-    
-    // Xóa file khỏi state nếu đã chọn file mới
-    const updatedImages = { ...newImages }
-    delete updatedImages[index]
-    setNewImages(updatedImages)
   }
+
+  // --- Gallery Handlers ---
+  const handleGalleryFiles = (e) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files)
+      setGalleryFiles([...galleryFiles, ...files])
+      
+      const previews = files.map(f => URL.createObjectURL(f))
+      setGalleryPreviews([...galleryPreviews, ...previews])
+    }
+  }
+
+  const removeNewGalleryImage = (index) => {
+    const newFiles = [...galleryFiles]
+    newFiles.splice(index, 1)
+    setGalleryFiles(newFiles)
+
+    const newPreviews = [...galleryPreviews]
+    newPreviews.splice(index, 1)
+    setGalleryPreviews(newPreviews)
+  }
+
+  const removeExistingGalleryImage = (index) => {
+    const newImages = [...formData.images]
+    const removedUrl = newImages.splice(index, 1)[0]
+    setFormData({ ...formData, images: newImages })
+    setImagesToDelete([...imagesToDelete, removedUrl])
+  }
+  // ------------------------
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -93,33 +123,31 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     setIsSaving(true)
     try {
       const slug = formData.slug || `product-${Date.now()}`
-      const processedVariants = [...variants]
       
-      // Xử lý upload file 3D nếu có
-      let finalModel3d = formData.model_3d
-      if (newModel3d) {
-        if (finalModel3d) {
-          await deleteProductImage(finalModel3d)
-        }
-        finalModel3d = await uploadProductImage(newModel3d, slug)
+      // Xóa ảnh cũ bị đánh dấu xóa
+      for (const url of imagesToDelete) {
+        await deleteProductImage(url)
       }
 
-      for (let i = 0; i < processedVariants.length; i++) {
-        if (newImages[i]) {
-          // Xóa ảnh cũ nếu có
-          if (processedVariants[i].img) {
-            await deleteProductImage(processedVariants[i].img)
-          }
-          // Upload ảnh mới
-          const newUrl = await uploadProductImage(newImages[i], slug)
-          processedVariants[i].img = newUrl
-        }
-        // Xóa URL tạm
-        delete processedVariants[i].imgPreview
+      // Upload ảnh mới
+      const newlyUploadedUrls = []
+      for (const file of galleryFiles) {
+        const newUrl = await uploadProductImage(file, slug)
+        newlyUploadedUrls.push(newUrl)
       }
+
+      // Gộp ảnh cũ còn giữ lại và ảnh mới
+      const finalImages = [...formData.images, ...newlyUploadedUrls]
 
       const cleanedHighlights = formData.highlights.filter(h => h.trim() !== '')
-      await onSave({ ...formData, highlights: cleanedHighlights, model_3d: finalModel3d }, processedVariants)
+      
+      // Cleanup variants by removing old img if any still exists in local state
+      const cleanedVariants = variants.map(v => {
+        const { img, imgPreview, ...rest } = v
+        return rest
+      })
+
+      await onSave({ ...formData, images: finalImages, highlights: cleanedHighlights }, cleanedVariants)
     } catch (err) {
       console.error(err)
       alert("Có lỗi xảy ra khi lưu: " + err.message)
@@ -130,7 +158,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl my-auto">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl my-auto">
         <div className="flex items-center justify-between p-6 border-b border-black/10">
           <h2 className="text-2xl font-bold">{product ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới'}</h2>
           <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors">
@@ -140,124 +168,185 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
 
         <form onSubmit={handleSubmit} className="p-6 max-h-[70vh] overflow-y-auto space-y-8">
           
-          {/* Thông tin chung */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-lg text-haq-orange">1. Thông tin chung</h3>
-              
-              <label className="flex items-center gap-2 bg-haq-bone px-4 py-2 rounded-lg cursor-pointer hover:bg-black/5 transition-colors border border-black/10">
-                <input 
-                  type="checkbox" 
-                  checked={formData.is_pinned}
-                  onChange={(e) => setFormData({...formData, is_pinned: e.target.checked})}
-                  className="w-4 h-4 text-haq-red rounded border-black/20 focus:ring-haq-red"
-                />
-                <Pin className={`w-4 h-4 ${formData.is_pinned ? 'text-haq-red fill-haq-red' : 'text-haq-ink/50'}`} />
-                <span className="text-sm font-semibold text-haq-ink">Ghim trang chủ (Max 6)</span>
-              </label>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-sm font-semibold">Tên sản phẩm *</label>
-                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Bánh Tráng Trộn" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-sm font-semibold">Slug (URL) *</label>
-                <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="banh-trang-tron" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-sm font-semibold">Tên tiếng Anh (Tùy chọn)</label>
-                <input type="text" value={formData.en_name} onChange={e => setFormData({...formData, en_name: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Mixed Rice Paper" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-sm font-semibold">Tag nổi bật (Tùy chọn)</label>
-                <input type="text" value={formData.tag} onChange={e => setFormData({...formData, tag: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Best Seller" />
-              </div>
-              <div className="col-span-2 space-y-1">
-                <label className="text-sm font-semibold">Mô tả</label>
-                <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-black/20 p-2 rounded" />
-              </div>
-              
-              <div className="col-span-2 space-y-1 mt-2 p-3 bg-haq-bone/30 rounded border border-black/10">
-                <label className="text-sm font-semibold text-haq-orange flex items-center gap-2">Mô hình 3D (.glb / .gltf) - Tùy chọn</label>
-                <div className="text-xs text-haq-ink/60 mb-2">Tải lên file 3D để khách hàng có thể xoay xem sản phẩm 360 độ.</div>
-                <input type="file" accept=".glb,.gltf" onChange={e => e.target.files && setNewModel3d(e.target.files[0])} className="w-full border border-black/20 p-1.5 rounded text-sm bg-white" />
-                {formData.model_3d && !newModel3d && <div className="text-xs text-green-600 mt-1 font-semibold">✓ Sản phẩm này đang có mô hình 3D.</div>}
-                {newModel3d && <div className="text-xs text-blue-600 mt-1 font-semibold">✓ Đã chọn file 3D: {newModel3d.name}</div>}
-              </div>
-            </div>
-          </div>
-
-          {/* Highlights */}
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-haq-orange">2. Điểm nổi bật (Highlights)</h3>
-            <div className="space-y-3">
-              {formData.highlights.map((hl, index) => (
-                <div key={index} className="flex gap-2">
-                  <input type="text" value={hl} onChange={e => handleHighlightChange(index, e.target.value)} className="flex-1 border border-black/20 p-2 rounded" placeholder="Ví dụ: Vị truyền thống" />
-                  <button type="button" onClick={() => removeHighlight(index)} className="p-2 text-red-500 hover:bg-red-50 rounded">
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+          <div className="grid lg:grid-cols-2 gap-8">
+            
+            {/* Cột Trái: Thông tin chung & Gallery */}
+            <div className="space-y-8">
+              {/* Thông tin chung */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-lg text-haq-orange">1. Thông tin cơ bản</h3>
                 </div>
-              ))}
-              <button type="button" onClick={addHighlight} className="text-sm flex items-center gap-1 text-haq-red font-semibold hover:underline">
-                <Plus className="w-4 h-4" /> Thêm điểm nổi bật
-              </button>
-            </div>
-          </div>
 
-          {/* Variants */}
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-haq-orange">3. Quy cách & Đóng gói (Variants)</h3>
-            <div className="space-y-6">
-              {variants.map((v, index) => (
-                <div key={index} className="border border-black/10 bg-haq-bone/30 p-4 rounded-lg relative">
-                  <button type="button" onClick={() => removeVariant(index)} className="absolute top-4 right-4 text-red-500 hover:bg-red-50 p-1 rounded">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mr-8">
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold">Kích cỡ (vd: 250g)</label>
-                      <input required type="text" value={v.size} onChange={e => handleVariantChange(index, 'size', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold">Đóng gói (vd: Hũ nhựa)</label>
-                      <input type="text" value={v.pack} onChange={e => handleVariantChange(index, 'pack', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold">Hạn sử dụng (vd: 6 tháng)</label>
-                      <input type="text" value={v.shelf} onChange={e => handleVariantChange(index, 'shelf', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold">MOQ (vd: 50 thùng)</label>
-                      <input type="text" value={v.moq} onChange={e => handleVariantChange(index, 'moq', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
-                    </div>
-                    <div className="col-span-2 space-y-1">
-                      <label className="text-xs font-semibold">Hình ảnh (Từ thiết bị)</label>
-                      <input type="file" accept="image/*" onChange={e => handleFileChange(index, e)} className="w-full border border-black/20 p-1.5 rounded text-sm bg-white" />
-                      {(v.imgPreview || v.img) && (
-                        <div className="mt-2 relative inline-block">
-                          <img src={v.imgPreview || v.img} alt="Preview" className="h-20 object-cover rounded border border-black/10" />
-                        </div>
-                      )}
-                    </div>
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Tên sản phẩm *</label>
+                    <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Bánh Tráng Trộn" />
                   </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Slug (URL) *</label>
+                    <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="banh-trang-tron" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Tên tiếng Anh (Tùy chọn)</label>
+                    <input type="text" value={formData.en_name} onChange={e => setFormData({...formData, en_name: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Mixed Rice Paper" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Danh mục (Category) *</label>
+                    <select 
+                      required 
+                      value={formData.category_id || ''} 
+                      onChange={e => {
+                        const selectedCat = categories.find(c => c.id === e.target.value)
+                        setFormData({
+                          ...formData, 
+                          category_id: e.target.value,
+                          category: selectedCat ? selectedCat.name : ''
+                        })
+                      }} 
+                      className="w-full border border-black/20 p-2 rounded bg-haq-bone"
+                    >
+                      <option value="">-- Chọn Danh mục (Mục Nhỏ) --</option>
+                      {categories.filter(c => !c.parent_id).map(parent => (
+                        <optgroup key={parent.id} label={`${parent.name} ${!parent.is_active ? '(Đang ẩn)' : ''}`}>
+                          {categories.filter(child => child.parent_id === parent.id).map(child => (
+                            <option key={child.id} value={child.id}>
+                              {child.name} {!child.is_active ? '(Đang ẩn)' : ''}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Tag nổi bật (Tùy chọn)</label>
+                    <input type="text" value={formData.tag} onChange={e => setFormData({...formData, tag: e.target.value})} className="w-full border border-black/20 p-2 rounded" placeholder="Best Seller" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold">Mô tả</label>
+                    <textarea rows={4} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-black/20 p-2 rounded" />
+                  </div>
+                  
+                  <label className="flex items-center gap-2 bg-haq-bone px-4 py-3 rounded-lg cursor-pointer hover:bg-black/5 transition-colors border border-black/10">
+                    <input 
+                      type="checkbox" 
+                      checked={formData.is_pinned}
+                      onChange={(e) => setFormData({...formData, is_pinned: e.target.checked})}
+                      className="w-4 h-4 text-haq-red rounded border-black/20 focus:ring-haq-red"
+                    />
+                    <Pin className={`w-4 h-4 ${formData.is_pinned ? 'text-haq-red fill-haq-red' : 'text-haq-ink/50'}`} />
+                    <span className="text-sm font-semibold text-haq-ink">Ghim ra Trang chủ (Tối đa 6 sản phẩm)</span>
+                  </label>
                 </div>
-              ))}
-              <button type="button" onClick={addVariant} className="text-sm flex items-center gap-1 text-haq-red font-semibold hover:underline">
-                <Plus className="w-4 h-4" /> Thêm quy cách đóng gói
-              </button>
+              </div>
+
+            </div>
+
+            {/* Cột Phải: Highlights & Variants */}
+            <div className="space-y-8">
+              
+              {/* Thư viện ảnh chung */}
+              <div>
+                <h3 className="font-bold text-lg mb-4 text-haq-orange flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5"/> 2. Thư viện ảnh
+                </h3>
+                <div className="border border-black/10 p-4 rounded-lg bg-haq-bone/30">
+                  
+                  {/* Grid ảnh đã upload & Preview ảnh mới */}
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+                    {/* Ảnh cũ từ DB */}
+                    {formData.images.map((url, idx) => (
+                      <div key={`old-${idx}`} className="relative aspect-square rounded-md overflow-hidden border border-black/10 bg-white group">
+                        <img src={url} alt={`img-${idx}`} className="w-full h-full object-contain" />
+                        <button type="button" onClick={() => removeExistingGalleryImage(idx)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                    {/* Ảnh mới đang preview */}
+                    {galleryPreviews.map((url, idx) => (
+                      <div key={`new-${idx}`} className="relative aspect-square rounded-md overflow-hidden border-2 border-haq-orange/50 bg-white group">
+                        <span className="absolute top-0 left-0 bg-haq-orange text-white text-[10px] font-bold px-1 rounded-br z-10">NEW</span>
+                        <img src={url} alt={`new-img-${idx}`} className="w-full h-full object-contain" />
+                        <button type="button" onClick={() => removeNewGalleryImage(idx)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded hover:bg-red-50 shadow-sm z-10">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Nút Upload */}
+                    <label className="aspect-square rounded-md border-2 border-dashed border-black/20 bg-white hover:bg-black/5 cursor-pointer flex flex-col items-center justify-center text-haq-ink/50 transition-colors">
+                      <Upload className="w-6 h-6 mb-1" />
+                      <span className="text-xs font-semibold">Tải ảnh</span>
+                      <input type="file" multiple accept="image/*" onChange={handleGalleryFiles} className="hidden" />
+                    </label>
+                  </div>
+                  <p className="text-xs text-haq-ink/50 italic">Bạn có thể chọn nhiều ảnh cùng lúc. Ảnh đầu tiên sẽ làm ảnh đại diện chính.</p>
+                </div>
+              </div>
+
+              {/* Điểm nổi bật */}
+              <div>
+                <h3 className="font-bold text-lg mb-4 text-haq-orange">3. Điểm nổi bật (Highlights)</h3>
+                <div className="space-y-3">
+                  {formData.highlights.map((hl, index) => (
+                    <div key={index} className="flex gap-2">
+                      <input type="text" value={hl} onChange={e => handleHighlightChange(index, e.target.value)} className="flex-1 border border-black/20 p-2 rounded" placeholder="Ví dụ: Vị gà lá chanh" />
+                      <button type="button" onClick={() => removeHighlight(index)} className="p-2 text-red-500 hover:bg-red-50 rounded">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addHighlight} className="text-sm flex items-center gap-1 text-haq-red font-semibold hover:underline">
+                    <Plus className="w-4 h-4" /> Thêm điểm nổi bật
+                  </button>
+                </div>
+              </div>
+
+              {/* Variants */}
+              <div>
+                <h3 className="font-bold text-lg mb-4 text-haq-orange">4. Quy cách đóng gói (Variants)</h3>
+                <div className="space-y-4">
+                  {variants.map((v, index) => (
+                    <div key={index} className="border border-black/10 bg-haq-bone/30 p-4 rounded-lg relative">
+                      <button type="button" onClick={() => removeVariant(index)} className="absolute top-2 right-2 text-red-500 hover:bg-red-50 p-1.5 rounded">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <div className="grid grid-cols-2 gap-3 mr-6">
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold">Kích cỡ (vd: 250g)</label>
+                          <input required type="text" value={v.size} onChange={e => handleVariantChange(index, 'size', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold">Đóng gói (vd: Hũ nhựa)</label>
+                          <input type="text" value={v.pack} onChange={e => handleVariantChange(index, 'pack', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold">Hạn sử dụng (vd: 6 tháng)</label>
+                          <input type="text" value={v.shelf} onChange={e => handleVariantChange(index, 'shelf', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold">MOQ (vd: 50 thùng)</label>
+                          <input type="text" value={v.moq} onChange={e => handleVariantChange(index, 'moq', e.target.value)} className="w-full border border-black/20 p-2 rounded text-sm" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addVariant} className="text-sm flex items-center gap-1 text-haq-red font-semibold hover:underline">
+                    <Plus className="w-4 h-4" /> Thêm quy cách đóng gói
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
-
         </form>
 
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-black/10 bg-haq-bone">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-black/10 bg-haq-bone rounded-b-xl">
           <button type="button" onClick={onClose} className="px-6 py-2 rounded font-semibold text-haq-ink hover:bg-black/5">
             Hủy
           </button>
-          <button onClick={handleSubmit} disabled={isSaving} className="px-6 py-2 rounded font-semibold bg-haq-red text-white hover:bg-red-700 disabled:opacity-50 flex items-center gap-2">
+          <button onClick={handleSubmit} disabled={isSaving} className="px-8 py-2.5 rounded font-bold bg-haq-red text-white hover:bg-red-700 disabled:opacity-50 flex items-center gap-2 shadow-md">
             {isSaving ? 'Đang lưu...' : 'Lưu sản phẩm'}
           </button>
         </div>

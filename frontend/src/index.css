@@ -10,7 +10,22 @@ html {
 body {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   color: #1A1A1A;
-  background-color: #F9F7F2;
+  background-color: #FFF8E7;
+}
+
+::selection {
+  background-color: #DAA520;
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  background: #DAA520;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #BE1E2D;
+  border-radius: 10px;
 }
 
 /* ── Reveal animation ─────────────────────────────────── */
@@ -89,6 +104,25 @@ body {
 
 .animate-partners-marquee {
   animation: partners-marquee 10s linear infinite !important;
+}
+
+/* Distribution logos move in the requested left-to-right direction. */
+@keyframes distribution-marquee {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.distribution-marquee {
+  animation: distribution-marquee 24s linear infinite !important;
+  will-change: transform;
+}
+
+.distribution-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* ── Reduced motion ───────────────────────────────────── */

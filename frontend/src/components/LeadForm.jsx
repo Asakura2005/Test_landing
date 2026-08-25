@@ -66,11 +66,10 @@ export default function LeadForm() {
             <h2 className="font-heading font-extrabold text-3xl md:text-5xl tracking-[-0.02em] leading-[1.05]">
               Trở thành đối tác
               <br />
-              <span className="text-haq-orange">phân phối HAQ FOOD.</span>
+              <span className="text-haq-orange">phân phối HAQ Hà Nội.</span>
             </h2>
             <p className="mt-6 text-white/70 text-lg leading-[1.6] max-w-md">
-              Để lại thông tin, đội ngũ kinh doanh B2B sẽ liên hệ gửi bảng báo giá sỉ
-              và hồ sơ năng lực trong vòng 24 giờ làm việc.
+              Để lại thông tin để HAQ Hà Nội liên hệ và trao đổi về nhu cầu hợp tác của bạn.
             </p>
 
             {/* Contact info */}
@@ -81,7 +80,7 @@ export default function LeadForm() {
                 </span>
                 <span>
                   <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Hotline B2B
+                    Hotline
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
                     024 23 23 56 56
@@ -89,13 +88,13 @@ export default function LeadForm() {
                 </span>
               </a>
 
-              <a href="mailto:wholesale@haqfood.vn" className="flex items-start gap-4 group">
+              <a href="mailto:info@haq.com.vn" className="flex items-start gap-4 group">
                 <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
                   <Mail className="w-5 h-5 text-white" strokeWidth={1.8} />
                 </span>
                 <span>
                   <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Email kinh doanh
+                    Email
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
                     info@haq.com.vn
@@ -103,12 +102,7 @@ export default function LeadForm() {
                 </span>
               </a>
 
-              <a
-                href="https://maps.app.goo.gl/McrVepx9uMcUc1pKA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-4 group"
-              >
+              <div className="flex items-start gap-4">
                 <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
                   <MapPin className="w-5 h-5 text-white" strokeWidth={1.8} />
                 </span>
@@ -117,11 +111,11 @@ export default function LeadForm() {
                     Trụ sở chính
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
-                    Số 30, Ngõ 1 Phạm Tuấn Tài,<br/>
-                    Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam
+                    Tổ 6, Phường Cầu Giấy,<br/>
+                    Thành phố Hà Nội, Việt Nam
                   </span>
                 </span>
-              </a>
+              </div>
             </div>
           </div>
 
@@ -136,8 +130,7 @@ export default function LeadForm() {
                     Đã ghi nhận yêu cầu của bạn.
                   </h3>
                   <p className="mt-3 text-white/70 max-w-md">
-                    Hồ sơ báo giá sỉ sẽ được gửi đến bạn trong vòng 24 giờ.
-                    Cảm ơn bạn đã tin tưởng HAQ FOOD.
+                    HAQ Hà Nội sẽ liên hệ với bạn sớm.
                   </p>
                   <button
                     onClick={() => setStatus('idle')}
@@ -224,9 +217,6 @@ export default function LeadForm() {
                     )}
                   </button>
 
-                  <p className="font-mono text-[11px] text-white/40 text-center tracking-wider">
-                    Thông tin của bạn được bảo mật &amp; chỉ dùng cho mục đích liên hệ kinh doanh.
-                  </p>
                 </form>
               )}
             </div>

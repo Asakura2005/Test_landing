@@ -3,6 +3,7 @@ import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users } from 'luc
 import { getProducts, deleteProduct, createProduct, updateProduct } from '../services/supabase'
 import ProductModal from '../components/admin/ProductModal'
 import LeadsManager from '../components/admin/LeadsManager'
+import CategoryManager from '../components/admin/CategoryManager'
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -152,6 +153,14 @@ export default function Admin() {
             <Package className="w-5 h-5" /> Quản lý sản phẩm
           </button>
           <button 
+            onClick={() => setActiveTab('categories')}
+            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
+              activeTab === 'categories' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+            }`}
+          >
+            <Pin className="w-5 h-5" /> Quản lý danh mục
+          </button>
+          <button 
             onClick={() => setActiveTab('leads')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
               activeTab === 'leads' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
@@ -171,6 +180,8 @@ export default function Admin() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {activeTab === 'leads' ? (
           <LeadsManager />
+        ) : activeTab === 'categories' ? (
+          <CategoryManager products={products} />
         ) : (
           <>
             {/* Header */}
@@ -208,7 +219,7 @@ export default function Admin() {
                         <tr className="bg-haq-bone border-b border-black/10 text-xs uppercase tracking-wider text-haq-ink/60">
                           <th className="p-4 font-mono w-[5%] text-center">Ghim</th>
                           <th className="p-4 font-mono w-[30%]">Sản phẩm</th>
-                          <th className="p-4 font-mono w-[15%]">Tag</th>
+                          <th className="p-4 font-mono w-[15%]">Danh mục</th>
                           <th className="p-4 font-mono w-[30%]">Mô tả ngắn</th>
                           <th className="p-4 font-mono w-[10%] text-center">Variants</th>
                           <th className="p-4 font-mono w-[10%] text-right">Thao tác</th>
@@ -231,12 +242,11 @@ export default function Admin() {
                               <div className="text-xs text-haq-ink/50 mt-1">{p.slug}</div>
                             </td>
                             <td className="p-4">
-                              {p.tag ? (
-                                <span className="inline-block bg-haq-red/10 text-haq-red text-xs px-2 py-1 rounded font-semibold whitespace-nowrap">
+                              <div className="font-bold text-haq-ink/80">{p.category || 'Chưa phân loại'}</div>
+                              {p.tag && (
+                                <span className="inline-block bg-haq-red/10 text-haq-red text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap mt-1">
                                   {p.tag}
-                                </span>
-                              ) : (
-                                <span className="text-black/20">-</span>
+                               </span>
                               )}
                             </td>
                             <td className="p-4">
