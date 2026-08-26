@@ -4,27 +4,25 @@ import {
   Menu,
   X,
   ChevronDown,
-  ChevronRight,
   ArrowRight,
   Sparkles,
-  Layers,
+  ShieldCheck,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
 import { getCategories } from '../services/supabase'
 
 const ABOUT_LINKS = [
-  { label: 'Tổng quan HAQ FOOD', path: '/#gioi-thieu', desc: 'Thành lập năm 2021 tại Hà Nội' },
-  { label: 'Lịch sử phát triển', path: '/#hanh-trinh', desc: 'Hành trình 2021 - 2025' },
-  { label: 'Tầm nhìn & Sứ mệnh', path: '/#tam-nhin', desc: 'Vươn tầm thị trường châu Á' },
-  { label: 'Giá trị cốt lõi', path: '/#tam-nhin', desc: '5 nguyên tắc Quality First' },
+  { label: 'Tổng quan HAQ FOOD', path: '/gioi-thieu#gioi-thieu', desc: 'Thành lập năm 2021 tại Hà Nội' },
+  { label: 'Hành trình phát triển', path: '/gioi-thieu#hanh-trinh', desc: 'Dấu mốc 2021 - 2025' },
+  { label: 'Tầm nhìn & Sứ mệnh', path: '/gioi-thieu#dinh-huong', desc: 'Vươn tầm thị trường châu Á' },
 ]
 
 const CAPABILITY_LINKS = [
-  { label: 'Năng lực sản xuất', path: '/#nang-luc', desc: 'Dây chuyền chế biến khép kín' },
-  { label: 'Chất lượng & an toàn', path: '/#chat-luong', desc: 'Chứng nhận ISO 22000 & HACCP' },
-  { label: 'OEM / ODM', path: '/#hop-tac', desc: 'Gia công theo yêu cầu đối tác' },
-  { label: 'Logistics & phân phối', path: '/#phan-phoi', desc: 'Kiểm soát và lưu mẫu từng lô' },
+  { label: 'Năng lực sản xuất', path: '/nang-luc#nha-may', desc: 'Dây chuyền sấy giòn khép kín' },
+  { label: 'Tiêu chuẩn chất lượng', path: '/nang-luc#chat-luong', desc: 'Chứng nhận ISO 22000 & HACCP' },
+  { label: 'Gia công OEM / ODM', path: '/nang-luc#oem-odm', desc: 'Sản xuất theo yêu cầu đối tác' },
+  { label: 'Mạng lưới phân phối', path: '/nang-luc#phan-phoi', desc: '3.000+ điểm bán & xuất khẩu' },
 ]
 
 export default function StickyNav() {
@@ -40,7 +38,6 @@ export default function StickyNav() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // 1. Fetch live categories from database
   useEffect(() => {
     const fetchCats = async () => {
       try {
@@ -55,14 +52,13 @@ export default function StickyNav() {
     fetchCats()
   }, [])
 
-  // Build category hierarchy tree
   const categoryTree = useMemo(() => {
     return buildCategoryTree(dbCategories)
   }, [dbCategories])
 
   useEffect(() => {
     if (categoryTree && categoryTree.length > 1 && !hoveredCategory) {
-      setHoveredCategory(categoryTree[1]) // Select first real category (Bánh Tráng)
+      setHoveredCategory(categoryTree[1])
     }
   }, [categoryTree, hoveredCategory])
 
@@ -74,13 +70,11 @@ export default function StickyNav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close menus on page change
   useEffect(() => {
     setMobileOpen(false)
     setActiveMenu(null)
   }, [location.pathname, location.search])
 
-  // Keyboard accessibility: Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -109,6 +103,11 @@ export default function StickyNav() {
   }
 
   const isProductsActive = location.pathname.startsWith('/san-pham')
+  const isAboutActive = location.pathname.startsWith('/gioi-thieu')
+  const isCapabilitiesActive = location.pathname.startsWith('/nang-luc')
+  const isNewsActive = location.pathname.startsWith('/tin-tuc')
+  const isContactActive = location.pathname.startsWith('/lien-he')
+
   const activePreviewCat = hoveredCategory || categoryTree[1] || categoryTree[0]
 
   return (
@@ -120,7 +119,7 @@ export default function StickyNav() {
       }`}
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between w-full">
-        {/* 1. Logo HAQ FOOD (Click to go Home) */}
+        {/* 1. Corporate Brand Logo */}
         <Link
           to="/"
           className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
@@ -143,24 +142,22 @@ export default function StickyNav() {
           </div>
         </Link>
 
-        {/* 2. Clean Desktop Navigation (Only 4 Primary Links + 1 CTA) */}
+        {/* 2. Desktop Navigation (5 Essential Items) */}
         <nav
           aria-label="Thanh điều hướng chính"
           className="hidden md:flex items-center gap-6 lg:gap-8"
           onMouseLeave={handleMouseLeave}
         >
-          {/* GIỚI THIỆU (Dropdown) */}
+          {/* GIỚI THIỆU */}
           <div
             className="relative"
             onMouseEnter={() => handleMouseEnter('gioi-thieu')}
           >
-            <button
-              type="button"
-              aria-expanded={activeMenu === 'gioi-thieu'}
-              aria-haspopup="true"
-              onClick={() => navigate('/gioi-thieu')}
+            <Link
+              to="/gioi-thieu"
+              aria-current={isAboutActive ? 'page' : undefined}
               className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-                activeMenu === 'gioi-thieu' || location.pathname === '/gioi-thieu'
+                activeMenu === 'gioi-thieu' || isAboutActive
                   ? 'text-haq-red'
                   : 'text-haq-ink hover:text-haq-red'
               }`}
@@ -168,9 +165,9 @@ export default function StickyNav() {
               <span>GIỚI THIỆU</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'gioi-thieu' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
-                activeMenu === 'gioi-thieu' || location.pathname === '/gioi-thieu' ? 'w-full' : 'w-0'
+                activeMenu === 'gioi-thieu' || isAboutActive ? 'w-full' : 'w-0'
               }`} />
-            </button>
+            </Link>
 
             {activeMenu === 'gioi-thieu' && (
               <div
@@ -201,12 +198,9 @@ export default function StickyNav() {
             className="relative"
             onMouseEnter={() => handleMouseEnter('san-pham')}
           >
-            <button
-              type="button"
-              aria-expanded={activeMenu === 'san-pham'}
-              aria-haspopup="true"
+            <Link
+              to="/san-pham"
               aria-current={isProductsActive ? 'page' : undefined}
-              onClick={() => navigate('/san-pham')}
               className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
                 activeMenu === 'san-pham' || isProductsActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
               }`}
@@ -216,7 +210,7 @@ export default function StickyNav() {
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
                 activeMenu === 'san-pham' || isProductsActive ? 'w-full' : 'w-0'
               }`} />
-            </button>
+            </Link>
 
             {activeMenu === 'san-pham' && (
               <div
@@ -224,14 +218,14 @@ export default function StickyNav() {
                 className="absolute top-full -left-20 lg:-left-16 mt-2 w-[740px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="grid grid-cols-12 gap-6">
-                  {/* Left Column: Dynamic Database Category List (Col 7) */}
+                  {/* Left Column: Dynamic Database Categories */}
                   <div className="col-span-7 border-r border-black/10 pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
                     <div className="text-[11px] font-mono font-bold tracking-widest text-haq-red uppercase mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>DANH MỤC SẢN PHẨM</span>
                       </div>
-                      <span className="text-[10px] text-haq-ink/50 font-normal">DATABASE LIVE</span>
+                      <span className="text-[10px] text-haq-ink/50 font-normal">HAQ FOOD CATALOG</span>
                     </div>
 
                     {categoryTree.map((cat) => {
@@ -294,7 +288,7 @@ export default function StickyNav() {
                     </div>
                   </div>
 
-                  {/* Right Column: Dynamic Preview Card (Col 5) */}
+                  {/* Right Column: Preview Card */}
                   <div className="col-span-5 flex flex-col justify-between bg-haq-bone rounded-2xl p-5 border border-black/5">
                     <div>
                       <div className="text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-2">
@@ -325,23 +319,26 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* NĂNG LỰC (Dropdown) */}
+          {/* NĂNG LỰC */}
           <div
             className="relative"
             onMouseEnter={() => handleMouseEnter('nang-luc')}
           >
-            <button
-              type="button"
-              aria-expanded={activeMenu === 'nang-luc'}
-              aria-haspopup="true"
+            <Link
+              to="/nang-luc"
+              aria-current={isCapabilitiesActive ? 'page' : undefined}
               className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-                activeMenu === 'nang-luc' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+                activeMenu === 'nang-luc' || isCapabilitiesActive
+                  ? 'text-haq-red'
+                  : 'text-haq-ink hover:text-haq-red'
               }`}
             >
               <span>NĂNG LỰC</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'nang-luc' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${activeMenu === 'nang-luc' ? 'w-full' : 'w-0'}`} />
-            </button>
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+                activeMenu === 'nang-luc' || isCapabilitiesActive ? 'w-full' : 'w-0'
+              }`} />
+            </Link>
 
             {activeMenu === 'nang-luc' && (
               <div
@@ -370,19 +367,33 @@ export default function StickyNav() {
           {/* TIN TỨC */}
           <Link
             to="/tin-tuc"
-            aria-current={location.pathname === '/tin-tuc' ? 'page' : undefined}
+            aria-current={isNewsActive ? 'page' : undefined}
             className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-              location.pathname === '/tin-tuc' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+              isNewsActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
             }`}
           >
             <span>TIN TỨC</span>
             <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
-              location.pathname === '/tin-tuc' ? 'w-full' : 'w-0 group-hover:w-full'
+              isNewsActive ? 'w-full' : 'w-0 group-hover:w-full'
+            }`} />
+          </Link>
+
+          {/* LIÊN HỆ (Nav link) */}
+          <Link
+            to="/lien-he"
+            aria-current={isContactActive ? 'page' : undefined}
+            className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
+              isContactActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+            }`}
+          >
+            <span>LIÊN HỆ</span>
+            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+              isContactActive ? 'w-full' : 'w-0 group-hover:w-full'
             }`} />
           </Link>
         </nav>
 
-        {/* 3. Single Minimal CTA: LIÊN HỆ → */}
+        {/* 3. CTA: LIÊN HỆ → */}
         <div className="hidden md:flex items-center">
           <Link
             to="/lien-he"
@@ -409,7 +420,7 @@ export default function StickyNav() {
       {/* Mobile Drawer (Accordion) */}
       {mobileOpen && (
         <div className="md:hidden bg-white border-b border-black/10 px-6 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
-          {/* Accordion: GIỚI THIỆU */}
+          {/* GIỚI THIỆU */}
           <div className="border-b border-black/5 pb-2">
             <button
               type="button"
@@ -421,6 +432,13 @@ export default function StickyNav() {
             </button>
             {mobileAccordion === 'gioi-thieu' && (
               <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
+                <Link
+                  to="/gioi-thieu"
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-1 font-bold text-haq-red"
+                >
+                  Trang Giới thiệu Doanh nghiệp →
+                </Link>
                 {ABOUT_LINKS.map((item, idx) => (
                   <a
                     key={idx}
@@ -435,7 +453,7 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* Accordion: SẢN PHẨM (Dynamic DB) */}
+          {/* SẢN PHẨM */}
           <div className="border-b border-black/5 pb-2">
             <button
               type="button"
@@ -483,7 +501,7 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* Accordion: NĂNG LỰC */}
+          {/* NĂNG LỰC */}
           <div className="border-b border-black/5 pb-2">
             <button
               type="button"
@@ -495,6 +513,13 @@ export default function StickyNav() {
             </button>
             {mobileAccordion === 'nang-luc' && (
               <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
+                <Link
+                  to="/nang-luc"
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-1 font-bold text-haq-red"
+                >
+                  Trang Năng lực Sản xuất & Chất lượng →
+                </Link>
                 {CAPABILITY_LINKS.map((item, idx) => (
                   <a
                     key={idx}
@@ -520,7 +545,7 @@ export default function StickyNav() {
             </Link>
           </div>
 
-          {/* Single Mobile CTA */}
+          {/* LIÊN HỆ */}
           <div className="pt-4">
             <Link
               to="/lien-he"

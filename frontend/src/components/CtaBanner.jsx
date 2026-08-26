@@ -1,38 +1,38 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles } from 'lucide-react'
-import { useReveal } from '../hooks/useReveal'
+import { ArrowRight, PhoneCall } from 'lucide-react'
 
 export default function CtaBanner() {
-  const ref = useReveal()
-
   return (
-    <section className="py-20 md:py-28 bg-haq-red text-white relative overflow-hidden">
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
-        <div ref={ref} className="reveal max-w-3xl mx-auto text-center flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xs px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-widest uppercase mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-haq-gold" />
-            <span>KẾT NỐI DOANH NGHIỆP</span>
-          </div>
+    <section className="py-24 sm:py-28 bg-haq-bone border-b border-black/5">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 text-center max-w-3xl">
+        <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-haq-red">
+          HAQ FOOD · PARTNERSHIP
+        </span>
 
-          <h2 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-[1.08]">
-            SẴN SÀNG ĐỒNG HÀNH <br />
-            CÙNG HAQ FOOD?
-          </h2>
+        <h2 className="mt-3 font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+          CÙNG TẠO NÊN NHỮNG GIÁ TRỊ TỐT ĐẸP
+        </h2>
 
-          <p className="mt-6 text-sm sm:text-base text-white/85 max-w-xl leading-relaxed">
-            HAQ FOOD cung cấp sản phẩm chất lượng và giải pháp sản xuất theo yêu cầu (OEM/ODM) phù hợp với các đối tác phân phối và bán lẻ trên toàn quốc.
-          </p>
+        <p className="mt-4 text-sm sm:text-base text-haq-ink/75 max-w-xl mx-auto leading-relaxed">
+          Đồng hành cùng HAQ FOOD trong hành trình mang sản phẩm thực phẩm Việt chất lượng cao đến đông đảo người tiêu dùng.
+        </p>
 
-          <div className="mt-10">
-            <Link
-              to="/lien-he"
-              className="group inline-flex items-center gap-2.5 bg-white hover:bg-haq-ink text-haq-red hover:text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-4 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <span>LIÊN HỆ</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            to="/lien-he"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-haq-red hover:bg-haq-ink text-white text-xs sm:text-sm font-heading font-black uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-xl"
+          >
+            <span>LIÊN HỆ HAQ FOOD</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+
+          <Link
+            to="/san-pham"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-black/5 text-haq-ink border border-black/15 text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300"
+          >
+            <span>KHÁM PHÁ SẢN PHẨM</span>
+          </Link>
         </div>
       </div>
     </section>

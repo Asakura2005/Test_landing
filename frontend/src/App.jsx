@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import CompanyProfilePage from './pages/CompanyProfilePage.jsx'
+import CapabilitiesPage from './pages/CapabilitiesPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import HeritagePage from './pages/HeritagePage.jsx'
 import NewsPage from './pages/NewsPage.jsx'
@@ -17,6 +18,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
+          <Route path="/nang-luc" element={<CapabilitiesPage />} />
           <Route path="/san-pham" element={<ProductsPage />} />
           <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
           <Route path="/tin-tuc" element={<NewsPage />} />
