@@ -148,11 +148,9 @@ export default function StickyNav() {
             <span className="font-heading font-black text-xl sm:text-2xl tracking-tight text-haq-ink leading-none">
               HAQ <span className="text-haq-red">FOOD</span>
             </span>
-            <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mt-0.5">
-              EST. 2021
-            </span>
           </div>
         </Link>
+
 
         {/* 2. Desktop Navigation (Standard Corporate Architecture) */}
         <nav

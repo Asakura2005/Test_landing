@@ -48,7 +48,7 @@ export default function Hero() {
       aria-label="HAQ FOOD Hero Showcase"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative w-full min-h-[90vh] lg:min-h-screen bg-haq-ink text-white overflow-hidden flex items-center justify-center pt-20"
+      className="relative w-full min-h-[520px] xs:min-h-[580px] sm:min-h-[700px] lg:min-h-screen bg-haq-ink text-white overflow-hidden flex items-center justify-center pt-16 sm:pt-20"
     >
       {/* 1. Cinematic Background Slider */}
       {SLIDES.map((slide, idx) => (
@@ -73,45 +73,46 @@ export default function Hero() {
       ))}
 
       {/* 2. Hero Content Container */}
-      <div className="relative z-10 mx-auto max-w-site px-6 sm:px-8 lg:px-12 w-full py-16 sm:py-20 md:py-28">
+      <div className="relative z-10 mx-auto max-w-site px-5 sm:px-8 lg:px-12 w-full py-10 sm:py-20 md:py-28">
         <div className="max-w-3xl">
           {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 mb-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <ShieldCheck className="w-3.5 h-3.5 text-haq-gold" />
-            <span className="font-mono text-[9px] xs:text-[10px] sm:text-xs font-bold tracking-[0.15em] sm:tracking-widest uppercase text-white/90">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 mb-4 sm:mb-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-haq-gold" />
+            <span className="font-mono text-[8px] xs:text-[9px] sm:text-xs font-bold tracking-[0.12em] sm:tracking-widest uppercase text-white/90">
               {SLIDES[current].eyebrow}
             </span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="font-heading font-black text-3xl xs:text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-6">
+          <h1 className="font-heading font-black text-2xl xs:text-3xl sm:text-5xl lg:text-7xl text-white tracking-tight uppercase leading-[1.12] sm:leading-[1.08] mb-4 sm:mb-6">
             {SLIDES[current].title}
           </h1>
 
           {/* Subtext */}
-          <p className="text-sm xs:text-base sm:text-lg lg:text-xl text-white/80 leading-relaxed max-w-2xl mb-8 sm:mb-10 font-normal line-clamp-3 sm:line-clamp-none">
+          <p className="text-xs xs:text-sm sm:text-lg lg:text-xl text-white/75 leading-relaxed max-w-2xl mb-6 sm:mb-10 font-normal line-clamp-3 sm:line-clamp-none">
             {SLIDES[current].subtext}
           </p>
 
           {/* 2 Clear CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4">
             <Link
               to="/san-pham"
-              className="inline-flex items-center justify-center gap-2.5 bg-haq-red hover:bg-white text-white hover:text-haq-ink text-xs sm:text-sm font-heading font-black uppercase tracking-wider px-8 py-4 sm:py-4.5 rounded-xl sm:rounded-full transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 sm:active:scale-102"
+              className="inline-flex items-center justify-center gap-2 bg-haq-red hover:bg-white text-white hover:text-haq-ink text-[11px] sm:text-sm font-heading font-black uppercase tracking-wider px-6 py-3.5 sm:py-4.5 rounded-xl sm:rounded-full transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 sm:active:scale-102"
             >
               <span>KHÁM PHÁ SẢN PHẨM</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
 
             <Link
               to="/gioi-thieu"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-4 sm:py-4.5 rounded-xl sm:rounded-full backdrop-blur-xs transition-all duration-300 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 text-[11px] sm:text-sm font-heading font-bold uppercase tracking-wider px-5 py-3.5 sm:py-4.5 rounded-xl sm:rounded-full backdrop-blur-xs transition-all duration-300 active:scale-98"
             >
               <span>VỀ HAQ FOOD</span>
             </Link>
           </div>
         </div>
       </div>
+
 
 
       {/* 3. Slider Navigation Controls */}
