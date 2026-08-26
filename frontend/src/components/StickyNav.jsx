@@ -8,44 +8,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
-import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
-import heroBanner2 from '../assets/herobanner/Gemini_Generated_Image_bbdxopbbdxopbbdx.png'
-import heroBanner3 from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
-
-const PRODUCT_CATEGORIES = [
-  {
-    id: 'banh-trang',
-    name: 'Bánh tráng',
-    slug: 'banh-trang',
-    desc: 'Bánh tráng sấy giòn vị bò, tôm, phô mai & bánh tráng trộn chuẩn vị truyền thống.',
-    image: heroBanner1,
-    featured: 'Bánh tráng trộn HAQ',
-  },
-  {
-    id: 'banh',
-    name: 'Bánh',
-    slug: 'banh',
-    desc: 'Bánh hạnh nhân & bánh đậu xanh thượng hạng đạt chuẩn xuất khẩu sang thị trường châu Á.',
-    image: heroBanner3,
-    featured: 'Bánh hạnh nhân & đậu xanh',
-  },
-  {
-    id: 'do-an-vat',
-    name: 'Đồ ăn vặt',
-    slug: 'do-an-vat',
-    desc: 'Bắp rang bơ sấy nổ công nghệ cao kết hợp bơ sữa béo ngậy thơm ngon.',
-    image: heroBanner2,
-    featured: 'Bắp rang bơ cao cấp',
-  },
-  {
-    id: 'do-an-kho',
-    name: 'Đồ ăn khô',
-    slug: 'do-an-kho',
-    desc: 'Thịt bò và thịt heo sấy gia vị tự nhiên đậm đà, kiểm soát chất lượng an toàn nghiêm ngặt.',
-    image: heroBanner1,
-    featured: 'Thịt khô hảo hạng',
-  },
-]
+import { PRODUCT_CATEGORIES } from '../data/productCategories'
 
 const ABOUT_LINKS = [
   { label: 'Tổng quan HAQ FOOD', path: '/#gioi-thieu', desc: 'Thành lập năm 2021 tại Hà Nội' },
@@ -66,7 +29,7 @@ export default function StickyNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
-  const [hoveredCategory, setHoveredCategory] = useState(PRODUCT_CATEGORIES[0])
+  const [hoveredCategory, setHoveredCategory] = useState(PRODUCT_CATEGORIES[1] || PRODUCT_CATEGORIES[0])
 
   const timeoutRef = useRef(null)
   const location = useLocation()
@@ -80,10 +43,23 @@ export default function StickyNav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Close menus on page change
   useEffect(() => {
     setMobileOpen(false)
     setActiveMenu(null)
-  }, [location.pathname])
+  }, [location.pathname, location.search])
+
+  // Keyboard accessibility: Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setActiveMenu(null)
+        setMobileOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const handleMouseEnter = (menuKey) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
@@ -101,6 +77,8 @@ export default function StickyNav() {
     setMobileAccordion(mobileAccordion === key ? null : key)
   }
 
+  const isProductsActive = location.pathname.startsWith('/san-pham')
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
@@ -113,7 +91,7 @@ export default function StickyNav() {
         {/* 1. Logo HAQ FOOD (Click to go Home) */}
         <Link
           to="/"
-          className="flex items-center gap-3 focus:outline-none"
+          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
           title="HAQ FOOD - Trang chủ"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-lg overflow-hidden border border-black/5 bg-white p-0.5 shrink-0">
@@ -145,15 +123,21 @@ export default function StickyNav() {
             onMouseEnter={() => handleMouseEnter('gioi-thieu')}
           >
             <button
+              type="button"
               aria-expanded={activeMenu === 'gioi-thieu'}
               aria-haspopup="true"
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors ${
-                activeMenu === 'gioi-thieu' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+              onClick={() => navigate('/gioi-thieu')}
+              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
+                activeMenu === 'gioi-thieu' || location.pathname === '/gioi-thieu'
+                  ? 'text-haq-red'
+                  : 'text-haq-ink hover:text-haq-red'
               }`}
             >
               <span>GIỚI THIỆU</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'gioi-thieu' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${activeMenu === 'gioi-thieu' ? 'w-full' : 'w-0'}`} />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+                activeMenu === 'gioi-thieu' || location.pathname === '/gioi-thieu' ? 'w-full' : 'w-0'
+              }`} />
             </button>
 
             {activeMenu === 'gioi-thieu' && (
@@ -166,7 +150,7 @@ export default function StickyNav() {
                     key={idx}
                     href={item.path}
                     onClick={() => setActiveMenu(null)}
-                    className="block p-2.5 rounded-xl hover:bg-haq-bone transition-colors group"
+                    className="block p-2.5 rounded-xl hover:bg-haq-bone transition-colors group focus:outline-none focus:bg-haq-bone"
                   >
                     <div className="text-xs font-heading font-bold text-haq-ink group-hover:text-haq-red transition-colors">
                       {item.label}
@@ -186,21 +170,26 @@ export default function StickyNav() {
             onMouseEnter={() => handleMouseEnter('san-pham')}
           >
             <button
+              type="button"
               aria-expanded={activeMenu === 'san-pham'}
               aria-haspopup="true"
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors ${
-                activeMenu === 'san-pham' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+              aria-current={isProductsActive ? 'page' : undefined}
+              onClick={() => navigate('/san-pham')}
+              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
+                activeMenu === 'san-pham' || isProductsActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
               }`}
             >
               <span>SẢN PHẨM</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${activeMenu === 'san-pham' ? 'w-full' : 'w-0'}`} />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+                activeMenu === 'san-pham' || isProductsActive ? 'w-full' : 'w-0'
+              }`} />
             </button>
 
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-24 lg:-left-20 mt-2 w-[680px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[700px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="grid grid-cols-12 gap-6">
                   {/* Left Column: Categories List */}
@@ -211,17 +200,15 @@ export default function StickyNav() {
                     </div>
 
                     {PRODUCT_CATEGORIES.map((cat) => (
-                      <div
+                      <Link
                         key={cat.id}
+                        to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
                         onMouseEnter={() => setHoveredCategory(cat)}
-                        onClick={() => {
-                          setActiveMenu(null)
-                          navigate('/san-pham')
-                        }}
-                        className={`p-3 rounded-2xl cursor-pointer transition-all ${
+                        onClick={() => setActiveMenu(null)}
+                        className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
                           hoveredCategory.id === cat.id
                             ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
-                            : 'hover:bg-haq-bone/50'
+                            : 'hover:bg-haq-bone/60'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -234,10 +221,10 @@ export default function StickyNav() {
                             hoveredCategory.id === cat.id ? 'text-haq-red' : 'text-black/20'
                           }`} />
                         </div>
-                        <p className="text-[11px] text-haq-ink/60 mt-1 line-clamp-1">
+                        <p className="text-[11px] text-haq-ink/60 mt-0.5 line-clamp-1">
                           {cat.desc}
                         </p>
-                      </div>
+                      </Link>
                     ))}
 
                     <div className="pt-3 border-t border-black/5">
@@ -268,7 +255,7 @@ export default function StickyNav() {
                         {hoveredCategory.featured}
                       </h4>
                       <p className="text-xs text-haq-ink/70 mt-1 leading-relaxed line-clamp-2">
-                        {hoveredCategory.desc}
+                        {hoveredCategory.featuredDesc || hoveredCategory.desc}
                       </p>
                     </div>
 
@@ -288,9 +275,10 @@ export default function StickyNav() {
             onMouseEnter={() => handleMouseEnter('nang-luc')}
           >
             <button
+              type="button"
               aria-expanded={activeMenu === 'nang-luc'}
               aria-haspopup="true"
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors ${
+              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
                 activeMenu === 'nang-luc' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
               }`}
             >
@@ -309,7 +297,7 @@ export default function StickyNav() {
                     key={idx}
                     href={item.path}
                     onClick={() => setActiveMenu(null)}
-                    className="block p-2.5 rounded-xl hover:bg-haq-bone transition-colors group"
+                    className="block p-2.5 rounded-xl hover:bg-haq-bone transition-colors group focus:outline-none focus:bg-haq-bone"
                   >
                     <div className="text-xs font-heading font-bold text-haq-ink group-hover:text-haq-red transition-colors">
                       {item.label}
@@ -324,20 +312,25 @@ export default function StickyNav() {
           </div>
 
           {/* TIN TỨC */}
-          <a
-            href="/#tin-tuc"
-            className="relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider text-haq-ink hover:text-haq-red transition-colors group"
+          <Link
+            to="/tin-tuc"
+            aria-current={location.pathname === '/tin-tuc' ? 'page' : undefined}
+            className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
+              location.pathname === '/tin-tuc' ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+            }`}
           >
             <span>TIN TỨC</span>
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-haq-red transition-all duration-200 group-hover:w-full" />
-          </a>
+            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+              location.pathname === '/tin-tuc' ? 'w-full' : 'w-0 group-hover:w-full'
+            }`} />
+          </Link>
         </nav>
 
         {/* 3. Single Minimal CTA: LIÊN HỆ → */}
         <div className="hidden md:flex items-center">
           <Link
             to="/lien-he"
-            className="inline-flex items-center gap-2 bg-haq-ink hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-widest px-6 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md"
+            className="inline-flex items-center gap-2 bg-haq-ink hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-widest px-6 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red"
           >
             <span>LIÊN HỆ</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -348,8 +341,9 @@ export default function StickyNav() {
         <div className="flex md:hidden items-center">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-haq-ink"
+            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -362,11 +356,12 @@ export default function StickyNav() {
           {/* Accordion: GIỚI THIỆU */}
           <div className="border-b border-black/5 pb-2">
             <button
+              type="button"
               onClick={() => toggleMobileAccordion('gioi-thieu')}
               className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-ink uppercase"
             >
               <span>GIỚI THIỆU</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'gioi-thieu' ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'gioi-thieu' ? 'rotate-180 text-haq-red' : ''}`} />
             </button>
             {mobileAccordion === 'gioi-thieu' && (
               <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
@@ -387,8 +382,9 @@ export default function StickyNav() {
           {/* Accordion: SẢN PHẨM */}
           <div className="border-b border-black/5 pb-2">
             <button
+              type="button"
               onClick={() => toggleMobileAccordion('san-pham')}
-              className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-ink uppercase text-haq-red"
+              className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-red uppercase"
             >
               <span>SẢN PHẨM</span>
               <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'san-pham' ? 'rotate-180' : ''}`} />
@@ -398,7 +394,7 @@ export default function StickyNav() {
                 {PRODUCT_CATEGORIES.map((cat) => (
                   <Link
                     key={cat.id}
-                    to="/san-pham"
+                    to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
                     onClick={() => setMobileOpen(false)}
                     className="block py-1 hover:text-haq-red"
                   >
@@ -419,11 +415,12 @@ export default function StickyNav() {
           {/* Accordion: NĂNG LỰC */}
           <div className="border-b border-black/5 pb-2">
             <button
+              type="button"
               onClick={() => toggleMobileAccordion('nang-luc')}
               className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-ink uppercase"
             >
               <span>NĂNG LỰC</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'nang-luc' ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'nang-luc' ? 'rotate-180 text-haq-red' : ''}`} />
             </button>
             {mobileAccordion === 'nang-luc' && (
               <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
@@ -443,13 +440,13 @@ export default function StickyNav() {
 
           {/* TIN TỨC */}
           <div className="border-b border-black/5 pb-2">
-            <a
-              href="/#tin-tuc"
+            <Link
+              to="/tin-tuc"
               onClick={() => setMobileOpen(false)}
               className="block py-2 text-sm font-heading font-black text-haq-ink uppercase"
             >
               TIN TỨC
-            </a>
+            </Link>
           </div>
 
           {/* Single Mobile CTA */}
