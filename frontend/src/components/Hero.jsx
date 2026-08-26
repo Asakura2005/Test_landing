@@ -50,7 +50,7 @@ export default function Hero() {
       className="relative w-full pt-[72px] sm:pt-[76px] bg-[#F7F7F7] overflow-hidden select-none"
     >
       {/* Full-Bleed 100% Screen Width Banner Canvas */}
-      <div className="relative w-full aspect-16/9 max-h-[calc(100vh-76px)] bg-[#F7F7F7] overflow-hidden flex items-center justify-center">
+      <div className="relative w-full aspect-video min-h-[280px] sm:min-h-[420px] md:min-h-[540px] lg:min-h-[640px] xl:min-h-[720px] bg-[#F7F7F7] overflow-hidden flex items-center justify-center">
         {SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
