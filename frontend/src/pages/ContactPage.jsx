@@ -442,7 +442,7 @@ export default function ContactPage() {
                     <span>Cam kết hỗ trợ đối tác</span>
                   </div>
                   <p className="text-xs text-haq-text-secondary mt-1.5 leading-relaxed">
-                    Mọi yêu cầu tư vấn và đăng ký mẫu thử sẽ được chuyên viên của HAQ FOOD liên hệ trực tiếp trong vòng <strong>2 – 4 giờ làm việc</strong>.
+                    Mọi yêu cầu tư vấn và đăng ký mẫu thử sẽ được chuyên viên của HAQ FOOD liên hệ trực tiếp trong vòng <strong>24 giờ làm việc</strong>.
                   </p>
                 </div>
               </div>

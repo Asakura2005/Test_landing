@@ -195,7 +195,7 @@ export default function ProductsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                    HAQ FOOD · DANH MỤC TỪ DATABASE
+                    HAQ FOOD · PRODUCTS
                   </span>
                   <span className="h-px w-10 bg-haq-red" />
                 </div>
@@ -209,10 +209,7 @@ export default function ProductsPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 text-xs font-mono text-haq-text-secondary bg-haq-cream px-4 py-2.5 rounded-2xl border border-haq-border shrink-0">
-                <ShieldCheck className="w-4 h-4 text-haq-red" />
-                <span>TIÊU CHUẨN ISO 22000 & HACCP</span>
-              </div>
+              
             </div>
 
             {/* 3. Level 1: Primary Category Tabs (Fetched Dynamically from DB) */}
