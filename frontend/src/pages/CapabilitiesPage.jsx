@@ -92,7 +92,7 @@ export default function CapabilitiesPage() {
       {/* Floating Quick Contact */}
       <FloatingContactBar />
 
-      <main className="flex-1 pt-24 sm:pt-28 pb-20">
+      <main className="flex-1 pt-[72px] sm:pt-[76px] pb-20">
         {/* 1. Subpage Hero Header */}
         <section className="bg-white border-b border-haq-border py-14 sm:py-20">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">

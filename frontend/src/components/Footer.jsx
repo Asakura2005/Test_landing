@@ -136,8 +136,16 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-[#C92332] shrink-0 mt-0.5" />
                 <span>
-                  <strong className="text-white">Địa chỉ:</strong> Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam
-                </span>
+                  <strong className="text-white">Địa chỉ:</strong>{' '}
+                  <a
+                    href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white font-mono font-bold hover:text-[#D9A900] transition-colors"
+                  >
+                    30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội, Việt Nam
+                  </a>
+                  </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#C92332] shrink-0" />

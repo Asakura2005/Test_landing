@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
       <StickyNav />
 
       {/* Hero Header */}
-      <section className="pt-28 sm:pt-36 pb-12 bg-white border-b border-haq-border relative">
+      <section className="pt-24 sm:pt-28 pb-10 bg-white border-b border-haq-border relative">
         <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-xs font-mono text-haq-text-secondary uppercase mb-6">

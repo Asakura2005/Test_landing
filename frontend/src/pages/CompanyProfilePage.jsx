@@ -271,11 +271,11 @@ export default function CompanyProfilePage() {
       {/* Floating Quick Contact Widget */}
       <FloatingContactBar />
 
-      <main className="flex-1 pt-24 sm:pt-28">
+      <main className="flex-1 pt-[72px] sm:pt-[76px]">
         {/* =========================================================================
             01 — HERO: WARM CREAM ENTERPRISE WITH BENTO COLLAGE
             ========================================================================= */}
-        <section className="bg-haq-cream text-haq-ink pt-8 sm:pt-14 pb-14 sm:pb-20 border-b border-haq-border relative overflow-hidden">
+        <section className="bg-haq-cream text-haq-ink pt-6 sm:pt-10 pb-12 sm:pb-16 border-b border-haq-border relative overflow-hidden">
           {/* Subtle botanical shadow ambient glow */}
           <div className="absolute top-0 left-0 w-96 h-96 bg-linear-to-br from-amber-900/5 via-amber-700/5 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
           

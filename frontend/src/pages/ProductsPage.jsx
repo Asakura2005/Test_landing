@@ -140,7 +140,7 @@ export default function ProductsPage() {
       {/* Floating Quick Contact Widget */}
       <FloatingContactBar />
 
-      <main className="flex-1 pt-24 sm:pt-28 pb-20">
+      <main className="flex-1 pt-[72px] sm:pt-[76px] pb-20">
         {/* 1. Breadcrumb Bar */}
         <div className="bg-white/80 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-3.5 flex items-center gap-2 text-xs text-haq-text-secondary overflow-x-auto whitespace-nowrap">

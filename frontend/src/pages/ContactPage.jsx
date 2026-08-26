@@ -239,11 +239,11 @@ export default function ContactPage() {
       <StickyNav />
       <FloatingContactBar />
 
-      <main className="flex-1 pt-24 sm:pt-28">
+      <main className="flex-1 pt-[72px] sm:pt-[76px]">
         {/* =========================================================================
             01 — HERO SECTION (#F5F1E8)
             ========================================================================= */}
-        <section className="bg-haq-cream text-haq-ink pt-10 sm:pt-16 pb-14 sm:pb-20 border-b border-haq-border relative overflow-hidden">
+        <section className="bg-haq-cream text-haq-ink pt-8 sm:pt-12 pb-14 sm:pb-20 border-b border-haq-border relative overflow-hidden">
           {/* Subtle ambient light */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-linear-to-bl from-amber-900/5 via-amber-700/5 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/3" />
           

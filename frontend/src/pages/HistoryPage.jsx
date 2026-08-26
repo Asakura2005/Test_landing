@@ -195,7 +195,7 @@ export default function HistoryPage() {
       {/* Floating Quick Contact Widget */}
       <FloatingContactBar />
 
-      <main className="flex-1 pt-24 sm:pt-28 pb-20">
+      <main className="flex-1 pt-[72px] sm:pt-[76px] pb-20">
         {/* 1. Bibica-Style Executive Milestone Hero */}
         <section className="bg-haq-dark text-white py-18 sm:py-28 border-b border-haq-border relative overflow-hidden">
           {/* Subtle Tech Coordinate Grid Texture */}
