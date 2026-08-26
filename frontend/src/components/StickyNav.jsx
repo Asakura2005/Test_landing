@@ -6,9 +6,6 @@ import {
   ChevronDown,
   ArrowRight,
   Sparkles,
-  Building2,
-  Milestone,
-  Factory,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
@@ -19,24 +16,22 @@ const ABOUT_SUBPAGES = [
     title: 'GIỚI THIỆU TỔNG QUAN',
     desc: 'Tuyên ngôn thương hiệu, Tầm nhìn chiến lược, Sứ mệnh & 5 Giá trị văn hóa cốt lõi.',
     path: '/gioi-thieu',
-    icon: Building2,
     badge: 'TỔNG QUAN',
   },
   {
     title: 'LỊCH SỬ & DẤU MỐC',
     desc: 'Dấu mốc phát triển 2021 — 2026, các bước ngoặt công nghệ & xuất khẩu châu Á.',
     path: '/lich-su',
-    icon: Milestone,
     badge: '2021 - 2026',
   },
   {
     title: 'CƠ SỞ SẢN XUẤT & CHẤT LƯỢNG',
     desc: 'Dây chuyền sấy giòn khép kín, phòng sạch, tiêu chuẩn ISO 22000 & HACCP, giải pháp OEM/ODM.',
     path: '/nang-luc',
-    icon: Factory,
     badge: 'ISO & HACCP',
   },
 ]
+
 
 export default function StickyNav() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -200,39 +195,41 @@ export default function StickyNav() {
 
                 <div className="grid grid-cols-1 gap-2 pt-1">
                   {ABOUT_SUBPAGES.map((sub, idx) => {
-                    const Icon = sub.icon
                     const isSubActive = location.pathname === sub.path
                     return (
                       <Link
                         key={idx}
                         to={sub.path}
                         onClick={() => setActiveMenu(null)}
-                        className={`group block p-3.5 rounded-2xl border transition-all ${
+                        className={`group block p-3 rounded-2xl transition-all ${
                           isSubActive
-                            ? 'bg-haq-bone border-haq-red/30 shadow-2xs'
-                            : 'bg-white border-black/5 hover:bg-haq-bone hover:border-black/15'
+                            ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
+                            : 'hover:bg-haq-bone/60'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-xl bg-haq-bone group-hover:bg-haq-red text-haq-ink group-hover:text-white flex items-center justify-center transition-colors shrink-0">
-                              <Icon className="w-4 h-4" />
-                            </div>
-                            <span className="text-xs font-heading font-black text-haq-ink group-hover:text-haq-red transition-colors uppercase">
-                              {sub.title}
-                            </span>
-                          </div>
-                          <span className="font-mono text-[9px] font-bold text-haq-red/80 uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
-                            {sub.badge}
+                        <div className="flex items-center justify-between">
+                          <span className={`text-xs font-heading font-extrabold uppercase ${
+                            isSubActive ? 'text-haq-red' : 'text-haq-ink group-hover:text-haq-red'
+                          }`}>
+                            {sub.title}
                           </span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[9px] font-bold text-haq-red/80 uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
+                              {sub.badge}
+                            </span>
+                            <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
+                              isSubActive ? 'text-haq-red' : 'text-black/20 group-hover:text-haq-red'
+                            }`} />
+                          </div>
                         </div>
-                        <p className="text-[11px] text-haq-ink/65 leading-relaxed pl-10.5 line-clamp-1">
+                        <p className="text-[11px] text-haq-ink/60 mt-1 line-clamp-1">
                           {sub.desc}
                         </p>
                       </Link>
                     )
                   })}
                 </div>
+
               </div>
             )}
           </div>
@@ -438,18 +435,15 @@ export default function StickyNav() {
                 mobileAccordion === 've-chung-toi' ? 'max-h-60 mt-3 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <div className="pl-4 space-y-4 py-1 text-xs text-haq-ink/75">
+              <div className="pl-4 space-y-3 py-1 text-xs text-haq-ink/75">
                 {ABOUT_SUBPAGES.map((sub, idx) => (
                   <Link
                     key={idx}
                     to={sub.path}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 font-bold text-haq-ink hover:text-haq-red transition-colors"
+                    className="block font-bold text-haq-ink hover:text-haq-red text-[13px] transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-haq-bone flex items-center justify-center text-haq-red">
-                      <sub.icon className="w-4 h-4" />
-                    </div>
-                    <span>{sub.title}</span>
+                    {sub.title}
                   </Link>
                 ))}
               </div>
