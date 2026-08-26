@@ -336,21 +336,18 @@ export default function ProductsPage() {
                   >
                     <div>
                       {/* Product Image */}
-                      <div className="relative aspect-4/3 overflow-hidden bg-haq-bone p-4">
+                      <div className="relative aspect-4/3 overflow-hidden bg-haq-bone/60 flex items-center justify-center p-3 sm:p-4">
                         <img
                           src={productImg}
                           alt={prod.name}
-                          className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-contain filter drop-shadow-xs transform group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
                         {prod.is_pinned && (
-                          <div className="absolute top-4 left-4 bg-haq-red text-white font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
+                          <div className="absolute top-3.5 left-3.5 bg-haq-red text-white font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
                             CHỦ LỰC
                           </div>
                         )}
-                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-xs font-mono text-[10px] font-bold text-haq-ink/70 px-2.5 py-1 rounded-full border border-black/5">
-                          ISO 22000
-                        </div>
                       </div>
 
                       {/* Product Content */}
