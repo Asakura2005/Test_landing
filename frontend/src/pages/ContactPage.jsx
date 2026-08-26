@@ -14,99 +14,124 @@ import {
   Send,
   Loader2,
   Sparkles,
-  Layers,
   Clock,
   ShieldCheck,
-  ChevronRight,
+  Check,
+  MessageSquare,
+  HelpCircle,
+  ExternalLink,
 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { submitLead } from '../services/supabase'
 
-// 5 Contact Gateways Configuration
-const GATEWAYS = [
-  {
-    id: 'products',
-    code: '01',
-    title: 'MUA / TÌM HIỂU SẢN PHẨM',
-    desc: 'Tìm hiểu danh mục thực phẩm, chính sách giá sỉ & thông tin sản phẩm HAQ FOOD.',
-    team: 'SALES TEAM',
-    badge: 'Sản phẩm & Bán hàng',
-    icon: Package,
-    leadNeed: '[PRODUCTS] Mua / Tìm hiểu sản phẩm',
-  },
+// 5 Natural & Human-Centric Consultation Topics
+const TOPICS = [
   {
     id: 'partnership',
     aliases: ['distribution', 'daily', 'partner'],
-    code: '02',
-    title: 'TRỞ THÀNH ĐỐI TÁC',
-    desc: 'Đại lý, nhà phân phối và cơ hội hợp tác kinh doanh bền vững tại các tỉnh thành.',
-    team: 'BUSINESS DEVELOPMENT',
-    badge: 'Phát triển Đại lý & NPP',
+    title: 'Đại lý & Nhà phân phối',
+    shortTitle: 'Đại lý & NPP',
+    tag: 'Chính sách sỉ toàn quốc',
+    desc: 'Nhận bảng giá sỉ cạnh tranh, chiết khấu hấp dẫn và chính sách bảo hộ khu vực kinh doanh độc quyền.',
+    dept: 'Phòng Phát triển Đại lý & NPP',
     icon: Handshake,
-    leadNeed: '[DISTRIBUTION] Trở thành Đối tác phân phối',
+    hotline: '024 23 23 56 56 (Ext 102)',
+    leadNeed: 'Hợp tác Đại lý & Nhà phân phối',
+    highlights: ['Chiết khấu đại lý tốt', 'Hỗ trợ mẫu thử & POSM', 'Bảo hộ thị trường'],
+  },
+  {
+    id: 'products',
+    aliases: ['mua-hang', 'don-hang', 'ban-buon'],
+    title: 'Mua sỉ & Đơn hàng lớn',
+    shortTitle: 'Mua sỉ & Bán buôn',
+    tag: 'Báo giá nhanh trong 2h',
+    desc: 'Báo giá trực tiếp cho chuỗi cửa hàng, siêu thị mini, bếp ăn, quà biếu doanh nghiệp và sự kiện.',
+    dept: 'Phòng Kinh doanh & Bán lẻ',
+    icon: Package,
+    hotline: '024 23 23 56 56 (Ext 101)',
+    leadNeed: 'Mua sỉ & Tìm hiểu sản phẩm',
+    highlights: ['Giao hàng hỏa tốc', 'Hạn sử dụng mới nhất', 'Đầy đủ hóa đơn VAT'],
   },
   {
     id: 'export',
     aliases: ['international', 'global'],
-    code: '03',
-    title: 'HỢP TÁC XUẤT KHẨU',
-    desc: 'Dành cho nhà nhập khẩu, distributor và đối tác kinh doanh quốc tế.',
-    team: 'INTERNATIONAL BUSINESS',
-    badge: 'Thương mại Quốc tế',
+    title: 'Thương mại Xuất khẩu',
+    shortTitle: 'Xuất khẩu Quốc tế',
+    tag: 'Hồ sơ CO/CQ đầy đủ',
+    desc: 'Cung ứng thực phẩm sấy sạch đạt tiêu chuẩn xuất khẩu sang Hàn Quốc, Đài Loan, Nhật Bản, Hoa Kỳ...',
+    dept: 'Phòng Thương mại Quốc tế',
     icon: Globe2,
-    leadNeed: '[EXPORT] Hợp tác Xuất khẩu',
+    hotline: '024 23 23 56 56 (Ext 103)',
+    leadNeed: 'Đối tác Thương mại Xuất khẩu',
+    highlights: ['Chứng nhận ATTP & Test report', 'Đóng gói container chuyên dụng', 'Hỗ trợ kiểm dịch & hải quan'],
   },
   {
     id: 'oem',
     aliases: ['private-label', 'giacong'],
-    code: '04',
-    title: 'OEM / PRIVATE LABEL',
-    desc: 'Sản xuất, chế biến và đóng gói thực phẩm theo thương hiệu và yêu cầu riêng của đối tác.',
-    team: 'B2B & OEM SOLUTIONS',
-    badge: 'Gia công & Sản xuất riêng',
+    title: 'Gia công Thực phẩm (OEM / ODM)',
+    shortTitle: 'Gia công OEM / ODM',
+    tag: 'Theo công thức riêng',
+    desc: 'Sản xuất, sấy sạch và đóng gói thực phẩm theo thương hiệu riêng, tùy chỉnh hương vị & bao bì đối tác.',
+    dept: 'Trung tâm R&D & Gia công OEM',
     icon: Building2,
-    leadNeed: '[OEM] Sản xuất Private Label & Gia công',
+    hotline: '024 23 23 56 56 (Ext 104)',
+    leadNeed: 'Sản xuất Private Label & Gia công OEM',
+    highlights: ['Quy trình sấy khép kín', 'Tùy biến bao bì & quy cách', 'Bảo mật công thức tuyệt đối'],
   },
   {
     id: 'general',
     aliases: ['support', 'contact', 'other'],
-    code: '05',
-    title: 'LIÊN HỆ CHUNG',
-    desc: 'Các câu hỏi, đề xuất hợp tác truyền thông, tài chính hoặc yêu cầu hỗ trợ khác.',
-    team: 'CUSTOMER SERVICE',
-    badge: 'Chăm sóc & Tiếp nhận chung',
+    title: 'Chăm sóc & Hỗ trợ chung',
+    shortTitle: 'Hỗ trợ khách hàng',
+    tag: 'Phản hồi trong ngày',
+    desc: 'Tra cứu chứng từ, chính sách đổi trả, đề xuất truyền thông, ứng tuyển hoặc trao đổi công việc khác.',
+    dept: 'Bộ phận Chăm sóc Khách hàng',
     icon: Headphones,
-    leadNeed: '[GENERAL] Liên hệ & Hỗ trợ chung',
+    hotline: '024 23 23 56 56',
+    leadNeed: 'Liên hệ & Hỗ trợ chung',
+    highlights: ['Hỗ trợ hóa đơn chứng từ', 'Chính sách đổi trả minh bạch', 'Tiếp nhận phản hồi 24/7'],
   },
 ]
 
-// Specialized Departments Information Map
+// Professional Departments Map
 const DEPARTMENTS = [
   {
-    team: 'SALES & WHOLESALE',
-    scope: 'Sản phẩm & Phân phối lẻ/sỉ',
-    desc: 'Cung cấp catalogue báo giá, tư vấn đơn hàng sỉ cho chuỗi cửa hàng, siêu thị mini và điểm bán lẻ.',
-    hotline: '024 23 23 56 56 (Ext 101)',
+    title: 'Phòng Phát triển Đại lý & NPP',
+    role: 'Phụ trách hệ thống phân phối toàn quốc',
+    desc: 'Thiết lập chính sách chiết khấu, gửi mẫu dùng thử và đồng hành cùng đối tác mở rộng thị trường.',
+    phone: '024 23 23 56 56',
+    ext: 'Ext 102',
+    email: 'kinhdoanh@haq.com.vn',
+    icon: Handshake,
   },
   {
-    team: 'BUSINESS DEVELOPMENT',
-    scope: 'Đại lý & NPP Toàn quốc',
-    desc: 'Thiết lập chính sách chiết khấu, khu vực độc quyền và hỗ trợ bán hàng cho các nhà phân phối cấp tỉnh.',
-    hotline: '024 23 23 56 56 (Ext 102)',
+    title: 'Phòng Kinh doanh & Đơn hàng lớn',
+    role: 'Báo giá sỉ & Cung ứng chuỗi điểm bán',
+    desc: 'Tư vấn danh mục bánh kẹo & đồ ăn vặt chủ lực, hỗ trợ đơn quà biếu doanh nghiệp và cửa hàng tiện lợi.',
+    phone: '024 23 23 56 56',
+    ext: 'Ext 101',
+    email: 'sales@haq.com.vn',
+    icon: Package,
   },
   {
-    team: 'INTERNATIONAL BUSINESS',
-    scope: 'Xuất khẩu & Đối tác Quốc tế',
-    desc: 'Hồ sơ chứng nhận CO/CQ, tiêu chuẩn kiểm nghiệm, thủ tục hải quan và logistics xuất khẩu chính ngạch.',
-    hotline: '024 23 23 56 56 (Ext 103)',
+    title: 'Phòng Thương mại Quốc tế',
+    role: 'Xuất khẩu & Chứng từ chính ngạch',
+    desc: 'Chuyên trách hồ sơ kiểm nghiệm CO/CQ, tiêu chuẩn kiểm dịch thực vật và logistics xuất khẩu.',
+    phone: '024 23 23 56 56',
+    ext: 'Ext 103',
+    email: 'export@haq.com.vn',
+    icon: Globe2,
   },
   {
-    team: 'B2B & OEM / ODM SOLUTIONS',
-    scope: 'Nghiên cứu & Sản xuất theo yêu cầu',
-    desc: 'Đội ngũ R&D nghiên cứu công thức sấy sạch, quy cách đóng gói và sản xuất theo tiêu chuẩn thương hiệu riêng.',
-    hotline: '024 23 23 56 56 (Ext 104)',
+    title: 'Trung tâm R&D & Gia công OEM',
+    role: 'Nghiên cứu công thức & Sản xuất thương hiệu riêng',
+    desc: 'Tiếp nhận yêu cầu mẫu thử, nghiên cứu sấy sạch theo tiêu chuẩn riêng và gia công bao bì trọn gói.',
+    phone: '024 23 23 56 56',
+    ext: 'Ext 104',
+    email: 'oem@haq.com.vn',
+    icon: Building2,
   },
 ]
 
@@ -114,18 +139,18 @@ export default function ContactPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const formRef = useRef(null)
 
-  // Determine initial selected gateway based on URL query param ?type=...
-  const getInitialGateway = () => {
+  // Determine initial selected topic based on URL query param ?type=...
+  const getInitialTopic = () => {
     const typeParam = (searchParams.get('type') || '').toLowerCase()
-    if (!typeParam) return 'partnership' // Default to partnership for B2B focus
+    if (!typeParam) return 'partnership' // Default to partnership
 
-    const match = GATEWAYS.find(
-      (g) => g.id === typeParam || (g.aliases && g.aliases.includes(typeParam))
+    const match = TOPICS.find(
+      (t) => t.id === typeParam || (t.aliases && t.aliases.includes(typeParam))
     )
     return match ? match.id : 'partnership'
   }
 
-  const [activeGatewayId, setActiveGatewayId] = useState(getInitialGateway)
+  const [activeTopicId, setActiveTopicId] = useState(getInitialTopic)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -150,18 +175,18 @@ export default function ContactPage() {
   useEffect(() => {
     const typeParam = (searchParams.get('type') || '').toLowerCase()
     if (typeParam) {
-      const match = GATEWAYS.find(
-        (g) => g.id === typeParam || (g.aliases && g.aliases.includes(typeParam))
+      const match = TOPICS.find(
+        (t) => t.id === typeParam || (t.aliases && t.aliases.includes(typeParam))
       )
-      if (match && match.id !== activeGatewayId) {
-        setActiveGatewayId(match.id)
+      if (match && match.id !== activeTopicId) {
+        setActiveTopicId(match.id)
       }
     }
   }, [searchParams])
 
-  const handleSelectGateway = (gatewayId) => {
-    setActiveGatewayId(gatewayId)
-    setSearchParams({ type: gatewayId })
+  const handleSelectTopic = (topicId) => {
+    setActiveTopicId(topicId)
+    setSearchParams({ type: topicId })
     setSubmitSuccess(false)
     setErrorMessage('')
 
@@ -178,7 +203,7 @@ export default function ContactPage() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const activeGateway = GATEWAYS.find((g) => g.id === activeGatewayId) || GATEWAYS[0]
+  const activeTopic = TOPICS.find((t) => t.id === activeTopicId) || TOPICS[0]
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -186,10 +211,10 @@ export default function ContactPage() {
     setErrorMessage('')
 
     try {
-      // Build a structured, backward-compatible note payload
+      // Build note details
       const noteDetails = []
       if (formData.email) noteDetails.push(`Email: ${formData.email}`)
-      if (formData.country && activeGatewayId === 'export') noteDetails.push(`Quốc gia: ${formData.country}`)
+      if (formData.country && activeTopicId === 'export') noteDetails.push(`Quốc gia: ${formData.country}`)
       if (formData.region) noteDetails.push(`Khu vực: ${formData.region}`)
       if (formData.distributionChannel) noteDetails.push(`Kênh phân phối: ${formData.distributionChannel}`)
       if (formData.productInterest) noteDetails.push(`Sản phẩm quan tâm: ${formData.productInterest}`)
@@ -199,18 +224,37 @@ export default function ContactPage() {
       if (formData.message) noteDetails.push(`Nội dung: ${formData.message}`)
 
       const leadPayload = {
-        full_name: formData.fullName || 'Khách hàng',
-        company: formData.company || '',
-        phone: formData.phone || '',
-        need: activeGateway.leadNeed,
-        note: noteDetails.join(' | '),
+        name: formData.fullName || 'Khách hàng liên hệ website',
+        company: formData.company || undefined,
+        phone: formData.phone,
+        email: formData.email,
+        need: activeTopic.leadNeed,
+        source: 'contact_page_form',
+        notes: noteDetails.join(' | '),
       }
 
       await submitLead(leadPayload)
+
       setSubmitSuccess(true)
+      setFormData({
+        fullName: '',
+        company: '',
+        email: '',
+        phone: '',
+        country: 'Việt Nam',
+        region: '',
+        distributionChannel: '',
+        productInterest: '',
+        estimatedVolume: '',
+        packagingRequirement: '',
+        topic: '',
+        message: '',
+      })
     } catch (err) {
-      console.error('Error submitting contact lead:', err)
-      setErrorMessage(err.message || 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại hoặc gọi Hotline.')
+      console.error('Contact submission error:', err)
+      setErrorMessage(
+        'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0993 308 319 để được hỗ trợ trực tiếp.'
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -218,20 +262,7 @@ export default function ContactPage() {
 
   const resetForm = () => {
     setSubmitSuccess(false)
-    setFormData({
-      fullName: '',
-      company: '',
-      email: '',
-      phone: '',
-      country: 'Việt Nam',
-      region: '',
-      distributionChannel: '',
-      productInterest: '',
-      estimatedVolume: '',
-      packagingRequirement: '',
-      topic: '',
-      message: '',
-    })
+    setErrorMessage('')
   }
 
   return (
@@ -241,18 +272,18 @@ export default function ContactPage() {
 
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
         {/* =========================================================================
-            01 — HERO SECTION (#F5F1E8)
+            01 — HERO BANNER: WARM FOOD CORPORATE WELCOME
             ========================================================================= */}
-        <section className="bg-haq-cream text-haq-ink pt-8 sm:pt-12 pb-14 sm:pb-20 border-b border-haq-border relative overflow-hidden">
-          {/* Subtle ambient light */}
+        <section className="bg-haq-cream text-haq-ink pt-8 sm:pt-12 pb-12 sm:pb-16 border-b border-haq-border relative overflow-hidden">
+          {/* Subtle warm ambient glow */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-linear-to-bl from-amber-900/5 via-amber-700/5 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/3" />
           
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
             <div className="max-w-4xl">
               {/* Eyebrow */}
-              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <div className="flex items-center gap-3 mb-4 sm:mb-5">
                 <span className="font-mono text-xs font-bold tracking-[0.2em] text-haq-gold uppercase">
-                  HAQ FOOD · CONTACT & INQUIRIES
+                  HAQ FOOD · KẾT NỐI & HỢP TÁC DOANH NGHIỆP
                 </span>
                 <span className="h-px w-8 sm:w-16 bg-haq-gold/40" />
                 <span className="font-mono text-xs text-haq-text-secondary uppercase">
@@ -260,239 +291,221 @@ export default function ContactPage() {
                 </span>
               </div>
 
-              {/* Monolithic Headline */}
-              <h1 className="font-heading font-black text-4xl sm:text-6xl lg:text-7xl text-haq-ink tracking-tight uppercase leading-[0.98]">
-                HÃY CÙNG HAQ <br />
-                <span className="text-haq-red">TẠO NÊN GIÁ TRỊ.</span>
+              {/* Headline */}
+              <h1 className="font-heading font-black text-3xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight uppercase leading-[1.05]">
+                ĐỒNG HÀNH PHÁT TRIỂN CÙNG <br />
+                <span className="text-haq-red">NÔNG SẢN VIỆT NAM.</span>
               </h1>
 
               {/* Subtext */}
-              <p className="mt-6 text-sm sm:text-base lg:text-lg text-haq-text-secondary max-w-2xl leading-relaxed font-normal">
-                Bạn đang tìm sản phẩm, đối tác phân phối, cơ hội xuất khẩu hay giải pháp sản xuất theo thương hiệu riêng? Hãy chọn nhu cầu phù hợp để chúng tôi kết nối bạn với đúng bộ phận phụ trách.
+              <p className="mt-5 text-sm sm:text-base lg:text-lg text-haq-text-secondary max-w-3xl leading-relaxed font-normal">
+                Chúng tôi luôn trân trọng mọi cơ hội hợp tác từ quý đối tác phân phối, đại lý, chuỗi bán lẻ, khách hàng xuất khẩu và doanh nghiệp gia công OEM. Đội ngũ HAQ FOOD sẵn sàng lắng nghe và đồng hành xây dựng mối quan hệ hợp tác bền vững.
               </p>
-            </div>
-          </div>
-        </section>
 
-        {/* =========================================================================
-            02 — CONTACT HIERARCHY WORKFLOW VISUAL
-            ========================================================================= */}
-        <section className="bg-white py-10 sm:py-12 border-b border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-haq-border/60">
-              <div>
-                <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-wider block">
-                  MÔ HÌNH TIẾP NHẬN PHÂN CẤP
-                </span>
-                <h2 className="font-heading font-black text-xl sm:text-2xl text-haq-ink uppercase mt-1">
-                  Đúng nhu cầu · Đúng bộ phận · Phản hồi nhanh chóng
-                </h2>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-mono text-haq-text-secondary bg-haq-cream/60 px-4 py-2 rounded-full border border-haq-border w-fit">
-                <ShieldCheck className="w-4 h-4 text-haq-gold shrink-0" />
-                <span>Tiếp nhận & xử lý thông tin bảo mật B2B</span>
-              </div>
-            </div>
+              {/* Quick direct contact pills */}
+              <div className="mt-8 flex items-center gap-3 sm:gap-4 flex-wrap">
+                <a
+                  href="tel:02423235656"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-haq-red hover:text-haq-red transition-all text-xs sm:text-sm font-semibold"
+                >
+                  <Phone className="w-4 h-4 text-haq-red" />
+                  <span>Hotline: 024 23 23 56 56</span>
+                </a>
 
-            {/* Visual Workflow Steps */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 sm:p-5 rounded-2xl bg-haq-cream/40 border border-haq-border/80 flex items-start gap-3.5">
-                <span className="w-8 h-8 rounded-full bg-haq-ink text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                  01
-                </span>
-                <div>
-                  <h4 className="font-heading font-black text-sm text-haq-ink uppercase">Chọn Cổng Nhu Cầu</h4>
-                  <p className="text-xs text-haq-text-secondary mt-1">Xác định mục tiêu: Mua hàng, Đại lý, Xuất khẩu hoặc OEM.</p>
-                </div>
-              </div>
+                <a
+                  href="https://zalo.me/0993308319"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-[#0068FF] hover:text-[#0068FF] transition-all text-xs sm:text-sm font-semibold"
+                >
+                  <div className="w-4 h-4 rounded bg-[#0068FF] text-white flex items-center justify-center text-[10px] font-black">
+                    Z
+                  </div>
+                  <span>Zalo Doanh nghiệp: 0993 308 319</span>
+                </a>
 
-              <div className="p-4 sm:p-5 rounded-2xl bg-haq-cream/40 border border-haq-border/80 flex items-start gap-3.5">
-                <span className="w-8 h-8 rounded-full bg-haq-ink text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                  02
-                </span>
-                <div>
-                  <h4 className="font-heading font-black text-sm text-haq-ink uppercase">Biểu Mẫu Chuyên Biệt</h4>
-                  <p className="text-xs text-haq-text-secondary mt-1">Điền thông tin và quy chuẩn cần thiết tương ứng với lĩnh vực.</p>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-haq-cream/40 border border-haq-border/80 flex items-start gap-3.5">
-                <span className="w-8 h-8 rounded-full bg-haq-ink text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                  03
-                </span>
-                <div>
-                  <h4 className="font-heading font-black text-sm text-haq-ink uppercase">Điều Hướng Phòng Ban</h4>
-                  <p className="text-xs text-haq-text-secondary mt-1">Hệ thống phân bổ trực tiếp đến chuyên viên phụ trách mảng.</p>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5 rounded-2xl bg-haq-cream/40 border border-haq-border/80 flex items-start gap-3.5">
-                <span className="w-8 h-8 rounded-full bg-haq-red text-white font-mono text-xs font-bold flex items-center justify-center shrink-0">
-                  04
-                </span>
-                <div>
-                  <h4 className="font-heading font-black text-sm text-haq-ink uppercase">Phản Hồi & Báo Giá</h4>
-                  <p className="text-xs text-haq-text-secondary mt-1">Liên hệ trao đổi, gửi mẫu thử và xây dựng lộ trình hợp tác.</p>
-                </div>
+                <a
+                  href="mailto:info@haq.com.vn"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-haq-gold hover:text-haq-gold transition-all text-xs sm:text-sm font-semibold"
+                >
+                  <Mail className="w-4 h-4 text-haq-gold" />
+                  <span>info@haq.com.vn</span>
+                </a>
               </div>
             </div>
           </div>
         </section>
 
         {/* =========================================================================
-            03 — CONTACT GATEWAY & DYNAMIC FORM SECTION (CORE)
+            02 — CONSULTATION & INQUIRY SECTION (HUMAN & NATURAL)
             ========================================================================= */}
-        <section id="gateway" className="py-16 sm:py-24 bg-haq-cream relative overflow-hidden">
+        <section id="tu-van" className="py-14 sm:py-20 bg-haq-cream relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+            
+            {/* Section Header */}
+            <div className="max-w-2xl mb-10 sm:mb-12">
               <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
-                BUSINESS CONTACT GATEWAY
+                HÌNH THỨC HỢP TÁC
               </span>
-              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight mt-2">
-                BẠN ĐANG TÌM KIẾM ĐIỀU GÌ?
+              <h2 className="font-heading font-black text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
+                BẠN ĐANG QUAN TÂM ĐẾN NHU CẦU NÀO?
               </h2>
-              <p className="text-sm text-haq-text-secondary mt-3">
-                Chọn một trong 5 cổng liên hệ dưới đây để biểu mẫu tự động thích ứng với nhu cầu của bạn.
+              <p className="text-xs sm:text-sm text-haq-text-secondary mt-2">
+                Hãy chọn chủ đề phù hợp để biểu mẫu tự động chuẩn bị thông tin và kết nối với bộ phận phụ trách chuyên sâu.
               </p>
             </div>
 
-            {/* Layout: Left Column = 5 Gateway Bars / Right Column = Dynamic Form */}
+            {/* Main Layout: Topic Cards + Friendly Inquiry Form */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               
-              {/* Left Column: 5 Gateway Options */}
-              <div className="lg:col-span-5 space-y-3 sm:space-y-3.5">
-                {GATEWAYS.map((gateway) => {
-                  const isSelected = activeGatewayId === gateway.id
+              {/* Left Column: 5 Elegant Consultation Topic Cards */}
+              <div className="lg:col-span-5 space-y-3.5">
+                {TOPICS.map((topic) => {
+                  const isSelected = activeTopicId === topic.id
+                  const Icon = topic.icon
 
                   return (
-                    <button
-                      key={gateway.id}
-                      type="button"
-                      onClick={() => handleSelectGateway(gateway.id)}
-                      className={`w-full text-left p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all duration-300 flex items-center justify-between gap-4 group cursor-pointer ${
+                    <div
+                      key={topic.id}
+                      onClick={() => handleSelectTopic(topic.id)}
+                      className={`p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all duration-300 cursor-pointer relative overflow-hidden group ${
                         isSelected
-                          ? 'bg-haq-ink text-white border-haq-ink shadow-xl ring-2 ring-haq-red/40 translate-x-1 sm:translate-x-2'
-                          : 'bg-white hover:bg-white/90 text-haq-ink border-haq-border shadow-xs hover:shadow-md hover:border-haq-gold/40'
+                          ? 'bg-white border-haq-red shadow-lg ring-2 ring-haq-red/20 translate-x-1 sm:translate-x-2'
+                          : 'bg-white/80 hover:bg-white border-haq-border shadow-xs hover:shadow-md hover:border-haq-gold/60'
                       }`}
                     >
-                      <div className="flex items-start gap-4">
-                        <span
-                          className={`font-mono text-sm sm:text-base font-black px-2.5 py-1 rounded-lg transition-colors ${
-                            isSelected
-                              ? 'bg-haq-red text-white'
-                              : 'bg-haq-cream text-haq-ink group-hover:bg-haq-red group-hover:text-white'
-                          }`}
-                        >
-                          {gateway.code}
-                        </span>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded ${
-                                isSelected ? 'bg-white/10 text-haq-gold' : 'bg-haq-cream text-haq-text-secondary'
-                              }`}
-                            >
-                              {gateway.team}
-                            </span>
+                      {/* Active Indicator Strip */}
+                      {isSelected && (
+                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-haq-red" />
+                      )}
+
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                              isSelected
+                                ? 'bg-haq-red text-white'
+                                : 'bg-haq-cream text-haq-ink group-hover:bg-haq-cream/80'
+                            }`}
+                          >
+                            <Icon className="w-5 h-5" />
                           </div>
-                          <h3
-                            className={`font-heading font-black text-base sm:text-lg uppercase mt-1 leading-snug transition-colors ${
-                              isSelected ? 'text-white' : 'text-haq-ink group-hover:text-haq-red'
-                            }`}
-                          >
-                            {gateway.title}
-                          </h3>
-                          <p
-                            className={`text-xs mt-1 font-normal line-clamp-2 leading-relaxed transition-colors ${
-                              isSelected ? 'text-white/70' : 'text-haq-text-secondary'
-                            }`}
-                          >
-                            {gateway.desc}
-                          </p>
+                          <div>
+                            <span className="text-[10px] sm:text-[11px] font-mono font-bold text-haq-gold uppercase tracking-wider block">
+                              {topic.tag}
+                            </span>
+                            <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink uppercase leading-snug">
+                              {topic.title}
+                            </h3>
+                          </div>
                         </div>
+
+                        {isSelected ? (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-haq-red bg-haq-red/10 px-2.5 py-1 rounded-full shrink-0">
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Đang chọn</span>
+                          </span>
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-haq-cream flex items-center justify-center text-haq-text-secondary group-hover:text-haq-ink shrink-0 transition-colors">
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </div>
+                        )}
                       </div>
 
-                      <div
-                        className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                          isSelected
-                            ? 'bg-haq-red text-white'
-                            : 'bg-haq-cream text-haq-ink group-hover:bg-haq-ink group-hover:text-white'
-                        }`}
-                      >
-                        <ArrowRight
-                          className={`w-4 h-4 transform transition-transform ${
-                            isSelected ? 'translate-x-0.5' : 'group-hover:translate-x-1'
-                          }`}
-                        />
+                      <p className="text-xs text-haq-text-secondary mt-3 leading-relaxed font-normal">
+                        {topic.desc}
+                      </p>
+
+                      {/* Highlights Pill Tags */}
+                      <div className="mt-3.5 flex items-center gap-1.5 flex-wrap">
+                        {topic.highlights.map((h, i) => (
+                          <span
+                            key={i}
+                            className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
+                              isSelected
+                                ? 'bg-haq-cream text-haq-ink border border-haq-border/60'
+                                : 'bg-haq-cream/60 text-haq-text-secondary'
+                            }`}
+                          >
+                            • {h}
+                          </span>
+                        ))}
                       </div>
-                    </button>
+                    </div>
                   )
                 })}
 
-                {/* Direct quick contact note box under Gateways */}
-                <div className="p-5 rounded-2xl bg-haq-gold/10 border border-haq-gold/30 mt-6 text-haq-ink">
-                  <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-haq-gold">
+                {/* Warm Consultation Promise Box */}
+                <div className="p-5 rounded-2xl bg-white border border-haq-border text-haq-ink shadow-xs">
+                  <div className="flex items-center gap-2.5 font-mono text-xs font-bold uppercase text-haq-gold">
                     <Clock className="w-4 h-4 text-haq-gold" />
-                    <span>Thời gian phản hồi cam kết</span>
+                    <span>Cam kết hỗ trợ đối tác</span>
                   </div>
-                  <p className="text-xs text-haq-text-secondary mt-1">
-                    Đội ngũ chuyên trách tiếp nhận và liên hệ lại trong vòng <strong>2 - 4 giờ làm việc</strong>.
+                  <p className="text-xs text-haq-text-secondary mt-1.5 leading-relaxed">
+                    Mọi yêu cầu tư vấn và đăng ký mẫu thử sẽ được chuyên viên của HAQ FOOD liên hệ trực tiếp trong vòng <strong>2 – 4 giờ làm việc</strong>.
                   </p>
                 </div>
               </div>
 
-              {/* Right Column: Tailored Dynamic Form */}
+              {/* Right Column: Friendly & Hospitable Inquiry Form */}
               <div ref={formRef} className="lg:col-span-7">
-                <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg relative">
+                <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-xl relative">
                   
                   {/* Form Header */}
                   <div className="border-b border-haq-border pb-6 mb-6">
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-haq-red uppercase bg-haq-red/10 px-2.5 py-1 rounded">
-                          CỔNG TIẾP NHẬN {activeGateway.code}
-                        </span>
-                        <span className="text-xs font-mono text-haq-text-secondary">
-                          → {activeGateway.team}
+                        <span className="w-2.5 h-2.5 rounded-full bg-haq-red animate-pulse" />
+                        <span className="font-mono text-xs font-bold text-haq-red uppercase">
+                          {activeTopic.dept}
                         </span>
                       </div>
-                      <span className="text-xs font-mono text-haq-gold bg-haq-cream px-3 py-1 rounded-full border border-haq-border">
-                        {activeGateway.badge}
+                      <span className="text-xs font-mono text-haq-text-secondary bg-haq-cream px-3 py-1 rounded-full border border-haq-border">
+                        {activeTopic.tag}
                       </span>
                     </div>
+
                     <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase mt-3">
-                      {activeGateway.title}
+                      PHIẾU ĐĂNG KÝ TƯ VẤN · {activeTopic.shortTitle}
                     </h3>
-                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-1">
-                      Vui lòng cung cấp các thông tin bên dưới để bộ phận phụ trách chuẩn bị phương án tốt nhất trước khi liên hệ lại với bạn.
+                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-1.5 leading-relaxed">
+                      Quý khách vui lòng để lại thông tin liên hệ. Chúng tôi sẽ chuẩn bị bảng giá, hồ sơ mẫu và chính sách phù hợp nhất trước khi trao đổi.
                     </p>
                   </div>
 
-                  {/* Form Submission Success State */}
+                  {/* Success State */}
                   {submitSuccess ? (
                     <div className="py-12 text-center space-y-4">
-                      <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                      <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
                         <CheckCircle2 className="w-10 h-10" />
                       </div>
                       <h4 className="font-heading font-black text-2xl text-haq-ink uppercase">
-                        CẢM ƠN BẠN ĐÃ LIÊN HỆ HAQ FOOD
+                        CẢM ƠN QUÝ KHÁCH ĐÃ KẾT NỐI VỚI HAQ FOOD
                       </h4>
                       <p className="text-sm sm:text-base text-haq-text-secondary max-w-md mx-auto leading-relaxed">
-                        Yêu cầu của bạn đã được tiếp nhận và chuyển đến <strong>{activeGateway.team}</strong>. 
-                        Đội ngũ phụ trách sẽ liên hệ lại qua số điện thoại hoặc email của bạn trong thời gian sớm nhất.
+                        Thông tin của bạn đã được chuyển đến <strong>{activeTopic.dept}</strong>. 
+                        Chuyên viên phụ trách sẽ liên hệ lại qua số điện thoại hoặc email trong thời gian sớm nhất.
                       </p>
-                      <div className="pt-4">
+                      <div className="pt-4 flex items-center justify-center gap-3 flex-wrap">
                         <button
                           type="button"
                           onClick={resetForm}
-                          className="bg-haq-ink hover:bg-haq-red text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors"
+                          className="bg-haq-ink hover:bg-haq-red text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
                         >
                           GỬI THÊM YÊU CẦU KHÁC
                         </button>
+                        <a
+                          href="https://zalo.me/0993308319"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 bg-[#0068FF] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full hover:bg-[#0052cc] transition-colors"
+                        >
+                          <span>NHẮN ZALO TRỰC TIẾP</span>
+                        </a>
                       </div>
                     </div>
                   ) : (
-                    /* Dynamic Form Fields */
+                    /* Dynamic Form */
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                       {errorMessage && (
                         <div className="p-4 bg-red-50 border border-red-200 text-haq-red text-xs sm:text-sm rounded-xl">
@@ -500,11 +513,11 @@ export default function ContactPage() {
                         </div>
                       )}
 
-                      {/* Common: Full Name & Company */}
+                      {/* Full Name & Company */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            Họ và tên <span className="text-haq-red">*</span>
+                            Họ và tên người liên hệ <span className="text-haq-red">*</span>
                           </label>
                           <input
                             type="text"
@@ -513,31 +526,31 @@ export default function ContactPage() {
                             value={formData.fullName}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Nguyễn Văn An"
-                            className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                           />
                         </div>
 
                         <div>
                           <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            {activeGatewayId === 'partnership' ? 'Tên Doanh nghiệp / Hộ KD *' : 'Tên Công ty / Cửa hàng'}
+                            {activeTopicId === 'partnership' ? 'Tên Doanh nghiệp / Đại lý *' : 'Tên Công ty / Cửa hàng'}
                           </label>
                           <input
                             type="text"
                             name="company"
-                            required={activeGatewayId === 'partnership' || activeGatewayId === 'oem' || activeGatewayId === 'export'}
+                            required={activeTopicId === 'partnership' || activeTopicId === 'oem' || activeTopicId === 'export'}
                             value={formData.company}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Công ty TNHH Thực phẩm ABC"
-                            className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                           />
                         </div>
                       </div>
 
-                      {/* Common: Email & Phone */}
+                      {/* Email & Phone */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            Email <span className="text-haq-red">*</span>
+                            Địa chỉ Email <span className="text-haq-red">*</span>
                           </label>
                           <input
                             type="email"
@@ -546,13 +559,13 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={handleInputChange}
                             placeholder="email@doanhnghiep.com"
-                            className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                           />
                         </div>
 
                         <div>
                           <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            {activeGatewayId === 'export' ? 'Phone / WhatsApp / Zalo *' : 'Số điện thoại *'}
+                            {activeTopicId === 'export' ? 'Số điện thoại / WhatsApp / Zalo *' : 'Số điện thoại liên hệ *'}
                           </label>
                           <input
                             type="tel"
@@ -561,55 +574,53 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: 0912 345 678"
-                            className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                           />
                         </div>
                       </div>
 
-                      {/* =========================================================
-                          DYNAMIC FIELDS PER GATEWAY
-                          ========================================================= */}
+                      {/* Dynamic Fields Per Topic */}
 
                       {/* 01. PRODUCTS SPECIFIC */}
-                      {activeGatewayId === 'products' && (
+                      {activeTopicId === 'products' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Sản phẩm quan tâm
+                              Dòng sản phẩm quan tâm
                             </label>
                             <select
                               name="productInterest"
                               value={formData.productInterest}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             >
                               <option value="">-- Chọn dòng sản phẩm --</option>
                               <option value="Bánh tráng sấy giòn HOKI">Bánh tráng sấy giòn HOKI (Tôm, Bò, Chà bông)</option>
                               <option value="Bánh đậu xanh tươi truyền thống">Bánh đậu xanh tươi truyền thống</option>
                               <option value="Bánh hạnh nhân & Bánh sữa dừa">Bánh hạnh nhân & Bánh sữa dừa</option>
                               <option value="Bánh tráng sợi sa tế tôm & Cuộn gà lá chanh">Bánh tráng sợi & Cuộn gà lá chanh</option>
-                              <option value="Toàn bộ danh mục sản phẩm">Toàn bộ danh mục sản phẩm HAQ</option>
+                              <option value="Toàn bộ danh mục sản phẩm">Toàn bộ danh mục sản phẩm HAQ FOOD</option>
                             </select>
                           </div>
 
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Số lượng / Quy mô dự kiến
+                              Số lượng dự kiến
                             </label>
                             <input
                               type="text"
                               name="estimatedVolume"
                               value={formData.estimatedVolume}
                               onChange={handleInputChange}
-                              placeholder="Ví dụ: 50 thùng / tháng"
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              placeholder="Ví dụ: 30 - 50 thùng / tháng"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
                       )}
 
-                      {/* 02. DISTRIBUTION / PARTNERSHIP SPECIFIC */}
-                      {activeGatewayId === 'partnership' && (
+                      {/* 02. PARTNERSHIP SPECIFIC */}
+                      {activeTopicId === 'partnership' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
@@ -622,33 +633,33 @@ export default function ContactPage() {
                               value={formData.region}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Hà Nội & Các tỉnh Miền Bắc"
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
 
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Kênh phân phối chính
+                              Kênh bán hàng hiện tại
                             </label>
                             <select
                               name="distributionChannel"
                               value={formData.distributionChannel}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             >
                               <option value="">-- Chọn kênh phân phối --</option>
-                              <option value="Tạp hóa & Điểm bán lẻ truyền thống (GT)">Tạp hóa & Điểm bán lẻ truyền thống (GT)</option>
-                              <option value="Chuỗi siêu thị mini & Cửa hàng tiện lợi (MT)">Chuỗi siêu thị mini & Cửa hàng tiện lợi (MT)</option>
+                              <option value="Tạp hóa & Bán lẻ truyền thống (GT)">Tạp hóa & Bán lẻ truyền thống (GT)</option>
+                              <option value="Chuỗi siêu thị mini & Tiện lợi (MT)">Chuỗi siêu thị mini & Tiện lợi (MT)</option>
                               <option value="Đại lý cấp 1 / Tổng kho phân phối sỉ">Đại lý cấp 1 / Tổng kho phân phối sỉ</option>
                               <option value="Kênh Horeca, Trường học & Căng tin">Kênh Horeca, Trường học & Căng tin</option>
-                              <option value="Kênh E-commerce & Bán lẻ online">Kênh E-commerce & Bán lẻ online</option>
+                              <option value="Thương mại điện tử & Online">Thương mại điện tử & Bán online</option>
                             </select>
                           </div>
                         </div>
                       )}
 
                       {/* 03. EXPORT SPECIFIC */}
-                      {activeGatewayId === 'export' && (
+                      {activeTopicId === 'export' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
@@ -660,8 +671,8 @@ export default function ContactPage() {
                               required
                               value={formData.country}
                               onChange={handleInputChange}
-                              placeholder="Ví dụ: South Korea, Taiwan, USA, Japan..."
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              placeholder="Ví dụ: South Korea, Taiwan, Japan, USA..."
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
 
@@ -674,19 +685,19 @@ export default function ContactPage() {
                               name="estimatedVolume"
                               value={formData.estimatedVolume}
                               onChange={handleInputChange}
-                              placeholder="Ví dụ: 1 x 20ft Container / Quý"
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              placeholder="Ví dụ: 1 x 20ft Container / Tháng"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
                       )}
 
-                      {/* 04. OEM / PRIVATE LABEL SPECIFIC */}
-                      {activeGatewayId === 'oem' && (
+                      {/* 04. OEM SPECIFIC */}
+                      {activeTopicId === 'oem' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Dòng sản phẩm mong muốn gia công
+                              Dòng sản phẩm muốn gia công
                             </label>
                             <input
                               type="text"
@@ -694,13 +705,13 @@ export default function ContactPage() {
                               value={formData.productInterest}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Bánh tráng sấy giòn vị đặc biệt"
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
 
                           <div>
                             <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Sản lượng & Quy cách đóng gói
+                              Quy cách đóng gói & Sản lượng
                             </label>
                             <input
                               type="text"
@@ -708,14 +719,14 @@ export default function ContactPage() {
                               value={formData.packagingRequirement}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Túi zipper 50g, 10.000 túi/tháng"
-                              className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
                       )}
 
                       {/* 05. GENERAL SPECIFIC */}
-                      {activeGatewayId === 'general' && (
+                      {activeTopicId === 'general' && (
                         <div>
                           <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
                             Chủ đề liên hệ
@@ -725,36 +736,38 @@ export default function ContactPage() {
                             name="topic"
                             value={formData.topic}
                             onChange={handleInputChange}
-                            placeholder="Ví dụ: Hợp tác truyền thông / Tuyển dụng / Đề xuất khác"
-                            className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            placeholder="Ví dụ: Tra cứu hóa đơn / Đề xuất hợp tác truyền thông / Khác"
+                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
                           />
                         </div>
                       )}
 
-                      {/* Common: Message Textarea */}
+                      {/* Message Textarea */}
                       <div>
                         <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                          {activeGatewayId === 'general' ? 'Nội dung chi tiết *' : 'Ghi chú / Nội dung chi tiết'}
+                          {activeTopicId === 'general' ? 'Nội dung chi tiết *' : 'Ghi chú thêm về yêu cầu của bạn'}
                         </label>
                         <textarea
                           rows={4}
                           name="message"
-                          required={activeGatewayId === 'general'}
+                          required={activeTopicId === 'general'}
                           value={formData.message}
                           onChange={handleInputChange}
                           placeholder={
-                            activeGatewayId === 'oem'
+                            activeTopicId === 'oem'
                               ? 'Mô tả chi tiết yêu cầu kỹ thuật, tiêu chuẩn chất lượng hoặc mong muốn riêng của bạn...'
-                              : activeGatewayId === 'export'
+                              : activeTopicId === 'export'
                               ? 'Cung cấp thông tin thị trường sở tại, các chứng nhận cần có hoặc câu hỏi cụ thể...'
+                              : activeTopicId === 'partnership'
+                              ? 'Chia sẻ thêm về kế hoạch phát triển đại lý hoặc câu hỏi về chính sách hợp tác...'
                               : 'Nhập nội dung bạn muốn trao đổi cùng đội ngũ HAQ FOOD...'
                           }
-                          className="w-full px-4 py-3 bg-haq-cream/30 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors resize-none"
+                          className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors resize-none"
                         />
                       </div>
 
-                      {/* Submit Button */}
-                      <div className="pt-3">
+                      {/* Submit Action */}
+                      <div className="pt-2">
                         <button
                           type="submit"
                           disabled={isSubmitting}
@@ -767,16 +780,26 @@ export default function ContactPage() {
                             </>
                           ) : (
                             <>
-                              <span>GỬI YÊU CẦU ĐẾN {activeGateway.team}</span>
+                              <span>GỬI YÊU CẦU NHẬN TƯ VẤN & BÁO GIÁ</span>
                               <Send className="w-4 h-4" />
                             </>
                           )}
                         </button>
                       </div>
 
-                      <p className="text-[11px] text-haq-text-secondary text-center">
-                        Bằng việc gửi yêu cầu, bạn đồng ý để HAQ FOOD liên hệ qua số điện thoại/email cung cấp.
-                      </p>
+                      {/* Security & Direct Call Reminder */}
+                      <div className="flex items-center justify-between gap-4 pt-2 text-[11px] text-haq-text-secondary flex-wrap">
+                        <span className="flex items-center gap-1.5">
+                          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>Thông tin được bảo mật và chỉ dùng để liên hệ tư vấn B2B.</span>
+                        </span>
+                        <a
+                          href="tel:02423235656"
+                          className="hover:text-haq-red font-medium transition-colors"
+                        >
+                          Cần gấp? Gọi ngay: <strong>024 23 23 56 56</strong>
+                        </a>
+                      </div>
                     </form>
                   )}
                 </div>
@@ -786,54 +809,68 @@ export default function ContactPage() {
         </section>
 
         {/* =========================================================================
-            04 — BUSINESS CONTACT MAP (DEPARTMENTS OVERVIEW)
+            03 — SPECIALIZED DEPARTMENTS: TRANSPARENT & PROFESSIONAL
             ========================================================================= */}
         <section className="py-16 sm:py-20 bg-white border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <div>
                 <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
-                  SPECIALIZED DEPARTMENTS
+                  ĐỘI NGŨ CHUYÊN TRÁCH
                 </span>
-                <h2 className="font-heading font-black text-3xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1">
-                  ĐỘI NGŨ PHỤ TRÁCH KINH DOANH
+                <h2 className="font-heading font-black text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
+                  CÁC BỘ PHẬN PHỤ TRÁCH KINH DOANH
                 </h2>
               </div>
-              <p className="text-sm text-haq-text-secondary max-w-md">
-                Mỗi bộ phận tại HAQ FOOD được chuyên môn hoá theo từng phân khúc kinh doanh nhằm đem lại giải pháp chuẩn xác và hỗ trợ đối tác nhanh chóng.
+              <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md leading-relaxed">
+                Mỗi bộ phận tại HAQ FOOD được tổ chức chuyên sâu theo từng phân khúc kinh doanh, đảm bảo phản hồi chính xác và đồng hành sát sao cùng quý khách.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {DEPARTMENTS.map((dept, idx) => (
-                <div
-                  key={idx}
-                  className="bg-haq-cream/40 rounded-3xl p-6 border border-haq-border hover:bg-white hover:shadow-md transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div>
-                    <span className="font-mono text-[11px] font-bold text-haq-gold uppercase tracking-wider block">
-                      {dept.scope}
-                    </span>
-                    <h3 className="font-heading font-black text-lg text-haq-ink uppercase mt-1">
-                      {dept.team}
-                    </h3>
-                    <p className="text-xs text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
-                      {dept.desc}
-                    </p>
-                  </div>
+              {DEPARTMENTS.map((dept, idx) => {
+                const DeptIcon = dept.icon
+                return (
+                  <div
+                    key={idx}
+                    className="bg-haq-cream/40 rounded-3xl p-6 border border-haq-border hover:bg-white hover:shadow-lg hover:border-haq-gold/60 transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="w-10 h-10 rounded-xl bg-haq-cream text-haq-red flex items-center justify-center mb-4 border border-haq-border">
+                        <DeptIcon className="w-5 h-5" />
+                      </div>
+                      <span className="font-mono text-[11px] font-bold text-haq-gold uppercase tracking-wider block">
+                        {dept.role}
+                      </span>
+                      <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink uppercase mt-1 leading-snug">
+                        {dept.title}
+                      </h3>
+                      <p className="text-xs text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
+                        {dept.desc}
+                      </p>
+                    </div>
 
-                  <div className="mt-6 pt-4 border-t border-haq-border/60">
-                    <span className="block font-mono text-[10px] uppercase text-haq-text-secondary">Hotline Nội Bộ</span>
-                    <span className="font-mono font-bold text-xs text-haq-ink">{dept.hotline}</span>
+                    <div className="mt-6 pt-4 border-t border-haq-border/80 space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-haq-text-secondary text-[11px]">Hotline / Ext:</span>
+                        <span className="font-mono font-bold text-haq-ink">{dept.phone} ({dept.ext})</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-haq-text-secondary text-[11px]">Email:</span>
+                        <a href={`mailto:${dept.email}`} className="font-mono text-haq-red hover:underline text-[11px]">
+                          {dept.email}
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
 
         {/* =========================================================================
-            05 — DIRECT CONTACT CHANNELS & HEADQUARTERS
+            04 — DIRECT CHANNELS & HEADQUARTERS LOCATION MAP
             ========================================================================= */}
         <section className="py-16 sm:py-24 bg-haq-cream relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
@@ -843,16 +880,16 @@ export default function ContactPage() {
               <div className="lg:col-span-5 flex flex-col justify-between bg-white rounded-3xl p-6 sm:p-8 border border-haq-border shadow-sm">
                 <div>
                   <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
-                    DIRECT CHANNELS
+                    KÊNH TRỰC TIẾP
                   </span>
-                  <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase mt-2">
-                    KÊNH LIÊN HỆ TRỰC TIẾP
+                  <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
+                    LIÊN HỆ VĂN PHÒNG CHÍNH
                   </h3>
                   <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed">
-                    Nếu bạn muốn trao đổi trực tiếp hoặc ghé thăm văn phòng, hãy liên hệ qua các cổng chính thức của chúng tôi.
+                    Quý khách có thể ghé thăm trực tiếp văn phòng làm việc hoặc liên hệ qua các kênh thông tin chính thức dưới đây.
                   </p>
 
-                  <div className="mt-8 space-y-5">
+                  <div className="mt-8 space-y-4">
                     {/* Hotline bàn */}
                     <div className="flex items-start gap-4 p-4 rounded-2xl bg-haq-cream/50 border border-haq-border/80">
                       <div className="w-10 h-10 rounded-xl bg-haq-red text-white flex items-center justify-center shrink-0">
@@ -860,12 +897,12 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <span className="block font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary">
-                          Hotline (Điện thoại bàn)
+                          Điện thoại cố định
                         </span>
                         <a href="tel:02423235656" className="font-heading font-black text-lg text-haq-ink hover:text-haq-red transition-colors">
                           024 23 23 56 56
                         </a>
-                        <p className="text-[11px] text-haq-text-secondary">Thứ 2 - Thứ 7: 8h00 - 17h30</p>
+                        <p className="text-[11px] text-haq-text-secondary">Thứ 2 – Thứ 7: 8h00 – 17h30</p>
                       </div>
                     </div>
 
@@ -897,7 +934,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <span className="block font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary">
-                          Hòm thư Hợp tác
+                          Hòm thư Hợp tác & Báo giá
                         </span>
                         <a href="mailto:info@haq.com.vn" className="font-mono font-bold text-sm text-haq-ink hover:text-haq-gold transition-colors">
                           info@haq.com.vn
@@ -916,21 +953,30 @@ export default function ContactPage() {
                         Trụ sở chính HAQ FOOD
                       </span>
                       <p className="text-xs text-haq-text-secondary mt-0.5">
-                        Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam
+                        Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.
                       </p>
+                      <a
+                        href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-haq-red font-bold mt-2 hover:underline"
+                      >
+                        <span>Mở vị trí trên Google Maps</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Right Column: Interactive Map Frame / Visual */}
-              <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-sm min-h-[380px] bg-white relative">
+              {/* Right Column: Interactive Google Map */}
+              <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-sm min-h-[400px] bg-white relative">
                 <iframe
                   title="HAQ FOOD Location Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.746825853712!2d105.7827073!3d21.0428138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab338121cba7%3A0x2cf17614ecef8583!2zMzAgTmcuIDEgUGjhuqFtIFR14bqlbiBUw6BpLCBOZ2jEqWEgxJDDtCwgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
                   width="100%"
                   height="100%"
-                  style={{ border: 0, minHeight: '400px' }}
+                  style={{ border: 0, minHeight: '420px' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
