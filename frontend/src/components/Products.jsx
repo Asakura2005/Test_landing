@@ -1,241 +1,174 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Eye, Sparkles, Package } from 'lucide-react'
+import { ArrowRight, Sparkles, Package, ShieldCheck, ArrowUpRight } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { getProducts, getCategories } from '../services/supabase'
-import ProductDetailModal from './ProductDetailModal'
-import bannerRicePaper from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
-import bannerMungBean from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
 
-// Key products defined in Company Profile
-const KEY_PRODUCTS_PROFILE = [
+import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
+import heroBanner2 from '../assets/herobanner/Gemini_Generated_Image_bbdxopbbdxopbbdx.png'
+import heroBanner3 from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
+
+const CATEGORY_TILES = [
   {
-    key: 'banh-trang-tron',
-    name: 'BÁNH TRÁNG TRỘN HAQ',
-    sub: 'HAQ MIXED RICE PAPER',
-    desc: 'Sản phẩm chủ lực gắn liền với sự hình thành công ty từ năm 2021, đa dạng vị Bò Sa Tế, Tôm Cay và Chà Bông.',
-    image: bannerRicePaper,
-    isHero: true,
+    id: 'banh-trang',
+    label: 'BÁNH TRÁNG',
+    title: 'Bánh Tráng Sấy & Trộn Sợi',
+    desc: 'Đa dạng vị bò, tôm, phô mai và sốt me cay béo ngậy chuẩn vị Sài Gòn.',
+    image: heroBanner1,
+    accent: 'border-l-4 border-haq-red',
+    tag: 'SIGNATURE 2021',
   },
   {
-    key: 'banh-hanh-nhan',
-    name: 'BÁNH HẠNH NHÂN',
-    sub: 'ALMOND COOKIES',
-    desc: 'Bánh nướng thơm bùi vị hạnh nhân tự nhiên, giòn tan thanh ngọt.',
-    image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=800&auto=format&fit=crop',
+    id: 'banh-dau-xanh',
+    label: 'BÁNH THƯỢNG HẠNG',
+    title: 'Bánh Đậu Xanh & Hạnh Nhân',
+    desc: 'Hương vị thanh ngọt truyền thống, chất lượng xuất khẩu sang Hàn Quốc & Đài Loan.',
+    image: heroBanner3,
+    accent: 'border-l-4 border-haq-gold',
+    tag: 'EXPORT QUALITY',
   },
   {
-    key: 'banh-dau-xanh',
-    name: 'BÁNH ĐẬU XANH',
-    sub: 'MUNG BEAN CAKE',
-    desc: 'Bánh đậu xanh tươi truyền thống, mix vị độc đáo và lá dứa thanh mát.',
-    image: bannerMungBean,
+    id: 'do-an-vat',
+    label: 'ĐỒ ĂN VẶT',
+    title: 'Bắp Rang Bơ & Snack Giòn',
+    desc: 'Công nghệ sấy nổ hiện đại, phủ caramel bơ sữa thơm ngon cho mọi lứa tuổi.',
+    image: heroBanner2,
+    accent: 'border-l-4 border-[#D97706]',
+    tag: 'TRENDING SNACK',
   },
   {
-    key: 'bap-rang-bo',
-    name: 'BẮP RANG BƠ',
-    sub: 'POPCORN',
-    desc: 'Bắp rang bơ giòn rụm đậm vị phô mai và caramel.',
-    image: 'https://images.unsplash.com/photo-1578849278619-e73505e9610f?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    key: 'thit-kho',
-    name: 'THỊT KHÔ',
-    sub: 'BEEF JERKY',
-    desc: 'Thịt bò và thịt heo sấy khô đậm đà gia vị truyền thống hảo hạng.',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop',
+    id: 'thit-kho',
+    label: 'THỊT KHÔ',
+    title: 'Thịt Khô Hảo Hạng',
+    desc: 'Thịt bò, heo tẩm ướp gia vị tự nhiên đậm đà, kiểm soát an toàn nghiêm ngặt.',
+    image: heroBanner1,
+    accent: 'border-l-4 border-haq-ink',
+    tag: 'PREMIUM FOOD',
   },
 ]
 
 export default function Products() {
   const ref = useReveal()
-  const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
-        const [productsData, categoriesData] = await Promise.all([
-          getProducts(),
-          getCategories(),
-        ])
-
-        if (categoriesData) {
-          setCategories(categoriesData.filter((c) => c.is_active))
-        }
-
-        if (productsData && productsData.length > 0) {
-          setProducts(productsData)
-        }
+        setLoading(true)
+        const productsData = await getProducts()
+        if (productsData) setProducts(productsData)
       } catch (err) {
-        console.error('Lỗi tải sản phẩm:', err)
+        console.error('Error fetching products:', err)
       } finally {
-        setIsLoading(false)
+        setLoading(false)
       }
     }
     fetchData()
   }, [])
 
-  // Find corresponding DB product for modal
-  const openModalForProfileItem = (item) => {
-    const matched = products.find((p) =>
-      p.name?.toLowerCase().includes(item.name.toLowerCase().replace('haq', '').trim())
-    )
-    if (matched) {
-      setSelectedProduct(matched)
-    } else {
-      // Mock object for detail modal
-      setSelectedProduct({
-        id: item.key,
-        name: item.name,
-        image_url: item.image,
-        description: item.desc,
-        short_description: item.sub,
-        categories: { name: 'KEY PRODUCTS' },
-      })
-    }
-  }
-
-  const heroItem = KEY_PRODUCTS_PROFILE[0]
-  const subItems = KEY_PRODUCTS_PROFILE.slice(1)
-
   return (
-    <section id="san-pham" className="py-20 md:py-32 bg-haq-bone relative">
+    <section id="san-pham" className="py-20 md:py-32 bg-white relative border-t border-black/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-        <div ref={ref} className="reveal">
-          {/* Editorial Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+        <div ref={ref} className="reveal flex flex-col">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 sm:mb-16">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  02 / PRODUCTS
+                  01 / SẢN PHẨM (PRODUCT DISCOVERY)
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
-              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
-                NHỮNG SẢN PHẨM <br />
-                <span className="text-haq-red">TẠO NÊN HAQ FOOD</span>
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
+                KHÁM PHÁ <br />
+                <span className="text-haq-red">DANH MỤC SẢN PHẨM</span>
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
-              Danh mục các dòng sản phẩm đồ ăn vặt chủ lực được phát triển và kiểm soát chất lượng chuẩn ISO & HACCP bởi HAQ FOOD.
-            </p>
+            <div className="flex flex-col items-start md:items-end">
+              <p className="text-sm sm:text-base text-haq-ink/75 max-w-md md:text-right leading-relaxed mb-4">
+                Các dòng sản phẩm thực phẩm và đồ ăn vặt chất lượng cao do HAQ FOOD nghiên cứu và phát triển.
+              </p>
+              <Link
+                to="/san-pham"
+                className="group inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red border-b-2 border-haq-red pb-0.5 hover:text-haq-ink hover:border-haq-ink transition-colors"
+              >
+                <span>XEM TẤT CẢ SẢN PHẨM ({products.length || '20+'})</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
 
-          {/* Editorial Asymmetric Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-            {/* Left Col: Hero Product (Spans 6 cols) */}
-            <div
-              onClick={() => openModalForProfileItem(heroItem)}
-              className="lg:col-span-6 group bg-white rounded-3xl p-6 sm:p-8 border border-black/5 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer relative overflow-hidden"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-mono text-xs font-bold uppercase tracking-widest text-haq-red bg-haq-red/10 px-3 py-1 rounded-full">
-                    SIGNATURE PRODUCT
-                  </span>
-                  <span className="text-xs font-mono font-semibold text-haq-ink/50">
-                    EST. 2021
-                  </span>
-                </div>
-
-                <div className="relative aspect-4/3 my-6 bg-haq-bone rounded-2xl overflow-hidden flex items-center justify-center p-4 border border-black/5">
+          {/* Large Visual Category Tiles (Asymmetric Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {CATEGORY_TILES.map((cat) => (
+              <Link
+                key={cat.id}
+                to="/san-pham"
+                className="group relative bg-haq-bone rounded-3xl overflow-hidden border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              >
+                {/* Visual Image Container with 1.03x Zoom on Hover */}
+                <div className="relative aspect-4/3 overflow-hidden bg-haq-ink">
                   <img
-                    src={heroItem.image}
-                    alt={heroItem.name}
-                    className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                    src={cat.image}
+                    alt={cat.title}
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-haq-ink/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-white text-haq-ink text-xs font-heading font-bold px-4 py-2 rounded-full shadow-md flex items-center gap-1.5">
-                      <Eye className="w-3.5 h-3.5 text-haq-red" />
-                      <span>Xem chi tiết</span>
-                    </span>
+                  <div className="absolute top-3.5 left-3.5 bg-white/95 backdrop-blur-xs text-haq-ink font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-black/5 shadow-2xs">
+                    {cat.tag}
+                  </div>
+                  <div className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/90 group-hover:bg-haq-red text-haq-ink group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:rotate-45" />
                   </div>
                 </div>
 
-                <div className="text-xs font-mono font-bold text-haq-ink/50 tracking-wider uppercase mb-1">
-                  {heroItem.sub}
-                </div>
-                <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink group-hover:text-haq-red transition-colors leading-tight">
-                  {heroItem.name}
-                </h3>
-                <p className="mt-3 text-sm text-haq-ink/75 leading-relaxed">
-                  {heroItem.desc}
-                </p>
-              </div>
-
-              <div className="mt-8 pt-4 border-t border-black/10 flex items-center justify-between text-xs font-heading font-extrabold text-haq-red uppercase tracking-wider">
-                <span>Khám phá sản phẩm</span>
-                <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
-              </div>
-            </div>
-
-            {/* Right Col: Staggered 2x2 Grid (Spans 6 cols) */}
-            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {subItems.map((item) => (
-                <div
-                  key={item.key}
-                  onClick={() => openModalForProfileItem(item)}
-                  className="group bg-white rounded-2xl p-5 border border-black/5 shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between cursor-pointer"
-                >
+                {/* Content Box */}
+                <div className="p-6 flex flex-col justify-between flex-1">
                   <div>
-                    <div className="relative aspect-square mb-4 bg-haq-bone rounded-xl overflow-hidden flex items-center justify-center p-3 border border-black/5">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="max-h-full max-w-full object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-2.5 left-2.5">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-white/90 px-2 py-0.5 rounded-sm border border-black/5">
-                          KEY PRODUCT
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="text-[10px] font-mono font-bold text-haq-ink/50 uppercase tracking-wider mb-0.5">
-                      {item.sub}
-                    </div>
-                    <h4 className="font-heading font-extrabold text-base text-haq-ink group-hover:text-haq-red transition-colors line-clamp-1">
-                      {item.name}
-                    </h4>
-                    <p className="mt-1.5 text-xs text-haq-ink/70 line-clamp-2 leading-relaxed">
-                      {item.desc}
+                    <span className="font-mono text-[11px] font-bold text-haq-red uppercase tracking-widest block mb-1.5">
+                      {cat.label}
+                    </span>
+                    <h3 className="font-heading font-extrabold text-lg text-haq-ink group-hover:text-haq-red transition-colors leading-snug">
+                      {cat.title}
+                    </h3>
+                    <p className="mt-2 text-xs text-haq-ink/70 leading-relaxed">
+                      {cat.desc}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-black/5 flex items-center justify-between text-xs font-heading font-bold text-haq-ink/70 group-hover:text-haq-red">
-                    <span className="text-[11px] uppercase tracking-wider">Chi tiết</span>
-                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  <div className="mt-5 pt-3 border-t border-black/5 flex items-center justify-between text-xs font-mono font-bold text-haq-ink/60 group-hover:text-haq-red">
+                    <span>KHÁM PHÁ NHÓM</span>
+                    <span>→</span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </Link>
+            ))}
           </div>
 
-          {/* Bottom Action */}
-          <div className="mt-12 sm:mt-16 text-center">
-            <Link
-              to="/san-pham"
-              className="group inline-flex items-center gap-3 bg-haq-ink hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
-            >
-              <span>XEM TOÀN BỘ DANH MỤC SẢN PHẨM</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+          {/* Quick Filter Pill Navigation */}
+          <div className="mt-12 p-4 rounded-2xl bg-haq-bone border border-black/5 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-haq-ink/60 uppercase">
+              <Sparkles className="w-4 h-4 text-haq-red" />
+              <span>TIÊU CHUẨN AN TOÀN VÀ ĐÓNG GÓI</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 bg-white rounded-full text-xs font-mono font-semibold text-haq-ink/80 border border-black/5">
+                ISO 22000
+              </span>
+              <span className="px-3 py-1 bg-white rounded-full text-xs font-mono font-semibold text-haq-ink/80 border border-black/5">
+                HACCP
+              </span>
+              <span className="px-3 py-1 bg-white rounded-full text-xs font-mono font-semibold text-haq-ink/80 border border-black/5">
+                BAO BÌ KÍN TIÊU CHUẨN
+              </span>
+              <span className="px-3 py-1 bg-white rounded-full text-xs font-mono font-semibold text-haq-ink/80 border border-black/5">
+                OEM / ODM SẴN SÀNG
+              </span>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Modal Integration */}
-      {selectedProduct && (
-        <ProductDetailModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </section>
   )
 }

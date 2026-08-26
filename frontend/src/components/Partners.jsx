@@ -46,11 +46,11 @@ export default function Partners() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  07 / DISTRIBUTION
+                  06 / MẠNG LƯỚI PHÂN PHỐI (DISTRIBUTION)
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
-              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
                 HIỆN DIỆN TẠI <br />
                 <span className="text-haq-red">NHỮNG HỆ THỐNG LỚN</span>
               </h2>
@@ -128,7 +128,7 @@ export default function Partners() {
 
               <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
                 <span>TIÊU CHUẨN XUẤT KHẨU</span>
-                <span className="text-haq-gold font-bold">ISO · HACCP</span>
+                <span className="text-haq-gold font-bold">ISO 22000 · HACCP</span>
               </div>
             </div>
           </div>

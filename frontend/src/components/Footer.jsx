@@ -1,14 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, Phone, Mail, Award, ShieldCheck, ArrowRight } from 'lucide-react'
+import { MapPin, Phone, Mail, ShieldCheck, ArrowRight } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 export default function Footer() {
   return (
     <footer className="bg-haq-ink text-white pt-16 pb-12 border-t border-white/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-14 border-b border-white/10">
-          {/* Col 1: Brand & Intro (Spans 4 cols) */}
+        {/* Sitemap Multi-column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-14 border-b border-white/10">
+          {/* Col 1: Brand Info (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <Link to="/" className="inline-flex items-center gap-3">
               <div className="h-10 w-10 rounded-lg p-1 bg-white flex items-center justify-center">
@@ -38,69 +39,78 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col 2: Navigation Links (Spans 3 cols) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold">
-              DANH MỤC ĐIỀU HƯỚNG
-            </h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-              <li>
-                <a href="/#" className="hover:text-haq-gold transition-colors">
-                  Trang Chủ
-                </a>
-              </li>
-              <li>
-                <a href="/#gioi-thieu" className="hover:text-haq-gold transition-colors">
-                  Giới Thiệu Doanh Nghiệp
-                </a>
-              </li>
-              <li>
-                <a href="/#san-pham" className="hover:text-haq-gold transition-colors">
-                  Danh Mục Sản Phẩm
-                </a>
-              </li>
-              <li>
-                <a href="/#nang-luc" className="hover:text-haq-gold transition-colors">
-                  Năng Lực Sản Xuất (OEM/ODM)
-                </a>
-              </li>
-              <li>
-                <a href="/#thi-truong" className="hover:text-haq-gold transition-colors">
-                  Mạng Lưới Phân Phối
-                </a>
-              </li>
-              <li>
-                <a href="/#tin-tuc" className="hover:text-haq-gold transition-colors">
-                  Tin Tức & Hoạt Động
-                </a>
-              </li>
-              <li>
-                <Link to="/lien-he" className="hover:text-haq-gold transition-colors">
-                  Liên Hệ & Hợp Tác
-                </Link>
-              </li>
-            </ul>
+          {/* Col 2: Giới thiệu & Sản phẩm (Spans 3 cols) */}
+          <div className="lg:col-span-3 space-y-6">
+            <div>
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
+                GIỚI THIỆU
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm text-white/75">
+                <li><a href="/#gioi-thieu" className="hover:text-haq-gold transition-colors">Tổng quan HAQ FOOD</a></li>
+                <li><a href="/#hanh-trinh" className="hover:text-haq-gold transition-colors">Lịch sử phát triển</a></li>
+                <li><a href="/#tam-nhin" className="hover:text-haq-gold transition-colors">Tầm nhìn & Sứ mệnh</a></li>
+                <li><a href="/#tam-nhin" className="hover:text-haq-gold transition-colors">Giá trị cốt lõi</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
+                DANH MỤC SẢN PHẨM
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm text-white/75">
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh tráng & bánh tráng trộn</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh đậu xanh & bánh hạnh nhân</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Đồ ăn vặt & bắp rang bơ</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Thịt khô hảo hạng</Link></li>
+              </ul>
+            </div>
           </div>
 
-          {/* Col 3: Contact Info (Spans 5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
+          {/* Col 3: Năng lực & Thị trường (Spans 2 cols) */}
+          <div className="lg:col-span-2 space-y-6">
+            <div>
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
+                NĂNG LỰC
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm text-white/75">
+                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Sản xuất quy mô lớn</a></li>
+                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Tiêu chuẩn ISO & HACCP</a></li>
+                <li><a href="/#hop-tac" className="hover:text-haq-gold transition-colors">Gia công OEM / ODM</a></li>
+                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Logistics & Lưu mẫu</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
+                THỊ TRƯỜNG
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm text-white/75">
+                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Việt Nam (Nội địa)</a></li>
+                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Hàn Quốc (Xuất khẩu)</a></li>
+                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Đài Loan (Xuất khẩu)</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Col 4: Liên hệ chính thức (Spans 3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold">
-              THÔNG TIN LIÊN HỆ DOANH NGHIỆP
+              THÔNG TIN LIÊN HỆ
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-white/80">
-              <li className="flex items-start gap-3">
+              <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
                 <span>
-                  <strong>Trụ sở:</strong> 30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội, Việt Nam
+                  <strong>Trụ sở:</strong> 30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội
                 </span>
               </li>
-              <li className="flex items-center gap-3">
+              <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-haq-red shrink-0" />
                 <span>
                   <strong>Hotline:</strong> <a href="tel:02423235656" className="hover:text-haq-gold font-mono font-bold">024 23 23 56 56</a>
                 </span>
               </li>
-              <li className="flex items-center gap-3">
+              <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-haq-red shrink-0" />
                 <span>
                   <strong>Email:</strong> <a href="mailto:info@haq.com.vn" className="hover:text-haq-gold">info@haq.com.vn</a>
@@ -108,10 +118,13 @@ export default function Footer() {
               </li>
             </ul>
 
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 mt-4">
-              <p className="text-xs text-white/70 leading-relaxed">
-                “Chất lượng là cốt lõi của thương hiệu.” — HAQ FOOD cam kết đồng hành bền vững cùng các đối tác bán lẻ & phân phối.
-              </p>
+            <div className="pt-2">
+              <Link
+                to="/lien-he"
+                className="inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-gold hover:text-white border-b border-haq-gold pb-0.5 transition-colors"
+              >
+                <span>GỬI YÊU CẦU HỢP TÁC B2B →</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -121,7 +134,7 @@ export default function Footer() {
           <div>
             © 2026 CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <span>ISO 22000</span>
             <span>·</span>
             <span>HACCP</span>

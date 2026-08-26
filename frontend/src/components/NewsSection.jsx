@@ -50,12 +50,12 @@ export default function NewsSection() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  09 / NEWS
+                  09 / TIN TỨC & HOẠT ĐỘNG (NEWS)
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
               <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
-                TIN TỨC & HOẠT ĐỘNG
+                TIN TỨC & SỰ KIỆN DOANH NGHIỆP
               </h2>
             </div>
             <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">

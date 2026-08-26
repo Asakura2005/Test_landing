@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Factory, Sparkles, Building2, Handshake } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 
 const ADVANTAGES = [
@@ -13,8 +13,8 @@ const ADVANTAGES = [
   {
     num: '02',
     code: 'FLEXIBILITY',
-    title: 'Sản Phẩm Đa Dạng – Gia Công Theo Yêu Cầu',
-    desc: 'Danh mục phong phú nhiều phân khúc và năng lực OEM/ODM linh hoạt đáp ứng mọi yêu cầu riêng biệt của đối tác.',
+    title: 'Sản Phẩm Đa Dạng – Gia Công OEM/ODM',
+    desc: 'Danh mục phong phú nhiều phân khúc và năng lực OEM/ODM linh hoạt đáp ứng mọi yêu cầu bao bì, công thức riêng biệt của đối tác.',
   },
   {
     num: '03',
@@ -41,7 +41,7 @@ export default function WhyChooseUs() {
   const [activeIdx, setActiveIdx] = useState(0)
 
   return (
-    <section className="py-20 md:py-32 bg-white relative border-t border-black/10">
+    <section id="hop-tac" className="py-20 md:py-32 bg-white relative border-t border-black/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal flex flex-col">
           {/* Header */}
@@ -49,18 +49,27 @@ export default function WhyChooseUs() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  06 / WHY HAQ
+                  07 / HỢP TÁC DOANH NGHIỆP (B2B PARTNERSHIP)
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
-              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
-                ĐIỀU GÌ TẠO NÊN <br />
-                <span className="text-haq-red">HAQ FOOD?</span>
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
+                ĐỐI TÁC CỦA <br />
+                <span className="text-haq-red">HAQ FOOD</span>
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
-              5 lợi thế cạnh tranh cốt lõi khẳng định vị thế và năng lực hợp tác chiến lược của HAQ FOOD với các đối tác lớn.
-            </p>
+            <div>
+              <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed mb-4">
+                Tìm kiếm một đối tác sản xuất và cung ứng thực phẩm đáng tin cậy? HAQ FOOD sẵn sàng đồng hành cùng sự phát triển của bạn.
+              </p>
+              <Link
+                to="/lien-he"
+                className="group inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red border-b-2 border-haq-red pb-0.5 hover:text-haq-ink hover:border-haq-ink transition-colors"
+              >
+                <span>TRAO ĐỔI VỚI HAQ FOOD</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
 
           {/* Interactive Typography & Value List */}
@@ -132,21 +141,10 @@ export default function WhyChooseUs() {
               </div>
 
               <div className="pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-haq-gold">
-                <span>HAQ COMPETITIVE ADVANTAGE</span>
+                <span>HAQ B2B ADVANTAGE</span>
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
-          </div>
-
-          {/* CTA */}
-          <div className="mt-14 sm:mt-16 text-center">
-            <Link
-              to="/lien-he"
-              className="group inline-flex items-center gap-3 bg-haq-red hover:bg-haq-ink text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
-            >
-              <span>HỢP TÁC CÙNG HAQ FOOD</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
           </div>
         </div>
       </div>

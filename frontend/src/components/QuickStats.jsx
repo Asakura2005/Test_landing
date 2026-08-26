@@ -3,24 +3,24 @@ import { useReveal } from '../hooks/useReveal'
 
 const STATS = [
   {
-    number: '2021',
+    value: '2021',
     label: 'FOUNDED',
-    subtext: 'Năm thành lập công ty',
+    sublabel: 'Năm thành lập doanh nghiệp tại Hà Nội',
   },
   {
-    number: 'ISO',
-    label: 'ISO CERTIFIED',
-    subtext: 'Tiêu chuẩn quản lý chất lượng',
+    value: 'ISO',
+    label: 'CERTIFIED',
+    sublabel: 'Chứng nhận Hệ thống Quản lý Chất lượng ISO 22000',
   },
   {
-    number: 'HACCP',
-    label: 'HACCP CERTIFIED',
-    subtext: 'Chuẩn mực an toàn thực phẩm',
+    value: 'HACCP',
+    label: 'CERTIFIED',
+    sublabel: 'Tiêu chuẩn An toàn Vệ sinh Thực phẩm quốc tế',
   },
   {
-    number: '03',
+    value: '03+',
     label: 'MARKETS',
-    subtext: 'Việt Nam · Hàn Quốc · Đài Loan',
+    sublabel: 'Việt Nam (nội địa), Hàn Quốc & Đài Loan (xuất khẩu)',
   },
 ]
 
@@ -28,28 +28,28 @@ export default function QuickStats() {
   const ref = useReveal()
 
   return (
-    <section className="py-10 md:py-14 bg-white border-y border-black/10">
+    <section className="bg-haq-ink text-white py-14 sm:py-16 border-y border-black/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div
           ref={ref}
-          className="reveal grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 lg:divide-x divide-black/10"
+          className="reveal grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 divide-y sm:divide-y-0 sm:divide-x divide-white/10"
         >
           {STATS.map((stat, idx) => (
             <div
               key={idx}
-              className={`pt-4 sm:pt-0 lg:px-6 flex flex-col justify-center ${
-                idx % 2 === 1 ? 'sm:border-l border-black/10 lg:border-l-0 sm:pl-6' : ''
-              }`}
+              className={`flex flex-col ${idx !== 0 ? 'pt-6 sm:pt-0 sm:pl-8' : ''}`}
             >
-              <div className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-haq-ink tracking-tight">
-                {stat.number}
+              <div className="flex items-baseline gap-2">
+                <span className="font-mono text-3xl sm:text-4xl lg:text-5xl font-black text-haq-gold tracking-tight">
+                  {stat.value}
+                </span>
+                <span className="font-mono text-[11px] font-bold tracking-widest text-white/50 uppercase">
+                  {stat.label}
+                </span>
               </div>
-              <div className="mt-1 font-heading font-extrabold text-xs sm:text-sm text-haq-red uppercase tracking-wider">
-                {stat.label}
-              </div>
-              <div className="mt-0.5 text-xs text-haq-ink/60">
-                {stat.subtext}
-              </div>
+              <p className="mt-2 text-xs text-white/70 leading-relaxed max-w-xs">
+                {stat.sublabel}
+              </p>
             </div>
           ))}
         </div>

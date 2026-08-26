@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowRight, Compass, Sparkles } from 'lucide-react'
+import { Compass, Sparkles } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 
 const EXPANSION_PATH = [
@@ -30,7 +30,7 @@ export default function VisionSection() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  08 / FUTURE
+                  08 / TẦM NHÌN & GIÁ TRỊ (FUTURE)
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
