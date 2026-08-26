@@ -8,7 +8,8 @@ import {
   Sparkles,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
-import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
+import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage } from '../data/productCategories'
+import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
 
 const ABOUT_SUBPAGES = [
@@ -341,25 +342,32 @@ export default function StickyNav() {
                                      p.category_id === hoveredCategory?.id || 
                                      p.categories?.slug === hoveredCategory?.slug)
                         .slice(0, 8) // Limit to 8 for cleanliness
-                        .map((p) => (
-                          <Link
-                            key={p.id}
-                            to={`/san-pham/${p.slug}`}
-                            onClick={() => setActiveMenu(null)}
-                            className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
-                          >
-                            <div className="w-16 h-16 rounded-full overflow-hidden border border-black/5 shadow-sm shrink-0">
-                              <img
-                                src={p.image_url}
-                                alt={p.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                            <span className="text-[11px] font-heading font-bold text-haq-ink text-center line-clamp-2">
-                              {p.name}
-                            </span>
-                          </Link>
-                        ))}
+                        .map((p) => {
+                          const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
+                          return (
+                            <Link
+                              key={p.id}
+                              to={`/san-pham/${p.slug}`}
+                              onClick={() => setActiveMenu(null)}
+                              className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
+                            >
+                              <div className="w-16 h-16 rounded-full overflow-hidden border border-black/5 shadow-sm shrink-0 bg-haq-bone flex items-center justify-center">
+                                <img
+                                  src={imgSrc}
+                                  alt={p.name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null
+                                    e.currentTarget.src = catBanhTrangImg
+                                  }}
+                                />
+                              </div>
+                              <span className="text-[11px] font-heading font-bold text-haq-ink text-center line-clamp-2">
+                                {p.name}
+                              </span>
+                            </Link>
+                          )
+                        })}
                     </div>
                   </div>
                 </div>

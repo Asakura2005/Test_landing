@@ -4,6 +4,63 @@ import catBanhImg from '../assets/categories/category_banh.jpg'
 import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
 import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 
+// Local product image assets
+import banhTrangSayTomImg from '../assets/products/banh_trang_say_tom_50g.jpg'
+import banhTrangSayBoImg from '../assets/products/banh_trang_say_bo_50g.jpg'
+import banhTrangSayChaBongImg from '../assets/products/banh_trang_say_cha_bong_50g.jpg'
+import banhTrangCuonGaImg from '../assets/products/banh_trang_cuon_ga_la_chanh_100g.jpg'
+import banhTrangSaTeTomImg from '../assets/products/banh_trang_soi_sa_te_tom_100g.jpg'
+import banhHanhNhanImg from '../assets/products/banh_hanh_nhan_truyen_thong_130g.jpg'
+import banhHanhNhanTraXanhImg from '../assets/products/banh_hanh_nhan_tra_xanh_130g.jpg'
+import banhDauXanhImg from '../assets/products/banh_dau_xanh_tuoi_250g.jpg'
+import banhSuaDuaImg from '../assets/products/banh_sua_dua_130g.jpg'
+
+export const PRODUCT_IMAGE_MAP = {
+  'banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
+  'Banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
+  'banh-trang-say-bo-50g': banhTrangSayBoImg,
+  'banh-trang-say-cha-bong-50g': banhTrangSayChaBongImg,
+  'banh-trang-tron-ga-la-chanh': banhTrangCuonGaImg,
+  'banh-trang-tron-sa-te-tom': banhTrangSaTeTomImg,
+  'banh-trang-tron-haq': banhTrangSaTeTomImg,
+  'banh-hanh-nhan-truyen-thong-130g': banhHanhNhanImg,
+  'banh-hanh-nhan-cao-cap': banhHanhNhanImg,
+  'banh-hanh-nhan-tra-xanh-130g': banhHanhNhanTraXanhImg,
+  'banh-dau-xanh-tuoi-250g': banhDauXanhImg,
+  'banh-dau-xanh-truyen-thong': banhDauXanhImg,
+  'banh-sua-dua-130g': banhSuaDuaImg,
+  'bap-rang-bo-caramel': catDoAnVatImg,
+  'bap-rang-bo-pho-mai': catDoAnVatImg,
+  'thit-bo-kho-hao-hang': catDoAnKhoImg,
+  'thit-heo-kho-chay-toi': catDoAnKhoImg,
+}
+
+/**
+ * Hàm giải quyết ảnh sản phẩm an toàn và fallback nhiều cấp
+ */
+export function resolveProductImage(product, categorySlug = null) {
+  if (!product) return catAllImg
+  if (product.slug && PRODUCT_IMAGE_MAP[product.slug]) {
+    return PRODUCT_IMAGE_MAP[product.slug]
+  }
+  if (product.image_url && typeof product.image_url === 'string' && product.image_url.startsWith('http')) {
+    return product.image_url
+  }
+  if (product.images && product.images[0] && typeof product.images[0] === 'string' && product.images[0].startsWith('http')) {
+    return product.images[0]
+  }
+  if (product.image && typeof product.image === 'string' && product.image.startsWith('http')) {
+    return product.image
+  }
+  if (categorySlug && CATEGORY_VISUALS[categorySlug]?.image) {
+    return CATEGORY_VISUALS[categorySlug].image
+  }
+  if (product.categories?.slug && CATEGORY_VISUALS[product.categories.slug]?.image) {
+    return CATEGORY_VISUALS[product.categories.slug].image
+  }
+  return catBanhTrangImg
+}
+
 /**
  * Visual Asset mapping theo slug hoặc từ khóa
  */
