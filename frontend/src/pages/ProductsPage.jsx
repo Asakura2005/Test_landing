@@ -335,12 +335,12 @@ export default function ProductsPage() {
                     className="group bg-white rounded-3xl overflow-hidden border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
                   >
                     <div className="flex-1 flex flex-col">
-                      {/* Product Image */}
-                      <div className="relative aspect-4/3 overflow-hidden bg-haq-bone/60 flex items-center justify-center p-3 sm:p-4">
+                      {/* Product Image Frame */}
+                      <div className="relative h-56 sm:h-60 bg-[#f8f9fa] flex items-center justify-center p-6 border-b border-black/5 overflow-hidden">
                         <img
                           src={productImg}
                           alt={prod.name}
-                          className="w-full h-full object-contain filter drop-shadow-xs transform group-hover:scale-105 transition-transform duration-500"
+                          className="max-h-44 sm:max-h-48 w-auto max-w-full object-contain filter drop-shadow-md transform group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
                         {prod.is_pinned && (
@@ -350,22 +350,25 @@ export default function ProductsPage() {
                         )}
                       </div>
 
-                      {/* Product Content */}
+                      {/* Product Content with Strict Height Locking */}
                       <div className="p-6 flex-1 flex flex-col justify-between">
                         <div>
-                          <div className="text-[10px] font-mono font-bold text-haq-red uppercase tracking-widest mb-1.5">
+                          {/* Slot 1: Category Tag (Fixed Height) */}
+                          <div className="text-[10px] font-mono font-bold text-haq-red uppercase tracking-widest h-4 flex items-center mb-1.5 truncate">
                             {prod.categories?.name ||
                               activeRootCategory.name ||
                               'HAQ FOOD'}
                           </div>
 
-                          <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug line-clamp-2 min-h-[3.25rem] flex items-center">
+                          {/* Slot 2: Product Name (Fixed 2-Line Height) */}
+                          <h3 className="font-heading font-black text-base text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug line-clamp-2 h-12 flex items-center">
                             <Link to={`/san-pham/${detailSlug}`}>
                               {prod.name}
                             </Link>
                           </h3>
 
-                          <p className="mt-2 text-xs text-haq-ink/70 leading-relaxed line-clamp-2 min-h-[2.5rem]">
+                          {/* Slot 3: Description (Fixed 2-Line Height) */}
+                          <p className="mt-2 text-xs text-haq-ink/70 leading-relaxed line-clamp-2 h-9 flex items-start">
                             {prod.description ||
                               'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
                           </p>
@@ -373,7 +376,7 @@ export default function ProductsPage() {
                       </div>
                     </div>
 
-                    {/* Card Footer */}
+                    {/* Card Footer (Always pinned to bottom) */}
                     <div className="p-6 pt-0 mt-auto">
                       <Link
                         to={`/san-pham/${detailSlug}`}
