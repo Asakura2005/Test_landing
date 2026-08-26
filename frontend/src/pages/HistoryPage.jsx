@@ -317,33 +317,31 @@ export default function HistoryPage() {
                   <div
                     key={chap.year}
                     id={chap.id}
-                    className="relative scroll-mt-36"
+                    className="relative scroll-mt-24 sm:scroll-mt-36"
                   >
-                    <div className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center ${
-                      isEven ? '' : 'lg:flex-row-reverse'
-                    }`}>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-start">
                       {/* Visual Media Column */}
-                      <div className={`lg:col-span-6 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                        <div className="relative aspect-16/10 rounded-3xl overflow-hidden shadow-xl border border-black/10 bg-haq-ink group">
+                      <div className="lg:col-span-6">
+                        <div className="relative aspect-video lg:aspect-16/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-black/5 bg-haq-ink group">
                           <img
                             src={chap.image}
                             alt={chap.title}
                             className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+                          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
                           
                           {/* Year Badge Overlay */}
-                          <div className="absolute top-4 left-4 bg-haq-red text-white font-heading font-black text-sm uppercase px-4 py-1.5 rounded-full shadow-md flex items-center gap-2">
+                          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-haq-red text-white font-heading font-black text-[10px] sm:text-sm uppercase px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-md flex items-center gap-2">
                             <span>{chap.year}</span>
-                            <span className="text-[10px] font-mono opacity-80">· {chap.phase}</span>
+                            <span className="text-[9px] sm:text-[10px] font-mono opacity-80 hidden sm:inline">· {chap.phase}</span>
                           </div>
 
                           {/* Highlight Badge */}
-                          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
-                            <span className="font-mono text-xs font-bold uppercase tracking-wider bg-black/50 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10">
+                          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-center justify-between text-white">
+                            <span className="font-mono text-[9px] sm:text-xs font-bold uppercase tracking-wider bg-black/50 backdrop-blur-md px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-white/10">
                               {chap.highlightBadge}
                             </span>
-                            <span className="font-mono text-xs font-bold text-haq-gold">
+                            <span className="font-mono text-[9px] sm:text-xs font-bold text-haq-gold">
                               {chap.metric}: {chap.metricVal}
                             </span>
                           </div>
@@ -351,20 +349,19 @@ export default function HistoryPage() {
                       </div>
 
                       {/* Content Narrative Column */}
-                      <div className={`lg:col-span-6 space-y-5 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+                      <div className="lg:col-span-6 space-y-4">
                         <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="font-mono text-xs font-bold text-haq-red uppercase tracking-widest">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="font-mono text-[10px] sm:text-xs font-bold text-haq-red uppercase tracking-widest">
                               {chap.phase} · {chap.theme}
                             </span>
-                            <span className="h-px flex-1 bg-black/10" />
                           </div>
 
-                          <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase leading-snug">
+                          <h3 className="font-heading font-black text-xl sm:text-3xl text-haq-ink uppercase leading-snug">
                             {chap.title}
                           </h3>
 
-                          <p className="mt-2 text-xs sm:text-sm font-mono font-bold text-haq-ink/80 leading-relaxed border-l-2 border-haq-red pl-3">
+                          <p className="mt-2 text-[11px] sm:text-sm font-mono font-bold text-haq-ink/80 leading-relaxed border-l-2 border-haq-red pl-3">
                             {chap.lead}
                           </p>
                         </div>
@@ -374,14 +371,14 @@ export default function HistoryPage() {
                         </p>
 
                         {/* Achievements Checklist (Bibica Style) */}
-                        <div className="space-y-2.5 pt-2">
+                        <div className="space-y-2 pt-1">
                           {chap.achievements.map((ach, aIdx) => (
                             <div
                               key={aIdx}
-                              className="flex items-start gap-3 bg-white p-3.5 rounded-2xl border border-black/5 shadow-2xs"
+                              className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-black/5 shadow-2xs"
                             >
-                              <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
-                              <span className="text-xs text-haq-ink/85 leading-relaxed font-medium">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-haq-red shrink-0 mt-0.5" />
+                              <span className="text-[11px] sm:text-xs text-haq-ink/85 leading-relaxed font-medium">
                                 {ach}
                               </span>
                             </div>
@@ -392,6 +389,7 @@ export default function HistoryPage() {
                   </div>
                 )
               })}
+
             </div>
           </div>
         </section>

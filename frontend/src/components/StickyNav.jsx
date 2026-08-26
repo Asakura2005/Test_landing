@@ -417,68 +417,72 @@ export default function StickyNav() {
       </div>
 
       {/* Mobile Drawer (Accordion) */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-b border-black/10 px-6 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
+      <div
+        className={`md:hidden fixed inset-x-0 top-[68px] sm:top-[72px] bg-white border-b border-black/10 transition-all duration-500 ease-in-out z-30 overflow-hidden ${
+          mobileOpen ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="px-6 py-8 space-y-5 overflow-y-auto max-h-[85vh] scrollbar-thin">
           {/* VỀ CHÚNG TÔI */}
-          <div className="border-b border-black/5 pb-2">
+          <div className="border-b border-black/5 pb-3">
             <button
               type="button"
               onClick={() => toggleMobileAccordion('ve-chung-toi')}
-              className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-red uppercase"
+              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-black text-haq-red uppercase tracking-tight"
             >
               <span>VỀ CHÚNG TÔI</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 've-chung-toi' ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 've-chung-toi' ? 'rotate-180' : ''}`} />
             </button>
-            {mobileAccordion === 've-chung-toi' && (
-              <div className="pl-4 space-y-3 py-2 text-xs text-haq-ink/75">
-                <Link
-                  to="/gioi-thieu"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-bold text-haq-ink hover:text-haq-red py-1 border-l-2 border-haq-red pl-2.5"
-                >
-                  01. Giới thiệu Tổng quan & Sứ mệnh
-                </Link>
-                <Link
-                  to="/lich-su"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-bold text-haq-ink hover:text-haq-red py-1 border-l-2 border-haq-gold pl-2.5"
-                >
-                  02. Lịch sử & Dấu mốc 2021 — 2026
-                </Link>
-                <Link
-                  to="/nang-luc"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-bold text-haq-ink hover:text-haq-red py-1 border-l-2 border-haq-ink pl-2.5"
-                >
-                  03. Cơ sở Sản xuất & Tiêu chuẩn Chất lượng
-                </Link>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                mobileAccordion === 've-chung-toi' ? 'max-h-60 mt-3 opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              <div className="pl-4 space-y-4 py-1 text-xs text-haq-ink/75">
+                {ABOUT_SUBPAGES.map((sub, idx) => (
+                  <Link
+                    key={idx}
+                    to={sub.path}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 font-bold text-haq-ink hover:text-haq-red transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-haq-bone flex items-center justify-center text-haq-red">
+                      <sub.icon className="w-4 h-4" />
+                    </div>
+                    <span>{sub.title}</span>
+                  </Link>
+                ))}
               </div>
-            )}
+            </div>
           </div>
 
           {/* SẢN PHẨM */}
-          <div className="border-b border-black/5 pb-2">
+          <div className="border-b border-black/5 pb-3">
             <button
               type="button"
               onClick={() => toggleMobileAccordion('san-pham')}
-              className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-ink uppercase"
+              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-black text-haq-ink uppercase tracking-tight"
             >
-              <span>SẢN PHẨM</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'san-pham' ? 'rotate-180 text-haq-red' : ''}`} />
+              <span>DANH MỤC SẢN PHẨM</span>
+              <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180 text-haq-red' : ''}`} />
             </button>
-            {mobileAccordion === 'san-pham' && (
-              <div className="pl-4 space-y-3 py-2 text-xs text-haq-ink/75">
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                mobileAccordion === 'san-pham' ? 'max-h-[400px] mt-3 opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              <div className="pl-4 space-y-4 py-1 text-xs text-haq-ink/75 overflow-y-auto scrollbar-none">
                 {categoryTree.map((cat) => (
-                  <div key={cat.id} className="space-y-1">
+                  <div key={cat.id} className="space-y-2">
                     <Link
                       to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
                       onClick={() => setMobileOpen(false)}
-                      className="block font-bold text-haq-ink hover:text-haq-red py-0.5"
+                      className="block font-bold text-haq-ink hover:text-haq-red text-[13px]"
                     >
                       {cat.name}
                     </Link>
                     {cat.children && cat.children.length > 0 && (
-                      <div className="pl-3 space-y-1 border-l border-black/10">
+                      <div className="pl-3 space-y-2 border-l border-black/10">
                         {cat.children.map((child) => (
                           <Link
                             key={child.id}
@@ -496,37 +500,40 @@ export default function StickyNav() {
                 <Link
                   to="/san-pham"
                   onClick={() => setMobileOpen(false)}
-                  className="block py-1 font-bold text-haq-red pt-2"
+                  className="inline-flex items-center gap-2 py-2 font-black text-haq-red pt-3 border-t border-black/5 w-full uppercase tracking-widest text-[11px]"
                 >
-                  XEM TẤT CẢ SẢN PHẨM →
+                  <span>XEM TẤT CẢ SẢN PHẨM</span>
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
-            )}
+            </div>
           </div>
 
           {/* TIN TỨC */}
-          <div className="border-b border-black/5 pb-2">
+          <div className="border-b border-black/5 pb-3">
             <Link
               to="/tin-tuc"
               onClick={() => setMobileOpen(false)}
-              className="block py-2 text-sm font-heading font-black text-haq-ink uppercase"
+              className="block py-2 text-[15px] font-heading font-black text-haq-ink uppercase tracking-tight"
             >
-              TIN TỨC
+              TIN TỨC & SỰ KIỆN
             </Link>
           </div>
 
           {/* LIÊN HỆ */}
-          <div className="pt-4">
+          <div className="pt-6">
             <Link
               to="/lien-he"
               onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-center gap-2 bg-haq-red text-white py-3 rounded-full text-xs font-heading font-black uppercase tracking-wider shadow-sm"
+              className="w-full flex items-center justify-center gap-3 bg-haq-red text-white py-4 rounded-2xl text-[13px] font-heading font-black uppercase tracking-widest shadow-lg shadow-haq-red/20 active:scale-95 transition-all"
             >
-              <span>LIÊN HỆ →</span>
+              <span>LIÊN HỆ HỢP TÁC</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
-      )}
+      </div>
+
     </header>
   )
 }

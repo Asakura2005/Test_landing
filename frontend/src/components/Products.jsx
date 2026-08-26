@@ -140,15 +140,15 @@ export default function Products() {
             <span className="font-mono text-xs uppercase tracking-widest">Đang tải danh mục sản phẩm...</span>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-12 lg:gap-14 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10 sm:gap-12 lg:gap-14 justify-items-center">
             {displayCategories.map((item) => (
               <Link
                 key={item.id || item.slug}
                 to={item.link}
-                className="group flex flex-col items-center text-center w-full max-w-[240px]"
+                className="group flex flex-col items-center text-center w-full max-w-[160px] xs:max-w-[200px] sm:max-w-[240px]"
               >
                 {/* Outer Circle Container */}
-                <div className="w-40 h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-linear-to-b from-[#f8f9fa] to-[#efefef] border border-black/5 shadow-2xs group-hover:shadow-xl group-hover:border-haq-red/20 group-hover:bg-white transition-all duration-400 flex items-center justify-center p-4 relative overflow-hidden">
+                <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-linear-to-b from-[#f8f9fa] to-[#efefef] border border-black/5 shadow-2xs group-hover:shadow-xl group-hover:border-haq-red/20 group-hover:bg-white transition-all duration-400 flex items-center justify-center p-3 xs:p-4 relative overflow-hidden">
                   {/* Subtle Inner Glow */}
                   <div className="absolute inset-0 rounded-full bg-radial from-transparent to-black/5 opacity-50 pointer-events-none" />
 
@@ -162,12 +162,13 @@ export default function Products() {
                 </div>
 
                 {/* Category Name Below Circle */}
-                <h3 className="mt-5 font-heading font-black text-sm sm:text-base text-haq-ink uppercase tracking-tight group-hover:text-haq-red transition-colors duration-200">
+                <h3 className="mt-3 xs:mt-5 font-heading font-black text-xs xs:text-sm sm:text-base text-haq-ink uppercase tracking-tight group-hover:text-haq-red transition-colors duration-200 line-clamp-2">
                   {item.name}
                 </h3>
               </Link>
             ))}
           </div>
+
         )}
 
         {/* Bottom CTA to Full Catalog */}
