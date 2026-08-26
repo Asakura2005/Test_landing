@@ -74,16 +74,16 @@ export default function LeadForm() {
 
             {/* Contact info */}
             <div className="mt-12 space-y-6">
-              <a href="tel:+84901234567" className="flex items-start gap-4 group">
+              <a href="tel:0993308319" className="flex items-start gap-4 group">
                 <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
                   <Phone className="w-5 h-5 text-white" strokeWidth={1.8} />
                 </span>
                 <span>
                   <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Hotline
+                    Hotline / Zalo
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
-                    024 23 23 56 56
+                    0993 308 319
                   </span>
                 </span>
               </a>
