@@ -13,15 +13,19 @@ import VisionSection from '../components/VisionSection'
 import NewsSection from '../components/NewsSection'
 import CtaBanner from '../components/CtaBanner'
 import Footer from '../components/Footer'
+import FloatingContactBar from '../components/FloatingContactBar'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans selection:bg-haq-red selection:text-white flex flex-col">
+    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans selection:bg-haq-red selection:text-white flex flex-col relative">
       {/* 00: Sticky Header & Navigation */}
       <StickyNav />
 
+      {/* Floating Quick-Contact Bar (Right side) */}
+      <FloatingContactBar />
+
       <main className="flex-1">
-        {/* Hero: Quality Is The Core & 16:9 3-Slide Showcase */}
+        {/* Full-Bleed 100% Edge-to-Edge Hero Banner Slider */}
         <Hero />
 
         {/* 01 / ABOUT HAQ FOOD: Corporate Introduction */}
