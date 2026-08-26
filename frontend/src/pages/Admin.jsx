@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users } from 'lucide-react'
+import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users, Newspaper } from 'lucide-react'
 import { getProducts, deleteProduct, createProduct, updateProduct } from '../services/supabase'
 import ProductModal from '../components/admin/ProductModal'
 import LeadsManager from '../components/admin/LeadsManager'
 import CategoryManager from '../components/admin/CategoryManager'
+import NewsManager from '../components/admin/NewsManager'
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -161,6 +162,14 @@ export default function Admin() {
             <Pin className="w-5 h-5" /> Quản lý danh mục
           </button>
           <button 
+            onClick={() => setActiveTab('news')}
+            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
+              activeTab === 'news' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+            }`}
+          >
+            <Newspaper className="w-5 h-5" /> Quản lý tin tức
+          </button>
+          <button 
             onClick={() => setActiveTab('leads')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
               activeTab === 'leads' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
@@ -182,6 +191,8 @@ export default function Admin() {
           <LeadsManager />
         ) : activeTab === 'categories' ? (
           <CategoryManager products={products} />
+        ) : activeTab === 'news' ? (
+          <NewsManager />
         ) : (
           <>
             {/* Header */}

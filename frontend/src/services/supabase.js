@@ -276,3 +276,101 @@ export async function deleteCategory(id) {
   if (error) throw error
   return true
 }
+
+/**
+ * ==================================================
+ * NEWS APIS (CMS)
+ * ==================================================
+ */
+
+/**
+ * Lấy danh sách tin tức
+ */
+export async function getNews() {
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .order('is_pinned', { ascending: false })
+    .order('published_at', { ascending: false })
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Lấy chi tiết tin tức theo slug
+ */
+export async function getNewsBySlug(slug) {
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Tạo tin tức mới
+ */
+export async function createNews(newsData) {
+  const { data, error } = await supabase
+    .from('news')
+    .insert([newsData])
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Cập nhật tin tức
+ */
+export async function updateNews(id, newsData) {
+  const { data, error } = await supabase
+    .from('news')
+    .update(newsData)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Xóa tin tức
+ */
+export async function deleteNews(id) {
+  const { error } = await supabase
+    .from('news')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw error
+  return true
+}
+
+/**
+ * Upload ảnh tin tức lên bucket 'assets' (dùng chung cho sản phẩm)
+ */
+export async function uploadNewsImage(file) {
+  const fileExt = file.name.split('.').pop()
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
+  const filePath = `news/${fileName}`
+
+  const { data, error } = await supabase.storage
+    .from('assets')
+    .upload(filePath, file)
+
+  if (error) throw error
+
+  // Lấy public URL
+  const { data: { publicUrl } } = supabase.storage
+    .from('assets')
+    .getPublicUrl(filePath)
+
+  return publicUrl
+}

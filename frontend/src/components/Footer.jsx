@@ -33,10 +33,7 @@ export default function Footer() {
               <strong>CÔNG TY CỔ PHẦN HAQ HÀ NỘI</strong> — Doanh nghiệp sản xuất và phân phối các sản phẩm thực phẩm, đồ ăn vặt đóng gói chất lượng cao cho thị trường trong nước và quốc tế.
             </p>
 
-            <div className="pt-2 flex items-center gap-3 text-xs font-mono text-haq-gold">
-              <ShieldCheck className="w-4 h-4" />
-              <span>ISO 22000 & HACCP CERTIFIED</span>
-            </div>
+            
           </div>
 
           {/* Col 2: Về chúng tôi & Sản phẩm (Spans 3 cols) */}
@@ -133,13 +130,7 @@ export default function Footer() {
           <div>
             © 2026 CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.
           </div>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <span>ISO 22000</span>
-            <span>·</span>
-            <span>HACCP</span>
-            <span>·</span>
-            <span>MADE IN VIETNAM</span>
-          </div>
+          
         </div>
       </div>
     </footer>

@@ -7,6 +7,7 @@ import CapabilitiesPage from './pages/CapabilitiesPage.jsx'
 import ProductsPage from './pages/ProductsPage.jsx'
 import HeritagePage from './pages/HeritagePage.jsx'
 import NewsPage from './pages/NewsPage.jsx'
+import NewsDetailPage from './pages/NewsDetailPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import PolicyPage from './pages/PolicyPage.jsx'
 import Admin from './pages/Admin.jsx'
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/san-pham" element={<ProductsPage />} />
           <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
           <Route path="/tin-tuc" element={<NewsPage />} />
+          <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
           <Route path="/chinh-sach" element={<PolicyPage />} />
           <Route path="/heritage" element={<HeritagePage />} />
