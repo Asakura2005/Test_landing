@@ -5,101 +5,228 @@ import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
 import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 
 /**
- * SINGLE SOURCE OF TRUTH FOR PRODUCT CATEGORIES
- * Được đồng bộ giữa Header Mega Menu, Mobile Drawer, và Trang Danh mục sản phẩm (/san-pham).
- * Mỗi danh mục sở hữu hình ảnh visual riêng biệt, chất lượng commercial food photography.
+ * Visual Asset mapping theo slug hoặc từ khóa
  */
-export const PRODUCT_CATEGORIES = [
-  {
-    id: 'all',
-    slug: 'all',
-    name: 'Tất cả sản phẩm',
-    shortName: 'Tất cả',
-    desc: 'Toàn bộ danh mục sản phẩm thực phẩm và đồ ăn vặt đóng gói chất lượng cao của HAQ FOOD.',
+export const CATEGORY_VISUALS = {
+  'all': {
     image: catAllImg,
+    desc: 'Toàn bộ danh mục sản phẩm thực phẩm và đồ ăn vặt đóng gói chất lượng cao của HAQ FOOD.',
     featured: 'Bánh tráng trộn HAQ 2021',
     featuredDesc: 'Sản phẩm tiêu biểu làm nên thương hiệu HAQ FOOD trên dây chuyền sấy giòn khép kín ISO 22000 & HACCP.',
-    dbMatchSlugs: ['all'],
   },
-  {
-    id: 'banh-trang',
-    slug: 'banh-trang',
-    name: 'Bánh tráng',
-    shortName: 'Bánh tráng',
-    desc: 'Bánh tráng sấy giòn vị bò, tôm, phô mai & bánh tráng trộn chuẩn vị truyền thống.',
+  'banh-trang': {
     image: catBanhTrangImg,
+    desc: 'Bánh tráng sấy giòn vị bò, tôm, phô mai & bánh tráng trộn chuẩn vị truyền thống.',
     featured: 'Bánh tráng trộn HAQ',
     featuredDesc: 'Dây chuyền sấy giòn tự động, kết hợp gia vị tôm và bò khô đậm vị Việt Nam.',
-    dbMatchSlugs: ['banh-trang', 'banh-trang-say', 'banh-trang-tron'],
   },
-  {
-    id: 'banh',
-    slug: 'banh',
-    name: 'Bánh',
-    shortName: 'Bánh',
-    desc: 'Bánh hạnh nhân & bánh đậu xanh thượng hạng đạt chuẩn xuất khẩu sang thị trường châu Á.',
-    image: catBanhImg,
-    featured: 'Bánh hạnh nhân & đậu xanh',
-    featuredDesc: 'Nguyên liệu tuyển chọn tự nhiên, vị thanh bùi giòn xốp đạt tiêu chuẩn kiểm định quốc tế.',
-    dbMatchSlugs: ['banh', 'banh-hanh-nhan', 'banh-deo', 'banh-khac', 'banh-sua'],
+  'banh-trang-say': {
+    image: catBanhTrangImg,
+    desc: 'Bánh tráng sấy giòn rụm với công nghệ sấy nhiệt hiện đại, các vị bò, tôm, chà bông.',
+    featured: 'Bánh tráng sấy giòn vị tôm',
+    featuredDesc: 'Giòn rụm đậm đà vị tôm biển tự nhiên, đạt chuẩn ISO 22000 & HACCP.',
   },
-  {
-    id: 'do-an-vat',
-    slug: 'do-an-vat',
-    name: 'Đồ ăn vặt',
-    shortName: 'Đồ ăn vặt',
-    desc: 'Bắp rang bơ sấy nổ công nghệ cao kết hợp bơ sữa caramel béo ngậy thơm ngon.',
+  'banh-trang-tron': {
+    image: catBanhTrangImg,
+    desc: 'Bánh tráng trộn dạng sợi và dạng cuộn gà lá chanh, sa tế tôm cay nồng đậm vị.',
+    featured: 'Bánh tráng trộn gà lá chanh',
+    featuredDesc: 'Sợi bánh tráng dẻo thơm hòa quyện khô gà cay cay và hương lá chanh tươi.',
+  },
+  'bap-rang-bo': {
     image: catDoAnVatImg,
-    featured: 'Bắp rang bơ cao cấp',
+    desc: 'Bắp rang bơ sấy nổ công nghệ cao kết hợp bơ sữa caramel béo ngậy thơm ngon.',
+    featured: 'Bắp rang bơ Caramel',
     featuredDesc: 'Hạt bắp nổ tròn đều, lớp sốt caramel và phô mai giòn rụm hấp dẫn.',
-    dbMatchSlugs: ['do-an-vat', 'bap-rang-bo'],
   },
-  {
-    id: 'do-an-kho',
-    slug: 'do-an-kho',
-    name: 'Đồ ăn khô',
-    shortName: 'Đồ ăn khô',
-    desc: 'Thịt bò và thịt heo sấy gia vị tự nhiên đậm đà, kiểm soát chất lượng an toàn nghiêm ngặt.',
+  'banh-hanh-nhan': {
+    image: catBanhImg,
+    desc: 'Bánh hạnh nhân thượng hạng thơm bùi giòn xốp đạt chuẩn xuất khẩu sang thị trường châu Á.',
+    featured: 'Bánh hạnh nhân thượng hạng',
+    featuredDesc: 'Bánh nướng giòn tan bùi thơm hạt hạnh nhân tự nhiên, đạt chuẩn ISO 22000.',
+  },
+  'banh-deo': {
+    image: catBanhImg,
+    desc: 'Bánh dẻo truyền thống ngọt thanh dịu mát từ bột nếp và nhân đậu tự nhiên.',
+    featured: 'Bánh dẻo truyền thống',
+    featuredDesc: 'Vị ngọt thanh tao lưu giữ nét đẹp văn hóa ẩm thực truyền thống.',
+  },
+  'banh-sua': {
+    image: catBanhImg,
+    desc: 'Bánh sữa dừa và bánh sữa đậu thơm ngậy béo bùi từ nguồn sữa nguyên chất.',
+    featured: 'Bánh sữa dừa tươi',
+    featuredDesc: 'Thơm ngậy vị sữa tự nhiên kết hợp dừa sấy bùi béo.',
+  },
+  'banh-khac': {
+    image: catBanhImg,
+    desc: 'Các dòng bánh nướng và bánh ngọt đa dạng của HAQ FOOD.',
+    featured: 'Bánh đậu xanh tươi',
+    featuredDesc: 'Đậu xanh nguyên chất tươi ngon, bổ dưỡng cho cả gia đình.',
+  },
+  'thot-kho': {
     image: catDoAnKhoImg,
-    featured: 'Thịt khô hảo hạng',
-    featuredDesc: 'Thịt tươi tẩm ướp gia vị truyền thống, bảo quản tiện lợi và an toàn vệ sinh.',
-    dbMatchSlugs: ['do-an-kho', 'thot-kho', 'thit-kho'],
+    desc: 'Thịt bò và thịt heo sấy gia vị tự nhiên đậm đà, kiểm soát chất lượng an toàn nghiêm ngặt.',
+    featured: 'Thịt bò khô hảo hạng',
+    featuredDesc: 'Thịt tươi tẩm ướp gia vị sả ớt truyền thống, bảo quản an toàn.',
   },
-]
-
-/**
- * Lấy thông tin Category theo slug (mặc định trả về category 'all' nếu không tìm thấy)
- */
-export function getCategoryBySlug(slug) {
-  if (!slug || slug === 'all') return PRODUCT_CATEGORIES[0]
-  return PRODUCT_CATEGORIES.find((c) => c.slug === slug) || PRODUCT_CATEGORIES[0]
+  'thit-kho': {
+    image: catDoAnKhoImg,
+    desc: 'Thịt bò và thịt heo sấy gia vị tự nhiên đậm đà, kiểm soát chất lượng an toàn nghiêm ngặt.',
+    featured: 'Thịt bò khô hảo hạng',
+    featuredDesc: 'Thịt tươi tẩm ướp gia vị sả ớt truyền thống, bảo quản an toàn.',
+  },
 }
 
 /**
- * Lọc danh sách sản phẩm theo Category slug
+ * Danh mục mặc định (Fallback khi chưa tải được từ DB)
  */
-export function filterProductsByCategory(products = [], categorySlug = 'all') {
-  if (!categorySlug || categorySlug === 'all') return products
+export const DEFAULT_DB_CATEGORIES = [
+  { id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', name: 'Bánh Tráng', slug: 'banh-trang', parent_id: null, sort_order: 0 },
+  { id: '89affdd7-e480-4a0d-8db1-b15e8d619df9', name: 'Bánh tráng sấy', slug: 'banh-trang-say', parent_id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', sort_order: 0 },
+  { id: 'd0feed03-78e6-4325-86a1-b27a9411c205', name: 'Bánh Tráng trộn', slug: 'banh-trang-tron', parent_id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', sort_order: 1 },
+  { id: '69b66cf7-e253-44d1-9037-cb6d6fe7dfb6', name: 'Bắp Rang Bơ', slug: 'bap-rang-bo', parent_id: null, sort_order: 1 },
+  { id: '7b16741d-a09a-485b-9242-ecb1132eb146', name: 'Bánh Hạnh Nhân', slug: 'banh-hanh-nhan', parent_id: null, sort_order: 2 },
+  { id: '23901975-7129-4130-9a54-d7d6e4bc7532', name: 'Bánh Sữa', slug: 'banh-sua', parent_id: null, sort_order: 3 },
+  { id: 'a5f914f4-da3f-4afa-9e44-5b1192465c71', name: 'Bánh Dẻo', slug: 'banh-deo', parent_id: null, sort_order: 4 },
+  { id: 'aea0547a-4522-4af9-9adc-9ccfb4ad5619', name: 'Bánh Khác', slug: 'banh-khac', parent_id: null, sort_order: 5 },
+  { id: 'e77a7f3a-48db-4777-82d8-60ff6f2a1ac5', name: 'Thịt khô', slug: 'thot-kho', parent_id: null, sort_order: 6 },
+]
 
-  const category = getCategoryBySlug(categorySlug)
-  if (!category) return products
+/**
+ * Xây dựng cây danh mục phân cấp (Parent - Children Tree) từ danh sách Database phẳng
+ */
+export function buildCategoryTree(rawCategories = []) {
+  const cats = (rawCategories && rawCategories.length > 0) ? rawCategories : DEFAULT_DB_CATEGORIES
+
+  // 1. Tạo node gốc "Tất cả sản phẩm"
+  const allNode = {
+    id: 'all',
+    name: 'Tất cả sản phẩm',
+    shortName: 'Tất cả',
+    slug: 'all',
+    parent_id: null,
+    children: [],
+    ...CATEGORY_VISUALS['all'],
+  }
+
+  // 2. Tìm các root categories (parent_id === null hoặc undefined)
+  const rootCats = cats
+    .filter((c) => !c.parent_id)
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .map((root) => {
+      const visual = CATEGORY_VISUALS[root.slug] || CATEGORY_VISUALS['all']
+      // Tìm các con của root
+      const children = cats
+        .filter((c) => c.parent_id === root.id)
+        .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+        .map((child) => {
+          const childVisual = CATEGORY_VISUALS[child.slug] || visual
+          return {
+            ...child,
+            shortName: child.name,
+            image: childVisual.image,
+            desc: child.description || childVisual.desc,
+            featured: childVisual.featured,
+            featuredDesc: childVisual.featuredDesc,
+          }
+        })
+
+      return {
+        ...root,
+        shortName: root.name,
+        children,
+        image: visual.image,
+        desc: root.description || visual.desc,
+        featured: visual.featured,
+        featuredDesc: visual.featuredDesc,
+      }
+    })
+
+  return [allNode, ...rootCats]
+}
+
+/**
+ * Lấy tất cả category IDs (bao gồm cả con) thuộc về 1 slug
+ */
+export function getCategoryAndChildrenIds(categoryTree, targetSlug) {
+  if (!targetSlug || targetSlug === 'all') return null
+
+  for (const root of categoryTree) {
+    if (root.slug === targetSlug) {
+      const ids = [root.id]
+      if (root.children && root.children.length > 0) {
+        root.children.forEach((c) => ids.push(c.id))
+      }
+      return ids
+    }
+    if (root.children && root.children.length > 0) {
+      const child = root.children.find((c) => c.slug === targetSlug)
+      if (child) return [child.id]
+    }
+  }
+
+  return null
+}
+
+/**
+ * Tìm category node theo slug (tìm trong cả root và children)
+ */
+export function findCategoryBySlug(categoryTree, slug) {
+  if (!slug || slug === 'all') return categoryTree[0]
+
+  for (const root of categoryTree) {
+    if (root.slug === slug) return root
+    if (root.children && root.children.length > 0) {
+      const child = root.children.find((c) => c.slug === slug)
+      if (child) return child
+    }
+  }
+
+  return categoryTree[0]
+}
+
+/**
+ * Lọc danh sách sản phẩm theo Category Slug & Subcategory Slug từ DB
+ */
+export function filterProductsByDbCategory(products = [], activeSlug = 'all', subSlug = null, categoryTree = []) {
+  if (!products || products.length === 0) return []
+  if (!activeSlug || activeSlug === 'all') return products
+
+  // Nếu có chọn sub-category cụ thể
+  const effectiveSlug = subSlug || activeSlug
+  const matchingIds = getCategoryAndChildrenIds(categoryTree, effectiveSlug)
 
   return products.filter((p) => {
-    // 1. Kiểm tra theo categories relation từ DB
-    const catSlug = p.categories?.slug || ''
-    if (category.dbMatchSlugs.includes(catSlug)) return true
+    // 1. So khớp theo category_id từ DB
+    if (matchingIds && p.category_id && matchingIds.includes(p.category_id)) return true
 
-    // 2. Kiểm tra theo category_id hoặc category slug trực tiếp
-    if (category.dbMatchSlugs.includes(p.category_id)) return true
-    if (p.category && category.dbMatchSlugs.includes(p.category)) return true
+    // 2. So khớp theo relation categories.slug hoặc categories.id
+    if (p.categories) {
+      if (matchingIds && matchingIds.includes(p.categories.id)) return true
+      if (p.categories.slug === effectiveSlug) return true
+      if (effectiveSlug === 'banh-trang' && (p.categories.slug === 'banh-trang-say' || p.categories.slug === 'banh-trang-tron')) return true
+    }
 
-    // 3. Fallback tìm theo tên sản phẩm
+    // 3. Fallback theo chuỗi slug trực tiếp
+    if (p.category === effectiveSlug) return true
+    if (effectiveSlug === 'banh-trang' && (p.category === 'banh-trang-say' || p.category === 'banh-trang-tron')) return true
+
+    // 4. Fallback theo tên
     const nameLower = (p.name || '').toLowerCase()
-    if (categorySlug === 'banh-trang' && nameLower.includes('bánh tráng')) return true
-    if (categorySlug === 'banh' && (nameLower.includes('bánh hạnh nhân') || nameLower.includes('bánh đậu xanh') || nameLower.includes('bánh dẻo') || nameLower.includes('bánh sữa'))) return true
-    if (categorySlug === 'do-an-vat' && nameLower.includes('bắp')) return true
-    if (categorySlug === 'do-an-kho' && (nameLower.includes('thịt') || nameLower.includes('khô'))) return true
+    if (effectiveSlug === 'banh-trang-say' && (nameLower.includes('sấy') || nameLower.includes('hoki-bánh tráng sấy'))) return true
+    if (effectiveSlug === 'banh-trang-tron' && (nameLower.includes('trộn') || nameLower.includes('sa tế') || nameLower.includes('gà lá chanh'))) return true
+    if (effectiveSlug === 'banh-trang' && nameLower.includes('bánh tráng')) return true
+    if (effectiveSlug === 'bap-rang-bo' && nameLower.includes('bắp')) return true
+    if ((effectiveSlug === 'thot-kho' || effectiveSlug === 'thit-kho') && (nameLower.includes('thịt') || nameLower.includes('khô'))) return true
+    if (effectiveSlug === 'banh-hanh-nhan' && (nameLower.includes('hạnh nhân') || nameLower.includes('bánh'))) return true
 
     return false
   })
+}
+
+export const PRODUCT_CATEGORIES = buildCategoryTree(DEFAULT_DB_CATEGORIES)
+export function getCategoryBySlug(slug) {
+  return findCategoryBySlug(PRODUCT_CATEGORIES, slug)
+}
+export function filterProductsByCategory(products = [], categorySlug = 'all') {
+  return filterProductsByDbCategory(products, categorySlug, null, PRODUCT_CATEGORIES)
 }

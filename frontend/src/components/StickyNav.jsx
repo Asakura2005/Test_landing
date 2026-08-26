@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
   ArrowRight,
   Sparkles,
+  Layers,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
-import { PRODUCT_CATEGORIES } from '../data/productCategories'
+import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
+import { getCategories } from '../services/supabase'
 
 const ABOUT_LINKS = [
   { label: 'Tổng quan HAQ FOOD', path: '/#gioi-thieu', desc: 'Thành lập năm 2021 tại Hà Nội' },
@@ -19,9 +22,9 @@ const ABOUT_LINKS = [
 
 const CAPABILITY_LINKS = [
   { label: 'Năng lực sản xuất', path: '/#nang-luc', desc: 'Dây chuyền chế biến khép kín' },
-  { label: 'Chất lượng & an toàn', path: '/#nang-luc', desc: 'Chứng nhận ISO 22000 & HACCP' },
+  { label: 'Chất lượng & an toàn', path: '/#chat-luong', desc: 'Chứng nhận ISO 22000 & HACCP' },
   { label: 'OEM / ODM', path: '/#hop-tac', desc: 'Gia công theo yêu cầu đối tác' },
-  { label: 'Logistics & phân phối', path: '/#nang-luc', desc: 'Kiểm soát và lưu mẫu từng lô' },
+  { label: 'Logistics & phân phối', path: '/#phan-phoi', desc: 'Kiểm soát và lưu mẫu từng lô' },
 ]
 
 export default function StickyNav() {
@@ -29,11 +32,39 @@ export default function StickyNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
-  const [hoveredCategory, setHoveredCategory] = useState(PRODUCT_CATEGORIES[1] || PRODUCT_CATEGORIES[0])
+
+  const [dbCategories, setDbCategories] = useState(DEFAULT_DB_CATEGORIES)
+  const [hoveredCategory, setHoveredCategory] = useState(null)
 
   const timeoutRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
+
+  // 1. Fetch live categories from database
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const data = await getCategories()
+        if (data && data.length > 0) {
+          setDbCategories(data)
+        }
+      } catch (err) {
+        console.warn('Lỗi lấy danh mục cho Header:', err)
+      }
+    }
+    fetchCats()
+  }, [])
+
+  // Build category hierarchy tree
+  const categoryTree = useMemo(() => {
+    return buildCategoryTree(dbCategories)
+  }, [dbCategories])
+
+  useEffect(() => {
+    if (categoryTree && categoryTree.length > 1 && !hoveredCategory) {
+      setHoveredCategory(categoryTree[1]) // Select first real category (Bánh Tráng)
+    }
+  }, [categoryTree, hoveredCategory])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,6 +109,7 @@ export default function StickyNav() {
   }
 
   const isProductsActive = location.pathname.startsWith('/san-pham')
+  const activePreviewCat = hoveredCategory || categoryTree[1] || categoryTree[0]
 
   return (
     <header
@@ -164,7 +196,7 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* SẢN PHẨM (Product Mega Menu) */}
+          {/* SẢN PHẨM (Dynamic Database Mega Menu) */}
           <div
             className="relative"
             onMouseEnter={() => handleMouseEnter('san-pham')}
@@ -189,43 +221,67 @@ export default function StickyNav() {
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[700px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[740px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="grid grid-cols-12 gap-6">
-                  {/* Left Column: Categories List */}
-                  <div className="col-span-6 border-r border-black/10 pr-6 space-y-1.5">
-                    <div className="text-[11px] font-mono font-bold tracking-widest text-haq-red uppercase mb-3 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>DANH MỤC SẢN PHẨM</span>
+                  {/* Left Column: Dynamic Database Category List (Col 7) */}
+                  <div className="col-span-7 border-r border-black/10 pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
+                    <div className="text-[11px] font-mono font-bold tracking-widest text-haq-red uppercase mb-3 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>DANH MỤC SẢN PHẨM</span>
+                      </div>
+                      <span className="text-[10px] text-haq-ink/50 font-normal">DATABASE LIVE</span>
                     </div>
 
-                    {PRODUCT_CATEGORIES.map((cat) => (
-                      <Link
-                        key={cat.id}
-                        to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
-                        onMouseEnter={() => setHoveredCategory(cat)}
-                        onClick={() => setActiveMenu(null)}
-                        className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
-                          hoveredCategory.id === cat.id
-                            ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
-                            : 'hover:bg-haq-bone/60'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className={`text-xs font-heading font-extrabold uppercase ${
-                            hoveredCategory.id === cat.id ? 'text-haq-red' : 'text-haq-ink'
-                          }`}>
-                            {cat.name}
-                          </span>
-                          <ArrowRight className={`w-3.5 h-3.5 ${
-                            hoveredCategory.id === cat.id ? 'text-haq-red' : 'text-black/20'
-                          }`} />
+                    {categoryTree.map((cat) => {
+                      const isHovered = activePreviewCat?.id === cat.id
+                      return (
+                        <div key={cat.id} className="space-y-1">
+                          <Link
+                            to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
+                            onMouseEnter={() => setHoveredCategory(cat)}
+                            onClick={() => setActiveMenu(null)}
+                            className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
+                              isHovered
+                                ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
+                                : 'hover:bg-haq-bone/60'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className={`text-xs font-heading font-extrabold uppercase ${
+                                isHovered ? 'text-haq-red' : 'text-haq-ink'
+                              }`}>
+                                {cat.name}
+                              </span>
+                              <ArrowRight className={`w-3.5 h-3.5 ${
+                                isHovered ? 'text-haq-red' : 'text-black/20'
+                              }`} />
+                            </div>
+                            <p className="text-[11px] text-haq-ink/60 mt-0.5 line-clamp-1">
+                              {cat.desc}
+                            </p>
+                          </Link>
+
+                          {/* Subcategories (e.g. Bánh tráng sấy / Bánh tráng trộn) */}
+                          {cat.children && cat.children.length > 0 && (
+                            <div className="pl-4 pr-1 py-1 flex flex-wrap gap-1.5">
+                              {cat.children.map((child) => (
+                                <Link
+                                  key={child.id}
+                                  to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
+                                  onMouseEnter={() => setHoveredCategory(child)}
+                                  onClick={() => setActiveMenu(null)}
+                                  className="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-haq-ink/75 hover:text-haq-red bg-haq-bone/70 hover:bg-haq-red/10 px-2.5 py-1 rounded-lg transition-colors border border-black/5"
+                                >
+                                  <span>↳ {child.name}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <p className="text-[11px] text-haq-ink/60 mt-0.5 line-clamp-1">
-                          {cat.desc}
-                        </p>
-                      </Link>
-                    ))}
+                      )
+                    })}
 
                     <div className="pt-3 border-t border-black/5">
                       <Link
@@ -238,29 +294,29 @@ export default function StickyNav() {
                     </div>
                   </div>
 
-                  {/* Right Column: Visual Product Preview Card */}
-                  <div className="col-span-6 flex flex-col justify-between bg-haq-bone rounded-2xl p-5 border border-black/5">
+                  {/* Right Column: Dynamic Preview Card (Col 5) */}
+                  <div className="col-span-5 flex flex-col justify-between bg-haq-bone rounded-2xl p-5 border border-black/5">
                     <div>
                       <div className="text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-2">
                         SẢN PHẨM TIÊU BIỂU
                       </div>
-                      <div className="aspect-16/9 rounded-xl overflow-hidden bg-white shadow-2xs mb-3">
+                      <div className="aspect-16/10 rounded-xl overflow-hidden bg-white shadow-2xs mb-3 border border-black/5">
                         <img
-                          src={hoveredCategory.image}
-                          alt={hoveredCategory.name}
+                          src={activePreviewCat.image}
+                          alt={activePreviewCat.name}
                           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                         />
                       </div>
                       <h4 className="font-heading font-black text-sm text-haq-ink uppercase">
-                        {hoveredCategory.featured}
+                        {activePreviewCat.featured || activePreviewCat.name}
                       </h4>
                       <p className="text-xs text-haq-ink/70 mt-1 leading-relaxed line-clamp-2">
-                        {hoveredCategory.featuredDesc || hoveredCategory.desc}
+                        {activePreviewCat.featuredDesc || activePreviewCat.desc}
                       </p>
                     </div>
 
                     <div className="pt-3 border-t border-black/10 flex items-center justify-between text-[11px] font-mono text-haq-red font-bold">
-                      <span>TIÊU CHUẨN ISO & HACCP</span>
+                      <span>ISO 22000 & HACCP</span>
                       <span>HAQ FOOD</span>
                     </div>
                   </div>
@@ -379,7 +435,7 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* Accordion: SẢN PHẨM */}
+          {/* Accordion: SẢN PHẨM (Dynamic DB) */}
           <div className="border-b border-black/5 pb-2">
             <button
               type="button"
@@ -390,16 +446,31 @@ export default function StickyNav() {
               <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'san-pham' ? 'rotate-180' : ''}`} />
             </button>
             {mobileAccordion === 'san-pham' && (
-              <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
-                {PRODUCT_CATEGORIES.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
-                    onClick={() => setMobileOpen(false)}
-                    className="block py-1 hover:text-haq-red"
-                  >
-                    {cat.name}
-                  </Link>
+              <div className="pl-4 space-y-3 py-2 text-xs text-haq-ink/75">
+                {categoryTree.map((cat) => (
+                  <div key={cat.id} className="space-y-1">
+                    <Link
+                      to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
+                      onClick={() => setMobileOpen(false)}
+                      className="block font-bold text-haq-ink hover:text-haq-red py-0.5"
+                    >
+                      {cat.name}
+                    </Link>
+                    {cat.children && cat.children.length > 0 && (
+                      <div className="pl-3 space-y-1 border-l border-black/10">
+                        {cat.children.map((child) => (
+                          <Link
+                            key={child.id}
+                            to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-0.5 text-haq-ink/70 hover:text-haq-red"
+                          >
+                            ↳ {child.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
                 <Link
                   to="/san-pham"

@@ -1,150 +1,111 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Home, ChevronRight, ArrowRight, Sparkles, Filter, Package, ShieldCheck } from 'lucide-react'
+import { Home, ChevronRight, ArrowRight, Filter, Package, ShieldCheck, Layers } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
-import { PRODUCT_CATEGORIES, getCategoryBySlug, filterProductsByCategory } from '../data/productCategories'
-import { getProducts } from '../services/supabase'
+import {
+  buildCategoryTree,
+  findCategoryBySlug,
+  filterProductsByDbCategory,
+  DEFAULT_DB_CATEGORIES,
+} from '../data/productCategories'
+import { getProducts, getCategories } from '../services/supabase'
 
 import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
-import heroBanner2 from '../assets/herobanner/Gemini_Generated_Image_bbdxopbbdxopbbdx.png'
-import heroBanner3 from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
+import banhTrangSayTomImg from '../assets/products/banh_trang_say_tom_50g.jpg'
+import banhTrangSayBoImg from '../assets/products/banh_trang_say_bo_50g.jpg'
+import banhTrangSayChaBongImg from '../assets/products/banh_trang_say_cha_bong_50g.jpg'
+import banhTrangCuonGaImg from '../assets/products/banh_trang_cuon_ga_la_chanh_100g.jpg'
+import banhTrangSaTeTomImg from '../assets/products/banh_trang_soi_sa_te_tom_100g.jpg'
+import banhHanhNhanImg from '../assets/products/banh_hanh_nhan_truyen_thong_130g.jpg'
+import banhHanhNhanTraXanhImg from '../assets/products/banh_hanh_nhan_tra_xanh_130g.jpg'
+import banhDauXanhImg from '../assets/products/banh_dau_xanh_tuoi_250g.jpg'
+import banhSuaDuaImg from '../assets/products/banh_sua_dua_130g.jpg'
+import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
+import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 
-// Curated fallback products from Company Profile & assets
-const FALLBACK_PRODUCTS = [
-  {
-    id: 'banh-trang-tron-haq',
-    name: 'Bánh tráng trộn HAQ',
-    slug: 'banh-trang-tron-haq',
-    category: 'banh-trang',
-    categoryName: 'BÁNH TRÁNG',
-    description: 'Sản phẩm tiêu biểu từ năm 2021 với dây chuyền sấy giòn khép kín, kết hợp bò khô, tôm khô và gia vị đặc trưng.',
-    images: [heroBanner1],
-    tag: 'CHỦ LỰC 2021',
-    pack: 'Gói 50g / 100g',
-  },
-  {
-    id: 'banh-trang-say-gion-vi-tom',
-    name: 'HOKI - Bánh tráng sấy giòn vị tôm',
-    slug: 'Banh-trang-say-gion-vi-tom',
-    category: 'banh-trang',
-    categoryName: 'BÁNH TRÁNG',
-    description: 'Bánh tráng giòn rụm đậm đà vị tôm biển tự nhiên, chuẩn vệ sinh an toàn thực phẩm.',
-    images: [heroBanner1],
-    tag: 'BÁN CHẠY',
-    pack: 'Gói 45g',
-  },
-  {
-    id: 'banh-trang-tron-ga-la-chanh',
-    name: 'HOKI - Bánh tráng trộn gà lá chanh',
-    slug: 'banh-trang-tron-ga-la-chanh',
-    category: 'banh-trang',
-    categoryName: 'BÁNH TRÁNG',
-    description: 'Sợi bánh tráng dẻo thơm hòa quyện khô gà cay cay và hương lá chanh tươi mát.',
-    images: [heroBanner1],
-    tag: 'MỚI',
-    pack: 'Hũ 150g',
-  },
-  {
-    id: 'banh-hanh-nhan-cao-cap',
-    name: 'Bánh hạnh nhân thượng hạng HAQ',
-    slug: 'banh-hanh-nhan-cao-cap',
-    category: 'banh',
-    categoryName: 'BÁNH THƯỢNG HẠNG',
-    description: 'Bánh nướng giòn tan bùi thơm hạt hạnh nhân tự nhiên, đáp ứng tiêu chuẩn xuất khẩu sang thị trường châu Á.',
-    images: [heroBanner3],
-    tag: 'XUẤT KHẨU',
-    pack: 'Hộp 200g / 350g',
-  },
-  {
-    id: 'banh-dau-xanh-truyen-thong',
-    name: 'Bánh đậu xanh truyền thống HAQ',
-    slug: 'banh-dau-xanh-truyen-thong',
-    category: 'banh',
-    categoryName: 'BÁNH THƯỢNG HẠNG',
-    description: 'Đậu xanh tuyển chọn nguyên chất, độ ngọt thanh mát dịu, lưu giữ trọn vẹn hương vị truyền thống.',
-    images: [heroBanner3],
-    tag: 'TRUYỀN THỐNG',
-    pack: 'Hộp 180g',
-  },
-  {
-    id: 'bap-rang-bo-caramel',
-    name: 'Bắp rang bơ Caramel nổ công nghệ cao',
-    slug: 'bap-rang-bo-caramel',
-    category: 'do-an-vat',
-    categoryName: 'ĐỒ ĂN VẶT',
-    description: 'Hạt bắp nổ tròn đều phủ đều sốt bơ đường caramel béo ngậy, giữ độ giòn lâu.',
-    images: [heroBanner2],
-    tag: 'HOT',
-    pack: 'Hũ 80g / 120g',
-  },
-  {
-    id: 'bap-rang-bo-pho-mai',
-    name: 'Bắp rang bơ phô mai cao cấp',
-    slug: 'bap-rang-bo-pho-mai',
-    category: 'do-an-vat',
-    categoryName: 'ĐỒ ĂN VẶT',
-    description: 'Vị mặn bùi đậm đà của phô mai hòa cùng bắp nổ giòn rụm thích hợp cho mọi lứa tuổi.',
-    images: [heroBanner2],
-    tag: 'BÁN CHẠY',
-    pack: 'Hũ 80g',
-  },
-  {
-    id: 'thit-bo-kho-hao-hang',
-    name: 'Thịt bò khô hảo hạng HAQ',
-    slug: 'thit-bo-kho-hao-hang',
-    category: 'do-an-kho',
-    categoryName: 'ĐỒ ĂN KHÔ',
-    description: 'Thịt bò tươi tẩm ướp gia vị sả ớt tự nhiên, sấy dẻo đậm đà, kiểm soát chất lượng từ khâu nguyên liệu.',
-    images: [heroBanner1],
-    tag: 'THƯỢNG HẠNG',
-    pack: 'Gói 100g / 250g',
-  },
-  {
-    id: 'thit-heo-kho-chay-toi',
-    name: 'Thịt heo khô cháy tỏi',
-    slug: 'thit-heo-kho-chay-toi',
-    category: 'do-an-kho',
-    categoryName: 'ĐỒ ĂN KHÔ',
-    description: 'Thịt heo sạch kết hợp tỏi phi thơm giòn rụm và sốt gia vị cay ngọt hài hòa.',
-    images: [heroBanner1],
-    tag: 'YÊU THÍCH',
-    pack: 'Gói 100g',
-  },
-]
+// Local product image map by slug
+const PRODUCT_IMAGE_MAP = {
+  'banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
+  'Banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
+  'banh-trang-say-bo-50g': banhTrangSayBoImg,
+  'banh-trang-say-cha-bong-50g': banhTrangSayChaBongImg,
+  'banh-trang-tron-ga-la-chanh': banhTrangCuonGaImg,
+  'banh-trang-tron-sa-te-tom': banhTrangSaTeTomImg,
+  'banh-trang-tron-haq': banhTrangSaTeTomImg,
+  'banh-hanh-nhan-truyen-thong-130g': banhHanhNhanImg,
+  'banh-hanh-nhan-cao-cap': banhHanhNhanImg,
+  'banh-hanh-nhan-tra-xanh-130g': banhHanhNhanTraXanhImg,
+  'banh-dau-xanh-tuoi-250g': banhDauXanhImg,
+  'banh-dau-xanh-truyen-thong': banhDauXanhImg,
+  'banh-sua-dua-130g': banhSuaDuaImg,
+  'bap-rang-bo-caramel': catDoAnVatImg,
+  'bap-rang-bo-pho-mai': catDoAnVatImg,
+  'thit-bo-kho-hao-hang': catDoAnKhoImg,
+  'thit-heo-kho-chay-toi': catDoAnKhoImg,
+}
 
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentCategorySlug = searchParams.get('category') || 'all'
+  const currentSubCategorySlug = searchParams.get('sub') || null
 
+  const [dbCategories, setDbCategories] = useState(DEFAULT_DB_CATEGORIES)
   const [dbProducts, setDbProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch products from database
+  // 1. Fetch Categories & Products from Database
   useEffect(() => {
     window.scrollTo(0, 0)
-    const fetchDbProducts = async () => {
+    const loadData = async () => {
       try {
         setIsLoading(true)
-        const data = await getProducts()
-        if (data && data.length > 0) {
-          setDbProducts(data)
-        } else {
-          setDbProducts(FALLBACK_PRODUCTS)
+        const [cats, prods] = await Promise.all([
+          getCategories().catch(() => null),
+          getProducts().catch(() => null),
+        ])
+
+        if (cats && cats.length > 0) {
+          setDbCategories(cats)
+        }
+        if (prods && prods.length > 0) {
+          setDbProducts(prods)
         }
       } catch (err) {
-        console.warn('Lỗi lấy sản phẩm từ database, sử dụng fallback data:', err)
-        setDbProducts(FALLBACK_PRODUCTS)
+        console.warn('Lỗi khi tải dữ liệu sản phẩm từ DB:', err)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchDbProducts()
+    loadData()
   }, [])
 
-  // Handle category tab change
-  const handleCategoryChange = (slug) => {
+  // Build hierarchical category tree
+  const categoryTree = useMemo(() => {
+    return buildCategoryTree(dbCategories)
+  }, [dbCategories])
+
+  // Active root category node
+  const activeRootCategory = useMemo(() => {
+    // Check if the currentCategorySlug is a child, find its parent
+    for (const root of categoryTree) {
+      if (root.slug === currentCategorySlug) return root
+      if (root.children && root.children.some((c) => c.slug === currentCategorySlug)) {
+        return root
+      }
+    }
+    return categoryTree[0]
+  }, [categoryTree, currentCategorySlug])
+
+  // Active sub-category or specific node
+  const activeCategoryNode = useMemo(() => {
+    const targetSlug = currentSubCategorySlug || currentCategorySlug
+    return findCategoryBySlug(categoryTree, targetSlug)
+  }, [categoryTree, currentCategorySlug, currentSubCategorySlug])
+
+  // Handle Root Category Switch
+  const handleRootCategoryChange = (slug) => {
     if (slug === 'all') {
       setSearchParams({})
     } else {
@@ -152,15 +113,28 @@ export default function ProductsPage() {
     }
   }
 
-  const activeCategory = getCategoryBySlug(currentCategorySlug)
+  // Handle Sub-Category Switch
+  const handleSubCategoryChange = (subSlug) => {
+    if (!subSlug) {
+      setSearchParams({ category: activeRootCategory.slug })
+    } else {
+      setSearchParams({ category: activeRootCategory.slug, sub: subSlug })
+    }
+  }
 
-  // Filter products based on active category
-  const allProductsList = dbProducts.length > 0 ? dbProducts : FALLBACK_PRODUCTS
-  const filteredProducts = filterProductsByCategory(allProductsList, currentCategorySlug)
+  // Filter products based on selected category & subcategory
+  const filteredProducts = useMemo(() => {
+    return filterProductsByDbCategory(
+      dbProducts,
+      currentCategorySlug,
+      currentSubCategorySlug,
+      categoryTree
+    )
+  }, [dbProducts, currentCategorySlug, currentSubCategorySlug, categoryTree])
 
   return (
     <div className="min-h-screen bg-haq-bone text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
-      {/* Sticky Header */}
+      {/* Sticky Header with Live Categories */}
       <StickyNav />
 
       {/* Floating Quick Contact Widget */}
@@ -169,7 +143,7 @@ export default function ProductsPage() {
       <main className="flex-1 pt-24 sm:pt-28 pb-20">
         {/* 1. Breadcrumb Bar */}
         <div className="bg-white/60 border-b border-black/5">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-3.5 flex items-center gap-2 text-xs text-haq-ink/60">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-3.5 flex items-center gap-2 text-xs text-haq-ink/60 overflow-x-auto whitespace-nowrap">
             <Link
               to="/"
               className="hover:text-haq-red flex items-center gap-1 transition-colors"
@@ -180,18 +154,34 @@ export default function ProductsPage() {
             <ChevronRight className="w-3 h-3 text-black/30" />
             <Link
               to="/san-pham"
-              onClick={() => handleCategoryChange('all')}
+              onClick={() => handleRootCategoryChange('all')}
               className={`hover:text-haq-red transition-colors ${
                 currentCategorySlug === 'all' ? 'text-haq-red font-bold' : ''
               }`}
             >
               Sản phẩm
             </Link>
-            {currentCategorySlug !== 'all' && (
+
+            {activeRootCategory.slug !== 'all' && (
+              <>
+                <ChevronRight className="w-3 h-3 text-black/30" />
+                <button
+                  type="button"
+                  onClick={() => handleSubCategoryChange(null)}
+                  className={`hover:text-haq-red transition-colors ${
+                    !currentSubCategorySlug ? 'text-haq-red font-bold' : ''
+                  }`}
+                >
+                  {activeRootCategory.name}
+                </button>
+              </>
+            )}
+
+            {currentSubCategorySlug && activeCategoryNode && (
               <>
                 <ChevronRight className="w-3 h-3 text-black/30" />
                 <span className="text-haq-red font-bold truncate">
-                  {activeCategory.name}
+                  {activeCategoryNode.name}
                 </span>
               </>
             )}
@@ -205,15 +195,17 @@ export default function ProductsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                    HAQ FOOD · DANH MỤC SẢN PHẨM
+                    HAQ FOOD · DANH MỤC TỪ DATABASE
                   </span>
                   <span className="h-px w-10 bg-haq-red" />
                 </div>
                 <h1 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
-                  {activeCategory.slug === 'all' ? 'TẤT CẢ SẢN PHẨM' : activeCategory.name}
+                  {activeCategoryNode.slug === 'all'
+                    ? 'TẤT CẢ SẢN PHẨM'
+                    : activeCategoryNode.name}
                 </h1>
                 <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 max-w-xl leading-relaxed">
-                  {activeCategory.desc}
+                  {activeCategoryNode.desc || activeRootCategory.desc}
                 </p>
               </div>
 
@@ -223,7 +215,7 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            {/* 3. Horizontal Category Navigation Tabs (Single Source of Truth) */}
+            {/* 3. Level 1: Primary Category Tabs (Fetched Dynamically from DB) */}
             <div className="mt-8 pt-6 border-t border-black/5">
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
                 <span className="text-xs font-mono font-bold text-haq-ink/40 uppercase mr-2 flex items-center gap-1 shrink-0">
@@ -231,33 +223,81 @@ export default function ProductsPage() {
                   <span>DANH MỤC:</span>
                 </span>
 
-                {PRODUCT_CATEGORIES.map((cat) => {
-                  const isActive = currentCategorySlug === cat.slug
+                {categoryTree.map((cat) => {
+                  const isSelected = activeRootCategory.slug === cat.slug
                   return (
                     <button
                       key={cat.id}
                       type="button"
-                      onClick={() => handleCategoryChange(cat.slug)}
+                      onClick={() => handleRootCategoryChange(cat.slug)}
                       className={`relative px-4 py-2 rounded-full text-xs font-heading font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                        isActive
-                          ? 'bg-haq-red text-white shadow-sm'
+                        isSelected
+                          ? 'bg-haq-red text-white shadow-sm scale-102'
                           : 'bg-haq-bone text-haq-ink/80 hover:bg-black/5 hover:text-haq-red'
                       }`}
                     >
                       <span>{cat.shortName || cat.name}</span>
+                      {cat.children && cat.children.length > 0 && (
+                        <span className="ml-1.5 text-[10px] opacity-75">
+                          ({cat.children.length})
+                        </span>
+                      )}
                     </button>
                   )
                 })}
               </div>
             </div>
+
+            {/* 4. Level 2: Sub-Category Pills (e.g. Bánh tráng -> Bánh tráng sấy & Bánh tráng trộn) */}
+            {activeRootCategory.children && activeRootCategory.children.length > 0 && (
+              <div className="mt-4 pt-3 border-t border-dashed border-black/10 flex items-center gap-2 overflow-x-auto pb-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                <span className="text-[11px] font-mono font-bold text-haq-red uppercase mr-2 flex items-center gap-1 shrink-0">
+                  <Layers className="w-3 h-3" />
+                  <span>PHÂN LOẠI {activeRootCategory.name}:</span>
+                </span>
+
+                {/* Sub-tab: Tất cả trong danh mục cha */}
+                <button
+                  type="button"
+                  onClick={() => handleSubCategoryChange(null)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-heading font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                    !currentSubCategorySlug
+                      ? 'bg-haq-ink text-white shadow-2xs'
+                      : 'bg-white text-haq-ink/70 hover:bg-black/5 hover:text-haq-ink border border-black/10'
+                  }`}
+                >
+                  Tất cả {activeRootCategory.name}
+                </button>
+
+                {/* Các danh mục con cụ thể */}
+                {activeRootCategory.children.map((child) => {
+                  const isChildActive = currentSubCategorySlug === child.slug
+                  return (
+                    <button
+                      key={child.id}
+                      type="button"
+                      onClick={() => handleSubCategoryChange(child.slug)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-heading font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                        isChildActive
+                          ? 'bg-haq-red text-white shadow-2xs'
+                          : 'bg-white text-haq-ink/70 hover:bg-black/5 hover:text-haq-ink border border-black/10'
+                      }`}
+                    >
+                      {child.name}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* 4. Products Grid */}
+        {/* 5. Products Grid */}
         <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-10 sm:py-14">
           <div className="flex items-center justify-between mb-8 text-xs font-mono text-haq-ink/60">
             <span>
               HIỂN THỊ <strong>{filteredProducts.length}</strong> SẢN PHẨM
+              {currentSubCategorySlug ? ` (${activeCategoryNode.name})` : ''}
             </span>
             <span>HAQ FOOD HANOI JSC</span>
           </div>
@@ -273,7 +313,7 @@ export default function ProductsPage() {
               </p>
               <button
                 type="button"
-                onClick={() => handleCategoryChange('all')}
+                onClick={() => handleRootCategoryChange('all')}
                 className="mt-6 px-6 py-2.5 bg-haq-red text-white text-xs font-heading font-bold uppercase rounded-full"
               >
                 Xem tất cả sản phẩm
@@ -282,7 +322,11 @@ export default function ProductsPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {filteredProducts.map((prod) => {
-                const productImg = prod.images?.[0] || prod.image || heroBanner1
+                const productImg =
+                  PRODUCT_IMAGE_MAP[prod.slug] ||
+                  prod.images?.[0] ||
+                  prod.image ||
+                  heroBanner1
                 const detailSlug = prod.slug || prod.id
 
                 return (
@@ -299,9 +343,9 @@ export default function ProductsPage() {
                           className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
-                        {prod.tag && (
+                        {prod.is_pinned && (
                           <div className="absolute top-4 left-4 bg-haq-red text-white font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
-                            {prod.tag}
+                            CHỦ LỰC
                           </div>
                         )}
                         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-xs font-mono text-[10px] font-bold text-haq-ink/70 px-2.5 py-1 rounded-full border border-black/5">
@@ -312,7 +356,9 @@ export default function ProductsPage() {
                       {/* Product Content */}
                       <div className="p-6">
                         <div className="text-[10px] font-mono font-bold text-haq-red uppercase tracking-widest mb-1.5">
-                          {prod.categories?.name || prod.categoryName || 'HAQ FOOD'}
+                          {prod.categories?.name ||
+                            activeRootCategory.name ||
+                            'HAQ FOOD'}
                         </div>
 
                         <h3 className="font-heading font-black text-lg text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug">
@@ -322,15 +368,9 @@ export default function ProductsPage() {
                         </h3>
 
                         <p className="mt-2.5 text-xs text-haq-ink/70 leading-relaxed line-clamp-2">
-                          {prod.description || 'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
+                          {prod.description ||
+                            'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
                         </p>
-
-                        {prod.pack && (
-                          <div className="mt-4 pt-3 border-t border-black/5 flex items-center gap-1.5 text-xs text-haq-ink/60 font-mono">
-                            <Package className="w-3.5 h-3.5 text-haq-ink/40" />
-                            <span>Quy cách: {prod.pack}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
 
