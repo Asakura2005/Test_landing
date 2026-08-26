@@ -39,17 +39,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col 2: Giới thiệu & Sản phẩm (Spans 3 cols) */}
+          {/* Col 2: Về chúng tôi & Sản phẩm (Spans 3 cols) */}
           <div className="lg:col-span-3 space-y-6">
             <div>
               <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
-                GIỚI THIỆU
+                VỀ CHÚNG TÔI
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><a href="/#gioi-thieu" className="hover:text-haq-gold transition-colors">Tổng quan HAQ FOOD</a></li>
-                <li><a href="/#hanh-trinh" className="hover:text-haq-gold transition-colors">Lịch sử phát triển</a></li>
-                <li><a href="/#tam-nhin" className="hover:text-haq-gold transition-colors">Tầm nhìn & Sứ mệnh</a></li>
-                <li><a href="/#tam-nhin" className="hover:text-haq-gold transition-colors">Giá trị cốt lõi</a></li>
+                <li><Link to="/gioi-thieu" className="hover:text-haq-gold transition-colors">Giới thiệu Tổng quan</Link></li>
+                <li><Link to="/lich-su" className="hover:text-haq-gold transition-colors">Lịch sử & Dấu mốc (2021 — 2026)</Link></li>
+                <li><Link to="/gioi-thieu" className="hover:text-haq-gold transition-colors">Tầm nhìn & Sứ mệnh</Link></li>
+                <li><Link to="/gioi-thieu" className="hover:text-haq-gold transition-colors">5 Giá trị cốt lõi</Link></li>
               </ul>
             </div>
 
@@ -58,9 +58,10 @@ export default function Footer() {
                 SẢN PHẨM
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Danh mục sản phẩm</Link></li>
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Sản phẩm nổi bật 2021</Link></li>
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh tráng & đồ ăn vặt</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Tất cả sản phẩm</Link></li>
+                <li><Link to="/san-pham?category=banh-trang" className="hover:text-haq-gold transition-colors">Bánh tráng sấy & trộn</Link></li>
+                <li><Link to="/san-pham?category=banh-hanh-nhan" className="hover:text-haq-gold transition-colors">Bánh hạnh nhân & đậu xanh</Link></li>
+                <li><Link to="/san-pham?category=bap-rang-bo" className="hover:text-haq-gold transition-colors">Bắp rang bơ sấy nổ</Link></li>
               </ul>
             </div>
           </div>
@@ -72,10 +73,10 @@ export default function Footer() {
                 NĂNG LỰC
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Sản xuất quy mô lớn</a></li>
-                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Chất lượng ISO & HACCP</a></li>
-                <li><a href="/#hop-tac" className="hover:text-haq-gold transition-colors">Gia công OEM / ODM</a></li>
-                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Logistics & Lưu mẫu</a></li>
+                <li><Link to="/nang-luc#nha-may" className="hover:text-haq-gold transition-colors">Dây chuyền khép kín</Link></li>
+                <li><Link to="/nang-luc#chat-luong" className="hover:text-haq-gold transition-colors">Tiêu chuẩn ISO & HACCP</Link></li>
+                <li><Link to="/nang-luc#oem-odm" className="hover:text-haq-gold transition-colors">Gia công OEM / ODM</Link></li>
+                <li><Link to="/nang-luc#phan-phoi" className="hover:text-haq-gold transition-colors">Mạng lưới phân phối</Link></li>
               </ul>
             </div>
 
@@ -84,8 +85,8 @@ export default function Footer() {
                 TIN TỨC
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><a href="/#tin-tuc" className="hover:text-haq-gold transition-colors">Hoạt động thương mại</a></li>
-                <li><a href="/#tin-tuc" className="hover:text-haq-gold transition-colors">Sự kiện doanh nghiệp</a></li>
+                <li><Link to="/tin-tuc" className="hover:text-haq-gold transition-colors">Hoạt động thương mại</Link></li>
+                <li><Link to="/tin-tuc" className="hover:text-haq-gold transition-colors">Sự kiện doanh nghiệp</Link></li>
               </ul>
             </div>
           </div>
