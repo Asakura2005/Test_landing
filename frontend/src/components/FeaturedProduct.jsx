@@ -1,91 +1,134 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
-import { useReveal } from '../hooks/useReveal'
-import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
+import { Sparkles, ShieldCheck, Flame, ArrowRight, CheckCircle2 } from 'lucide-react'
+
+import signatureImg from '../assets/categories/category_banh_trang.jpg'
+import packImg1 from '../assets/products/banh_trang_soi_sa_te_tom_100g.jpg'
+import packImg2 from '../assets/products/banh_trang_say_tom_50g.jpg'
+import packImg3 from '../assets/products/banh_trang_say_bo_50g.jpg'
 
 export default function FeaturedProduct() {
-  const ref = useReveal()
-
   return (
-    <section className="py-20 md:py-32 bg-haq-bone relative border-t border-black/10">
+    <section
+      aria-label="Sản phẩm chủ lực - Bánh tráng trộn HAQ"
+      className="relative bg-white py-20 sm:py-28 border-b border-black/5 overflow-hidden"
+    >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-        <div ref={ref} className="reveal flex flex-col">
-          {/* Label */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-              02 / SIGNATURE PRODUCT
-            </span>
-            <span className="h-px w-10 bg-haq-red" />
-          </div>
+        {/* Section Tag */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
+            SIGNATURE PRODUCT · SẢN PHẨM TIÊU BIỂU 2021
+          </span>
+          <span className="h-px w-10 bg-haq-red" />
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mt-4">
-            {/* Visual Column (Spans 7 cols) */}
-            <div className="lg:col-span-7 relative group rounded-3xl overflow-hidden shadow-xl bg-white border border-black/5 flex items-center justify-center p-4 sm:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* Left Column: Visual Spotlight (Col 7) */}
+          <div className="lg:col-span-7 relative">
+            <div className="relative aspect-16/10 rounded-3xl overflow-hidden shadow-2xl border border-black/10">
               <img
-                src={heroBanner1}
+                src={signatureImg}
                 alt="Bánh tráng trộn HAQ"
-                className="w-full h-auto max-h-[460px] object-cover rounded-2xl transform group-hover:scale-103 transition-transform duration-700 ease-out"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute top-6 left-6 bg-haq-ink/90 backdrop-blur-xs text-haq-gold font-mono text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-white/10 shadow-md">
-                EST. 2021 SIGNATURE RECIPE
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
+                <div>
+                  <span className="font-mono text-[11px] font-bold text-haq-gold uppercase tracking-widest">
+                    CÔNG THỨC ĐỘC QUYỀN HAQ FOOD
+                  </span>
+                  <h3 className="font-heading font-black text-2xl sm:text-3xl uppercase mt-1">
+                    BÁNH TRÁNG TRỘN & SẤY GIÒN
+                  </h3>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 font-mono text-xs bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30">
+                  <ShieldCheck className="w-4 h-4 text-haq-gold" />
+                  <span>ISO 22000 & HACCP</span>
+                </div>
               </div>
             </div>
 
-            {/* Content Column (Spans 5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between bg-white rounded-3xl p-8 sm:p-10 border border-black/5 shadow-2xs">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-red uppercase mb-3">
-                  <Award className="w-4 h-4" />
-                  <span>SẢN PHẨM KHỞI NGUỒN</span>
-                </div>
-
-                <h2 className="font-heading font-black text-3xl sm:text-4xl text-haq-ink uppercase tracking-tight leading-tight">
-                  BÁNH TRÁNG <br />
-                  <span className="text-haq-red">TRỘN HAQ</span>
-                </h2>
-
-                <p className="mt-4 text-xs font-mono text-haq-ink/60 uppercase tracking-wider">
-                  Hoàn thiện dây chuyền sản xuất và gắn liền với thương hiệu từ năm 2021
-                </p>
-
-                <p className="mt-4 text-sm sm:text-base text-haq-ink/75 leading-relaxed">
-                  Sản phẩm tiêu biểu tạo nên bước đột phá của HAQ FOOD trên thị trường thực phẩm đóng gói. Được chế biến trên dây chuyền sấy giòn khép kín đạt chuẩn ISO & HACCP, kết hợp topping tôm, bò khô đậm vị và gia vị đặc trưng đường phố Việt.
-                </p>
-
-                <div className="mt-6 space-y-2.5 pt-4 border-t border-black/5 text-xs text-haq-ink/80">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" />
-                    <span>Dây chuyền sấy giòn khép kín đảm bảo vệ sinh an toàn thực phẩm.</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" />
-                    <span>Hương vị đậm đà nguyên bản – đa dạng vị sốt gia vị.</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" />
-                    <span>Đóng gói tiêu chuẩn giữ độ giòn lâu và tiện lợi mang đi.</span>
-                  </div>
+            {/* Packaging Mini Carousel / Thumbnails */}
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              <div className="bg-haq-bone rounded-2xl p-3 border border-black/5 flex items-center gap-3">
+                <img src={packImg1} alt="Bánh tráng sợi sa tế" className="w-12 h-12 object-contain rounded-lg" />
+                <div className="text-[11px] font-mono leading-tight">
+                  <strong className="block text-haq-ink uppercase">Sợi sa tế tôm</strong>
+                  <span className="text-haq-ink/60">Hũ 100g</span>
                 </div>
               </div>
-
-              <div className="mt-8 pt-6 border-t border-black/5 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/san-pham"
-                  className="group inline-flex items-center gap-2 bg-haq-red hover:bg-haq-ink text-white text-xs font-heading font-extrabold uppercase tracking-widest px-7 py-3.5 rounded-full transition-all duration-200 shadow-sm"
-                >
-                  <span>KHÁM PHÁ</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-
-                <Link
-                  to="/lien-he"
-                  className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-haq-ink/70 hover:text-haq-red transition-colors"
-                >
-                  <span>ĐẶT HÀNG SỈ / OEM →</span>
-                </Link>
+              <div className="bg-haq-bone rounded-2xl p-3 border border-black/5 flex items-center gap-3">
+                <img src={packImg2} alt="Sấy giòn vị tôm" className="w-12 h-12 object-contain rounded-lg" />
+                <div className="text-[11px] font-mono leading-tight">
+                  <strong className="block text-haq-ink uppercase">Sấy giòn tôm</strong>
+                  <span className="text-haq-ink/60">Gói 50g</span>
+                </div>
               </div>
+              <div className="bg-haq-bone rounded-2xl p-3 border border-black/5 flex items-center gap-3">
+                <img src={packImg3} alt="Sấy giòn vị bò" className="w-12 h-12 object-contain rounded-lg" />
+                <div className="text-[11px] font-mono leading-tight">
+                  <strong className="block text-haq-ink uppercase">Sấy giòn bò</strong>
+                  <span className="text-haq-ink/60">Gói 50g</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Craft Story & Features (Col 5) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div>
+              <span className="font-mono text-xs font-bold text-haq-red uppercase tracking-widest">
+                KHỞI NGUỒN TỪ NĂM 2021
+              </span>
+              <h2 className="font-heading font-black text-3xl sm:text-4xl text-haq-ink uppercase tracking-tight leading-tight mt-1.5">
+                NÂNG TẦM MÓN ĂN VẶT QUỐC DÂN
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+              Bánh tráng trộn HAQ là sản phẩm chiến lược đặt nền móng cho thương hiệu.
+              Bằng việc ứng dụng <strong>dây chuyền sấy giòn khép kín</strong> thay cho phương pháp thủ công,
+              HAQ FOOD giữ trọn vẹn độ giòn xốp và vị đậm đà truyền thống của tôm khô, bò khô cùng sốt gia vị đặc trưng.
+            </p>
+
+            {/* Key Advantages */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
+                <div className="text-xs text-haq-ink/80">
+                  <strong className="text-haq-ink font-heading uppercase">Công nghệ sấy tự động:</strong> Độ ẩm tiêu chuẩn &lt; 5%, bảo quản tự nhiên không chất độc hại.
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
+                <div className="text-xs text-haq-ink/80">
+                  <strong className="text-haq-ink font-heading uppercase">Gia vị tuyển chọn:</strong> Tôm biển sấy, thịt khô tẩm ướp chuẩn vị ẩm thực đường phố Việt.
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
+                <div className="text-xs text-haq-ink/80">
+                  <strong className="text-haq-ink font-heading uppercase">Quy cách đa dạng:</strong> Đóng gói tiện lợi 45g – 150g phục vụ hệ thống siêu thị và xuất khẩu.
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-4 flex items-center gap-4">
+              <Link
+                to="/san-pham?category=banh-trang"
+                className="inline-flex items-center gap-2 bg-haq-red hover:bg-haq-ink text-white text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm"
+              >
+                <span>XEM DÒNG BÁNH TRÁNG</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/lien-he"
+                className="inline-flex items-center gap-2 bg-haq-bone hover:bg-black/5 text-haq-ink text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 border border-black/10"
+              >
+                <span>ĐẶT MẪU B2B</span>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,10 +1,13 @@
-import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
-import heroBanner2 from '../assets/herobanner/Gemini_Generated_Image_bbdxopbbdxopbbdx.png'
-import heroBanner3 from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
+import catAllImg from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
+import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
+import catBanhImg from '../assets/categories/category_banh.jpg'
+import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
+import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 
 /**
  * SINGLE SOURCE OF TRUTH FOR PRODUCT CATEGORIES
  * Được đồng bộ giữa Header Mega Menu, Mobile Drawer, và Trang Danh mục sản phẩm (/san-pham).
+ * Mỗi danh mục sở hữu hình ảnh visual riêng biệt, chất lượng commercial food photography.
  */
 export const PRODUCT_CATEGORIES = [
   {
@@ -13,7 +16,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Tất cả sản phẩm',
     shortName: 'Tất cả',
     desc: 'Toàn bộ danh mục sản phẩm thực phẩm và đồ ăn vặt đóng gói chất lượng cao của HAQ FOOD.',
-    image: heroBanner1,
+    image: catAllImg,
     featured: 'Bánh tráng trộn HAQ 2021',
     featuredDesc: 'Sản phẩm tiêu biểu làm nên thương hiệu HAQ FOOD trên dây chuyền sấy giòn khép kín ISO 22000 & HACCP.',
     dbMatchSlugs: ['all'],
@@ -24,7 +27,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Bánh tráng',
     shortName: 'Bánh tráng',
     desc: 'Bánh tráng sấy giòn vị bò, tôm, phô mai & bánh tráng trộn chuẩn vị truyền thống.',
-    image: heroBanner1,
+    image: catBanhTrangImg,
     featured: 'Bánh tráng trộn HAQ',
     featuredDesc: 'Dây chuyền sấy giòn tự động, kết hợp gia vị tôm và bò khô đậm vị Việt Nam.',
     dbMatchSlugs: ['banh-trang', 'banh-trang-say', 'banh-trang-tron'],
@@ -35,7 +38,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Bánh',
     shortName: 'Bánh',
     desc: 'Bánh hạnh nhân & bánh đậu xanh thượng hạng đạt chuẩn xuất khẩu sang thị trường châu Á.',
-    image: heroBanner3,
+    image: catBanhImg,
     featured: 'Bánh hạnh nhân & đậu xanh',
     featuredDesc: 'Nguyên liệu tuyển chọn tự nhiên, vị thanh bùi giòn xốp đạt tiêu chuẩn kiểm định quốc tế.',
     dbMatchSlugs: ['banh', 'banh-hanh-nhan', 'banh-deo', 'banh-khac', 'banh-sua'],
@@ -46,7 +49,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Đồ ăn vặt',
     shortName: 'Đồ ăn vặt',
     desc: 'Bắp rang bơ sấy nổ công nghệ cao kết hợp bơ sữa caramel béo ngậy thơm ngon.',
-    image: heroBanner2,
+    image: catDoAnVatImg,
     featured: 'Bắp rang bơ cao cấp',
     featuredDesc: 'Hạt bắp nổ tròn đều, lớp sốt caramel và phô mai giòn rụm hấp dẫn.',
     dbMatchSlugs: ['do-an-vat', 'bap-rang-bo'],
@@ -57,7 +60,7 @@ export const PRODUCT_CATEGORIES = [
     name: 'Đồ ăn khô',
     shortName: 'Đồ ăn khô',
     desc: 'Thịt bò và thịt heo sấy gia vị tự nhiên đậm đà, kiểm soát chất lượng an toàn nghiêm ngặt.',
-    image: heroBanner1,
+    image: catDoAnKhoImg,
     featured: 'Thịt khô hảo hạng',
     featuredDesc: 'Thịt tươi tẩm ướp gia vị truyền thống, bảo quản tiện lợi và an toàn vệ sinh.',
     dbMatchSlugs: ['do-an-kho', 'thot-kho', 'thit-kho'],

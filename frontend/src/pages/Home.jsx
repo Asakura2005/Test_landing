@@ -2,11 +2,12 @@ import React from 'react'
 import StickyNav from '../components/StickyNav'
 import FloatingContactBar from '../components/FloatingContactBar'
 import Hero from '../components/Hero'
+import BrandStatement from '../components/BrandStatement'
 import Products from '../components/Products'
 import FeaturedProduct from '../components/FeaturedProduct'
-import BrandStorySection from '../components/BrandStorySection'
-import QuickStats from '../components/QuickStats'
+import JourneyTimeline from '../components/JourneyTimeline'
 import CapabilitiesSection from '../components/CapabilitiesSection'
+import QuickStats from '../components/QuickStats'
 import Partners from '../components/Partners'
 import WhyChooseUs from '../components/WhyChooseUs'
 import NewsSection from '../components/NewsSection'
@@ -16,45 +17,48 @@ import Footer from '../components/Footer'
 export default function Home() {
   return (
     <div className="min-h-screen bg-haq-bone text-haq-ink font-sans selection:bg-haq-red selection:text-white flex flex-col relative">
-      {/* 00: Minimalist Sticky Header with Product Mega Menu */}
+      {/* 00 / HEADER: Minimalist Sticky Header with Product Mega Menu */}
       <StickyNav />
 
       {/* Floating Quick Contact Widget */}
       <FloatingContactBar />
 
       <main className="flex-1">
-        {/* 01 / HERO: Full-Bleed 100% Banner Slider */}
+        {/* 01 / HERO: Full-Bleed Banner Slider */}
         <Hero />
 
-        {/* 02 / SẢN PHẨM: Product Discovery (Asymmetric Editorial Grid) */}
+        {/* 02 / BRAND STATEMENT: Chất lượng là cốt lõi của thương hiệu */}
+        <BrandStatement />
+
+        {/* 03 / PRODUCT WORLD: Asymmetric Editorial Product Gallery */}
         <Products />
 
-        {/* 03 / SIGNATURE PRODUCT: Bánh Tráng Trộn HAQ 2021 */}
+        {/* 04 / SIGNATURE PRODUCT: Bánh Tráng Trộn HAQ 2021 */}
         <FeaturedProduct />
 
-        {/* 04 / ABOUT: Doanh nghiệp thực phẩm Việt Nam */}
-        <BrandStorySection />
+        {/* 05 / STORY OF HAQ: Hành trình phát triển 2021 - 2025 */}
+        <JourneyTimeline />
 
-        {/* 05 / TRUST & QUALITY: ISO · HACCP · Quality Control · Transparency */}
-        <QuickStats />
-
-        {/* 06 / CAPABILITY: 5-Step Process & Production Power */}
+        {/* 06 / MANUFACTURING POWER: Năng lực sản xuất công nghiệp & Dây chuyền tự động */}
         <CapabilitiesSection />
 
-        {/* 07 / MARKET: Domestic Chains & Global Export */}
+        {/* 07 / QUALITY & SAFETY: Quy trình kiểm soát 5 bước ISO 22000 & HACCP */}
+        <QuickStats />
+
+        {/* 08 / DISTRIBUTION & EXPORT: Phủ sóng toàn quốc & Xuất khẩu Châu Á */}
         <Partners />
 
-        {/* 08 / PARTNERSHIP: B2B & OEM/ODM Dedicated Section */}
+        {/* 09 / B2B PARTNERSHIP: Nền tảng hợp tác B2B & Gia công OEM / ODM */}
         <WhyChooseUs />
 
-        {/* 09 / NEWS: Real Corporate News & Trade Activities */}
+        {/* 10 / EDITORIAL NEWS: Tin tức & Hoạt động thương mại */}
         <NewsSection />
 
-        {/* 10 / FINAL CTA: Sẵn Sàng Đồng Hành Cùng HAQ FOOD? */}
+        {/* 11 / FINAL CTA: Kêu gọi hành động hợp tác */}
         <CtaBanner />
       </main>
 
-      {/* 11 / FOOTER: Clean Sitemapped Corporate Footer */}
+      {/* 12 / FOOTER: Corporate Sitemapped Footer */}
       <Footer />
     </div>
   )
