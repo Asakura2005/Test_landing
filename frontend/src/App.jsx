@@ -10,6 +10,9 @@ import NewsPage from './pages/NewsPage.jsx'
 import NewsDetailPage from './pages/NewsDetailPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import PolicyPage from './pages/PolicyPage.jsx'
+import RefundPolicyPage from './pages/RefundPolicyPage.jsx'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx'
+import TermsOfServicePage from './pages/TermsOfServicePage.jsx'
 import Admin from './pages/Admin.jsx'
 import ProductDetailPage from './pages/ProductDetailPage.jsx'
 
@@ -43,7 +46,13 @@ export default function App() {
           <Route path="/tin-tuc" element={<NewsPage />} />
           <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
+          
+          {/* Legal & Policy Pages */}
           <Route path="/chinh-sach" element={<PolicyPage />} />
+          <Route path="/chinh-sach-doi-tra-hoan-tien" element={<RefundPolicyPage />} />
+          <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicyPage />} />
+          <Route path="/dieu-khoan-su-dung" element={<TermsOfServicePage />} />
+          
           <Route path="/heritage" element={<HeritagePage />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/company-profile" element={<Navigate to="/gioi-thieu" replace />} />
