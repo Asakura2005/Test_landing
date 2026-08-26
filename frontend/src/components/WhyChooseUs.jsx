@@ -1,38 +1,32 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, Factory, Sparkles, Building2, Handshake } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Factory, Sparkles, Building2 } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 
-const ADVANTAGES = [
+const PARTNER_BENEFITS = [
   {
     num: '01',
-    code: 'QUALITY',
-    title: 'Chất Lượng Ổn Định – Giá Cạnh Tranh',
-    desc: 'Kiểm soát nghiêm ngặt theo tiêu chuẩn ISO & HACCP, đảm bảo từng lô sản phẩm đồng nhất về hương vị và an toàn với chi phí tối ưu.',
+    code: 'OEM / ODM',
+    title: 'Gia Công Sản Phẩm Theo Yêu Cầu',
+    desc: 'Tùy biến công thức, quy cách đóng gói và in ấn bao bì theo nhận diện thương hiệu riêng của đối tác.',
   },
   {
     num: '02',
-    code: 'FLEXIBILITY',
-    title: 'Sản Phẩm Đa Dạng – Gia Công OEM/ODM',
-    desc: 'Danh mục phong phú nhiều phân khúc và năng lực OEM/ODM linh hoạt đáp ứng mọi yêu cầu bao bì, công thức riêng biệt của đối tác.',
+    code: 'LARGE ORDERS',
+    title: 'Đáp Ứng Đơn Hàng Lớn & Liên Tục',
+    desc: 'Năng lực sản xuất quy chuẩn đảm bảo cung ứng khối lượng lớn ổn định, đúng tiến độ cho các chuỗi bán lẻ.',
   },
   {
     num: '03',
-    code: 'MARKET KNOWLEDGE',
-    title: 'Đội Ngũ Am Hiểu Thị Trường',
-    desc: 'Nắm bắt sâu sắc thị hiếu người tiêu dùng Việt Nam và xu hướng ẩm thực ăn vặt hiện đại để không ngừng đổi mới.',
+    code: 'QUALITY FIRST',
+    title: 'Tiêu Chuẩn ISO 22000 & HACCP',
+    desc: 'Kiểm soát chặt chẽ từng lô hàng từ nguồn nguyên liệu đến lưu mẫu truy xuất, đảm bảo chất lượng đồng nhất.',
   },
   {
     num: '04',
-    code: 'DISTRIBUTION',
-    title: 'Hệ Thống Phân Phối Rộng Khắp',
-    desc: 'Hiện diện vững chắc tại các hệ thống siêu thị, đại siêu thị và chuỗi cửa hàng tiện lợi hàng đầu trên cả nước.',
-  },
-  {
-    num: '05',
-    code: 'EXPORT',
-    title: 'Kinh Nghiệm Xuất Khẩu Quốc Tế',
-    desc: 'Đã xuất khẩu thành công sang các thị trường tiêu chuẩn khắt khe như Hàn Quốc & Đài Loan, mở đường vươn xa châu Á.',
+    code: 'EXPORT READY',
+    title: 'Kinh Nghiệm Phân Phối & Xuất Khẩu',
+    desc: 'Đã xuất khẩu sang Hàn Quốc và Đài Loan, am hiểu thủ tục kiểm định và tiêu chuẩn đóng gói quốc tế.',
   },
 ]
 
@@ -49,18 +43,18 @@ export default function WhyChooseUs() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  07 / HỢP TÁC DOANH NGHIỆP (B2B PARTNERSHIP)
+                  06 / PARTNERSHIP
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
               <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
-                ĐỐI TÁC CỦA <br />
-                <span className="text-haq-red">HAQ FOOD</span>
+                TÌM KIẾM MỘT <br />
+                <span className="text-haq-red">ĐỐI TÁC THỰC PHẨM?</span>
               </h2>
             </div>
             <div>
               <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed mb-4">
-                Tìm kiếm một đối tác sản xuất và cung ứng thực phẩm đáng tin cậy? HAQ FOOD sẵn sàng đồng hành cùng sự phát triển của bạn.
+                HAQ FOOD có năng lực sản xuất theo yêu cầu OEM/ODM và đáp ứng các đơn hàng lớn, liên tục.
               </p>
               <Link
                 to="/lien-he"
@@ -72,11 +66,11 @@ export default function WhyChooseUs() {
             </div>
           </div>
 
-          {/* Interactive Typography & Value List */}
+          {/* Interactive Editorial Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Interactive List */}
+            {/* Left: Benefits List */}
             <div className="lg:col-span-7 space-y-3">
-              {ADVANTAGES.map((item, idx) => {
+              {PARTNER_BENEFITS.map((item, idx) => {
                 const isActive = activeIdx === idx
                 return (
                   <div
@@ -108,7 +102,6 @@ export default function WhyChooseUs() {
                       </span>
                     </div>
 
-                    {/* Mobile visible desc if active */}
                     {isActive && (
                       <p className="lg:hidden mt-3 pt-3 border-t border-black/5 text-xs text-haq-ink/70 leading-relaxed">
                         {item.desc}
@@ -120,28 +113,28 @@ export default function WhyChooseUs() {
             </div>
 
             {/* Right: Active Detail Poster Box */}
-            <div className="hidden lg:flex lg:col-span-5 bg-haq-ink text-white rounded-3xl p-8 sticky top-28 border border-black/5 shadow-xl flex-col justify-between min-h-[380px]">
+            <div className="hidden lg:flex lg:col-span-5 bg-haq-ink text-white rounded-3xl p-8 sticky top-28 border border-black/5 shadow-xl flex-col justify-between min-h-[360px]">
               <div>
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
                   <span className="font-mono text-4xl font-black text-haq-gold">
-                    {ADVANTAGES[activeIdx].num}
+                    {PARTNER_BENEFITS[activeIdx].num}
                   </span>
                   <span className="font-mono text-xs font-bold tracking-widest text-white/50 uppercase">
-                    {ADVANTAGES[activeIdx].code}
+                    {PARTNER_BENEFITS[activeIdx].code}
                   </span>
                 </div>
 
                 <h4 className="font-heading font-black text-2xl text-white uppercase leading-snug">
-                  {ADVANTAGES[activeIdx].title}
+                  {PARTNER_BENEFITS[activeIdx].title}
                 </h4>
 
                 <p className="mt-6 text-sm text-white/75 leading-relaxed">
-                  {ADVANTAGES[activeIdx].desc}
+                  {PARTNER_BENEFITS[activeIdx].desc}
                 </p>
               </div>
 
               <div className="pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-haq-gold">
-                <span>HAQ B2B ADVANTAGE</span>
+                <span>HỢP TÁC BỀN VỮNG</span>
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>

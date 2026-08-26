@@ -6,11 +6,9 @@ import Products from '../components/Products'
 import FeaturedProduct from '../components/FeaturedProduct'
 import BrandStorySection from '../components/BrandStorySection'
 import QuickStats from '../components/QuickStats'
-import JourneyTimeline from '../components/JourneyTimeline'
 import CapabilitiesSection from '../components/CapabilitiesSection'
 import Partners from '../components/Partners'
 import WhyChooseUs from '../components/WhyChooseUs'
-import VisionSection from '../components/VisionSection'
 import NewsSection from '../components/NewsSection'
 import CtaBanner from '../components/CtaBanner'
 import Footer from '../components/Footer'
@@ -18,51 +16,45 @@ import Footer from '../components/Footer'
 export default function Home() {
   return (
     <div className="min-h-screen bg-haq-bone text-haq-ink font-sans selection:bg-haq-red selection:text-white flex flex-col relative">
-      {/* 00: Sticky Header with Visual Mega Menu & Search */}
+      {/* 00: Minimalist Sticky Header with Product Mega Menu */}
       <StickyNav />
 
-      {/* Floating Quick-Contact Bar (Right side) */}
+      {/* Floating Quick Contact Widget */}
       <FloatingContactBar />
 
       <main className="flex-1">
-        {/* 00 / HERO: Full-Bleed 100% Edge-to-Edge Banner Slider */}
+        {/* 01 / HERO: Full-Bleed 100% Banner Slider */}
         <Hero />
 
-        {/* 01 / SẢN PHẨM: Product Discovery Category Tiles (Directly after Hero) */}
+        {/* 02 / SẢN PHẨM: Product Discovery (Asymmetric Editorial Grid) */}
         <Products />
 
-        {/* 02 / SẢN PHẨM TIÊU BIỂU: Signature Product Spotlight */}
+        {/* 03 / SIGNATURE PRODUCT: Bánh Tráng Trộn HAQ 2021 */}
         <FeaturedProduct />
 
-        {/* 03 / DOANH NGHIỆP: About HAQ FOOD Storytelling & Factory */}
+        {/* 04 / ABOUT: Doanh nghiệp thực phẩm Việt Nam */}
         <BrandStorySection />
 
-        {/* Trust Statistics Strip: 2021 | ISO | HACCP | 03 Markets */}
+        {/* 05 / TRUST & QUALITY: ISO · HACCP · Quality Control · Transparency */}
         <QuickStats />
 
-        {/* 04 / HÀNH TRÌNH: Timeline 2021 - 2025 */}
-        <JourneyTimeline />
-
-        {/* 05 / NĂNG LỰC SẢN XUẤT: 5 Pillars & 5-Step Process */}
+        {/* 06 / CAPABILITY: 5-Step Process & Production Power */}
         <CapabilitiesSection />
 
-        {/* 06 / MẠNG LƯỚI PHÂN PHỐI: Domestic Chains & Global Markets */}
+        {/* 07 / MARKET: Domestic Chains & Global Export */}
         <Partners />
 
-        {/* 07 / HỢP TÁC DOANH NGHIỆP: B2B & OEM/ODM Dedicated Section */}
+        {/* 08 / PARTNERSHIP: B2B & OEM/ODM Dedicated Section */}
         <WhyChooseUs />
 
-        {/* 08 / TẦM NHÌN & GIÁ TRỊ: Asia Expansion & Core Values */}
-        <VisionSection />
-
-        {/* 09 / TIN TỨC HOẠT ĐỘNG: Real Corporate Activities */}
+        {/* 09 / NEWS: Real Corporate News & Trade Activities */}
         <NewsSection />
 
-        {/* 10 / PRE-FOOTER CTA: Sẵn Sàng Đồng Hành Cùng HAQ FOOD */}
+        {/* 10 / FINAL CTA: Sẵn Sàng Đồng Hành Cùng HAQ FOOD? */}
         <CtaBanner />
       </main>
 
-      {/* 11 / FOOTER: Comprehensive Information Architecture Sitemap */}
+      {/* 11 / FOOTER: Clean Sitemapped Corporate Footer */}
       <Footer />
     </div>
   )

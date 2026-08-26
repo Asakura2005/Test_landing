@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, Phone, Mail, ShieldCheck, ArrowRight } from 'lucide-react'
+import { MapPin, Phone, Mail, ShieldCheck } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 export default function Footer() {
@@ -55,18 +55,17 @@ export default function Footer() {
 
             <div>
               <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
-                DANH MỤC SẢN PHẨM
+                SẢN PHẨM
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh tráng & bánh tráng trộn</Link></li>
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh đậu xanh & bánh hạnh nhân</Link></li>
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Đồ ăn vặt & bắp rang bơ</Link></li>
-                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Thịt khô hảo hạng</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Danh mục sản phẩm</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Sản phẩm nổi bật 2021</Link></li>
+                <li><Link to="/san-pham" className="hover:text-haq-gold transition-colors">Bánh tráng & đồ ăn vặt</Link></li>
               </ul>
             </div>
           </div>
 
-          {/* Col 3: Năng lực & Thị trường (Spans 2 cols) */}
+          {/* Col 3: Năng lực & Tin tức (Spans 2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             <div>
               <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
@@ -74,7 +73,7 @@ export default function Footer() {
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
                 <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Sản xuất quy mô lớn</a></li>
-                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Tiêu chuẩn ISO & HACCP</a></li>
+                <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Chất lượng ISO & HACCP</a></li>
                 <li><a href="/#hop-tac" className="hover:text-haq-gold transition-colors">Gia công OEM / ODM</a></li>
                 <li><a href="/#nang-luc" className="hover:text-haq-gold transition-colors">Logistics & Lưu mẫu</a></li>
               </ul>
@@ -82,12 +81,11 @@ export default function Footer() {
 
             <div>
               <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold mb-3">
-                THỊ TRƯỜNG
+                TIN TỨC
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-white/75">
-                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Việt Nam (Nội địa)</a></li>
-                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Hàn Quốc (Xuất khẩu)</a></li>
-                <li><a href="/#thi-truong" className="hover:text-haq-gold transition-colors">Đài Loan (Xuất khẩu)</a></li>
+                <li><a href="/#tin-tuc" className="hover:text-haq-gold transition-colors">Hoạt động thương mại</a></li>
+                <li><a href="/#tin-tuc" className="hover:text-haq-gold transition-colors">Sự kiện doanh nghiệp</a></li>
               </ul>
             </div>
           </div>
@@ -95,13 +93,13 @@ export default function Footer() {
           {/* Col 4: Liên hệ chính thức (Spans 3 cols) */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-haq-gold">
-              THÔNG TIN LIÊN HỆ
+              LIÊN HỆ
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-white/80">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
                 <span>
-                  <strong>Trụ sở:</strong> 30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội
+                  <strong>Trụ sở:</strong> Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
@@ -123,7 +121,7 @@ export default function Footer() {
                 to="/lien-he"
                 className="inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-gold hover:text-white border-b border-haq-gold pb-0.5 transition-colors"
               >
-                <span>GỬI YÊU CẦU HỢP TÁC B2B →</span>
+                <span>LIÊN HỆ HỢP TÁC B2B →</span>
               </Link>
             </div>
           </div>

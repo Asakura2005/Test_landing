@@ -50,7 +50,7 @@ export default function NewsSection() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  09 / TIN TỨC & HOẠT ĐỘNG (NEWS)
+                  07 / NEWS
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
@@ -63,7 +63,7 @@ export default function NewsSection() {
             </p>
           </div>
 
-          {/* Magazine News Grid (1 Featured + 2 Stacked) */}
+          {/* Editorial News Grid (1 Featured + 2 Stacked) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left: Big Featured Article (Spans 7 cols) */}
             <article className="lg:col-span-7 group bg-haq-bone rounded-3xl overflow-hidden border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
@@ -72,7 +72,7 @@ export default function NewsSection() {
                   <img
                     src={FEATURED_ARTICLE.image}
                     alt={FEATURED_ARTICLE.title}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover transform group-hover:scale-103 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs text-haq-ink font-mono text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/5 shadow-2xs">
@@ -101,7 +101,7 @@ export default function NewsSection() {
                   to="/tin-tuc"
                   className="group/link inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red border-b-2 border-haq-red pb-1"
                 >
-                  <span>XEM CHI TIẾT HOẠT ĐỘNG</span>
+                  <span>XEM CHI TIẾT</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                 </Link>
               </div>
@@ -140,17 +140,6 @@ export default function NewsSection() {
                 </article>
               ))}
             </div>
-          </div>
-
-          {/* Bottom Action */}
-          <div className="mt-12 sm:mt-16 text-center">
-            <Link
-              to="/tin-tuc"
-              className="group inline-flex items-center gap-3 bg-haq-ink hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
-            >
-              <span>XEM TẤT CẢ TIN TỨC & HOẠT ĐỘNG</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
           </div>
         </div>
       </div>

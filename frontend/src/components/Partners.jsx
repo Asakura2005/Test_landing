@@ -23,14 +23,14 @@ const DOMESTIC_PARTNERS = [
 
 const INTERNATIONAL_MARKETS = [
   {
-    country: 'SOUTH KOREA',
-    name: 'HÀN QUỐC',
-    desc: 'Xuất khẩu chính ngạch các dòng bánh tráng sấy giòn đạt chuẩn kiểm định an toàn nghiêm ngặt.',
+    code: 'KOR',
+    country: 'HÀN QUỐC (SOUTH KOREA)',
+    desc: 'Xuất khẩu chính ngạch các dòng bánh tráng sấy giòn đạt chuẩn kiểm định an toàn thực phẩm khắt khe.',
   },
   {
-    country: 'TAIWAN',
-    name: 'ĐÀI LOAN',
-    desc: 'Phân phối các món ăn vặt đóng gói đặc trưng chuẩn vị Việt Nam tại thị trường Đài Loan.',
+    code: 'TWN',
+    country: 'ĐÀI LOAN (TAIWAN)',
+    desc: 'Phân phối các món ăn vặt đóng gói đặc trưng chuẩn vị truyền thống Việt Nam.',
   },
 ]
 
@@ -46,31 +46,31 @@ export default function Partners() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  06 / MẠNG LƯỚI PHÂN PHỐI (DISTRIBUTION)
+                  05 / MARKET
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
               <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
-                HIỆN DIỆN TẠI <br />
-                <span className="text-haq-red">NHỮNG HỆ THỐNG LỚN</span>
+                TỪ VIỆT NAM ĐẾN <br />
+                <span className="text-haq-red">THỊ TRƯỜNG QUỐC TẾ</span>
               </h2>
             </div>
             <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
-              Mạng lưới phân phối uy tín tại các chuỗi đại siêu thị hàng đầu Việt Nam và các thị trường xuất khẩu quốc tế.
+              Hiện diện vững chắc tại hệ thống đại siêu thị hàng đầu trong nước và mở rộng xuất khẩu chính ngạch sang các thị trường quốc tế.
             </p>
           </div>
 
-          {/* Dual Distribution Layout: Domestic & International */}
+          {/* Geographic Flow Grid: Domestic Chains + International */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Domestic Supermarket Chains (Spans 7 cols) */}
+            {/* Domestic Distribution (Spans 7 cols) */}
             <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-black/5 shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-4 mb-6 border-b border-black/10">
                   <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-red uppercase">
                     <Store className="w-4 h-4" />
-                    <span>DOMESTIC DISTRIBUTION</span>
+                    <span>HỆ THỐNG BÁN LẺ NỘI ĐỊA (DOMESTIC)</span>
                   </div>
-                  <span className="text-xs font-mono text-haq-ink/50">VIỆT NAM</span>
+                  <span className="text-xs font-mono text-haq-ink/40">VIỆT NAM</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -101,20 +101,20 @@ export default function Partners() {
                 <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
                   <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-gold uppercase">
                     <Globe className="w-4 h-4" />
-                    <span>INTERNATIONAL MARKETS</span>
+                    <span>THỊ TRƯỜNG XUẤT KHẨU (INTERNATIONAL)</span>
                   </div>
-                  <span className="text-xs font-mono text-white/50">02+ QUỐC TẾ</span>
+                  <span className="text-xs font-mono text-white/50">CHÂU Á</span>
                 </div>
 
                 <div className="space-y-4">
                   {INTERNATIONAL_MARKETS.map((im) => (
                     <div
-                      key={im.country}
+                      key={im.code}
                       className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-haq-gold/40 transition-colors"
                     >
                       <div className="flex items-center justify-between">
-                        <h4 className="font-heading font-black text-lg text-haq-gold uppercase">
-                          {im.country} ({im.name})
+                        <h4 className="font-heading font-black text-base sm:text-lg text-haq-gold uppercase">
+                          {im.country}
                         </h4>
                         <CheckCircle className="w-4 h-4 text-haq-gold" />
                       </div>
@@ -127,7 +127,7 @@ export default function Partners() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
-                <span>TIÊU CHUẨN XUẤT KHẨU</span>
+                <span>ĐẠT CHUẨN XUẤT KHẨU</span>
                 <span className="text-haq-gold font-bold">ISO 22000 · HACCP</span>
               </div>
             </div>
