@@ -39,7 +39,7 @@ export default function Headquarters() {
               </div>
 
               <a 
-                href="https://maps.google.com" 
+                href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7" 
                 target="_blank"
                 rel="noreferrer"
                 className="group inline-flex items-center justify-center gap-3 bg-haq-red text-white font-heading font-bold text-base px-8 py-3 rounded-full hover:bg-haq-dark hover:text-white transition-colors shadow-lg"

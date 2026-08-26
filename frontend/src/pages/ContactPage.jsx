@@ -927,7 +927,7 @@ export default function ContactPage() {
               <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-sm min-h-[380px] bg-white relative">
                 <iframe
                   title="HAQ FOOD Location Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.863855881423!2d105.7891868759695!3d21.038132787453315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab3b4e6d4c0b%3A0xb35a09d3bbfb8915!2zQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.746825853712!2d105.7827073!3d21.0428138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab338121cba7%3A0x2cf17614ecef8583!2zMzAgTmcuIDEgUGjhuqFtIFR14bqlbiBUw6BpLCBOZ2jEqWEgxJDDtCwgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
                   width="100%"
                   height="100%"
                   style={{ border: 0, minHeight: '400px' }}
