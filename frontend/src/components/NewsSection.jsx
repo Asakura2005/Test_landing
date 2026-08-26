@@ -6,35 +6,35 @@ import factoryImg from '../assets/hero-factory.jpg'
 
 const FEATURED_ARTICLE = {
   id: 1,
-  title: 'HAQ FOOD Không Ngừng Nâng Cao Chất Lượng Sản Phẩm Và Chuẩn Mực Dây Chuyền Sản Xuất',
-  category: 'HOẠT ĐỘNG DOANH NGHIỆP',
-  date: '15/01/2026',
+  title: 'HAQ FOOD Tham Gia Hội Chợ Giao Thương Việt – Trung 2025: Thúc Đẩy Mở Rộng Thị Trường',
+  category: 'XÚC TIẾN THƯƠNG MẠI',
+  date: '2025',
   image: factoryImg,
   description:
-    'Đầu tư dây chuyền sấy giòn tự động hóa khép kín và hoàn thiện quy trình kiểm soát chất lượng chuẩn ISO 22000 & HACCP nhằm đáp ứng tối đa nhu cầu của các chuỗi bán lẻ lớn.',
-  slug: 'nang-cao-chat-luong-san-pham',
+    'Sự kiện xúc tiến thương mại quan trọng mở ra cơ hội kết nối cung ứng, đưa các món ăn vặt đặc trưng của HAQ FOOD tiếp cận các đối tác phân phối khu vực và quốc tế.',
+  slug: 'hoi-cho-giao-thuong-viet-trung',
 }
 
 const SECONDARY_ARTICLES = [
   {
     id: 2,
-    title: 'Mở Rộng Hệ Thống Phân Phối Tại Các Chuỗi Đại Siêu Thị Toàn Quốc',
-    category: 'MẠNG LƯỚI BÁN LẺ',
-    date: '08/01/2026',
+    title: 'Xuất Khẩu Thành Công Sang Thị Trường Hàn Quốc & Đài Loan',
+    category: 'HOẠT ĐỘNG XUẤT KHẨU',
+    date: '2024',
     image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?q=80&w=800&auto=format&fit=crop',
     description:
-      'Sản phẩm HAQ FOOD gia tăng độ phủ sóng trên kệ hàng của WinMart, GO!, Circle K, GS25, Kmart và Bách Hóa Xanh.',
-    slug: 'mo-rong-he-thong-phan-phoi',
+      'Các sản phẩm bánh tráng sấy giòn và đồ ăn vặt HAQ FOOD đáp ứng đầy đủ tiêu chuẩn kiểm định an toàn thực phẩm khắt khe của các đối tác quốc tế.',
+    slug: 'xuat-khau-han-quoc-dai-loan',
   },
   {
     id: 3,
-    title: 'Xúc Tiến Thương Mại Và Quảng Bá Đồ Ăn Vặt Việt Nam Đến Thị Trường Quốc Tế',
-    category: 'XUẤT KHẨU & HỘI CHỢ',
-    date: '20/12/2025',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop',
+    title: 'Chuẩn Hóa Quy Trình Sản Xuất Khép Kín Đạt Chuẩn ISO & HACCP',
+    category: 'NĂNG LỰC SẢN XUẤT',
+    date: '2023',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop',
     description:
-      'Tích cực giới thiệu các món bánh tráng sấy giòn đặc trưng của Việt Nam tại các hội chợ giao thương quốc tế.',
-    slug: 'xuc-tien-thuong-mai',
+      'Đầu tư đồng bộ công nghệ sấy và kiểm soát chất lượng từ khâu nguyên liệu đến lưu mẫu từng lô hàng sản xuất.',
+    slug: 'chuan-hoa-quy-trinh-san-xuat',
   },
 ]
 
@@ -42,7 +42,7 @@ export default function NewsSection() {
   const ref = useReveal()
 
   return (
-    <section id="tin-tuc" className="py-20 md:py-32 bg-white relative">
+    <section id="tin-tuc" className="py-20 md:py-32 bg-white relative border-t border-black/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal flex flex-col">
           {/* Header */}
@@ -50,7 +50,7 @@ export default function NewsSection() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  04 / LATEST NEWS
+                  09 / NEWS
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
@@ -58,12 +58,12 @@ export default function NewsSection() {
                 TIN TỨC & HOẠT ĐỘNG
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-haq-ink/70 max-w-md leading-relaxed">
-              Cập nhật thông tin mới nhất về hoạt động kinh doanh, năng lực sản xuất và sự kiện thương mại nổi bật của HAQ FOOD.
+            <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
+              Các hoạt động thương mại, xúc tiến xuất khẩu và cột mốc phát triển nổi bật của HAQ FOOD.
             </p>
           </div>
 
-          {/* Magazine News Grid (1 Big Featured + 2 Stacked) */}
+          {/* Magazine News Grid (1 Featured + 2 Stacked) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left: Big Featured Article (Spans 7 cols) */}
             <article className="lg:col-span-7 group bg-haq-bone rounded-3xl overflow-hidden border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
@@ -83,14 +83,14 @@ export default function NewsSection() {
                 <div className="p-6 sm:p-8">
                   <div className="flex items-center gap-2 text-xs font-mono font-semibold text-haq-ink/50 mb-3">
                     <Calendar className="w-3.5 h-3.5 text-haq-red" />
-                    <span>{FEATURED_ARTICLE.date}</span>
+                    <span>NĂM {FEATURED_ARTICLE.date}</span>
                   </div>
 
                   <h3 className="font-heading font-black text-xl sm:text-2xl text-haq-ink group-hover:text-haq-red transition-colors leading-snug">
                     {FEATURED_ARTICLE.title}
                   </h3>
 
-                  <p className="mt-4 text-sm text-haq-ink/75 leading-relaxed line-clamp-3">
+                  <p className="mt-4 text-sm text-haq-ink/75 leading-relaxed">
                     {FEATURED_ARTICLE.description}
                   </p>
                 </div>
@@ -101,7 +101,7 @@ export default function NewsSection() {
                   to="/tin-tuc"
                   className="group/link inline-flex items-center gap-2 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red border-b-2 border-haq-red pb-1"
                 >
-                  <span>ĐỌC TOÀN BỘ BÀI VIẾT</span>
+                  <span>XEM CHI TIẾT HOẠT ĐỘNG</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                 </Link>
               </div>
@@ -120,7 +120,7 @@ export default function NewsSection() {
                         {article.category}
                       </span>
                       <span className="text-[11px] font-mono text-haq-ink/50">
-                        {article.date}
+                        NĂM {article.date}
                       </span>
                     </div>
 
@@ -148,7 +148,7 @@ export default function NewsSection() {
               to="/tin-tuc"
               className="group inline-flex items-center gap-3 bg-haq-ink hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
             >
-              <span>XEM TẤT CẢ TIN TỨC</span>
+              <span>XEM TẤT CẢ TIN TỨC & HOẠT ĐỘNG</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>

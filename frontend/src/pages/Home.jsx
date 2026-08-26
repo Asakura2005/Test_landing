@@ -1,66 +1,64 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import StickyNav from '../components/StickyNav'
 import Hero from '../components/Hero'
-import QuickStats from '../components/QuickStats'
 import BrandStorySection from '../components/BrandStorySection'
+import QuickStats from '../components/QuickStats'
 import Products from '../components/Products'
 import FeaturedProduct from '../components/FeaturedProduct'
+import JourneyTimeline from '../components/JourneyTimeline'
 import CapabilitiesSection from '../components/CapabilitiesSection'
 import WhyChooseUs from '../components/WhyChooseUs'
 import Partners from '../components/Partners'
+import VisionSection from '../components/VisionSection'
 import NewsSection from '../components/NewsSection'
 import CtaBanner from '../components/CtaBanner'
 import Footer from '../components/Footer'
 
 export default function Home() {
-  // Handle hash scrolling if navigating with anchor
-  useEffect(() => {
-    if (window.location.hash) {
-      const el = document.querySelector(window.location.hash)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
-      }
-    }
-  }, [])
-
   return (
-    <div className="bg-white min-h-screen flex flex-col selection:bg-haq-red selection:text-white">
-      {/* 1. Header & Navigation */}
+    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans selection:bg-haq-red selection:text-white flex flex-col">
+      {/* 00: Sticky Header & Navigation */}
       <StickyNav />
 
       <main className="flex-1">
-        {/* 2. Hero Section */}
+        {/* Hero: Quality Is The Core & 16:9 3-Slide Showcase */}
         <Hero />
 
-        {/* 3. Quick Brand Statistics Strip */}
-        <QuickStats />
-
-        {/* 4. Brand Story Section (50/50 Layout) */}
+        {/* 01 / ABOUT HAQ FOOD: Corporate Introduction */}
         <BrandStorySection />
 
-        {/* 5. Product Catalog & Categories */}
+        {/* Trust Statistics Strip: 2021 | ISO | HACCP | 03 Markets */}
+        <QuickStats />
+
+        {/* 02 / PRODUCTS: Key Products Asymmetric Editorial Grid */}
         <Products />
 
-        {/* 6. Featured Flagship Product Spotlight */}
+        {/* 03 / SIGNATURE PRODUCT: Bánh Tráng Trộn HAQ Spotlight */}
         <FeaturedProduct />
 
-        {/* 7. Corporate Capabilities (4 Pillars) */}
+        {/* 04 / OUR JOURNEY: Timeline 2021 - 2025 */}
+        <JourneyTimeline />
+
+        {/* 05 / PRODUCTION: Manufacturing Capability & 5-Step Process */}
         <CapabilitiesSection />
 
-        {/* 8. B2B Trust & Why HAQ FOOD */}
+        {/* 06 / WHY HAQ: 5 Competitive Advantages */}
         <WhyChooseUs />
 
-        {/* 9. Retail & Distribution Partners (Monochrome) */}
+        {/* 07 / DISTRIBUTION: Domestic & International Networks */}
         <Partners />
 
-        {/* 10. News & Corporate Activities */}
+        {/* 08 / FUTURE: Asia Vision & Core Values Flow */}
+        <VisionSection />
+
+        {/* 09 / NEWS: Real Corporate Activities */}
         <NewsSection />
 
-        {/* 11. Final Pre-Footer Call to Action */}
+        {/* B2B & OEM/ODM Partnership CTA */}
         <CtaBanner />
       </main>
 
-      {/* 12. Corporate 4-Column Footer */}
+      {/* Corporate Footer */}
       <Footer />
     </div>
   )

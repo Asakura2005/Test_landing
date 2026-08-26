@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Search, Menu, X, ArrowRight } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { Menu, X, ArrowRight } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 
 const NAV_ITEMS = [
   { label: 'TRANG CHỦ', path: '/' },
-  { label: 'GIỚI THIỆU', path: '/gioi-thieu' },
-  { label: 'SẢN PHẨM', path: '/san-pham' },
-  { label: 'NĂNG LỰC', path: '/gioi-thieu#nang-luc' },
-  { label: 'TIN TỨC', path: '/tin-tuc' },
+  { label: 'GIỚI THIỆU', path: '/#gioi-thieu' },
+  { label: 'SẢN PHẨM', path: '/#san-pham' },
+  { label: 'NĂNG LỰC', path: '/#nang-luc' },
+  { label: 'THỊ TRƯỜNG', path: '/#thi-truong' },
+  { label: 'TIN TỨC', path: '/#tin-tuc' },
   { label: 'LIÊN HỆ', path: '/lien-he' },
 ]
 
 export default function StickyNav() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
   const [lang, setLang] = useState('VN')
   const location = useLocation()
-  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,21 +32,14 @@ export default function StickyNav() {
     setMobileMenuOpen(false)
   }, [location.pathname, location.hash])
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      setSearchOpen(false)
-      navigate(`/san-pham?q=${encodeURIComponent(searchQuery.trim())}`)
-    }
-  }
-
   const isCurrentActive = (item) => {
     if (item.path === '/') {
       return location.pathname === '/' && !location.hash
     }
     if (item.path.includes('#')) {
       const [path, hash] = item.path.split('#')
-      return location.pathname === path && location.hash === `#${hash}`
+      const currentPath = location.pathname
+      return (currentPath === path || (path === '' && currentPath === '/')) && location.hash === `#${hash}`
     }
     return location.pathname === item.path
   }
@@ -64,7 +55,7 @@ export default function StickyNav() {
       >
         <div className="mx-auto max-w-site h-full px-4 sm:px-6 lg:px-12 flex items-center justify-between">
           {/* Left: Brand Logo & Navigation */}
-          <div className="flex items-center gap-6 xl:gap-10">
+          <div className="flex items-center gap-6 xl:gap-8">
             <Link to="/" className="flex items-center gap-2.5 group shrink-0">
               <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-md p-1 bg-white border border-black/10 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
                 <img
@@ -84,13 +75,13 @@ export default function StickyNav() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            <nav className="hidden xl:flex items-center gap-1">
               {NAV_ITEMS.map((item) => {
                 const active = isCurrentActive(item)
                 return (
-                  <Link
+                  <a
                     key={item.label}
-                    to={item.path}
+                    href={item.path}
                     className={`relative px-3 py-1.5 font-heading text-[13px] tracking-wider uppercase font-bold transition-colors ${
                       active
                         ? 'text-haq-red'
@@ -101,24 +92,14 @@ export default function StickyNav() {
                     {active && (
                       <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-haq-red rounded-full" />
                     )}
-                  </Link>
+                  </a>
                 )
               })}
             </nav>
           </div>
 
-          {/* Right: Search, Language & Contact CTA */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-5">
-            {/* Search Trigger */}
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="p-2 text-haq-ink/60 hover:text-haq-ink transition-colors rounded-full hover:bg-black/5"
-              title="Tìm kiếm sản phẩm"
-              aria-label="Tìm kiếm"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-
+          {/* Right: Language & Partner CTA */}
+          <div className="hidden xl:flex items-center gap-4">
             {/* Language Switcher */}
             <div className="flex items-center text-xs font-mono font-bold text-haq-ink/60 bg-haq-bone px-2.5 py-1 rounded-full border border-black/5">
               <button
@@ -136,25 +117,24 @@ export default function StickyNav() {
               </button>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA Button: ĐỐI TÁC */}
             <Link
               to="/lien-he"
-              className="group inline-flex items-center gap-2 bg-haq-red hover:bg-haq-ink text-white text-xs font-heading font-extrabold uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-200 shadow-2xs hover:shadow-xs"
+              className="group inline-flex items-center gap-2 bg-haq-red hover:bg-haq-ink text-white text-xs font-heading font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-xs"
             >
-              <span>LIÊN HỆ</span>
+              <span>ĐỐI TÁC</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
           </div>
 
           {/* Mobile Right Controls */}
-          <div className="flex lg:hidden items-center gap-2">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="p-2 text-haq-ink/70 hover:text-haq-red"
-              aria-label="Tìm kiếm"
+          <div className="flex xl:hidden items-center gap-2">
+            <Link
+              to="/lien-he"
+              className="bg-haq-red text-white text-[11px] font-heading font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full"
             >
-              <Search className="w-5 h-5" />
-            </button>
+              ĐỐI TÁC
+            </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-haq-ink hover:text-haq-red"
@@ -168,7 +148,7 @@ export default function StickyNav() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
+        <div className="fixed inset-0 z-40 xl:hidden">
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
             onClick={() => setMobileMenuOpen(false)}
@@ -177,7 +157,7 @@ export default function StickyNav() {
             <div className="space-y-1">
               <div className="pb-3 mb-3 border-b border-black/10 flex items-center justify-between">
                 <span className="text-xs font-mono font-bold tracking-widest text-haq-ink/50 uppercase">
-                  DANH MỤC MENU
+                  HAQ FOOD MENU
                 </span>
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
                   <button
@@ -199,9 +179,9 @@ export default function StickyNav() {
               {NAV_ITEMS.map((item) => {
                 const active = isCurrentActive(item)
                 return (
-                  <Link
+                  <a
                     key={item.label}
-                    to={item.path}
+                    href={item.path}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center justify-between py-3 px-3 rounded-lg font-heading font-bold text-sm uppercase tracking-wide transition-colors ${
                       active
@@ -211,7 +191,7 @@ export default function StickyNav() {
                   >
                     <span>{item.label}</span>
                     <ArrowRight className="w-4 h-4 opacity-40" />
-                  </Link>
+                  </a>
                 )
               })}
             </div>
@@ -222,72 +202,14 @@ export default function StickyNav() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full flex items-center justify-center gap-2 bg-haq-red text-white py-3 rounded-lg font-heading font-bold text-sm uppercase tracking-wider hover:bg-haq-ink transition-colors shadow-xs"
               >
-                <span>LIÊN HỆ HỢP TÁC</span>
+                <span>HỢP TÁC DOANH NGHIỆP</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <div className="text-xs text-haq-ink/60 space-y-1">
+                <p>Địa chỉ: <strong>30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội</strong></p>
                 <p>Hotline: <strong className="text-haq-ink font-mono">024 23 23 56 56</strong></p>
                 <p>Email: <strong className="text-haq-ink">info@haq.com.vn</strong></p>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Quick Search Modal */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
-            onClick={() => setSearchOpen(false)}
-          />
-          <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl p-6 border border-black/10 z-10">
-            <div className="flex items-center justify-between pb-4 border-b border-black/10">
-              <span className="font-heading font-bold text-base text-haq-ink">
-                Tìm Kiếm Sản Phẩm & Tin Tức
-              </span>
-              <button
-                onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-md text-haq-ink/50 hover:text-haq-ink hover:bg-black/5"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleSearchSubmit} className="mt-4">
-              <div className="relative flex items-center">
-                <Search className="absolute left-4 w-5 h-5 text-haq-ink/40" />
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="Nhập tên sản phẩm (bánh tráng, bánh đậu xanh, bắp rang bơ...)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-28 py-3.5 bg-haq-bone rounded-xl border border-black/10 text-sm font-medium text-haq-ink focus:outline-none focus:border-haq-red focus:bg-white transition-all"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 bg-haq-red text-white text-xs font-heading font-bold px-4 py-2 rounded-lg hover:bg-haq-ink transition-colors"
-                >
-                  Tìm Kiếm
-                </button>
-              </div>
-            </form>
-            <div className="mt-4 pt-3 flex flex-wrap items-center gap-2 text-xs text-haq-ink/60">
-              <span>Gợi ý:</span>
-              {['Bánh tráng sấy giòn', 'Bánh tráng trộn sợi', 'Bánh đậu xanh', 'Bánh hạnh nhân'].map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery(tag)
-                    setSearchOpen(false)
-                    navigate(`/san-pham?q=${encodeURIComponent(tag)}`)
-                  }}
-                  className="bg-black/5 hover:bg-haq-red/10 hover:text-haq-red px-2.5 py-1 rounded-full transition-colors"
-                >
-                  {tag}
-                </button>
-              ))}
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Store, Globe2 } from 'lucide-react'
+import { ArrowRight, Globe, Store, CheckCircle } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 
 import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
@@ -10,70 +10,127 @@ import gs25Logo from '../assets/pictures_doitac/gs25.png'
 import kmartLogo from '../assets/pictures_doitac/kmart.png'
 import winmartLogo from '../assets/pictures_doitac/winmart.png'
 
-const PARTNERS = [
+const DOMESTIC_PARTNERS = [
   { name: 'WinMart', logo: winmartLogo },
   { name: 'GO!', logo: goLogo },
+  { name: 'Tops Market', logo: goLogo },
   { name: 'Circle K', logo: circleKLogo },
   { name: 'GS25', logo: gs25Logo },
   { name: 'Kmart', logo: kmartLogo },
   { name: 'Bách Hóa Xanh', logo: bachHoaXanhLogo },
+  { name: 'Mega Market', logo: winmartLogo },
+]
+
+const INTERNATIONAL_MARKETS = [
+  {
+    country: 'SOUTH KOREA',
+    name: 'HÀN QUỐC',
+    desc: 'Xuất khẩu chính ngạch các dòng bánh tráng sấy giòn đạt chuẩn kiểm định an toàn nghiêm ngặt.',
+  },
+  {
+    country: 'TAIWAN',
+    name: 'ĐÀI LOAN',
+    desc: 'Phân phối các món ăn vặt đóng gói đặc trưng chuẩn vị Việt Nam tại thị trường Đài Loan.',
+  },
 ]
 
 export default function Partners() {
   const ref = useReveal()
 
   return (
-    <section id="doi-tac" className="py-20 md:py-28 bg-white border-y border-black/10 relative">
+    <section id="thi-truong" className="py-20 md:py-32 bg-haq-bone relative border-t border-black/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal flex flex-col">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                  RETAIL PARTNERS
+                  07 / DISTRIBUTION
                 </span>
                 <span className="h-px w-10 bg-haq-red" />
               </div>
-              <h2 className="font-heading font-black text-3xl sm:text-4xl text-haq-ink tracking-tight uppercase">
-                ĐỒNG HÀNH CÙNG CHÚNG TÔI
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
+                HIỆN DIỆN TẠI <br />
+                <span className="text-haq-red">NHỮNG HỆ THỐNG LỚN</span>
               </h2>
             </div>
-            <p className="text-xs sm:text-sm text-haq-ink/65 max-w-md">
-              Sản phẩm HAQ FOOD tự hào hiện diện tại các chuỗi siêu thị và đại siêu thị uy tín trên toàn quốc.
+            <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
+              Mạng lưới phân phối uy tín tại các chuỗi đại siêu thị hàng đầu Việt Nam và các thị trường xuất khẩu quốc tế.
             </p>
           </div>
 
-          {/* Grayscale Partner Logos */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-            {PARTNERS.map((partner, idx) => (
-              <div
-                key={idx}
-                className="group bg-haq-bone hover:bg-white rounded-2xl p-6 h-24 sm:h-28 flex items-center justify-center border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-md transition-all duration-300"
-              >
-                <img
-                  src={partner.logo}
-                  alt={`Đối tác ${partner.name}`}
-                  className="max-h-10 sm:max-h-12 w-auto object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
+          {/* Dual Distribution Layout: Domestic & International */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Domestic Supermarket Chains (Spans 7 cols) */}
+            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-black/5 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-black/10">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-red uppercase">
+                    <Store className="w-4 h-4" />
+                    <span>DOMESTIC DISTRIBUTION</span>
+                  </div>
+                  <span className="text-xs font-mono text-haq-ink/50">VIỆT NAM</span>
+                </div>
 
-          {/* Subtext info */}
-          <div className="mt-10 pt-6 border-t border-black/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono font-bold text-haq-ink/60">
-            <div className="flex items-center gap-4">
-              <span className="text-haq-red">✓</span>
-              <span>PHỦ SÓNG HỆ THỐNG BÁN LẺ TOÀN QUỐC</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {DOMESTIC_PARTNERS.map((partner, idx) => (
+                    <div
+                      key={idx}
+                      className="group bg-haq-bone hover:bg-white rounded-xl p-4 h-20 sm:h-24 flex items-center justify-center border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-md transition-all duration-300"
+                    >
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className="max-h-8 sm:max-h-10 w-auto object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between text-xs text-haq-ink/70">
+                <span>WinMart · GO! · Tops Market · Circle K · GS25 · Kmart · Bách Hóa Xanh · Mega Market</span>
+              </div>
             </div>
-            <Link
-              to="/gioi-thieu#phan-phoi"
-              className="hover:text-haq-red transition-colors flex items-center gap-1"
-            >
-              <span>XEM HỆ THỐNG PHÂN PHỐI</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+
+            {/* International Export Markets (Spans 5 cols) */}
+            <div className="lg:col-span-5 bg-haq-ink text-white rounded-3xl p-6 sm:p-8 border border-black/5 shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-gold uppercase">
+                    <Globe className="w-4 h-4" />
+                    <span>INTERNATIONAL MARKETS</span>
+                  </div>
+                  <span className="text-xs font-mono text-white/50">02+ QUỐC TẾ</span>
+                </div>
+
+                <div className="space-y-4">
+                  {INTERNATIONAL_MARKETS.map((im) => (
+                    <div
+                      key={im.country}
+                      className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-haq-gold/40 transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-heading font-black text-lg text-haq-gold uppercase">
+                          {im.country} ({im.name})
+                        </h4>
+                        <CheckCircle className="w-4 h-4 text-haq-gold" />
+                      </div>
+                      <p className="mt-2 text-xs sm:text-sm text-white/75 leading-relaxed">
+                        {im.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
+                <span>TIÊU CHUẨN XUẤT KHẨU</span>
+                <span className="text-haq-gold font-bold">ISO · HACCP</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

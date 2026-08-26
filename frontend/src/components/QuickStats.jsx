@@ -4,23 +4,23 @@ import { useReveal } from '../hooks/useReveal'
 const STATS = [
   {
     number: '2021',
-    label: 'Năm Thành Lập & Phát Triển',
-    subtext: 'Thương hiệu thực phẩm HAQ FOOD',
+    label: 'FOUNDED',
+    subtext: 'Năm thành lập công ty',
   },
   {
-    number: 'ISO · HACCP',
-    label: 'Chuẩn Mực Chất Lượng',
-    subtext: 'Quy trình kiểm soát an toàn nghiêm ngặt',
+    number: 'ISO',
+    label: 'ISO CERTIFIED',
+    subtext: 'Tiêu chuẩn quản lý chất lượng',
   },
   {
-    number: '63',
-    label: 'Tỉnh Thành Phân Phối',
-    subtext: 'Phủ sóng chuỗi bán lẻ toàn quốc',
+    number: 'HACCP',
+    label: 'HACCP CERTIFIED',
+    subtext: 'Chuẩn mực an toàn thực phẩm',
   },
   {
-    number: '02+',
-    label: 'Thị Trường Quốc Tế',
-    subtext: 'Xuất khẩu sang Hàn Quốc & Đài Loan',
+    number: '03',
+    label: 'MARKETS',
+    subtext: 'Việt Nam · Hàn Quốc · Đài Loan',
   },
 ]
 
@@ -44,7 +44,7 @@ export default function QuickStats() {
               <div className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-haq-ink tracking-tight">
                 {stat.number}
               </div>
-              <div className="mt-1.5 font-heading font-extrabold text-xs sm:text-sm text-haq-red uppercase tracking-wider">
+              <div className="mt-1 font-heading font-extrabold text-xs sm:text-sm text-haq-red uppercase tracking-wider">
                 {stat.label}
               </div>
               <div className="mt-0.5 text-xs text-haq-ink/60">
