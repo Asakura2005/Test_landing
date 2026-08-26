@@ -83,11 +83,11 @@ export default function StickyNav() {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-xs py-3.5 border-b border-black/5'
-          : 'bg-white py-4 sm:py-5 border-b border-black/5'
+          ? 'bg-white/95 backdrop-blur-md shadow-xs h-[68px] sm:h-[72px] border-b border-black/5 flex items-center'
+          : 'bg-white h-[72px] sm:h-[76px] border-b border-black/5 flex items-center'
       }`}
     >
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between h-[52px]">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between w-full">
         {/* 1. Logo HAQ FOOD (Click to go Home) */}
         <Link
           to="/"

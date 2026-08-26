@@ -47,10 +47,10 @@ export default function Hero() {
       aria-label="Hero Banner Slider"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative w-full pt-[68px] xl:pt-[74px] bg-[#F7F7F7] overflow-hidden select-none"
+      className="relative w-full pt-[72px] sm:pt-[76px] bg-[#F7F7F7] overflow-hidden select-none"
     >
       {/* Full-Bleed 100% Screen Width Banner Canvas */}
-      <div className="relative w-full aspect-16/9 sm:aspect-16/9 md:aspect-[1920/860] lg:aspect-[1920/820] xl:aspect-[1920/780] max-h-[85vh] bg-white overflow-hidden flex items-center justify-center">
+      <div className="relative w-full aspect-16/9 max-h-[calc(100vh-76px)] bg-[#F7F7F7] overflow-hidden flex items-center justify-center">
         {SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
