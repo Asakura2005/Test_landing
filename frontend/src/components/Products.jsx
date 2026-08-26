@@ -123,21 +123,26 @@ export default function Products() {
   return (
     <section id="san-pham" className="py-20 sm:py-28 bg-white border-b border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-        {/* Section Header kiểu Orion */}
+        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
-            SẢN PHẨM
+          <div className="inline-flex items-center justify-center gap-2 mb-3">
+            <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
+              DANH MỤC SẢN PHẨM TIÊU BIỂU
+            </span>
+          </div>
+          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
+            HỆ SINH THÁI SẢN PHẨM HAQ FOOD
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-haq-text-secondary italic font-serif">
-            HAQ FOOD luôn đặt chất lượng và an toàn hàng đầu cho từng sản phẩm
+          <p className="mt-3 text-sm sm:text-base text-haq-text-secondary font-normal">
+            HAQ FOOD luôn đặt chất lượng, sự tươi ngon và an toàn vệ sinh thực phẩm lên hàng đầu
           </p>
         </div>
 
         {/* Circular Product Category Grid */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-haq-text-secondary">
-            <Loader2 className="w-8 h-8 animate-spin text-haq-red" />
-            <span className="font-mono text-xs uppercase tracking-widest">Đang tải danh mục sản phẩm...</span>
+            <Loader2 className="w-8 h-8 animate-spin text-[#16A34A]" />
+            <span className="font-heading text-xs uppercase tracking-wider">Đang tải danh mục sản phẩm...</span>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10 sm:gap-12 lg:gap-14 justify-items-center">
@@ -148,31 +153,30 @@ export default function Products() {
                 className="group flex flex-col items-center text-center w-full max-w-[160px] xs:max-w-[200px] sm:max-w-[240px]"
               >
                 {/* Outer Circle Container */}
-                <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-haq-cream border border-haq-border shadow-xs group-hover:shadow-md group-hover:border-haq-red group-hover:bg-white transition-all duration-400 flex items-center justify-center p-3 xs:p-4 relative overflow-hidden">
+                <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-haq-sage border border-haq-border shadow-2xs group-hover:shadow-md group-hover:border-[#16A34A] group-hover:bg-white transition-all duration-300 flex items-center justify-center p-3 xs:p-4 relative overflow-hidden">
                   {/* Product Pack Floating in Circle */}
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-contain filter drop-shadow-md transform transition-transform duration-500 ease-out group-hover:scale-110"
+                    className="w-full h-full object-contain filter drop-shadow-sm transform transition-transform duration-500 ease-out group-hover:scale-110"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Category Name Below Circle */}
-                <h3 className="mt-3 xs:mt-5 font-heading font-black text-xs xs:text-sm sm:text-base text-haq-ink uppercase tracking-tight group-hover:text-haq-red transition-colors duration-200 line-clamp-2">
+                <h3 className="mt-3 xs:mt-5 font-heading font-bold text-xs xs:text-sm sm:text-base text-haq-ink group-hover:text-[#16A34A] transition-colors duration-200 line-clamp-2">
                   {item.name}
                 </h3>
               </Link>
             ))}
           </div>
-
         )}
 
         {/* Bottom CTA to Full Catalog */}
         <div className="mt-16 sm:mt-20 text-center">
           <Link
             to="/san-pham"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-haq-ink text-white hover:bg-haq-red text-xs sm:text-sm font-heading font-extrabold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#16A34A] text-white hover:bg-[#13863d] text-xs sm:text-sm font-heading font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group"
           >
             <span>XEM TẤT CẢ SẢN PHẨM</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />

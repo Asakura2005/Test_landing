@@ -138,10 +138,10 @@ export default function StickyNav() {
         {/* 1. Corporate Brand Logo */}
         <Link
           to="/"
-          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
+          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg"
           title="HAQ FOOD - Trang chủ"
         >
-          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-lg overflow-hidden border border-haq-border bg-white p-0.5 shrink-0">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
             <img
               src={logoImg}
               alt="HAQ FOOD Logo"
@@ -149,8 +149,8 @@ export default function StickyNav() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading font-black text-xl sm:text-2xl tracking-tight text-haq-ink leading-none">
-              HAQ <span className="text-haq-red">FOOD</span>
+            <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-haq-ink leading-none">
+              HAQ <span className="text-haq-green-dark">FOOD</span>
             </span>
           </div>
         </Link>
@@ -172,15 +172,15 @@ export default function StickyNav() {
               aria-expanded={activeMenu === 've-chung-toi'}
               aria-haspopup="true"
               onClick={() => navigate('/gioi-thieu')}
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded cursor-pointer ${
+              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
                 activeMenu === 've-chung-toi' || isAboutActive
-                  ? 'text-haq-red'
-                  : 'text-haq-ink hover:text-haq-red'
+                  ? 'text-haq-green-dark font-bold'
+                  : 'text-haq-ink hover:text-haq-green-dark'
               }`}
             >
-              <span>VỀ CHÚNG TÔI</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-red' : 'text-haq-text-secondary'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+              <span>Về chúng tôi</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 've-chung-toi' || isAboutActive ? 'w-full' : 'w-0'
               }`} />
             </button>
@@ -190,9 +190,9 @@ export default function StickyNav() {
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
                 className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-xl border border-haq-border p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
-                <div className="text-[10px] font-mono font-bold tracking-widest text-haq-red uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
-                  <span>ABOUT HAQ FOOD HANOI JSC</span>
-                  <span className="text-haq-text-secondary font-normal">3 CHUYÊN MỤC CON</span>
+                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
+                  <span>HỒ SƠ DOANH NGHIỆP HAQ FOOD</span>
+                  <span className="text-haq-text-secondary font-normal text-[11px]">3 CHUYÊN MỤC</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 pt-1">
@@ -208,26 +208,26 @@ export default function StickyNav() {
                         }}
                         className={`group block p-3 rounded-2xl transition-all ${
                           isSubActive
-                            ? 'bg-haq-cream border border-haq-red/20 shadow-2xs'
-                            : 'hover:bg-haq-soft'
+                            ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
+                            : 'hover:bg-haq-sage/20'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className={`text-xs font-heading font-extrabold uppercase ${
-                            isSubActive ? 'text-haq-red' : 'text-haq-ink group-hover:text-haq-red'
+                          <span className={`text-xs font-heading font-bold uppercase ${
+                            isSubActive ? 'text-[#16A34A]' : 'text-haq-ink group-hover:text-[#16A34A]'
                           }`}>
                             {sub.title}
                           </span>
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-[9px] font-bold text-haq-red uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
+                            <span className="font-heading text-[9px] font-bold text-[#16A34A] uppercase px-2 py-0.5 bg-[#16A34A]/10 rounded-md">
                               {sub.badge}
                             </span>
                             <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
-                              isSubActive ? 'text-haq-red' : 'text-haq-text-secondary group-hover:text-haq-red'
+                              isSubActive ? 'text-[#16A34A]' : 'text-haq-text-secondary group-hover:text-[#16A34A]'
                             }`} />
                           </div>
                         </div>
-                        <p className="text-[11px] text-haq-text-secondary mt-1 line-clamp-1">
+                        <p className="text-[11px] text-haq-text-secondary mt-1 line-clamp-1 font-normal">
                           {sub.desc}
                         </p>
                       </Link>
@@ -247,13 +247,13 @@ export default function StickyNav() {
             <Link
               to="/san-pham"
               aria-current={isProductsActive ? 'page' : undefined}
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-                activeMenu === 'san-pham' || isProductsActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
+                activeMenu === 'san-pham' || isProductsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
               }`}
             >
-              <span>SẢN PHẨM</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+              <span>Sản phẩm</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 'san-pham' || isProductsActive ? 'w-full' : 'w-0'
               }`} />
             </Link>
@@ -266,9 +266,9 @@ export default function StickyNav() {
                 <div className="grid grid-cols-12 gap-6">
                   {/* Left Column: Dynamic Database Categories */}
                   <div className="col-span-7 border-r border-haq-border pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
-                    <div className="text-[11px] font-mono font-bold tracking-widest text-haq-red uppercase mb-3 flex items-center justify-between">
+                    <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
+                        <Sparkles className="w-3.5 h-3.5 text-haq-green" />
                         <span>DANH MỤC SẢN PHẨM</span>
                       </div>
                       <span className="text-[10px] text-haq-text-secondary font-normal">HAQ FOOD CATALOG</span>
@@ -284,18 +284,18 @@ export default function StickyNav() {
                             onClick={() => setActiveMenu(null)}
                             className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
                               isHovered
-                                ? 'bg-haq-cream border border-haq-red/20 shadow-2xs'
+                                ? 'bg-haq-sage border border-haq-green/20 shadow-2xs'
                                 : 'hover:bg-haq-soft'
                             }`}
                           >
                             <div className="flex items-center justify-between">
-                              <span className={`text-xs font-heading font-extrabold uppercase ${
-                                isHovered ? 'text-haq-red' : 'text-haq-ink'
+                              <span className={`text-xs font-heading font-bold ${
+                                isHovered ? 'text-haq-green-dark' : 'text-haq-ink'
                               }`}>
                                 {cat.name}
                               </span>
                               <ArrowRight className={`w-3.5 h-3.5 ${
-                                isHovered ? 'text-haq-red' : 'text-haq-text-secondary'
+                                isHovered ? 'text-haq-green-dark' : 'text-haq-text-secondary'
                               }`} />
                             </div>
                             <p className="text-[11px] text-haq-text-secondary mt-0.5 line-clamp-1">
@@ -314,10 +314,10 @@ export default function StickyNav() {
                                     to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
                                     onMouseEnter={() => setHoveredCategory(child)}
                                     onClick={() => setActiveMenu(null)}
-                                    className={`inline-flex items-center gap-1 text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg transition-colors border ${
+                                    className={`inline-flex items-center gap-1 text-[11px] font-heading font-semibold px-2.5 py-1 rounded-lg transition-colors border ${
                                       isChildHovered
-                                        ? 'bg-haq-red text-white border-haq-red shadow-2xs'
-                                        : 'text-haq-ink/80 hover:text-haq-red bg-haq-soft hover:bg-haq-red/10 border-haq-border'
+                                        ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
+                                        : 'text-haq-ink/80 hover:text-haq-green-dark bg-haq-soft hover:bg-haq-green/10 border-haq-border'
                                     }`}
                                   >
                                     <span>↳ {child.name}</span>
@@ -334,18 +334,18 @@ export default function StickyNav() {
                       <Link
                         to="/san-pham"
                         onClick={() => setActiveMenu(null)}
-                        className="inline-flex items-center gap-1.5 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red hover:text-haq-ink transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors"
                       >
-                        <span>XEM TẤT CẢ SẢN PHẨM →</span>
+                        <span>Xem tất cả sản phẩm →</span>
                       </Link>
                     </div>
                   </div>
 
                   {/* Right Column: Dynamic Product Grid */}
-                  <div className="col-span-5 bg-haq-cream rounded-2xl p-5 border border-haq-border flex flex-col">
-                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-4 flex items-center justify-between">
+                  <div className="col-span-5 bg-haq-sage rounded-2xl p-5 border border-haq-border flex flex-col">
+                    <div className="text-[11px] font-heading font-bold tracking-wide text-haq-text-secondary uppercase mb-4 flex items-center justify-between">
                       <span>{hoveredCategory?.name || 'SẢN PHẨM'}</span>
-                      <span className="text-[9px] font-normal text-haq-text-secondary/70">
+                      <span className="text-[10px] font-normal text-haq-text-secondary/70">
                         {filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree).length} sản phẩm
                       </span>
                     </div>
@@ -379,7 +379,7 @@ export default function StickyNav() {
                                   }}
                                 />
                               </div>
-                              <span className="text-[11px] font-heading font-bold text-haq-ink text-center line-clamp-2">
+                              <span className="text-[11px] font-heading font-medium text-haq-ink text-center line-clamp-2">
                                 {p.name}
                               </span>
                             </Link>
@@ -397,12 +397,12 @@ export default function StickyNav() {
           <Link
             to="/tin-tuc"
             aria-current={isNewsActive ? 'page' : undefined}
-            className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-              isNewsActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+            className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
+              isNewsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
             }`}
           >
-            <span>TIN TỨC</span>
-            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+            <span>Tin tức</span>
+            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
               isNewsActive ? 'w-full' : 'w-0 group-hover:w-full'
             }`} />
           </Link>
@@ -411,12 +411,12 @@ export default function StickyNav() {
           <Link
             to="/lien-he"
             aria-current={isContactActive ? 'page' : undefined}
-            className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-              isContactActive ? 'text-haq-red' : 'text-haq-ink hover:text-haq-red'
+            className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
+              isContactActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
             }`}
           >
-            <span>LIÊN HỆ</span>
-            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
+            <span>Liên hệ</span>
+            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
               isContactActive ? 'w-full' : 'w-0 group-hover:w-full'
             }`} />
           </Link>
@@ -426,9 +426,9 @@ export default function StickyNav() {
         <div className="hidden md:flex items-center">
           <Link
             to="/lien-he"
-            className="inline-flex items-center gap-2 bg-haq-ink hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-widest px-6 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red"
+            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-6 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
           >
-            <span>LIÊN HỆ</span>
+            <span>LIÊN HỆ BÁO GIÁ</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -437,7 +437,7 @@ export default function StickyNav() {
         <div className="flex md:hidden items-center">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
+            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg"
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
             aria-expanded={mobileOpen}
           >
@@ -452,13 +452,13 @@ export default function StickyNav() {
           mobileOpen ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="px-6 py-8 space-y-5 overflow-y-auto max-h-[85vh] scrollbar-thin">
+        <div className="px-6 py-8 space-y-5 overflow-y-auto max-h-[85vh] scrollbar-thin font-sans">
           {/* VỀ CHÚNG TÔI */}
           <div className="border-b border-haq-border pb-3">
             <button
               type="button"
               onClick={() => toggleMobileAccordion('ve-chung-toi')}
-              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-black text-haq-red uppercase tracking-tight"
+              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-bold text-[#16A34A] uppercase tracking-tight"
             >
               <span>VỀ CHÚNG TÔI</span>
               <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 've-chung-toi' ? 'rotate-180' : ''}`} />
@@ -474,7 +474,7 @@ export default function StickyNav() {
                     key={idx}
                     to={sub.path}
                     onClick={() => setMobileOpen(false)}
-                    className="block font-bold text-haq-ink hover:text-haq-red text-[13px] transition-colors"
+                    className="block font-bold text-haq-ink hover:text-[#16A34A] text-[13px] transition-colors"
                   >
                     {sub.title}
                   </Link>
@@ -488,10 +488,10 @@ export default function StickyNav() {
             <button
               type="button"
               onClick={() => toggleMobileAccordion('san-pham')}
-              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-black text-haq-ink uppercase tracking-tight"
+              className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight"
             >
               <span>DANH MỤC SẢN PHẨM</span>
-              <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180 text-haq-red' : ''}`} />
+              <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180 text-[#16A34A]' : ''}`} />
             </button>
             <div
               className={`overflow-hidden transition-all duration-300 ease-in-out ${
@@ -504,7 +504,7 @@ export default function StickyNav() {
                     <Link
                       to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
                       onClick={() => setMobileOpen(false)}
-                      className="block font-bold text-haq-ink hover:text-haq-red text-[13px]"
+                      className="block font-bold text-haq-ink hover:text-[#16A34A] text-[13px]"
                     >
                       {cat.name}
                     </Link>
@@ -515,7 +515,7 @@ export default function StickyNav() {
                             key={child.id}
                             to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
                             onClick={() => setMobileOpen(false)}
-                            className="block py-0.5 text-haq-text-secondary hover:text-haq-red"
+                            className="block py-0.5 text-haq-text-secondary hover:text-[#16A34A]"
                           >
                             ↳ {child.name}
                           </Link>
@@ -527,7 +527,7 @@ export default function StickyNav() {
                 <Link
                   to="/san-pham"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-2 py-2 font-black text-haq-red pt-3 border-t border-haq-border w-full uppercase tracking-widest text-[11px]"
+                  className="inline-flex items-center gap-2 py-2 font-bold text-[#16A34A] pt-3 border-t border-haq-border w-full uppercase tracking-wider text-[11px]"
                 >
                   <span>XEM TẤT CẢ SẢN PHẨM</span>
                   <ArrowRight className="w-3 h-3" />
@@ -541,7 +541,7 @@ export default function StickyNav() {
             <Link
               to="/tin-tuc"
               onClick={() => setMobileOpen(false)}
-              className="block py-2 text-[15px] font-heading font-black text-haq-ink uppercase tracking-tight"
+              className="block py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight"
             >
               TIN TỨC & SỰ KIỆN
             </Link>
@@ -552,7 +552,7 @@ export default function StickyNav() {
             <Link
               to="/lien-he"
               onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-center gap-3 bg-haq-red text-white py-4 rounded-2xl text-[13px] font-heading font-black uppercase tracking-widest shadow-lg shadow-haq-red/20 active:scale-95 transition-all"
+              className="w-full flex items-center justify-center gap-3 bg-[#16A34A] text-white py-4 rounded-2xl text-[13px] font-heading font-bold uppercase tracking-wider shadow-md hover:bg-[#0F5132] active:scale-95 transition-all"
             >
               <span>LIÊN HỆ HỢP TÁC</span>
               <ArrowRight className="w-4 h-4" />

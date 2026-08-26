@@ -265,36 +265,37 @@ export default function ContactPage() {
     setErrorMessage('')
   }
 
+ 
   return (
-    <div className="bg-haq-cream min-h-screen flex flex-col selection:bg-haq-red selection:text-white">
+    <div className="bg-white min-h-screen flex flex-col selection:bg-[#16A34A]/20 selection:text-haq-green-dark font-sans">
       <StickyNav />
       <FloatingContactBar />
 
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
         {/* =========================================================================
-            01 — HERO BANNER: WARM FOOD CORPORATE WELCOME
+            01 — HERO BANNER: FRESH CORPORATE GREEN & WHITE WELCOME
             ========================================================================= */}
-        <section className="bg-haq-cream text-haq-ink pt-8 sm:pt-12 pb-12 sm:pb-16 border-b border-haq-border relative overflow-hidden">
-          {/* Subtle warm ambient glow */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-linear-to-bl from-amber-900/5 via-amber-700/5 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/3" />
+        <section className="bg-gradient-to-b from-haq-sage/60 via-haq-sage/20 to-white text-haq-ink pt-8 sm:pt-12 pb-12 sm:pb-16 border-b border-haq-border relative overflow-hidden">
+          {/* Subtle natural ambient glow */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-emerald-900/5 via-green-600/5 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/3" />
           
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
             <div className="max-w-4xl">
               {/* Eyebrow */}
               <div className="flex items-center gap-3 mb-4 sm:mb-5">
-                <span className="font-mono text-xs font-bold tracking-[0.2em] text-haq-gold uppercase">
+                <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                   HAQ FOOD · KẾT NỐI & HỢP TÁC DOANH NGHIỆP
                 </span>
-                <span className="h-px w-8 sm:w-16 bg-haq-gold/40" />
-                <span className="font-mono text-xs text-haq-text-secondary uppercase">
+                <span className="h-px w-8 sm:w-16 bg-[#16A34A]/30" />
+                <span className="font-heading text-xs text-haq-text-secondary uppercase">
                   HANOI, VIETNAM
                 </span>
               </div>
 
               {/* Headline */}
-              <h1 className="font-heading font-black text-3xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight uppercase leading-[1.05]">
+              <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight uppercase leading-[1.08]">
                 ĐỒNG HÀNH PHÁT TRIỂN CÙNG <br />
-                <span className="text-haq-red">NÔNG SẢN VIỆT NAM.</span>
+                <span className="text-[#16A34A]">NÔNG SẢN VIỆT NAM.</span>
               </h1>
 
               {/* Subtext */}
@@ -306,9 +307,9 @@ export default function ContactPage() {
               <div className="mt-8 flex items-center gap-3 sm:gap-4 flex-wrap">
                 <a
                   href="tel:02423235656"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-haq-red hover:text-haq-red transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#16A34A] hover:text-[#16A34A] transition-all text-xs sm:text-sm font-semibold"
                 >
-                  <Phone className="w-4 h-4 text-haq-red" />
+                  <Phone className="w-4 h-4 text-[#16A34A]" />
                   <span>Hotline: 024 23 23 56 56</span>
                 </a>
 
@@ -316,7 +317,7 @@ export default function ContactPage() {
                   href="https://zalo.me/0993308319"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-[#0068FF] hover:text-[#0068FF] transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#0068FF] hover:text-[#0068FF] transition-all text-xs sm:text-sm font-semibold"
                 >
                   <div className="w-4 h-4 rounded bg-[#0068FF] text-white flex items-center justify-center text-[10px] font-black">
                     Z
@@ -326,9 +327,9 @@ export default function ContactPage() {
 
                 <a
                   href="mailto:info@haq.com.vn"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-xs hover:border-haq-gold hover:text-haq-gold transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#C89B3C] hover:text-[#C89B3C] transition-all text-xs sm:text-sm font-semibold"
                 >
-                  <Mail className="w-4 h-4 text-haq-gold" />
+                  <Mail className="w-4 h-4 text-[#C89B3C]" />
                   <span>info@haq.com.vn</span>
                 </a>
               </div>
@@ -339,18 +340,18 @@ export default function ContactPage() {
         {/* =========================================================================
             02 — CONSULTATION & INQUIRY SECTION (HUMAN & NATURAL)
             ========================================================================= */}
-        <section id="tu-van" className="py-14 sm:py-20 bg-haq-cream relative">
+        <section id="tu-van" className="py-14 sm:py-20 bg-white relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             
             {/* Section Header */}
             <div className="max-w-2xl mb-10 sm:mb-12">
-              <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
-                HÌNH THỨC HỢP TÁC
+              <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                HÌNH THỨC HỢP TÁC DOANH NGHIỆP
               </span>
-              <h2 className="font-heading font-black text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
+              <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
                 BẠN ĐANG QUAN TÂM ĐẾN NHU CẦU NÀO?
               </h2>
-              <p className="text-xs sm:text-sm text-haq-text-secondary mt-2">
+              <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 font-normal">
                 Hãy chọn chủ đề phù hợp để biểu mẫu tự động chuẩn bị thông tin và kết nối với bộ phận phụ trách chuyên sâu.
               </p>
             </div>
@@ -370,13 +371,13 @@ export default function ContactPage() {
                       onClick={() => handleSelectTopic(topic.id)}
                       className={`p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all duration-300 cursor-pointer relative overflow-hidden group ${
                         isSelected
-                          ? 'bg-white border-haq-red shadow-lg ring-2 ring-haq-red/20 translate-x-1 sm:translate-x-2'
-                          : 'bg-white/80 hover:bg-white border-haq-border shadow-xs hover:shadow-md hover:border-haq-gold/60'
+                          ? 'bg-haq-sage/40 border-[#16A34A] shadow-md ring-2 ring-[#16A34A]/20 translate-x-1 sm:translate-x-2'
+                          : 'bg-white hover:bg-haq-sage/20 border-haq-border shadow-2xs hover:shadow-md hover:border-[#16A34A]/40'
                       }`}
                     >
                       {/* Active Indicator Strip */}
                       {isSelected && (
-                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-haq-red" />
+                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-[#16A34A]" />
                       )}
 
                       <div className="flex items-start justify-between gap-3">
@@ -384,29 +385,29 @@ export default function ContactPage() {
                           <div
                             className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                               isSelected
-                                ? 'bg-haq-red text-white'
-                                : 'bg-haq-cream text-haq-ink group-hover:bg-haq-cream/80'
+                                ? 'bg-[#16A34A] text-white'
+                                : 'bg-haq-sage text-[#0F5132] group-hover:bg-haq-sage/80'
                             }`}
                           >
                             <Icon className="w-5 h-5" />
                           </div>
                           <div>
-                            <span className="text-[10px] sm:text-[11px] font-mono font-bold text-haq-gold uppercase tracking-wider block">
+                            <span className="text-[10px] sm:text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider block">
                               {topic.tag}
                             </span>
-                            <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink uppercase leading-snug">
+                            <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase leading-snug">
                               {topic.title}
                             </h3>
                           </div>
                         </div>
 
                         {isSelected ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-haq-red bg-haq-red/10 px-2.5 py-1 rounded-full shrink-0">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#16A34A] bg-[#16A34A]/10 px-2.5 py-1 rounded-full shrink-0">
                             <Check className="w-3.5 h-3.5" />
                             <span>Đang chọn</span>
                           </span>
                         ) : (
-                          <div className="w-7 h-7 rounded-full bg-haq-cream flex items-center justify-center text-haq-text-secondary group-hover:text-haq-ink shrink-0 transition-colors">
+                          <div className="w-7 h-7 rounded-full bg-haq-sage flex items-center justify-center text-haq-text-secondary group-hover:text-haq-ink shrink-0 transition-colors">
                             <ArrowRight className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -423,8 +424,8 @@ export default function ContactPage() {
                             key={i}
                             className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
                               isSelected
-                                ? 'bg-haq-cream text-haq-ink border border-haq-border/60'
-                                : 'bg-haq-cream/60 text-haq-text-secondary'
+                                ? 'bg-white text-haq-ink border border-haq-border/80'
+                                : 'bg-haq-sage/60 text-haq-text-secondary'
                             }`}
                           >
                             • {h}
@@ -436,12 +437,12 @@ export default function ContactPage() {
                 })}
 
                 {/* Warm Consultation Promise Box */}
-                <div className="p-5 rounded-2xl bg-white border border-haq-border text-haq-ink shadow-xs">
-                  <div className="flex items-center gap-2.5 font-mono text-xs font-bold uppercase text-haq-gold">
-                    <Clock className="w-4 h-4 text-haq-gold" />
+                <div className="p-5 rounded-2xl bg-haq-sage/30 border border-haq-border text-haq-ink shadow-2xs">
+                  <div className="flex items-center gap-2.5 font-heading text-xs font-bold uppercase text-[#16A34A]">
+                    <Clock className="w-4 h-4 text-[#16A34A]" />
                     <span>Cam kết hỗ trợ đối tác</span>
                   </div>
-                  <p className="text-xs text-haq-text-secondary mt-1.5 leading-relaxed">
+                  <p className="text-xs text-haq-text-secondary mt-1.5 leading-relaxed font-normal">
                     Mọi yêu cầu tư vấn và đăng ký mẫu thử sẽ được chuyên viên của HAQ FOOD liên hệ trực tiếp trong vòng <strong>24 giờ làm việc</strong>.
                   </p>
                 </div>
@@ -455,20 +456,20 @@ export default function ContactPage() {
                   <div className="border-b border-haq-border pb-6 mb-6">
                     <div className="flex items-center justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-haq-red animate-pulse" />
-                        <span className="font-mono text-xs font-bold text-haq-red uppercase">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] animate-pulse" />
+                        <span className="font-heading text-xs font-bold text-[#16A34A] uppercase">
                           {activeTopic.dept}
                         </span>
                       </div>
-                      <span className="text-xs font-mono text-haq-text-secondary bg-haq-cream px-3 py-1 rounded-full border border-haq-border">
+                      <span className="text-xs font-heading text-haq-text-secondary bg-haq-sage/40 px-3 py-1 rounded-full border border-haq-border">
                         {activeTopic.tag}
                       </span>
                     </div>
 
-                    <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase mt-3">
+                    <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-3">
                       PHIẾU ĐĂNG KÝ TƯ VẤN · {activeTopic.shortTitle}
                     </h3>
-                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-1.5 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-1.5 leading-relaxed font-normal">
                       Quý khách vui lòng để lại thông tin liên hệ. Chúng tôi sẽ chuẩn bị bảng giá, hồ sơ mẫu và chính sách phù hợp nhất trước khi trao đổi.
                     </p>
                   </div>
@@ -479,10 +480,10 @@ export default function ContactPage() {
                       <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
                         <CheckCircle2 className="w-10 h-10" />
                       </div>
-                      <h4 className="font-heading font-black text-2xl text-haq-ink uppercase">
+                      <h4 className="font-heading font-extrabold text-2xl text-haq-ink uppercase">
                         CẢM ƠN QUÝ KHÁCH ĐÃ KẾT NỐI VỚI HAQ FOOD
                       </h4>
-                      <p className="text-sm sm:text-base text-haq-text-secondary max-w-md mx-auto leading-relaxed">
+                      <p className="text-sm sm:text-base text-haq-text-secondary max-w-md mx-auto leading-relaxed font-normal">
                         Thông tin của bạn đã được chuyển đến <strong>{activeTopic.dept}</strong>. 
                         Chuyên viên phụ trách sẽ liên hệ lại qua số điện thoại hoặc email trong thời gian sớm nhất.
                       </p>
@@ -490,7 +491,7 @@ export default function ContactPage() {
                         <button
                           type="button"
                           onClick={resetForm}
-                          className="bg-haq-ink hover:bg-haq-red text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
+                          className="bg-haq-green-dark hover:bg-[#16A34A] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
                         >
                           GỬI THÊM YÊU CẦU KHÁC
                         </button>
@@ -508,7 +509,7 @@ export default function ContactPage() {
                     /* Dynamic Form */
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                       {errorMessage && (
-                        <div className="p-4 bg-red-50 border border-red-200 text-haq-red text-xs sm:text-sm rounded-xl">
+                        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm rounded-xl">
                           {errorMessage}
                         </div>
                       )}
@@ -516,8 +517,8 @@ export default function ContactPage() {
                       {/* Full Name & Company */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            Họ và tên người liên hệ <span className="text-haq-red">*</span>
+                          <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
+                            Họ và tên người liên hệ <span className="text-[#16A34A]">*</span>
                           </label>
                           <input
                             type="text"
@@ -526,12 +527,12 @@ export default function ContactPage() {
                             value={formData.fullName}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Nguyễn Văn An"
-                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                          <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                             {activeTopicId === 'partnership' ? 'Tên Doanh nghiệp / Đại lý *' : 'Tên Công ty / Cửa hàng'}
                           </label>
                           <input
@@ -541,7 +542,7 @@ export default function ContactPage() {
                             value={formData.company}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Công ty TNHH Thực phẩm ABC"
-                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -549,8 +550,8 @@ export default function ContactPage() {
                       {/* Email & Phone */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                            Địa chỉ Email <span className="text-haq-red">*</span>
+                          <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
+                            Địa chỉ Email <span className="text-[#16A34A]">*</span>
                           </label>
                           <input
                             type="email"
@@ -559,12 +560,12 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={handleInputChange}
                             placeholder="email@doanhnghiep.com"
-                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                          <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                             {activeTopicId === 'export' ? 'Số điện thoại / WhatsApp / Zalo *' : 'Số điện thoại liên hệ *'}
                           </label>
                           <input
@@ -574,7 +575,7 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: 0912 345 678"
-                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -585,14 +586,14 @@ export default function ContactPage() {
                       {activeTopicId === 'products' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Dòng sản phẩm quan tâm
                             </label>
                             <select
                               name="productInterest"
                               value={formData.productInterest}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             >
                               <option value="">-- Chọn dòng sản phẩm --</option>
                               <option value="Bánh tráng sấy giòn HOKI">Bánh tráng sấy giòn HOKI (Tôm, Bò, Chà bông)</option>
@@ -604,7 +605,7 @@ export default function ContactPage() {
                           </div>
 
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Số lượng dự kiến
                             </label>
                             <input
@@ -613,7 +614,7 @@ export default function ContactPage() {
                               value={formData.estimatedVolume}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: 30 - 50 thùng / tháng"
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
@@ -623,8 +624,8 @@ export default function ContactPage() {
                       {activeTopicId === 'partnership' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Khu vực / Tỉnh thành phụ trách <span className="text-haq-red">*</span>
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
+                              Khu vực / Tỉnh thành phụ trách <span className="text-[#16A34A]">*</span>
                             </label>
                             <input
                               type="text"
@@ -633,19 +634,19 @@ export default function ContactPage() {
                               value={formData.region}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Hà Nội & Các tỉnh Miền Bắc"
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Kênh bán hàng hiện tại
                             </label>
                             <select
                               name="distributionChannel"
                               value={formData.distributionChannel}
                               onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             >
                               <option value="">-- Chọn kênh phân phối --</option>
                               <option value="Tạp hóa & Bán lẻ truyền thống (GT)">Tạp hóa & Bán lẻ truyền thống (GT)</option>
@@ -662,8 +663,8 @@ export default function ContactPage() {
                       {activeTopicId === 'export' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
-                              Quốc gia / Thị trường mục tiêu <span className="text-haq-red">*</span>
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
+                              Quốc gia / Thị trường mục tiêu <span className="text-[#16A34A]">*</span>
                             </label>
                             <input
                               type="text"
@@ -672,12 +673,12 @@ export default function ContactPage() {
                               value={formData.country}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: South Korea, Taiwan, Japan, USA..."
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Sản lượng dự kiến / Container
                             </label>
                             <input
@@ -686,7 +687,7 @@ export default function ContactPage() {
                               value={formData.estimatedVolume}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: 1 x 20ft Container / Tháng"
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
@@ -696,7 +697,7 @@ export default function ContactPage() {
                       {activeTopicId === 'oem' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Dòng sản phẩm muốn gia công
                             </label>
                             <input
@@ -705,12 +706,12 @@ export default function ContactPage() {
                               value={formData.productInterest}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Bánh tráng sấy giòn vị đặc biệt"
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                               Quy cách đóng gói & Sản lượng
                             </label>
                             <input
@@ -719,7 +720,7 @@ export default function ContactPage() {
                               value={formData.packagingRequirement}
                               onChange={handleInputChange}
                               placeholder="Ví dụ: Túi zipper 50g, 10.000 túi/tháng"
-                              className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                             />
                           </div>
                         </div>
@@ -728,7 +729,7 @@ export default function ContactPage() {
                       {/* 05. GENERAL SPECIFIC */}
                       {activeTopicId === 'general' && (
                         <div>
-                          <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                          <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                             Chủ đề liên hệ
                           </label>
                           <input
@@ -737,14 +738,14 @@ export default function ContactPage() {
                             value={formData.topic}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Tra cứu hóa đơn / Đề xuất hợp tác truyền thông / Khác"
-                            className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                           />
                         </div>
                       )}
 
                       {/* Message Textarea */}
                       <div>
-                        <label className="block text-xs font-mono font-bold text-haq-ink uppercase mb-1.5">
+                        <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
                           {activeTopicId === 'general' ? 'Nội dung chi tiết *' : 'Ghi chú thêm về yêu cầu của bạn'}
                         </label>
                         <textarea
@@ -762,7 +763,7 @@ export default function ContactPage() {
                               ? 'Chia sẻ thêm về kế hoạch phát triển đại lý hoặc câu hỏi về chính sách hợp tác...'
                               : 'Nhập nội dung bạn muốn trao đổi cùng đội ngũ HAQ FOOD...'
                           }
-                          className="w-full px-4 py-3 bg-haq-cream/40 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-haq-red focus:bg-white transition-colors resize-none"
+                          className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors resize-none"
                         />
                       </div>
 
@@ -771,7 +772,7 @@ export default function ContactPage() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full inline-flex items-center justify-center gap-3 bg-haq-red text-white py-4 rounded-xl font-heading font-black text-sm uppercase tracking-wider hover:bg-haq-red/90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-3 bg-[#16A34A] text-white py-4 rounded-xl font-heading font-bold text-sm uppercase tracking-wider hover:bg-[#0F5132] transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
                         >
                           {isSubmitting ? (
                             <>
@@ -790,12 +791,12 @@ export default function ContactPage() {
                       {/* Security & Direct Call Reminder */}
                       <div className="flex items-center justify-between gap-4 pt-2 text-[11px] text-haq-text-secondary flex-wrap">
                         <span className="flex items-center gap-1.5">
-                          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <ShieldCheck className="w-4 h-4 text-[#16A34A] shrink-0" />
                           <span>Thông tin được bảo mật và chỉ dùng để liên hệ tư vấn B2B.</span>
                         </span>
                         <a
                           href="tel:02423235656"
-                          className="hover:text-haq-red font-medium transition-colors"
+                          className="hover:text-[#16A34A] font-medium transition-colors"
                         >
                           Cần gấp? Gọi ngay: <strong>024 23 23 56 56</strong>
                         </a>
@@ -811,18 +812,18 @@ export default function ContactPage() {
         {/* =========================================================================
             03 — SPECIALIZED DEPARTMENTS: TRANSPARENT & PROFESSIONAL
             ========================================================================= */}
-        <section className="py-16 sm:py-20 bg-white border-b border-haq-border">
+        <section className="py-16 sm:py-20 bg-haq-sage/20 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <div>
-                <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
+                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
                   ĐỘI NGŨ CHUYÊN TRÁCH
                 </span>
-                <h2 className="font-heading font-black text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
+                <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
                   CÁC BỘ PHẬN PHỤ TRÁCH KINH DOANH
                 </h2>
               </div>
-              <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md leading-relaxed">
+              <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md leading-relaxed font-normal">
                 Mỗi bộ phận tại HAQ FOOD được tổ chức chuyên sâu theo từng phân khúc kinh doanh, đảm bảo phản hồi chính xác và đồng hành sát sao cùng quý khách.
               </p>
             </div>
@@ -833,16 +834,16 @@ export default function ContactPage() {
                 return (
                   <div
                     key={idx}
-                    className="bg-haq-cream/40 rounded-3xl p-6 border border-haq-border hover:bg-white hover:shadow-lg hover:border-haq-gold/60 transition-all duration-300 flex flex-col justify-between"
+                    className="bg-white rounded-3xl p-6 border border-haq-border hover:shadow-lg hover:border-[#16A34A]/40 transition-all duration-300 flex flex-col justify-between"
                   >
                     <div>
-                      <div className="w-10 h-10 rounded-xl bg-haq-cream text-haq-red flex items-center justify-center mb-4 border border-haq-border">
+                      <div className="w-10 h-10 rounded-xl bg-haq-sage text-[#0F5132] flex items-center justify-center mb-4 border border-haq-border">
                         <DeptIcon className="w-5 h-5" />
                       </div>
-                      <span className="font-mono text-[11px] font-bold text-haq-gold uppercase tracking-wider block">
+                      <span className="font-heading text-[11px] font-bold text-[#16A34A] uppercase tracking-wider block">
                         {dept.role}
                       </span>
-                      <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink uppercase mt-1 leading-snug">
+                      <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase mt-1 leading-snug">
                         {dept.title}
                       </h3>
                       <p className="text-xs text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
@@ -852,12 +853,12 @@ export default function ContactPage() {
 
                     <div className="mt-6 pt-4 border-t border-haq-border/80 space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono text-haq-text-secondary text-[11px]">Hotline / Ext:</span>
-                        <span className="font-mono font-bold text-haq-ink">{dept.phone} ({dept.ext})</span>
+                        <span className="font-heading text-haq-text-secondary text-[11px]">Hotline / Ext:</span>
+                        <span className="font-sans font-bold text-haq-ink">{dept.phone} ({dept.ext})</span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono text-haq-text-secondary text-[11px]">Email:</span>
-                        <a href={`mailto:${dept.email}`} className="font-mono text-haq-red hover:underline text-[11px]">
+                        <span className="font-heading text-haq-text-secondary text-[11px]">Email:</span>
+                        <a href={`mailto:${dept.email}`} className="font-sans font-medium text-[#16A34A] hover:underline text-[11px]">
                           {dept.email}
                         </a>
                       </div>
@@ -872,34 +873,34 @@ export default function ContactPage() {
         {/* =========================================================================
             04 — DIRECT CHANNELS & HEADQUARTERS LOCATION MAP
             ========================================================================= */}
-        <section className="py-16 sm:py-24 bg-haq-cream relative">
+        <section className="py-16 sm:py-24 bg-white relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
               
               {/* Left Column: Direct Channels */}
-              <div className="lg:col-span-5 flex flex-col justify-between bg-white rounded-3xl p-6 sm:p-8 border border-haq-border shadow-sm">
+              <div className="lg:col-span-5 flex flex-col justify-between bg-haq-sage/20 rounded-3xl p-6 sm:p-8 border border-haq-border shadow-2xs">
                 <div>
-                  <span className="font-mono text-xs font-bold text-haq-gold uppercase tracking-[0.2em]">
+                  <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
                     KÊNH TRỰC TIẾP
                   </span>
-                  <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
+                  <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
                     LIÊN HỆ VĂN PHÒNG CHÍNH
                   </h3>
-                  <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
                     Quý khách có thể ghé thăm trực tiếp văn phòng làm việc hoặc liên hệ qua các kênh thông tin chính thức dưới đây.
                   </p>
 
                   <div className="mt-8 space-y-4">
                     {/* Hotline bàn */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-haq-cream/50 border border-haq-border/80">
-                      <div className="w-10 h-10 rounded-xl bg-haq-red text-white flex items-center justify-center shrink-0">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
+                      <div className="w-10 h-10 rounded-xl bg-[#16A34A] text-white flex items-center justify-center shrink-0">
                         <Phone className="w-5 h-5" />
                       </div>
                       <div>
-                        <span className="block font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary">
+                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
                           Điện thoại cố định
                         </span>
-                        <a href="tel:02423235656" className="font-heading font-black text-lg text-haq-ink hover:text-haq-red transition-colors">
+                        <a href="tel:02423235656" className="font-heading font-bold text-lg text-haq-ink hover:text-[#16A34A] transition-colors">
                           024 23 23 56 56
                         </a>
                         <p className="text-[11px] text-haq-text-secondary">Thứ 2 – Thứ 7: 8h00 – 17h30</p>
@@ -907,19 +908,19 @@ export default function ContactPage() {
                     </div>
 
                     {/* Zalo Doanh Nghiệp */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-haq-cream/50 border border-haq-border/80">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
                       <div className="w-10 h-10 rounded-xl bg-[#0068FF] text-white flex items-center justify-center font-bold text-base shrink-0">
                         Z
                       </div>
                       <div>
-                        <span className="block font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary">
+                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
                           Zalo Tư Vấn Doanh Nghiệp
                         </span>
                         <a
                           href="https://zalo.me/0993308319"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-heading font-black text-lg text-haq-ink hover:text-[#0068FF] transition-colors"
+                          className="font-heading font-bold text-lg text-haq-ink hover:text-[#0068FF] transition-colors"
                         >
                           0993 308 319
                         </a>
@@ -928,15 +929,15 @@ export default function ContactPage() {
                     </div>
 
                     {/* Email */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-haq-cream/50 border border-haq-border/80">
-                      <div className="w-10 h-10 rounded-xl bg-haq-ink text-white flex items-center justify-center shrink-0">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
+                      <div className="w-10 h-10 rounded-xl bg-[#0C1E15] text-white flex items-center justify-center shrink-0">
                         <Mail className="w-5 h-5" />
                       </div>
                       <div>
-                        <span className="block font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary">
+                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
                           Hòm thư Hợp tác & Báo giá
                         </span>
-                        <a href="mailto:info@haq.com.vn" className="font-mono font-bold text-sm text-haq-ink hover:text-haq-gold transition-colors">
+                        <a href="mailto:info@haq.com.vn" className="font-sans font-bold text-sm text-haq-ink hover:text-[#16A34A] transition-colors">
                           info@haq.com.vn
                         </a>
                         <p className="text-[11px] text-haq-text-secondary">Tiếp nhận hồ sơ năng lực & chào giá</p>
@@ -947,9 +948,9 @@ export default function ContactPage() {
 
                 <div className="mt-8 pt-6 border-t border-haq-border">
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
                     <div>
-                      <span className="block font-mono text-xs font-bold text-haq-ink uppercase">
+                      <span className="block font-heading text-xs font-bold text-haq-ink uppercase">
                         Trụ sở chính HAQ FOOD
                       </span>
                       <p className="text-xs text-haq-text-secondary mt-0.5">
@@ -959,7 +960,7 @@ export default function ContactPage() {
                         href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-haq-red font-bold mt-2 hover:underline"
+                        className="inline-flex items-center gap-1.5 text-xs text-[#16A34A] font-bold mt-2 hover:underline"
                       >
                         <span>Mở vị trí trên Google Maps</span>
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -970,7 +971,7 @@ export default function ContactPage() {
               </div>
 
               {/* Right Column: Interactive Google Map */}
-              <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-sm min-h-[400px] bg-white relative">
+              <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-2xs min-h-[400px] bg-white relative">
                 <iframe
                   title="HAQ FOOD Location Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.746825853712!2d105.7827073!3d21.0428138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab338121cba7%3A0x2cf17614ecef8583!2zMzAgTmcuIDEgUGjhuqFtIFR14bqlbiBUw6BpLCBOZ2jEqWEgxJDDtCwgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
@@ -980,7 +981,7 @@ export default function ContactPage() {
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full grayscale contrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                  className="w-full h-full grayscale-[20%] contrast-105 opacity-95 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
                 />
               </div>
             </div>

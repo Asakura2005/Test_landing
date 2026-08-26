@@ -41,7 +41,7 @@ export default function ProductDetailModal({ product, onClose }) {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 w-10 h-10 bg-haq-cream hover:bg-haq-red hover:text-white rounded-full flex items-center justify-center transition-colors text-haq-ink border border-haq-border"
+          className="absolute top-4 right-4 z-20 w-10 h-10 bg-haq-sage/40 hover:bg-[#16A34A] hover:text-white rounded-full flex items-center justify-center transition-colors text-haq-ink border border-haq-border cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -50,7 +50,7 @@ export default function ProductDetailModal({ product, onClose }) {
         <div className="w-full md:w-2/5 lg:w-1/2 bg-white p-8 flex flex-col items-center justify-center relative min-h-[300px] md:min-h-0 border-b md:border-b-0 md:border-r border-haq-border">
           {/* Tag */}
           {product.tag && (
-            <div className="absolute top-4 left-4 z-20 bg-haq-red text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm shadow-md">
+            <div className="absolute top-4 left-4 z-20 bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-sm">
               {product.tag}
             </div>
           )}
@@ -69,11 +69,11 @@ export default function ProductDetailModal({ product, onClose }) {
         </div>
 
         {/* Right: Product Details */}
-        <div className="w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 lg:p-10 overflow-y-auto">
+        <div className="w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 lg:p-10 overflow-y-auto font-sans">
           {/* Category & Title */}
           <div className="mb-6">
-            <span className="text-xs font-mono font-bold text-haq-red uppercase tracking-wider block mb-2">{product.category}</span>
-            <h2 className="text-3xl md:text-4xl font-heading font-black text-haq-ink uppercase leading-tight">
+            <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block mb-2">{product.category}</span>
+            <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-haq-ink uppercase leading-tight">
               {product.name}
             </h2>
             {product.en_name && (
@@ -82,7 +82,7 @@ export default function ProductDetailModal({ product, onClose }) {
           </div>
 
           {/* Description */}
-          <div className="prose prose-sm md:prose-base text-haq-text-secondary text-justify mb-8 leading-relaxed">
+          <div className="prose prose-sm md:prose-base text-haq-text-secondary text-justify mb-8 leading-relaxed font-normal">
             {product.description ? (
               <p>{product.description}</p>
             ) : (
@@ -92,15 +92,15 @@ export default function ProductDetailModal({ product, onClose }) {
 
           {/* Highlights */}
           {product.highlights && product.highlights.length > 0 && product.highlights[0] !== '' && (
-            <div className="mb-8 bg-haq-cream/60 p-5 rounded-xl border border-haq-border">
-              <h4 className="font-bold text-haq-ink mb-3 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-haq-red" />
+            <div className="mb-8 bg-haq-sage/20 p-5 rounded-2xl border border-haq-border">
+              <h4 className="font-heading font-bold text-haq-ink mb-3 flex items-center gap-2 text-sm uppercase">
+                <CheckCircle className="w-4 h-4 text-[#16A34A]" />
                 Điểm nổi bật
               </h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
                 {product.highlights.map((hl, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-haq-text-secondary">
-                    <span className="text-haq-red mt-1 text-[10px]">●</span> 
+                  <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-haq-text-secondary">
+                    <span className="text-[#16A34A] mt-1 text-[10px]">●</span> 
                     <span className="flex-1">{hl}</span>
                   </li>
                 ))}
@@ -110,32 +110,32 @@ export default function ProductDetailModal({ product, onClose }) {
 
           {/* Variants Table */}
           <div className="mb-8">
-            <h4 className="font-bold text-haq-ink mb-4">Quy cách đóng gói</h4>
-            <div className="bg-white border border-haq-border rounded-xl overflow-hidden shadow-sm">
+            <h4 className="font-heading font-bold text-haq-ink mb-3 text-sm uppercase">Quy cách đóng gói</h4>
+            <div className="bg-white border border-haq-border rounded-2xl overflow-hidden shadow-2xs">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm min-w-[400px]">
-                  <thead className="bg-haq-cream border-b border-haq-border">
+                <table className="w-full text-left text-xs sm:text-sm min-w-[400px]">
+                  <thead className="bg-haq-sage/30 border-b border-haq-border">
                     <tr>
-                      <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                        <div className="flex items-center gap-1.5"><Package className="w-4 h-4 text-haq-red"/> Trọng lượng</div>
+                      <th className="p-3 font-heading font-bold text-haq-ink whitespace-nowrap">
+                        <div className="flex items-center gap-1.5"><Package className="w-4 h-4 text-[#16A34A]"/> Trọng lượng</div>
                       </th>
-                      <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">Quy cách</th>
-                      <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                        <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-haq-red"/> HSD</div>
+                      <th className="p-3 font-heading font-bold text-haq-ink whitespace-nowrap">Quy cách</th>
+                      <th className="p-3 font-heading font-bold text-haq-ink whitespace-nowrap">
+                        <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-[#16A34A]"/> HSD</div>
                       </th>
-                      <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                        <div className="flex items-center gap-1.5"><Truck className="w-4 h-4 text-haq-red"/> MOQ</div>
+                      <th className="p-3 font-heading font-bold text-haq-ink whitespace-nowrap">
+                        <div className="flex items-center gap-1.5"><Truck className="w-4 h-4 text-[#16A34A]"/> MOQ</div>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-haq-border">
                     {product.variants && product.variants.length > 0 ? (
                       product.variants.map((v, idx) => (
-                        <tr key={idx} className="hover:bg-haq-cream/50 transition-colors">
-                          <td className="p-3 font-bold text-haq-red whitespace-nowrap">{v.size || '-'}</td>
+                        <tr key={idx} className="hover:bg-haq-sage/10 transition-colors">
+                          <td className="p-3 font-bold text-[#16A34A] whitespace-nowrap">{v.size || '-'}</td>
                           <td className="p-3 text-haq-text-secondary whitespace-nowrap">{v.pack || '-'}</td>
                           <td className="p-3 text-haq-text-secondary whitespace-nowrap">{v.shelf || '-'}</td>
-                          <td className="p-3 font-mono text-xs text-haq-text-secondary whitespace-nowrap">{v.moq || 'Liên hệ'}</td>
+                          <td className="p-3 text-xs text-haq-text-secondary whitespace-nowrap">{v.moq || 'Liên hệ'}</td>
                         </tr>
                       ))
                     ) : (
@@ -153,14 +153,14 @@ export default function ProductDetailModal({ product, onClose }) {
           <div className="mt-auto pt-4 border-t border-haq-border flex flex-col sm:flex-row gap-3">
             <button 
               onClick={handleCTA}
-              className="flex-1 bg-haq-red text-white py-3.5 px-6 rounded-lg font-bold hover:bg-haq-dark transition-all shadow-md flex items-center justify-center gap-2 group"
+              className="flex-1 bg-[#16A34A] text-white py-3.5 px-6 rounded-xl font-heading font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-[#0F5132] transition-all shadow-md flex items-center justify-center gap-2 group cursor-pointer"
             >
-              Nhận báo giá Sỉ / Đại lý
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <span>Nhận báo giá Sỉ / Đại lý</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
               onClick={onClose}
-              className="px-6 py-3.5 rounded-lg font-bold text-haq-ink bg-haq-cream hover:bg-haq-soft transition-colors border border-haq-border"
+              className="px-6 py-3.5 rounded-xl font-heading font-bold text-xs sm:text-sm uppercase text-haq-ink bg-haq-sage/30 hover:bg-haq-sage/60 transition-colors border border-haq-border cursor-pointer"
             >
               Đóng
             </button>

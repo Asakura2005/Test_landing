@@ -69,7 +69,7 @@ function AnimatedNumber({ target, suffix }) {
   const formattedCount = Number(count).toLocaleString('en-US')
 
   return (
-    <span ref={ref} className="font-heading font-extrabold text-5xl md:text-6xl text-haq-red">
+    <span ref={ref} className="font-heading font-extrabold text-4xl md:text-5xl text-haq-green-dark">
       {formattedCount}{suffix}
     </span>
   )
@@ -79,24 +79,34 @@ export default function StatsCounter() {
   const ref = useReveal()
 
   return (
-    <section className="py-20 md:py-32 bg-haq-cream">
+    <section className="py-20 md:py-28 bg-white border-t border-haq-border font-sans">
       <div className="mx-auto max-w-site px-6 md:px-12">
         <div ref={ref} className="reveal">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 mt-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider block mb-1">
+              CON SỐ BIẾT NÓI
+            </span>
+            <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-haq-ink uppercase tracking-tight">
+              QUY MÔ & TĂNG TRƯỞNG BỀN VỮNG
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {STATS.map((stat, i) => {
               const Icon = stat.icon
               return (
-                <div key={i} className="relative bg-white rounded-3xl p-8 pt-14 text-center shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-haq-border hover:-translate-y-2 transition-transform duration-300">
+                <div key={i} className="relative bg-haq-sage/20 rounded-3xl p-6 pt-10 text-center border border-haq-border hover:-translate-y-1.5 transition-all duration-300 shadow-2xs hover:shadow-lg hover:bg-white hover:border-[#16A34A]/40">
                   {/* Overlapping Icon */}
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md border-4 border-haq-cream">
-                    <Icon className="w-8 h-8 text-haq-red" strokeWidth={1.5} />
+                  <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-haq-border mx-auto mb-4 text-[#16A34A]">
+                    <Icon className="w-7 h-7" strokeWidth={1.75} />
                   </div>
                   
-                  <div className="mb-3">
+                  <div className="mb-2">
                     <AnimatedNumber target={stat.number} suffix={stat.suffix} />
                   </div>
-                  <p className="text-haq-ink/60 font-medium text-sm leading-relaxed">
+                  <h3 className="font-heading font-bold text-sm uppercase text-haq-ink mb-1">{stat.label}</h3>
+                  <p className="text-haq-text-secondary font-normal text-xs leading-relaxed">
                     {stat.desc}
                   </p>
                 </div>

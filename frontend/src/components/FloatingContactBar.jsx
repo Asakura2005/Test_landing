@@ -11,7 +11,7 @@ export default function FloatingContactBar() {
       href: 'tel:02423235656',
       icon: Phone,
       label: 'Hotline: 024 23 23 56 56',
-      color: 'bg-haq-red',
+      color: 'bg-haq-green-dark',
       title: 'Gọi Hotline (024 23 23 56 56)',
     },
     {
@@ -34,16 +34,16 @@ export default function FloatingContactBar() {
       href: 'mailto:info@haq.com.vn',
       icon: Mail,
       label: 'info@haq.com.vn',
-      color: 'bg-[#D97706]',
+      color: 'bg-[#16A34A]',
       title: 'Gửi Email hợp tác',
     },
     {
       href: '/lien-he?type=oem',
       icon: Sparkles,
       label: 'Hợp tác B2B / OEM',
-      color: 'bg-haq-ink',
+      color: 'bg-[#0C1E15]',
       title: 'Hợp tác B2B & OEM/ODM',
-      extraClass: 'border border-white/20 text-haq-gold',
+      extraClass: 'border border-white/20 text-[#C89B3C]',
     },
   ]
 
@@ -66,9 +66,9 @@ export default function FloatingContactBar() {
             {item.icon ? (
               <item.icon className={`w-4.5 h-4.5 ${item.icon === Phone ? 'animate-pulse' : ''}`} />
             ) : (
-              <span className="font-heading font-black text-xs tracking-tight">{item.text}</span>
+              <span className="font-heading font-bold text-xs">{item.text}</span>
             )}
-            <span className="absolute right-full mr-3 px-3 py-1.5 bg-haq-dark text-white text-xs font-heading font-bold rounded-xl shadow-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity border border-white/10">
+            <span className="absolute right-full mr-3 px-3.5 py-1.5 bg-[#0C1E15] text-white text-xs font-heading font-medium rounded-xl shadow-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity border border-white/10">
               {item.label}
             </span>
           </a>
@@ -90,7 +90,7 @@ export default function FloatingContactBar() {
               {item.icon ? (
                 <item.icon className="w-4.5 h-4.5" />
               ) : (
-                <span className="font-heading font-black text-xs">{item.text}</span>
+                <span className="font-heading font-bold text-xs">{item.text}</span>
               )}
             </a>
           ))}
@@ -100,13 +100,13 @@ export default function FloatingContactBar() {
         <button
           onClick={toggleMenu}
           className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 cursor-pointer ${
-            isOpen ? 'bg-haq-dark rotate-0' : 'bg-haq-red rotate-0'
+            isOpen ? 'bg-[#0C1E15] rotate-0' : 'bg-[#0F5132] rotate-0'
           }`}
           aria-label="Menu liên hệ"
         >
           {isOpen ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
           {!isOpen && (
-            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-haq-gold rounded-full border-2 border-white" />
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-[#C89B3C] rounded-full border-2 border-white" />
           )}
         </button>
       </div>

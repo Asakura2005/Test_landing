@@ -43,15 +43,15 @@ export default function NewsSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
+              <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                 TIN TỨC & HOẠT ĐỘNG · EDITORIAL NEWS
               </span>
-              <span className="h-px w-10 bg-haq-red" />
+              <span className="h-px w-10 bg-[#16A34A]" />
             </div>
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
-              HOẠT ĐỘNG <span className="text-haq-red">DOANH NGHIỆP</span>
+            <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+              HOẠT ĐỘNG <span className="text-[#16A34A]">DOANH NGHIỆP</span>
             </h2>
-            <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary max-w-xl leading-relaxed">
+            <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary max-w-xl leading-relaxed font-normal">
               Cập nhật tin tức xúc tiến thương mại, hợp tác quốc tế và nâng cấp công nghệ sản xuất của HAQ FOOD.
             </p>
           </div>
@@ -59,7 +59,7 @@ export default function NewsSection() {
           <div>
             <Link
               to="/tin-tuc"
-              className="inline-flex items-center gap-2 bg-haq-cream hover:bg-haq-soft text-haq-ink text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3 rounded-full transition-all border border-haq-border"
+              className="inline-flex items-center gap-2 bg-white hover:bg-haq-sage text-haq-green-dark text-xs font-heading font-bold uppercase tracking-wider px-6 py-3 rounded-full transition-all border border-haq-border shadow-2xs"
             >
               <span>XEM TẤT CẢ TIN TỨC</span>
               <ArrowRight className="w-4 h-4" />
@@ -70,29 +70,29 @@ export default function NewsSection() {
         {/* Asymmetric Magazine Grid (1 Large Featured News + 2 Side Stories) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Main Featured Article (Col 7) */}
-          <div className="lg:col-span-7 group bg-haq-cream rounded-3xl overflow-hidden border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-            <div className="relative aspect-16/9 overflow-hidden bg-haq-soft">
+          <div className="lg:col-span-7 group bg-haq-sage/30 rounded-3xl overflow-hidden border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <div className="relative aspect-16/9 overflow-hidden bg-haq-sage/50">
               <img
                 src={FEATURED_NEWS.image}
                 alt={FEATURED_NEWS.title}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"
               />
-              <div className="absolute top-4 left-4 bg-haq-red text-white font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+              <div className="absolute top-4 left-4 bg-[#16A34A] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-2xs">
                 {FEATURED_NEWS.category}
               </div>
             </div>
 
             <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
               <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-haq-text-secondary mb-2">
-                  <Calendar className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-2 text-xs font-heading text-haq-text-secondary mb-2">
+                  <Calendar className="w-3.5 h-3.5 text-[#16A34A]" />
                   <span>{FEATURED_NEWS.date}</span>
                 </div>
-                <h3 className="font-heading font-black text-xl sm:text-2xl text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug">
+                <h3 className="font-heading font-bold text-xl sm:text-2xl text-haq-ink group-hover:text-[#16A34A] transition-colors uppercase leading-snug">
                   {FEATURED_NEWS.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed mt-3">
+                <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed mt-3 font-normal">
                   {FEATURED_NEWS.excerpt}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function NewsSection() {
               <div className="mt-6 pt-4 border-t border-haq-border">
                 <Link
                   to={`/tin-tuc/${FEATURED_NEWS.id}`}
-                  className="inline-flex items-center gap-2 text-xs font-heading font-extrabold text-haq-red uppercase group-hover:underline"
+                  className="inline-flex items-center gap-2 text-xs font-heading font-bold text-[#16A34A] hover:text-[#0F5132] uppercase transition-colors"
                 >
                   <span>ĐỌC BÀI VIẾT CHI TIẾT</span>
                   <ArrowRight className="w-4 h-4" />
@@ -114,17 +114,17 @@ export default function NewsSection() {
             {SIDE_NEWS.map((item) => (
               <div
                 key={item.id}
-                className="group bg-haq-cream rounded-3xl p-6 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between flex-1"
+                className="group bg-haq-sage/30 rounded-3xl p-6 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between flex-1"
               >
                 <div>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-haq-text-secondary mb-2">
-                    <span className="text-haq-red font-bold uppercase">{item.category}</span>
+                  <div className="flex items-center justify-between text-[10px] font-heading text-haq-text-secondary mb-2">
+                    <span className="text-[#16A34A] font-bold uppercase">{item.category}</span>
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
+                      <Calendar className="w-3 h-3 text-[#16A34A]" />
                       {item.date}
                     </span>
                   </div>
-                  <h4 className="font-heading font-black text-base text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug mt-1">
+                  <h4 className="font-heading font-bold text-base text-haq-ink group-hover:text-[#16A34A] transition-colors uppercase leading-snug mt-1">
                     {item.title}
                   </h4>
                 </div>
@@ -132,7 +132,7 @@ export default function NewsSection() {
                 <div className="mt-4 pt-4 border-t border-haq-border">
                   <Link
                     to={`/tin-tuc/${item.id}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-haq-ink group-hover:text-haq-red transition-colors uppercase"
+                    className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-haq-ink group-hover:text-[#16A34A] transition-colors uppercase"
                   >
                     <span>Xem chi tiết</span>
                     <ArrowRight className="w-3.5 h-3.5" />

@@ -34,19 +34,19 @@ export default function QuickStats() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
+              <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                 TIÊU CHUẨN & NĂNG LỰC · CAPABILITY
               </span>
-              <span className="h-px w-10 bg-haq-red" />
+              <span className="h-px w-10 bg-[#16A34A]" />
             </div>
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
+            <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
               NỀN TẢNG SẢN XUẤT VỮNG CHẮC
             </h2>
           </div>
 
           <Link
             to="/nang-luc"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-extrabold text-haq-red hover:text-haq-ink uppercase tracking-wider transition-colors group"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-bold text-[#16A34A] hover:text-[#0F5132] uppercase tracking-wider transition-colors group"
           >
             <span>XEM CHI TIẾT NĂNG LỰC</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -60,25 +60,25 @@ export default function QuickStats() {
             return (
               <div
                 key={pillar.num}
-                className="group bg-haq-cream rounded-3xl p-8 sm:p-10 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group bg-haq-sage rounded-3xl p-8 sm:p-10 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <span className="font-heading font-black text-3xl sm:text-4xl text-haq-red">
+                    <span className="font-heading font-black text-3xl sm:text-4xl text-[#16A34A]">
                       {pillar.num}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-haq-border flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-haq-red group-hover:text-white group-hover:border-haq-red transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-haq-border flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-[#16A34A] group-hover:text-white group-hover:border-[#16A34A] transition-colors">
                       <Icon className="w-6 h-6" />
                     </div>
                   </div>
 
-                  <div className="font-mono text-xs font-bold uppercase tracking-widest text-haq-text-secondary mb-1">
+                  <div className="font-heading text-xs font-bold uppercase tracking-wider text-haq-text-secondary mb-1">
                     {pillar.label}
                   </div>
-                  <h3 className="font-heading font-black text-xl sm:text-2xl text-haq-ink uppercase">
+                  <h3 className="font-heading font-bold text-xl sm:text-2xl text-haq-ink">
                     {pillar.title}
                   </h3>
-                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
+                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
                     {pillar.desc}
                   </p>
                 </div>
@@ -86,7 +86,7 @@ export default function QuickStats() {
                 <div className="mt-8 pt-6 border-t border-haq-border">
                   <Link
                     to="/nang-luc"
-                    className="inline-flex items-center gap-1.5 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red group-hover:text-haq-ink transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-[#16A34A] group-hover:text-[#0F5132] transition-colors"
                   >
                     <span>TÌM HIỂU THÊM</span>
                     <ArrowRight className="w-3.5 h-3.5" />

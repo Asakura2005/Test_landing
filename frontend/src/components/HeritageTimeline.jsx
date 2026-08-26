@@ -44,7 +44,7 @@ export default function HeritageTimeline() {
   }
 
   return (
-    <div className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center">
+    <div className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center font-sans">
       {SECTIONS.map((section, index) => {
         const isActive = activeSection === section.id
         const isPast = SECTIONS.findIndex(s => s.id === activeSection) > index
@@ -55,19 +55,19 @@ export default function HeritageTimeline() {
             {index !== SECTIONS.length - 1 && (
               <div 
                 className={`absolute left-1.5 top-3 w-[2px] h-8 transition-colors duration-500 ${
-                  isPast || isActive ? 'bg-haq-gold-dark' : 'bg-black/10'
+                  isPast || isActive ? 'bg-[#16A34A]' : 'bg-haq-border'
                 }`}
               />
             )}
             
-            {/* The Node (Diamond shape for heritage feel) */}
+            {/* The Node (Rounded circle for clean modern look) */}
             <div 
-              className={`w-3.5 h-3.5 rotate-45 border transition-all duration-300 ${
+              className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${
                 isActive 
-                  ? 'bg-haq-red border-haq-red scale-125 shadow-[0_0_10px_rgba(190,30,45,0.5)]' 
+                  ? 'bg-[#16A34A] border-[#16A34A] scale-125 shadow-[0_0_10px_rgba(22,163,74,0.5)]' 
                   : isPast
-                    ? 'bg-haq-gold-dark border-haq-gold-dark'
-                    : 'bg-transparent border-haq-border hover:border-haq-red'
+                    ? 'bg-[#0F5132] border-[#0F5132]'
+                    : 'bg-white border-haq-border hover:border-[#16A34A]'
               }`}
             />
             
@@ -75,8 +75,8 @@ export default function HeritageTimeline() {
             <div 
               className={`absolute left-8 whitespace-nowrap transition-all duration-300 pointer-events-none ${
                 isActive 
-                  ? 'opacity-100 translate-x-0 font-bold text-haq-red text-sm' 
-                  : 'opacity-0 -translate-x-2 font-medium text-haq-ink/50 text-xs group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-haq-gold-dark'
+                  ? 'opacity-100 translate-x-0 font-bold text-[#16A34A] text-xs' 
+                  : 'opacity-0 -translate-x-2 font-medium text-haq-text-secondary text-xs group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-haq-ink'
               }`}
             >
               {section.label}

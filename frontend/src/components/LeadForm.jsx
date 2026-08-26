@@ -8,7 +8,7 @@ const NEED_OPTIONS = ['Báo giá sỉ', 'Phân phối đại lý', 'Xuất khẩ
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50 mb-2">
+      <span className="block font-heading text-xs font-bold uppercase tracking-wider text-white/80 mb-2">
         {label}
       </span>
       {children}
@@ -48,107 +48,107 @@ export default function LeadForm() {
   }
 
   return (
-    <section id="lead" className="bg-haq-ink py-24 md:py-32 relative overflow-hidden">
-      {/* Vertical guide lines */}
-      <div className="pointer-events-none absolute inset-y-0 left-[8.33%] w-px bg-white/10" />
-      <div className="pointer-events-none absolute inset-y-0 right-[8.33%] w-px bg-white/10" />
+    <section id="lead" className="bg-[#0C1E15] py-24 md:py-32 relative overflow-hidden font-sans border-t border-[#16A34A]/20">
+      {/* Subtle green ambient lighting */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#16A34A]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#0F5132]/30 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-site px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+      <div className="mx-auto max-w-site px-6 md:px-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
           {/* Left — info */}
           <div ref={ref} className="reveal lg:col-span-5 text-white">
-            <div className="flex items-center gap-3 mb-5">
-              <span className="h-px w-10 bg-haq-gold" />
-              <span className="font-mono text-xs tracking-[0.25em] uppercase text-haq-gold">
-                Trạm Kết Nối Đối Tác
+            <div className="flex items-center gap-3 mb-4">
+              <span className="font-heading text-xs font-bold tracking-wider uppercase text-[#16A34A]">
+                TRẠM KẾT NỐI ĐỐI TÁC · B2B GATEWAY
               </span>
+              <span className="h-px w-10 bg-[#16A34A]" />
             </div>
-            <h2 className="font-heading font-extrabold text-3xl md:text-5xl tracking-[-0.02em] leading-[1.05]">
-              Trở thành đối tác
-              <br />
-              <span className="text-haq-orange">phân phối HAQ Hà Nội.</span>
+            <h2 className="font-heading font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-tight">
+              TRỞ THÀNH ĐỐI TÁC <br />
+              <span className="text-[#16A34A]">HAQ HÀ NỘI</span>
             </h2>
-            <p className="mt-6 text-white/70 text-lg leading-[1.6] max-w-md">
-              Để lại thông tin để HAQ Hà Nội liên hệ và trao đổi về nhu cầu hợp tác của bạn.
+            <p className="mt-4 text-white/70 text-sm sm:text-base leading-relaxed max-w-md font-normal">
+              Để lại thông tin để bộ phận phát triển kinh doanh HAQ FOOD tư vấn chính sách đại lý, bảng giá sỉ và quy trình gia công OEM.
             </p>
 
-            {/* Contact info */}
-            <div className="mt-12 space-y-6">
-              <a href="tel:02423235656" className="flex items-start gap-4 group">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-red transition-colors">
-                  <Phone className="w-5 h-5 text-white" strokeWidth={1.8} />
-                </span>
-                <span>
-                  <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
+            {/* Contact info cards */}
+            <div className="mt-10 space-y-4">
+              <a href="tel:02423235656" className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#16A34A]/20 text-[#16A34A] flex items-center justify-center shrink-0 group-hover:bg-[#16A34A] group-hover:text-white transition-colors">
+                  <Phone className="w-5 h-5" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
                     Hotline (Điện thoại bàn)
                   </span>
-                  <span className="font-heading font-bold text-lg text-white">
+                  <span className="font-heading font-bold text-base text-white">
                     024 23 23 56 56
                   </span>
-                </span>
+                </div>
               </a>
 
-              <a href="https://zalo.me/0993308319" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 group">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-[#0068FF]/30 group-hover:bg-[#0068FF] transition-colors rounded">
-                  <span className="text-white font-bold text-sm">Z</span>
-                </span>
-                <span>
-                  <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Zalo Công Ty
+              <a href="https://zalo.me/0993308319" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#0068FF]/20 text-[#0068FF] flex items-center justify-center shrink-0 group-hover:bg-[#0068FF] group-hover:text-white transition-colors font-bold text-sm">
+                  Z
+                </div>
+                <div>
+                  <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
+                    Zalo Doanh Nghiệp (24/7)
                   </span>
-                  <span className="font-heading font-bold text-lg text-white">
+                  <span className="font-heading font-bold text-base text-white">
                     0993 308 319
                   </span>
-                </span>
+                </div>
               </a>
 
-              <a href="mailto:info@haq.com.vn" className="flex items-start gap-4 group">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
-                  <Mail className="w-5 h-5 text-white" strokeWidth={1.8} />
-                </span>
-                <span>
-                  <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Email
+              <a href="mailto:info@haq.com.vn" className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#16A34A]/20 text-[#16A34A] flex items-center justify-center shrink-0 group-hover:bg-[#16A34A] group-hover:text-white transition-colors">
+                  <Mail className="w-5 h-5" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
+                    Email Hợp Tác Doanh Nghiệp
                   </span>
-                  <span className="font-heading font-bold text-lg text-white">
+                  <span className="font-heading font-bold text-base text-white">
                     info@haq.com.vn
                   </span>
-                </span>
+                </div>
               </a>
 
-              <div className="flex items-start gap-4">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
-                  <MapPin className="w-5 h-5 text-white" strokeWidth={1.8} />
-                </span>
-                <span>
-                  <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Trụ sở chính
+              <a href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#16A34A]/20 text-[#16A34A] flex items-center justify-center shrink-0 group-hover:bg-[#16A34A] group-hover:text-white transition-colors mt-0.5">
+                  <MapPin className="w-5 h-5" strokeWidth={1.8} />
+                </div>
+                <div>
+                  <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
+                    Trụ Sở Chính (Google Maps)
                   </span>
-                  <span className="font-heading font-bold text-lg text-white">
-                    Tổ 6, Phường Cầu Giấy,<br/>
-                    Thành phố Hà Nội, Việt Nam
+                  <span className="font-heading font-bold text-sm text-white leading-relaxed">
+                    Tổ 6, Phường Cầu Giấy, TP. Hà Nội
                   </span>
-                </span>
-              </div>
+                </div>
+              </a>
             </div>
           </div>
 
           {/* Right — form */}
           <div className="lg:col-span-7">
-            <div className="bg-white/10 backdrop-blur-md border border-white/15 p-6 md:p-10">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 md:p-10 rounded-3xl shadow-2xl">
               {status === 'done' ? (
                 /* Success state */
                 <div className="min-h-[420px] flex flex-col items-center justify-center text-center text-white">
-                  <CheckCircle className="w-16 h-16 text-haq-gold mb-6" strokeWidth={1.5} />
+                  <div className="w-16 h-16 rounded-full bg-[#16A34A]/20 text-[#16A34A] flex items-center justify-center mb-6">
+                    <CheckCircle className="w-10 h-10" strokeWidth={1.8} />
+                  </div>
                   <h3 className="font-heading font-extrabold text-2xl md:text-3xl">
-                    Đã ghi nhận yêu cầu của bạn.
+                    Đã Ghi Nhận Yêu Cầu Của Bạn!
                   </h3>
-                  <p className="mt-3 text-white/70 max-w-md">
-                    HAQ Hà Nội sẽ liên hệ với bạn sớm.
+                  <p className="mt-3 text-white/70 max-w-md font-normal text-sm">
+                    Đội ngũ HAQ Hà Nội sẽ liên hệ lại với quý đối tác trong vòng 2 - 4 giờ làm việc.
                   </p>
                   <button
                     onClick={() => setStatus('idle')}
-                    className="mt-8 min-h-[48px] px-8 border-2 border-white/30 hover:border-haq-orange hover:text-haq-orange font-heading font-bold tracking-wide transition-colors text-white"
+                    className="mt-8 px-8 py-3.5 rounded-full border border-white/30 hover:border-[#16A34A] hover:bg-[#16A34A] font-heading font-bold text-xs uppercase tracking-wider transition-all text-white cursor-pointer"
                   >
                     GỬI YÊU CẦU KHÁC
                   </button>
@@ -156,45 +156,45 @@ export default function LeadForm() {
               ) : (
                 /* Form */
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <Field label="Họ và tên *">
                       <input
                         required
                         value={form.full_name}
                         onChange={update('full_name')}
-                        className="haq-input"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
                         placeholder="Nguyễn Văn A"
                       />
                     </Field>
-                    <Field label="Công ty">
+                    <Field label="Tên công ty / Cửa hàng">
                       <input
                         value={form.company}
                         onChange={update('company')}
-                        className="haq-input"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
                         placeholder="Công ty TNHH ABC"
                       />
                     </Field>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <Field label="Số điện thoại *">
                       <input
                         required
                         type="tel"
                         value={form.phone}
                         onChange={update('phone')}
-                        className="haq-input"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
                         placeholder="09xx xxx xxx"
                       />
                     </Field>
-                    <Field label="Nhu cầu">
+                    <Field label="Nhu cầu hợp tác">
                       <select
                         value={form.need}
                         onChange={update('need')}
-                        className="haq-input"
+                        className="w-full px-4 py-3.5 rounded-xl bg-[#0C1E15] border border-white/15 text-white focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
                       >
                         {NEED_OPTIONS.map((opt) => (
-                          <option key={opt} value={opt} className="text-haq-ink">
+                          <option key={opt} value={opt} className="bg-[#0C1E15] text-white">
                             {opt}
                           </option>
                         ))}
@@ -202,32 +202,32 @@ export default function LeadForm() {
                     </Field>
                   </div>
 
-                  <Field label="Ghi chú nhu cầu">
+                  <Field label="Ghi chú nhu cầu chi tiết">
                     <textarea
                       value={form.note}
                       onChange={update('note')}
                       rows={3}
-                      className="haq-input resize-none"
-                      placeholder="VD: Cần báo giá sỉ 5 SKU, giao hàng ra miền Trung..."
+                      className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm resize-none"
+                      placeholder="VD: Cần báo giá sỉ 5 SKU bánh, số lượng xuất buôn tại Hà Nội..."
                     />
                   </Field>
 
                   {errMsg && (
-                    <p className="text-haq-gold text-sm font-mono">{errMsg}</p>
+                    <p className="text-red-400 text-xs font-sans">{errMsg}</p>
                   )}
 
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full min-h-[56px] bg-haq-orange text-haq-ink font-heading font-extrabold text-lg tracking-wide flex items-center justify-center gap-3 hover:bg-haq-red hover:text-white transition-colors disabled:opacity-70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-haq-orange/50"
+                    className="w-full py-4 bg-[#16A34A] text-white font-heading font-bold text-sm uppercase tracking-wider rounded-xl flex items-center justify-center gap-3 hover:bg-[#0F5132] transition-all disabled:opacity-70 shadow-lg cursor-pointer"
                   >
                     {status === 'loading' ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        ĐANG KIỂM ĐỊNH CHẤT LƯỢNG...
+                        <span>ĐANG GỬI THÔNG TIN...</span>
                       </>
                     ) : (
-                      'GỬI YÊU CẦU BÁO GIÁ SỈ'
+                      'GỬI YÊU CẦU BÁO GIÁ SỈ & ĐẠI LÝ'
                     )}
                   </button>
 

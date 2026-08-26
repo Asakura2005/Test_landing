@@ -7,13 +7,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#191919] text-white pt-16 pb-12 border-t border-white/12 select-none-text">
+    <footer className="bg-[#0C1E15] text-white pt-16 pb-12 border-t border-[#1B4D3E]/40 select-none-text">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         
         {/* =========================================================================
             1. BRAND AREA
         ========================================================================= */}
-        <div className="pb-10 border-b border-white/12">
+        <div className="pb-10 border-b border-white/10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <Link to="/" className="shrink-0 flex items-center justify-center h-14 w-14 rounded-2xl bg-white p-1.5 shadow-sm">
@@ -25,15 +25,15 @@ export default function Footer() {
               </Link>
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-heading font-black text-2xl tracking-tight text-white leading-none">
-                    HAQ <span className="text-[#C92332]">FOOD</span>
+                  <span className="font-heading font-extrabold text-2xl tracking-tight text-white leading-none">
+                    HAQ <span className="text-[#16A34A]">FOOD</span>
                   </span>
                 </div>
-                <p className="text-xs font-mono font-semibold tracking-wider text-[#D9A900] uppercase mt-1">
+                <p className="text-xs font-heading font-semibold tracking-wider text-[#C89B3C] uppercase mt-1">
                   Vietnamese Food Manufacturer & Exporter
                 </p>
-                <p className="text-xs text-[#A8A8A8] mt-0.5">
-                  Bringing Vietnamese food to the world · Mang hương vị thực phẩm Việt Nam vươn tầm thế giới.
+                <p className="text-xs text-[#9BB3A3] mt-0.5 font-normal">
+                  Bringing Vietnamese food to the world · Nông sản sạch & Thực phẩm Việt Nam vươn tầm thế giới.
                 </p>
               </div>
             </div>
@@ -42,7 +42,7 @@ export default function Footer() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/lien-he"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C92332] text-white text-xs font-heading font-extrabold uppercase tracking-wider hover:bg-[#b01e2b] transition-colors shadow-xs"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#13863d] transition-all shadow-xs hover:shadow-md"
               >
                 <span>LIÊN HỆ HỢP TÁC B2B</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -54,15 +54,15 @@ export default function Footer() {
         {/* =========================================================================
             2. THREE COLUMNS NAVIGATION: VỀ HAQ FOOD | SẢN PHẨM | LIÊN HỆ
         ========================================================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-12 border-b border-white/12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-12 border-b border-white/10">
           
           {/* CỘT 1: VỀ HAQ FOOD (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#D9A900] flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C92332]"></span>
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>VỀ HAQ FOOD</span>
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-[#A8A8A8]">
+            <ul className="space-y-2.5 text-xs sm:text-sm text-[#9BB3A3]">
               <li>
                 <Link to="/gioi-thieu" className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   Giới thiệu Tổng quan Công ty
@@ -93,11 +93,11 @@ export default function Footer() {
 
           {/* CỘT 2: SẢN PHẨM (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#D9A900] flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C92332]"></span>
-              <span>SẢN PHẨM</span>
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              <span>SẢN PHẨM TIÊU BIỂU</span>
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-[#A8A8A8]">
+            <ul className="space-y-2.5 text-xs sm:text-sm text-[#9BB3A3]">
               <li>
                 <Link to="/san-pham" className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
                   Tất cả sản phẩm (HAQ Catalog) →
@@ -128,36 +128,36 @@ export default function Footer() {
 
           {/* CỘT 3: LIÊN HỆ (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#D9A900] flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C92332]"></span>
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>LIÊN HỆ CHÍNH THỨC</span>
             </h4>
-            <ul className="space-y-3 text-xs sm:text-sm text-[#A8A8A8]">
+            <ul className="space-y-3 text-xs sm:text-sm text-[#9BB3A3]">
               <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#C92332] shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-white">Địa chỉ:</strong>{' '}
                   <a
                     href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white font-mono font-bold hover:text-[#D9A900] transition-colors"
+                    className="text-white hover:text-[#C89B3C] transition-colors"
                   >
                     30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội, Việt Nam
                   </a>
                   </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-[#C92332] shrink-0" />
+                <Phone className="w-4 h-4 text-[#16A34A] shrink-0" />
                 <span>
                   <strong className="text-white">Hotline (máy bàn):</strong>{' '}
-                  <a href="tel:02423235656" className="text-white font-mono font-bold hover:text-[#D9A900] transition-colors">
+                  <a href="tel:02423235656" className="text-white font-semibold hover:text-[#C89B3C] transition-colors">
                     024 23 23 56 56
                   </a>
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <span className="w-4 h-4 text-[#C92332] shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">
+                <span className="w-4 h-4 text-[#16A34A] shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">
                   Z
                 </span>
                 <span>
@@ -166,17 +166,17 @@ export default function Footer() {
                     href="https://zalo.me/0993308319"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white font-mono font-bold hover:text-[#D9A900] transition-colors"
+                    className="text-white font-semibold hover:text-[#C89B3C] transition-colors"
                   >
                     0993 308 319
                   </a>
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#C92332] shrink-0" />
+                <Mail className="w-4 h-4 text-[#16A34A] shrink-0" />
                 <span>
                   <strong className="text-white">Email:</strong>{' '}
-                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-[#D9A900] transition-colors">
+                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-[#C89B3C] transition-colors">
                     info@haq.com.vn
                   </a>
                 </span>
@@ -189,19 +189,19 @@ export default function Footer() {
         {/* =========================================================================
             3. THÔNG TIN DOANH NGHIỆP (CORPORATE REGISTRY & VNTAX VERIFICATION)
         ========================================================================= */}
-        <div className="py-10 border-b border-white/12">
-          <div className="bg-white/5 rounded-2xl p-6 sm:p-8 border border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="py-10 border-b border-white/10">
+          <div className="bg-white/5 rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#D9A900] uppercase">
-                <Building2 className="w-4 h-4 text-[#C92332]" />
-                <span>THÔNG TIN DOANH NGHIỆP</span>
+              <div className="inline-flex items-center gap-2 text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase">
+                <Building2 className="w-4 h-4 text-[#16A34A]" />
+                <span>THÔNG TIN PHÁP LÝ DOANH NGHIỆP</span>
               </div>
-              <h3 className="font-heading font-black text-lg sm:text-xl text-white tracking-wide uppercase">
+              <h3 className="font-heading font-bold text-lg sm:text-xl text-white tracking-wide">
                 CÔNG TY CỔ PHẦN HAQ HÀ NỘI
               </h3>
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#A8A8A8]">
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#9BB3A3]">
                 <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-[#16A34A] shrink-0" />
                   <span>GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP</span>
                 </div>
                 <span className="text-white/30 hidden sm:inline">•</span>
@@ -215,7 +215,7 @@ export default function Footer() {
                 href="https://vntax.net/0109547016-cong-ty-co-phan-haq-ha-noi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-[#C92332] text-white text-xs font-heading font-extrabold uppercase tracking-wider transition-all border border-white/15 hover:border-[#C92332] shadow-xs"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all border border-white/15 hover:border-[#16A34A] shadow-xs"
               >
                 <span>Tra cứu thông tin doanh nghiệp</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -227,37 +227,37 @@ export default function Footer() {
         {/* =========================================================================
             4. CHÍNH SÁCH & PHÁP LÝ (LEGAL & COMPLIANCE LINKS)
         ========================================================================= */}
-        <div className="py-8 border-b border-white/12">
+        <div className="py-8 border-b border-white/10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="text-xs font-mono font-bold tracking-widest text-[#D9A900] uppercase flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-[#C92332]" />
+            <div className="text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase flex items-center gap-2">
+              <FileCheck className="w-4 h-4 text-[#16A34A]" />
               <span>CHÍNH SÁCH & PHÁP LÝ:</span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-xs sm:text-sm font-heading font-bold text-white/80">
+            <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-xs sm:text-sm font-heading font-medium text-white/80">
               <Link
                 to="/chinh-sach-doi-tra-hoan-tien"
-                className="hover:text-[#D9A900] transition-colors flex items-center gap-1.5"
+                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
-                <span className="text-white/40 font-mono text-[11px]">01</span>
+                <span className="text-white/40 text-[11px]">01</span>
                 <span>Chính sách đổi trả & hoàn tiền</span>
                 <span className="text-white/40">→</span>
               </Link>
               <span className="text-white/20 hidden md:inline">|</span>
               <Link
                 to="/chinh-sach-bao-mat"
-                className="hover:text-[#D9A900] transition-colors flex items-center gap-1.5"
+                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
-                <span className="text-white/40 font-mono text-[11px]">02</span>
+                <span className="text-white/40 text-[11px]">02</span>
                 <span>Chính sách bảo mật</span>
                 <span className="text-white/40">→</span>
               </Link>
               <span className="text-white/20 hidden md:inline">|</span>
               <Link
                 to="/dieu-khoan-su-dung"
-                className="hover:text-[#D9A900] transition-colors flex items-center gap-1.5"
+                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
-                <span className="text-white/40 font-mono text-[11px]">03</span>
+                <span className="text-white/40 text-[11px]">03</span>
                 <span>Điều khoản sử dụng</span>
                 <span className="text-white/40">→</span>
               </Link>
@@ -268,40 +268,40 @@ export default function Footer() {
         {/* =========================================================================
             5. COPYRIGHT & SOCIAL MEDIA BAR
         ========================================================================= */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#A8A8A8]">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9BB3A3]">
           <div>
             © {currentYear} CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-heading font-bold">
+          <div className="flex items-center gap-4 text-xs font-heading font-medium">
             <a
               href="https://zalo.me/0993308319"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#C92332] transition-colors"
+              className="hover:text-[#16A34A] transition-colors"
               aria-label="Liên hệ Zalo HAQ FOOD"
             >
-              ZALO OFFICIAL
+              Zalo Official
             </a>
             <span className="text-white/20">·</span>
             <a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#C92332] transition-colors"
+              className="hover:text-[#16A34A] transition-colors"
               aria-label="Trang Facebook HAQ FOOD"
             >
-              FACEBOOK
+              Facebook
             </a>
             <span className="text-white/20">·</span>
             <a
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#C92332] transition-colors"
+              className="hover:text-[#16A34A] transition-colors"
               aria-label="Trang LinkedIn HAQ FOOD"
             >
-              LINKEDIN
+              LinkedIn
             </a>
           </div>
         </div>

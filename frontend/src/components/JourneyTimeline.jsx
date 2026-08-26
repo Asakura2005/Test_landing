@@ -44,21 +44,21 @@ export default function JourneyTimeline() {
     <section
       id="hanh-trinh"
       aria-label="Hành trình phát triển HAQ FOOD"
-      className="relative bg-haq-cream py-20 sm:py-28 border-b border-haq-border overflow-hidden"
+      className="relative bg-white py-20 sm:py-28 border-b border-haq-border overflow-hidden"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-2 mb-3">
-            <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
+            <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
               HÀNH TRÌNH PHÁT TRIỂN · COMPANY STORY
             </span>
-            <span className="h-px w-10 bg-haq-red" />
+            <span className="h-px w-10 bg-[#16A34A]" />
           </div>
-          <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
-            HÀNH TRÌNH TỪ <span className="text-haq-red">2021 ĐẾN 2025</span>
+          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+            HÀNH TRÌNH TỪ <span className="text-[#16A34A]">2021 ĐẾN NAY</span>
           </h2>
-          <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
+          <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
             Mỗi cột mốc là một bước tiến vững chắc trong việc chuẩn hóa chất lượng,
             mở rộng quy mô công nghiệp và khẳng định giá trị nông sản chế biến Việt Nam.
           </p>
@@ -71,35 +71,35 @@ export default function JourneyTimeline() {
             return (
               <div
                 key={item.year}
-                className="group relative bg-white rounded-3xl p-6 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-haq-sage/30 rounded-3xl p-6 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Big Year Number */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-heading font-black text-3xl sm:text-4xl text-haq-ink group-hover:text-haq-red transition-colors tracking-tight">
+                    <span className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink group-hover:text-[#16A34A] transition-colors tracking-tight">
                       {item.year}
                     </span>
-                    <div className="w-10 h-10 rounded-2xl bg-haq-cream group-hover:bg-haq-red group-hover:text-white text-haq-ink flex items-center justify-center transition-colors">
+                    <div className="w-10 h-10 rounded-2xl bg-white group-hover:bg-[#16A34A] group-hover:text-white text-haq-green-dark border border-haq-border flex items-center justify-center transition-colors shadow-2xs">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <div className="font-mono text-[10px] font-bold text-haq-red uppercase tracking-wider mb-2">
+                  <div className="font-heading text-[10px] font-bold text-[#16A34A] uppercase tracking-wider mb-2">
                     {item.badge}
                   </div>
 
-                  <h3 className="font-heading font-black text-sm sm:text-base text-haq-ink uppercase leading-snug">
+                  <h3 className="font-heading font-bold text-sm sm:text-base text-haq-ink uppercase leading-snug">
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-haq-text-secondary leading-relaxed mt-2.5">
+                  <p className="text-xs text-haq-text-secondary leading-relaxed mt-2.5 font-normal">
                     {item.desc}
                   </p>
                 </div>
 
-                <div className="pt-4 mt-6 border-t border-haq-border flex items-center justify-between text-[10px] font-mono text-haq-text-secondary">
+                <div className="pt-4 mt-6 border-t border-haq-border flex items-center justify-between text-[10px] font-heading font-medium text-haq-text-secondary">
                   <span>MỐC 0{idx + 1}</span>
-                  <span>HAQ FOOD</span>
+                  <span className="font-semibold text-haq-green-dark">HAQ FOOD</span>
                 </div>
               </div>
             )
