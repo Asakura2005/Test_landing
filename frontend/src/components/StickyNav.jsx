@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
-import { getCategories } from '../services/supabase'
+import { getCategories, getProducts } from '../services/supabase'
 
 const ABOUT_SUBPAGES = [
   {
@@ -40,6 +40,7 @@ export default function StickyNav() {
   const [activeMenu, setActiveMenu] = useState(null)
 
   const [dbCategories, setDbCategories] = useState(DEFAULT_DB_CATEGORIES)
+  const [allProducts, setAllProducts] = useState([])
   const [hoveredCategory, setHoveredCategory] = useState(null)
 
   const timeoutRef = useRef(null)
@@ -47,17 +48,19 @@ export default function StickyNav() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchCats = async () => {
+    const fetchAll = async () => {
       try {
-        const data = await getCategories()
-        if (data && data.length > 0) {
-          setDbCategories(data)
-        }
+        const [cats, prods] = await Promise.all([
+          getCategories().catch(() => []),
+          getProducts().catch(() => [])
+        ])
+        if (cats && cats.length > 0) setDbCategories(cats)
+        if (prods && prods.length > 0) setAllProducts(prods)
       } catch (err) {
-        console.warn('Lỗi lấy danh mục cho Header:', err)
+        console.warn('Lỗi lấy data cho Header:', err)
       }
     }
-    fetchCats()
+    fetchAll()
   }, [])
 
   const categoryTree = useMemo(() => {
@@ -327,30 +330,36 @@ export default function StickyNav() {
                     </div>
                   </div>
 
-                  {/* Right Column: Preview Card */}
-                  <div className="col-span-5 flex flex-col justify-between bg-haq-bone rounded-2xl p-5 border border-black/5">
-                    <div>
-                      <div className="text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-2">
-                        SẢN PHẨM TIÊU BIỂU
-                      </div>
-                      <div className="aspect-16/10 rounded-xl overflow-hidden bg-white shadow-2xs mb-3 border border-black/5">
-                        <img
-                          src={activePreviewCat.image}
-                          alt={activePreviewCat.name}
-                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                      </div>
-                      <h4 className="font-heading font-black text-sm text-haq-ink uppercase">
-                        {activePreviewCat.featured || activePreviewCat.name}
-                      </h4>
-                      <p className="text-xs text-haq-ink/70 mt-1 leading-relaxed line-clamp-2">
-                        {activePreviewCat.featuredDesc || activePreviewCat.desc}
-                      </p>
+                  {/* Right Column: Dynamic Product Grid */}
+                  <div className="col-span-5 bg-haq-bone rounded-2xl p-5 border border-black/5 flex flex-col">
+                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-4">
+                      {hoveredCategory?.name || 'SẢN PHẨM'}
                     </div>
-
-                    <div className="pt-3 border-t border-black/10 flex items-center justify-between text-[11px] font-mono text-haq-red font-bold">
-                      <span>ISO 22000 & HACCP</span>
-                      <span>HAQ FOOD</span>
+                    <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] scrollbar-thin">
+                      {allProducts
+                        .filter(p => hoveredCategory?.id === '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966' || // 'all' or specific cat
+                                     p.category_id === hoveredCategory?.id || 
+                                     p.categories?.slug === hoveredCategory?.slug)
+                        .slice(0, 8) // Limit to 8 for cleanliness
+                        .map((p) => (
+                          <Link
+                            key={p.id}
+                            to={`/san-pham/${p.slug}`}
+                            onClick={() => setActiveMenu(null)}
+                            className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
+                          >
+                            <div className="w-16 h-16 rounded-full overflow-hidden border border-black/5 shadow-sm shrink-0">
+                              <img
+                                src={p.image_url}
+                                alt={p.name}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                            <span className="text-[11px] font-heading font-bold text-haq-ink text-center line-clamp-2">
+                              {p.name}
+                            </span>
+                          </Link>
+                        ))}
                     </div>
                   </div>
                 </div>
