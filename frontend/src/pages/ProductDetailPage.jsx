@@ -61,16 +61,7 @@ export default function ProductDetailPage() {
     window.location.href = '/#lead'
   }
 
-  if (isLoading) {
-    return (
-      <main className="min-h-screen bg-[#F5F2E8]">
-        <StickyNav />
-        <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
-          <div className="animate-pulse text-haq-ink/50 font-bold text-xl">Đang tải sản phẩm...</div>
-        </div>
-      </main>
-    )
-  }
+  
 
   if (!product) {
     return (

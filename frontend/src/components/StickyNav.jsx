@@ -202,7 +202,10 @@ export default function StickyNav() {
                       <Link
                         key={idx}
                         to={sub.path}
-                        onClick={() => setActiveMenu(null)}
+                        onClick={() => {
+                          setActiveMenu(null)
+                          window.scrollTo(0, 0)
+                        }}
                         className={`group block p-3 rounded-2xl transition-all ${
                           isSubActive
                             ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
