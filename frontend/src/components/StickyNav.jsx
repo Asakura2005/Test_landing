@@ -1,167 +1,297 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Search, ShoppingCart, Menu, X } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Search, Menu, X, ArrowRight } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
-import { getCategories } from '../services/supabase'
+
+const NAV_ITEMS = [
+  { label: 'TRANG CHỦ', path: '/' },
+  { label: 'GIỚI THIỆU', path: '/gioi-thieu' },
+  { label: 'SẢN PHẨM', path: '/san-pham' },
+  { label: 'NĂNG LỰC', path: '/gioi-thieu#nang-luc' },
+  { label: 'TIN TỨC', path: '/tin-tuc' },
+  { label: 'LIÊN HỆ', path: '/lien-he' },
+]
 
 export default function StickyNav() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState(null)
-  const [categories, setCategories] = useState([])
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [lang, setLang] = useState('VN')
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchCats = async () => {
-      try {
-        const data = await getCategories()
-        if (data) setCategories(data.filter(c => c.is_active && !c.parent_id))
-      } catch (err) {
-        console.error("Lỗi fetch danh mục Header:", err)
-      }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
     }
-    fetchCats()
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    setMobileMenuOpen(false)
+  }, [location.pathname, location.hash])
 
-  const isActive = (path) => location.pathname === path
+  const handleSearchSubmit = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      setSearchOpen(false)
+      navigate(`/san-pham?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
 
-  const NavLink = ({ to, label, hasDropdown }) => {
-    const active = isActive(to) || (hasDropdown && activeDropdown === hasDropdown)
-    return (
-      <Link 
-        to={to} 
-        className={`uppercase font-heading font-bold text-[13px] px-4 py-1.5 transition-all duration-200 border border-transparent whitespace-nowrap ${
-          active 
-            ? 'text-haq-gold border-haq-gold rounded-full' 
-            : 'text-white/90 hover:text-haq-gold hover:border-haq-gold hover:rounded-full'
-        }`}
-      >
-        {label}
-      </Link>
-    )
+  const isCurrentActive = (item) => {
+    if (item.path === '/') {
+      return location.pathname === '/' && !location.hash
+    }
+    if (item.path.includes('#')) {
+      const [path, hash] = item.path.split('#')
+      return location.pathname === path && location.hash === `#${hash}`
+    }
+    return location.pathname === item.path
   }
 
   return (
-    <nav
-      id="sticky-nav"
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-haq-red ${
-        scrolled ? 'shadow-md' : ''
-      }`}
-    >
-      <div className="mx-auto max-w-site px-4 md:px-8 h-20 relative flex items-center justify-between lg:justify-center">
-        
-        {/* Mobile menu toggle */}
-        <button className="lg:hidden p-2 text-white z-20" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-        </button>
-
-        {/* Desktop Left Nav */}
-        <div className="hidden lg:flex flex-1 items-center justify-end pr-28 xl:pr-36 gap-1 xl:gap-3 h-full z-10">
-          <NavLink to="/" label="Trang Chủ" />
-          
-          {/* Dropdown Giới Thiệu */}
-          <div 
-            className="relative h-full flex items-center"
-            onMouseEnter={() => setActiveDropdown('about')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <NavLink to="/gioi-thieu" label="Giới Thiệu" hasDropdown="about" />
-            {activeDropdown === 'about' && (
-              <div className="absolute top-[85%] left-0 w-64 bg-haq-cream shadow-xl py-2 rounded-sm border border-black/5">
-                <a href="/gioi-thieu#gioi-thieu" className="block px-5 py-2.5 text-[15px] text-haq-brown hover:text-haq-red transition-colors border-b border-black/5">Giới thiệu về HAQ</a>
-                <a href="/gioi-thieu#hanh-trinh" className="block px-5 py-2.5 text-[15px] text-haq-brown hover:text-haq-red transition-colors border-b border-black/5">Hành trình phát triển</a>
-                <a href="/gioi-thieu#nang-luc" className="block px-5 py-2.5 text-[15px] text-haq-brown hover:text-haq-red transition-colors border-b border-black/5">Năng lực sản xuất</a>
-                <a href="/gioi-thieu#phan-phoi" className="block px-5 py-2.5 text-[15px] text-haq-brown hover:text-haq-red transition-colors">Hệ thống phân phối</a>
+    <>
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'h-[68px] bg-white/95 backdrop-blur-md shadow-xs border-b border-black/5'
+            : 'h-[74px] bg-white/90 backdrop-blur-xs border-b border-black/5'
+        }`}
+      >
+        <div className="mx-auto max-w-site h-full px-4 sm:px-6 lg:px-12 flex items-center justify-between">
+          {/* Left: Brand Logo & Navigation */}
+          <div className="flex items-center gap-6 xl:gap-10">
+            <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-md p-1 bg-white border border-black/10 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+                <img
+                  src={logoImg}
+                  alt="HAQ FOOD Logo"
+                  className="h-full w-full object-contain"
+                />
               </div>
-            )}
-          </div>
-          
-          {/* Dropdown Sản Phẩm */}
-          <div 
-            className="relative h-full flex items-center"
-            onMouseEnter={() => setActiveDropdown('products')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <NavLink to="/san-pham" label="Sản Phẩm" hasDropdown="products" />
-            {activeDropdown === 'products' && categories.length > 0 && (
-              <div className="absolute top-[85%] left-0 w-60 bg-haq-cream shadow-xl py-2 rounded-sm border border-black/5">
-                {categories.map((cat, index) => (
-                  <Link 
-                    key={cat.id} 
-                    to="/san-pham" 
-                    className={`block px-5 py-2.5 text-[15px] text-haq-brown hover:text-haq-red transition-colors ${index !== categories.length - 1 ? 'border-b border-black/5' : ''}`}
+              <div className="flex flex-col">
+                <span className="font-heading font-black text-base sm:text-lg tracking-tight text-haq-ink leading-none">
+                  HAQ <span className="text-haq-red">FOOD</span>
+                </span>
+                <span className="text-[9px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mt-0.5">
+                  EST. 2021
+                </span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+              {NAV_ITEMS.map((item) => {
+                const active = isCurrentActive(item)
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    className={`relative px-3 py-1.5 font-heading text-[13px] tracking-wider uppercase font-bold transition-colors ${
+                      active
+                        ? 'text-haq-red'
+                        : 'text-haq-ink/75 hover:text-haq-red'
+                    }`}
                   >
-                    {cat.name}
+                    <span>{item.label}</span>
+                    {active && (
+                      <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-haq-red rounded-full" />
+                    )}
                   </Link>
-                ))}
-              </div>
-            )}
+                )
+              })}
+            </nav>
           </div>
-        </div>
 
-        {/* Center Logo — overlapping circle */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 h-[110px] w-[110px] bg-haq-red rounded-b-full flex items-center justify-center shadow-lg border-b-4 border-haq-gold/30 z-20 overflow-hidden">
-          <Link to="/" className="flex items-center justify-center w-[96px] h-[96px] p-2 bg-white rounded-full mt-1 shadow-inner">
-            <img src={logoImg} alt="HAQ FOOD Logo" className="w-[85%] h-[85%] object-contain" />
-          </Link>
-        </div>
+          {/* Right: Search, Language & Contact CTA */}
+          <div className="hidden lg:flex items-center gap-4 xl:gap-5">
+            {/* Search Trigger */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="p-2 text-haq-ink/60 hover:text-haq-ink transition-colors rounded-full hover:bg-black/5"
+              title="Tìm kiếm sản phẩm"
+              aria-label="Tìm kiếm"
+            >
+              <Search className="w-4 h-4" />
+            </button>
 
-        {/* Desktop Right Nav */}
-        <div className="hidden lg:flex flex-1 items-center justify-start pl-28 xl:pl-36 gap-1 xl:gap-3 h-full z-10">
-          <NavLink to="/tin-tuc" label="Tin Tức & Tuyển Dụng" />
-          <NavLink to="/lien-he" label="Liên Hệ" />
-          
-          <div className="flex items-center ml-2 xl:ml-5 gap-4">
-            <button className="text-white hover:text-haq-gold transition-colors">
+            {/* Language Switcher */}
+            <div className="flex items-center text-xs font-mono font-bold text-haq-ink/60 bg-haq-bone px-2.5 py-1 rounded-full border border-black/5">
+              <button
+                onClick={() => setLang('VN')}
+                className={`transition-colors ${lang === 'VN' ? 'text-haq-red font-black' : 'hover:text-haq-ink'}`}
+              >
+                VN
+              </button>
+              <span className="mx-1 text-black/20">|</span>
+              <button
+                onClick={() => setLang('EN')}
+                className={`transition-colors ${lang === 'EN' ? 'text-haq-red font-black' : 'hover:text-haq-ink'}`}
+              >
+                EN
+              </button>
+            </div>
+
+            {/* CTA Button */}
+            <Link
+              to="/lien-he"
+              className="group inline-flex items-center gap-2 bg-haq-red hover:bg-haq-ink text-white text-xs font-heading font-extrabold uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-200 shadow-2xs hover:shadow-xs"
+            >
+              <span>LIÊN HỆ</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+
+          {/* Mobile Right Controls */}
+          <div className="flex lg:hidden items-center gap-2">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="p-2 text-haq-ink/70 hover:text-haq-red"
+              aria-label="Tìm kiếm"
+            >
               <Search className="w-5 h-5" />
             </button>
-            <button className="text-white hover:text-haq-gold transition-colors relative">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-2 -right-2.5 bg-haq-gold text-haq-ink text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-haq-ink hover:text-haq-red"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Mobile Right Icons */}
-        <div className="lg:hidden flex items-center gap-4 z-20">
-          <button className="text-white hover:text-haq-gold">
-            <Search className="w-6 h-6" />
-          </button>
-          <button className="text-white hover:text-haq-gold relative">
-            <ShoppingCart className="w-6 h-6" />
-            <span className="absolute -top-1 -right-2 bg-haq-gold text-haq-ink text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-haq-red border-t border-white/10 shadow-lg flex flex-col z-40 pb-4">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="px-6 py-4 font-heading font-bold text-sm uppercase border-b border-white/10 text-white hover:text-haq-gold">Trang Chủ</Link>
-          <Link to="/gioi-thieu" onClick={() => setMenuOpen(false)} className="px-6 py-4 font-heading font-bold text-sm uppercase border-b border-white/10 text-white hover:text-haq-gold">Giới Thiệu</Link>
-          <div className="flex flex-col border-b border-white/10">
-            <Link to="/san-pham" onClick={() => setMenuOpen(false)} className="px-6 py-4 font-heading font-bold text-sm uppercase text-white hover:text-haq-gold">Sản Phẩm</Link>
-            {categories.length > 0 && (
-              <div className="pl-10 pr-6 pb-4 flex flex-col gap-3">
-                {categories.map(cat => (
-                  <Link key={cat.id} to="/san-pham" onClick={() => setMenuOpen(false)} className="text-white/80 text-sm hover:text-haq-gold">
-                    {cat.name}
-                  </Link>
-                ))}
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed top-[68px] right-0 bottom-0 w-full max-w-xs bg-white shadow-2xl p-6 flex flex-col justify-between border-l border-black/5 overflow-y-auto">
+            <div className="space-y-1">
+              <div className="pb-3 mb-3 border-b border-black/10 flex items-center justify-between">
+                <span className="text-xs font-mono font-bold tracking-widest text-haq-ink/50 uppercase">
+                  DANH MỤC MENU
+                </span>
+                <div className="flex items-center gap-1.5 text-xs font-mono font-bold">
+                  <button
+                    onClick={() => setLang('VN')}
+                    className={lang === 'VN' ? 'text-haq-red font-black' : 'text-haq-ink/50'}
+                  >
+                    VN
+                  </button>
+                  <span className="text-black/20">/</span>
+                  <button
+                    onClick={() => setLang('EN')}
+                    className={lang === 'EN' ? 'text-haq-red font-black' : 'text-haq-ink/50'}
+                  >
+                    EN
+                  </button>
+                </div>
               </div>
-            )}
+
+              {NAV_ITEMS.map((item) => {
+                const active = isCurrentActive(item)
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between py-3 px-3 rounded-lg font-heading font-bold text-sm uppercase tracking-wide transition-colors ${
+                      active
+                        ? 'bg-haq-red/10 text-haq-red font-black'
+                        : 'text-haq-ink/80 hover:bg-haq-bone hover:text-haq-red'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <ArrowRight className="w-4 h-4 opacity-40" />
+                  </Link>
+                )
+              })}
+            </div>
+
+            <div className="pt-6 border-t border-black/10 space-y-4">
+              <Link
+                to="/lien-he"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-2 bg-haq-red text-white py-3 rounded-lg font-heading font-bold text-sm uppercase tracking-wider hover:bg-haq-ink transition-colors shadow-xs"
+              >
+                <span>LIÊN HỆ HỢP TÁC</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <div className="text-xs text-haq-ink/60 space-y-1">
+                <p>Hotline: <strong className="text-haq-ink font-mono">024 23 23 56 56</strong></p>
+                <p>Email: <strong className="text-haq-ink">info@haq.com.vn</strong></p>
+              </div>
+            </div>
           </div>
-          <Link to="/tin-tuc" onClick={() => setMenuOpen(false)} className="px-6 py-4 font-heading font-bold text-sm uppercase border-b border-white/10 text-white hover:text-haq-gold">Tin Tức & Tuyển Dụng</Link>
-          <Link to="/lien-he" onClick={() => setMenuOpen(false)} className="px-6 py-4 font-heading font-bold text-sm uppercase text-white hover:text-haq-gold">Liên Hệ</Link>
         </div>
       )}
-    </nav>
+
+      {/* Quick Search Modal */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            onClick={() => setSearchOpen(false)}
+          />
+          <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl p-6 border border-black/10 z-10">
+            <div className="flex items-center justify-between pb-4 border-b border-black/10">
+              <span className="font-heading font-bold text-base text-haq-ink">
+                Tìm Kiếm Sản Phẩm & Tin Tức
+              </span>
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="p-1 rounded-md text-haq-ink/50 hover:text-haq-ink hover:bg-black/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleSearchSubmit} className="mt-4">
+              <div className="relative flex items-center">
+                <Search className="absolute left-4 w-5 h-5 text-haq-ink/40" />
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="Nhập tên sản phẩm (bánh tráng, bánh đậu xanh, bắp rang bơ...)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-28 py-3.5 bg-haq-bone rounded-xl border border-black/10 text-sm font-medium text-haq-ink focus:outline-none focus:border-haq-red focus:bg-white transition-all"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 bg-haq-red text-white text-xs font-heading font-bold px-4 py-2 rounded-lg hover:bg-haq-ink transition-colors"
+                >
+                  Tìm Kiếm
+                </button>
+              </div>
+            </form>
+            <div className="mt-4 pt-3 flex flex-wrap items-center gap-2 text-xs text-haq-ink/60">
+              <span>Gợi ý:</span>
+              {['Bánh tráng sấy giòn', 'Bánh tráng trộn sợi', 'Bánh đậu xanh', 'Bánh hạnh nhân'].map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery(tag)
+                    setSearchOpen(false)
+                    navigate(`/san-pham?q=${encodeURIComponent(tag)}`)
+                  }}
+                  className="bg-black/5 hover:bg-haq-red/10 hover:text-haq-red px-2.5 py-1 rounded-full transition-colors"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

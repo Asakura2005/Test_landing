@@ -1,211 +1,233 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, Eye, Sparkles, Package } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { getProducts, getCategories } from '../services/supabase'
-import { Link } from 'react-router-dom'
 import ProductDetailModal from './ProductDetailModal'
 
 export default function Products() {
   const ref = useReveal()
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
-  
-  const [activeTopCatId, setActiveTopCatId] = useState(null)
-  const [activeSubCatId, setActiveSubCatId] = useState(null)
+  const [activeCategoryId, setActiveCategoryId] = useState('ALL')
   const [selectedProduct, setSelectedProduct] = useState(null)
-  
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchAll = async () => {
+    const fetchData = async () => {
       try {
         const [productsData, categoriesData] = await Promise.all([
           getProducts(),
-          getCategories()
+          getCategories(),
         ])
-        
+
         if (categoriesData) {
-          const activeCats = categoriesData.filter(c => c.is_active)
+          const activeCats = categoriesData.filter((c) => c.is_active)
           setCategories(activeCats)
-          
-          // Set initial active top category
-          const topCats = activeCats.filter(c => !c.parent_id).sort((a,b) => a.sort_order - b.sort_order)
-          if (topCats.length > 0) {
-            setActiveTopCatId(topCats[0].id)
-          }
         }
 
         if (productsData && productsData.length > 0) {
           setProducts(productsData)
         }
       } catch (err) {
-        console.error("Lỗi fetch products/categories:", err)
+        console.error('Lỗi tải sản phẩm:', err)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchAll()
+    fetchData()
   }, [])
 
-  // Derived state
-  const topCategories = categories.filter(c => !c.parent_id).sort((a,b) => a.sort_order - b.sort_order)
-  const activeTopCat = topCategories.find(c => c.id === activeTopCatId) || topCategories[0]
-  const subCategories = categories.filter(c => c.parent_id === activeTopCat?.id).sort((a,b) => a.sort_order - b.sort_order)
+  const topCategories = categories.filter((c) => !c.parent_id).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
 
-  const filteredProducts = products.filter(p => {
-    if (!activeTopCat) return false;
-    if (activeSubCatId) {
-      return p.category_id === activeSubCatId;
-    }
-    // "Tất cả": show all products that belong to any subcategory of the active top category
-    return subCategories.some(sub => sub.id === p.category_id)
+  const filteredProducts = products.filter((p) => {
+    if (activeCategoryId === 'ALL') return true
+    const childCatIds = categories
+      .filter((c) => c.parent_id === activeCategoryId)
+      .map((c) => c.id)
+    return p.category_id === activeCategoryId || childCatIds.includes(p.category_id)
   })
 
+  // Partition for Asymmetric Magazine Layout
+  const featuredItem = filteredProducts[0]
+  const secondaryItems = filteredProducts.slice(1, 5)
+
   return (
-    <section className="relative bg-haq-bone py-24 md:py-32">
-      <div className="relative z-10 mx-auto max-w-site px-6 md:px-12">
+    <section id="san-pham" className="py-20 md:py-32 bg-haq-bone relative">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal">
-          <div className="mx-auto mb-14 max-w-3xl text-center">
-            <div className="mb-5 flex items-center justify-center gap-3">
-              <span className="h-px w-10 bg-haq-red" />
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.22em] text-haq-red">Sản phẩm HAQ</span>
+          {/* Editorial Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
+                  01 / PRODUCTS
+                </span>
+                <span className="h-px w-10 bg-haq-red" />
+              </div>
+              <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight">
+                KHÁM PHÁ HƯƠNG VỊ
+              </h2>
             </div>
-            <h2 className="font-heading text-4xl font-extrabold tracking-[-0.04em] text-haq-ink md:text-6xl">Hương vị Việt,<br />được làm cho hôm nay.</h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-haq-ink/65">Những lựa chọn tiện lợi, an toàn và phù hợp cho từng khoảnh khắc thưởng thức.</p>
+            <p className="text-sm sm:text-base text-haq-ink/70 max-w-md leading-relaxed">
+              Tuyển tập những món ăn vặt đặc trưng mang đậm hương vị Việt, kết hợp giữa bí quyết chế biến truyền thống và chuẩn mực an toàn hiện đại.
+            </p>
           </div>
-          
+
+          {/* Category Navigation Pills */}
+          <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-black/10">
+            <button
+              onClick={() => setActiveCategoryId('ALL')}
+              className={`px-4 py-2 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-all ${
+                activeCategoryId === 'ALL'
+                  ? 'bg-haq-ink text-white'
+                  : 'bg-white text-haq-ink/70 hover:text-haq-ink border border-black/5'
+              }`}
+            >
+              TẤT CẢ SẢN PHẨM ({products.length})
+            </button>
+            {topCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategoryId(cat.id)}
+                className={`px-4 py-2 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-all ${
+                  activeCategoryId === cat.id
+                    ? 'bg-haq-ink text-white'
+                    : 'bg-white text-haq-ink/70 hover:text-haq-ink border border-black/5'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Editorial Asymmetric Grid */}
           {isLoading ? (
-            <div className="flex justify-center h-64 items-center animate-pulse text-haq-ink/50">Đang tải sản phẩm...</div>
-          ) : (
-            <>
-              {/* Top Category Tabs */}
-              <div className="mb-14 flex flex-wrap justify-center gap-x-7 gap-y-3 border-y border-black/10 py-5">
-                {topCategories.map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setActiveTopCatId(cat.id)
-                      setActiveSubCatId(null)
-                    }}
-                    className={`border-b-2 pb-1 font-heading text-sm font-bold uppercase tracking-[0.08em] transition-colors md:text-[15px] ${
-                      activeTopCatId === cat.id
-                        ? 'border-haq-red text-haq-red'
-                        : 'border-transparent text-haq-ink/50 hover:border-haq-gold hover:text-haq-ink'
-                    }`}
-                  >
-                    {cat.name}
-                  </button>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-6 bg-white rounded-2xl h-[480px] animate-pulse border border-black/5" />
+              <div className="lg:col-span-6 grid grid-cols-2 gap-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white rounded-xl h-[230px] animate-pulse border border-black/5" />
                 ))}
               </div>
-
-              {/* Wooden Story Banner */}
-              {activeTopCat && (
-                <div className="mx-auto mb-10 grid max-w-5xl gap-8 border-b border-black/10 pb-10 md:grid-cols-[0.7fr_1.3fr] md:items-start">
-                  <div className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-haq-red">Bộ sưu tập<br />được chọn lọc</div>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="bg-white rounded-2xl p-12 text-center border border-black/5 max-w-md mx-auto">
+              <Package className="w-12 h-12 text-haq-ink/30 mx-auto mb-3" />
+              <p className="text-haq-ink/70 font-medium">Danh mục đang được cập nhật sản phẩm mới.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+              {/* Left Featured Block (Spans 6 cols, full height magazine poster) */}
+              {featuredItem && (
+                <div
+                  onClick={() => setSelectedProduct(featuredItem)}
+                  className="lg:col-span-6 group bg-white rounded-3xl p-6 sm:p-8 border border-black/5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer relative overflow-hidden"
+                >
                   <div>
-                    <h2 className="font-heading text-3xl font-extrabold leading-[1.08] text-haq-ink md:text-5xl">
-                      {activeTopCat.name}
-                    </h2>
-                    <div className="mt-5 max-w-3xl text-base leading-relaxed text-haq-ink/65 md:text-lg">
-                      {activeTopCat.description ? (
-                        activeTopCat.description.split('\n').map((para, i) => (
-                          <p key={i} className="mb-4 last:mb-0">{para}</p>
-                        ))
-                      ) : (
-                        <p>Sản phẩm được phát triển từ nguyên liệu chọn lọc, phù hợp với nhu cầu thưởng thức hiện đại.</p>
-                      )}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="font-mono text-xs font-bold uppercase tracking-widest text-haq-red bg-haq-red/10 px-3 py-1 rounded-full">
+                        {featuredItem.categories?.name || 'SẢN PHẨM TIÊU BIỂU'}
+                      </span>
+                      <span className="text-xs font-mono font-semibold text-haq-ink/50">
+                        FEATURED
+                      </span>
                     </div>
+
+                    <div className="relative aspect-4/3 my-6 bg-haq-cream/30 rounded-2xl overflow-hidden flex items-center justify-center p-6 border border-black/5">
+                      <img
+                        src={featuredItem.variants?.[0]?.img || featuredItem.image_url}
+                        alt={featuredItem.name}
+                        className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-haq-ink/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="bg-white text-haq-ink text-xs font-heading font-bold px-4 py-2 rounded-full shadow-md flex items-center gap-1.5">
+                          <Eye className="w-3.5 h-3.5 text-haq-red" />
+                          <span>Xem chi tiết</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink group-hover:text-haq-red transition-colors leading-tight">
+                      {featuredItem.name}
+                    </h3>
+                    <p className="mt-3 text-sm text-haq-ink/75 line-clamp-3 leading-relaxed">
+                      {featuredItem.short_description || featuredItem.description || 'Sản phẩm được phát triển từ nguyên liệu tự nhiên chọn lọc, quy trình đóng gói khép kín giữ trọn vị ngon đậm đà.'}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 pt-4 border-t border-black/10 flex items-center justify-between text-xs font-heading font-extrabold text-haq-red uppercase tracking-wider">
+                    <span>Khám phá chi tiết sản phẩm</span>
+                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
                   </div>
                 </div>
               )}
 
-              {/* Sub Categories Tabs */}
-              {subCategories.length > 0 && (
-                <div className="mb-10 flex flex-wrap justify-center gap-x-6 gap-y-3">
-                  <button
-                    onClick={() => setActiveSubCatId(null)}
-                    className={`text-sm font-bold transition-colors md:text-[15px] ${
-                      activeSubCatId === null
-                        ? 'text-haq-red'
-                        : 'text-haq-ink/50 hover:text-haq-red'
-                    }`}
-                  >
-                    Tất cả
-                  </button>
-                  {subCategories.map(sub => (
-                    <button
-                      key={sub.id}
-                      onClick={() => setActiveSubCatId(sub.id)}
-                      className={`text-sm font-bold transition-colors md:text-[15px] ${
-                        activeSubCatId === sub.id
-                          ? 'text-haq-red'
-                          : 'text-haq-ink/50 hover:text-haq-red'
-                      }`}
+              {/* Right Stacked Grid (Spans 6 cols, 2x2 grid) */}
+              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {secondaryItems.map((product) => {
+                  const imageUrl = product.variants?.[0]?.img || product.image_url
+                  return (
+                    <div
+                      key={product.id}
+                      onClick={() => setSelectedProduct(product)}
+                      className="group bg-white rounded-2xl p-5 border border-black/5 shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between cursor-pointer"
                     >
-                      {sub.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Product Grid */}
-              {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-7 md:gap-y-12 lg:grid-cols-4">
-                  {filteredProducts.map(p => (
-                    <Link 
-                      to={`/san-pham/${p.slug || p.id}`}
-                      key={p.id} 
-                      className="group relative flex h-full cursor-pointer flex-col overflow-hidden bg-white transition-transform duration-300 hover:-translate-y-1"
-                    >
-                      
-                      {/* Weight Tag */}
-                      {p.variants?.[0]?.size && (
-                        <div className="absolute left-3 top-3 z-10 bg-haq-red px-2 py-1 text-xs font-bold text-white">
-                          {p.variants[0].size}
-                        </div>
-                      )}
-                      
-                      {/* Image */}
-                      <div className="relative flex h-48 w-full items-center justify-center overflow-hidden bg-[#f7f5ef] p-4 md:h-60">
-                        {(p.images?.[0] || p.variants?.[0]?.img) ? (
-                          <img 
-                            src={p.images?.[0] || p.variants?.[0]?.img} 
-                            alt={p.name} 
-                            className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" 
+                      <div>
+                        <div className="relative aspect-square mb-4 bg-haq-cream/30 rounded-xl overflow-hidden flex items-center justify-center p-4 border border-black/5">
+                          <img
+                            src={imageUrl}
+                            alt={product.name}
+                            className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
                           />
-                        ) : (
-                          <div className="text-haq-ink/20 text-xs text-center border-2 border-dashed border-haq-ink/10 p-4 rounded w-full h-full flex items-center justify-center">
-                            Chưa có ảnh
+                          <div className="absolute top-2.5 left-2.5">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-white/90 px-2 py-0.5 rounded-sm border border-black/5">
+                              {product.categories?.name || 'HAQ FOOD'}
+                            </span>
                           </div>
-                        )}
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                      </div>
-                      
-                      {/* Info */}
-                      <div className="flex flex-1 flex-col border-t border-black/5 bg-white p-4 text-left md:p-5">
-                        <h3 className="mb-3 font-heading text-base font-bold leading-tight text-haq-ink transition-colors group-hover:text-haq-red md:text-lg">
-                          {p.name}
-                        </h3>
-                        
-                        <div className="mt-auto pt-3">
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-haq-red md:text-sm">
-                            Xem chi tiết <span>→</span>
-                          </span>
                         </div>
+
+                        <h4 className="font-heading font-extrabold text-base text-haq-ink group-hover:text-haq-red transition-colors line-clamp-1">
+                          {product.name}
+                        </h4>
+                        <p className="mt-1.5 text-xs text-haq-ink/65 line-clamp-2 leading-relaxed">
+                          {product.short_description || product.description || 'Hương vị thơm ngon, an toàn vệ sinh thực phẩm.'}
+                        </p>
                       </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-20 text-haq-ink/50 text-lg">
-                  Chưa có sản phẩm nào trong danh mục này.
-                </div>
-              )}
-            </>
+
+                      <div className="mt-4 pt-3 border-t border-black/5 flex items-center justify-between text-xs font-heading font-bold text-haq-ink/70 group-hover:text-haq-red">
+                        <span className="text-[11px] uppercase tracking-wider">Chi tiết</span>
+                        <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           )}
 
+          {/* Bottom Action */}
+          <div className="mt-12 sm:mt-16 text-center">
+            <Link
+              to="/san-pham"
+              className="group inline-flex items-center gap-3 bg-haq-ink hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              <span>XEM TOÀN BỘ DANH MỤC ({products.length} SẢN PHẨM)</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Modal Integration */}
+      {selectedProduct && (
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </section>
   )
 }
