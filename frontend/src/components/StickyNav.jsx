@@ -8,6 +8,7 @@ import {
   Sparkles,
   Building2,
   Milestone,
+  Factory,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES } from '../data/productCategories'
@@ -16,25 +17,25 @@ import { getCategories } from '../services/supabase'
 const ABOUT_SUBPAGES = [
   {
     title: 'GIỚI THIỆU TỔNG QUAN',
-    desc: 'Tuyên ngôn thương hiệu, Tầm nhìn chiến lược, Sứ mệnh & 5 Giá trị cốt lõi.',
+    desc: 'Tuyên ngôn thương hiệu, Tầm nhìn chiến lược, Sứ mệnh & 5 Giá trị văn hóa cốt lõi.',
     path: '/gioi-thieu',
     icon: Building2,
-    badge: 'OVERVIEW',
+    badge: 'TỔNG QUAN',
   },
   {
-    title: 'LỊCH SỬ & HÀNH TRÌNH',
+    title: 'LỊCH SỬ & DẤU MỐC',
     desc: 'Dấu mốc phát triển 2021 — 2026, các bước ngoặt công nghệ & xuất khẩu châu Á.',
     path: '/lich-su',
     icon: Milestone,
     badge: '2021 - 2026',
   },
-]
-
-const CAPABILITY_LINKS = [
-  { label: 'Năng lực sản xuất', path: '/nang-luc#nha-may', desc: 'Dây chuyền sấy giòn khép kín' },
-  { label: 'Tiêu chuẩn chất lượng', path: '/nang-luc#chat-luong', desc: 'Chứng nhận ISO 22000 & HACCP' },
-  { label: 'Gia công OEM / ODM', path: '/nang-luc#oem-odm', desc: 'Sản xuất theo yêu cầu đối tác' },
-  { label: 'Mạng lưới phân phối', path: '/nang-luc#phan-phoi', desc: '3.000+ điểm bán & xuất khẩu' },
+  {
+    title: 'CƠ SỞ SẢN XUẤT & CHẤT LƯỢNG',
+    desc: 'Dây chuyền sấy giòn khép kín, phòng sạch, tiêu chuẩn ISO 22000 & HACCP, giải pháp OEM/ODM.',
+    path: '/nang-luc',
+    icon: Factory,
+    badge: 'ISO & HACCP',
+  },
 ]
 
 export default function StickyNav() {
@@ -118,9 +119,9 @@ export default function StickyNav() {
     location.pathname === '/gioi-thieu' ||
     location.pathname === '/ve-chung-toi' ||
     location.pathname === '/lich-su' ||
+    location.pathname === '/nang-luc' ||
     location.pathname.startsWith('/ve-chung-toi/')
   const isProductsActive = location.pathname.startsWith('/san-pham')
-  const isCapabilitiesActive = location.pathname.startsWith('/nang-luc')
   const isNewsActive = location.pathname.startsWith('/tin-tuc')
   const isContactActive = location.pathname.startsWith('/lien-he')
 
@@ -158,13 +159,13 @@ export default function StickyNav() {
           </div>
         </Link>
 
-        {/* 2. Desktop Navigation (5 Essential Items) */}
+        {/* 2. Desktop Navigation (Standard Corporate Architecture) */}
         <nav
           aria-label="Thanh điều hướng chính"
-          className="hidden md:flex items-center gap-6 lg:gap-8"
+          className="hidden md:flex items-center gap-7 lg:gap-9"
           onMouseLeave={handleMouseLeave}
         >
-          {/* VỀ CHÚNG TÔI (Dual Subpages Tech Dropdown) */}
+          {/* VỀ CHÚNG TÔI (Mega Dropdown 3 Chuyên Mục Con) */}
           <div
             className="relative"
             onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
@@ -190,11 +191,11 @@ export default function StickyNav() {
             {activeMenu === 've-chung-toi' && (
               <div
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
-                className="absolute top-full left-0 mt-2 w-[460px] bg-white rounded-3xl shadow-2xl border border-black/10 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-2xl border border-black/10 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="text-[10px] font-mono font-bold tracking-widest text-haq-red uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-black/5">
                   <span>ABOUT HAQ FOOD HANOI JSC</span>
-                  <span className="text-haq-ink/40 font-normal">2 CHUYÊN MỤC</span>
+                  <span className="text-haq-ink/40 font-normal">3 CHUYÊN MỤC CON</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 pt-1">
@@ -206,26 +207,26 @@ export default function StickyNav() {
                         key={idx}
                         to={sub.path}
                         onClick={() => setActiveMenu(null)}
-                        className={`group block p-4 rounded-2xl border transition-all ${
+                        className={`group block p-3.5 rounded-2xl border transition-all ${
                           isSubActive
                             ? 'bg-haq-bone border-haq-red/30 shadow-2xs'
                             : 'bg-white border-black/5 hover:bg-haq-bone hover:border-black/15'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-xl bg-haq-bone group-hover:bg-haq-red text-haq-ink group-hover:text-white flex items-center justify-center transition-colors">
+                            <div className="w-8 h-8 rounded-xl bg-haq-bone group-hover:bg-haq-red text-haq-ink group-hover:text-white flex items-center justify-center transition-colors shrink-0">
                               <Icon className="w-4 h-4" />
                             </div>
                             <span className="text-xs font-heading font-black text-haq-ink group-hover:text-haq-red transition-colors uppercase">
                               {sub.title}
                             </span>
                           </div>
-                          <span className="font-mono text-[10px] font-bold text-haq-red/80 uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
+                          <span className="font-mono text-[9px] font-bold text-haq-red/80 uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
                             {sub.badge}
                           </span>
                         </div>
-                        <p className="text-[11px] text-haq-ink/65 leading-relaxed pl-10.5">
+                        <p className="text-[11px] text-haq-ink/65 leading-relaxed pl-10.5 line-clamp-1">
                           {sub.desc}
                         </p>
                       </Link>
@@ -362,51 +363,6 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* NĂNG LỰC */}
-          <div
-            className="relative"
-            onMouseEnter={() => handleMouseEnter('nang-luc')}
-          >
-            <Link
-              to="/nang-luc"
-              aria-current={isCapabilitiesActive ? 'page' : undefined}
-              className={`relative py-2 text-xs lg:text-[13px] font-heading font-extrabold uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded ${
-                activeMenu === 'nang-luc' || isCapabilitiesActive
-                  ? 'text-haq-red'
-                  : 'text-haq-ink hover:text-haq-red'
-              }`}
-            >
-              <span>NĂNG LỰC</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'nang-luc' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
-              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
-                activeMenu === 'nang-luc' || isCapabilitiesActive ? 'w-full' : 'w-0'
-              }`} />
-            </Link>
-
-            {activeMenu === 'nang-luc' && (
-              <div
-                onMouseEnter={() => handleMouseEnter('nang-luc')}
-                className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-black/10 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
-              >
-                {CAPABILITY_LINKS.map((item, idx) => (
-                  <a
-                    key={idx}
-                    href={item.path}
-                    onClick={() => setActiveMenu(null)}
-                    className="block p-2.5 rounded-xl hover:bg-haq-bone transition-colors group focus:outline-none focus:bg-haq-bone"
-                  >
-                    <div className="text-xs font-heading font-bold text-haq-ink group-hover:text-haq-red transition-colors">
-                      {item.label}
-                    </div>
-                    <div className="text-[11px] text-haq-ink/50 mt-0.5">
-                      {item.desc}
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* TIN TỨC */}
           <Link
             to="/tin-tuc"
@@ -489,6 +445,13 @@ export default function StickyNav() {
                 >
                   02. Lịch sử & Dấu mốc 2021 — 2026
                 </Link>
+                <Link
+                  to="/nang-luc"
+                  onClick={() => setMobileOpen(false)}
+                  className="block font-bold text-haq-ink hover:text-haq-red py-1 border-l-2 border-haq-ink pl-2.5"
+                >
+                  03. Cơ sở Sản xuất & Tiêu chuẩn Chất lượng
+                </Link>
               </div>
             )}
           </div>
@@ -537,39 +500,6 @@ export default function StickyNav() {
                 >
                   XEM TẤT CẢ SẢN PHẨM →
                 </Link>
-              </div>
-            )}
-          </div>
-
-          {/* NĂNG LỰC */}
-          <div className="border-b border-black/5 pb-2">
-            <button
-              type="button"
-              onClick={() => toggleMobileAccordion('nang-luc')}
-              className="w-full flex items-center justify-between py-2 text-sm font-heading font-black text-haq-ink uppercase"
-            >
-              <span>NĂNG LỰC</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${mobileAccordion === 'nang-luc' ? 'rotate-180 text-haq-red' : ''}`} />
-            </button>
-            {mobileAccordion === 'nang-luc' && (
-              <div className="pl-4 space-y-2 py-2 text-xs text-haq-ink/75">
-                <Link
-                  to="/nang-luc"
-                  onClick={() => setMobileOpen(false)}
-                  className="block py-1 font-bold text-haq-red"
-                >
-                  Trang Năng lực Sản xuất & Chất lượng →
-                </Link>
-                {CAPABILITY_LINKS.map((item, idx) => (
-                  <a
-                    key={idx}
-                    href={item.path}
-                    onClick={() => setMobileOpen(false)}
-                    className="block py-1 hover:text-haq-red"
-                  >
-                    {item.label}
-                  </a>
-                ))}
               </div>
             )}
           </div>
