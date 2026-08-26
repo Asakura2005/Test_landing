@@ -8,7 +8,7 @@ export default function BrandStorySection() {
   const ref = useReveal()
 
   return (
-    <section id="gioi-thieu" className="py-20 md:py-32 bg-white relative border-t border-black/10">
+    <section id="gioi-thieu" className="py-20 md:py-32 bg-white relative border-t border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal flex flex-col">
           {/* Header Label */}
@@ -28,7 +28,7 @@ export default function BrandStorySection() {
                 ĐẾN QUỐC TẾ.
               </h2>
 
-              <div className="space-y-4 text-sm sm:text-base text-haq-ink/80 leading-relaxed">
+              <div className="space-y-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed">
                 <p>
                   <strong>CÔNG TY CỔ PHẦN HAQ HÀ NỘI</strong> (thương hiệu <strong>HAQ FOOD</strong>) được thành lập năm 2021 tại Hà Nội, hoạt động chính trong lĩnh vực sản xuất và phân phối thực phẩm, đồ ăn vặt đóng gói và cung ứng thực phẩm cho thị trường nội địa & xuất khẩu.
                 </p>
@@ -38,23 +38,23 @@ export default function BrandStorySection() {
               </div>
 
               {/* Verified Badges */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-black/5">
-                <div className="p-4 rounded-2xl bg-haq-bone border border-black/5">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-haq-border">
+                <div className="p-4 rounded-2xl bg-haq-cream border border-haq-border">
                   <div className="flex items-center gap-2 text-haq-red font-mono font-bold text-xs uppercase mb-1">
                     <ShieldCheck className="w-4 h-4" />
                     <span>ISO & HACCP</span>
                   </div>
-                  <div className="text-xs text-haq-ink/70">
+                  <div className="text-xs text-haq-text-secondary">
                     Kiểm soát chất lượng nghiêm ngặt từ nguyên liệu đến lưu mẫu.
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-haq-bone border border-black/5">
+                <div className="p-4 rounded-2xl bg-haq-cream border border-haq-border">
                   <div className="flex items-center gap-2 text-haq-red font-mono font-bold text-xs uppercase mb-1">
                     <Factory className="w-4 h-4" />
                     <span>SẢN XUẤT QUY MÔ</span>
                   </div>
-                  <div className="text-xs text-haq-ink/70">
+                  <div className="text-xs text-haq-text-secondary">
                     Đảm bảo công suất lớn và nhận gia công OEM / ODM chuyên nghiệp.
                   </div>
                 </div>
@@ -64,7 +64,7 @@ export default function BrandStorySection() {
               <div className="pt-2">
                 <Link
                   to="/gioi-thieu"
-                  className="group inline-flex items-center gap-3 bg-haq-ink hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
+                  className="group inline-flex items-center gap-3 bg-haq-dark hover:bg-haq-red text-white text-xs sm:text-sm font-heading font-extrabold uppercase tracking-widest px-8 py-3.5 rounded-full transition-all duration-200 shadow-sm"
                 >
                   <span>KHÁM PHÁ HAQ FOOD</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -74,20 +74,20 @@ export default function BrandStorySection() {
 
             {/* Right: Factory Facility Image (Spans 6 cols) */}
             <div className="lg:col-span-6 relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-haq-ink border border-black/5">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-haq-dark border border-haq-border">
                 <img
                   src={factoryImg}
                   alt="Nhà máy sản xuất HAQ FOOD đạt chuẩn ISO HACCP"
                   className="w-full h-full object-cover aspect-4/3 transition-transform duration-700 hover:scale-103"
                   loading="lazy"
                 />
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-black/5 shadow-lg">
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-haq-border shadow-lg">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xs font-heading font-black text-haq-ink uppercase">
                         HỆ THỐNG DÂY CHUYỀN KHÉP KÍN
                       </div>
-                      <div className="text-[11px] font-mono text-haq-ink/60">
+                      <div className="text-[11px] font-mono text-haq-text-secondary">
                         Kiểm soát từ nguồn nguyên liệu đến thành phẩm
                       </div>
                     </div>

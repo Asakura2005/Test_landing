@@ -28,7 +28,7 @@ const PILLARS = [
 
 export default function QuickStats() {
   return (
-    <section id="nang-luc" className="py-24 sm:py-32 bg-white border-b border-black/5">
+    <section id="nang-luc" className="py-24 sm:py-32 bg-white border-b border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
@@ -60,30 +60,30 @@ export default function QuickStats() {
             return (
               <div
                 key={pillar.num}
-                className="group bg-haq-bone rounded-3xl p-8 sm:p-10 border border-black/5 hover:border-haq-red/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group bg-haq-cream rounded-3xl p-8 sm:p-10 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-8">
                     <span className="font-heading font-black text-3xl sm:text-4xl text-haq-red">
                       {pillar.num}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-haq-red group-hover:text-white transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-haq-border flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-haq-red group-hover:text-white group-hover:border-haq-red transition-colors">
                       <Icon className="w-6 h-6" />
                     </div>
                   </div>
 
-                  <div className="font-mono text-xs font-bold uppercase tracking-widest text-haq-ink/50 mb-1">
+                  <div className="font-mono text-xs font-bold uppercase tracking-widest text-haq-text-secondary mb-1">
                     {pillar.label}
                   </div>
                   <h3 className="font-heading font-black text-xl sm:text-2xl text-haq-ink uppercase">
                     {pillar.title}
                   </h3>
-                  <p className="mt-3 text-xs sm:text-sm text-haq-ink/70 leading-relaxed">
+                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                     {pillar.desc}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-black/5">
+                <div className="mt-8 pt-6 border-t border-haq-border">
                   <Link
                     to="/nang-luc"
                     className="inline-flex items-center gap-1.5 text-xs font-heading font-extrabold uppercase tracking-wider text-haq-red group-hover:text-haq-ink transition-colors"

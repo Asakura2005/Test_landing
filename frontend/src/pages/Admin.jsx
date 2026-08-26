@@ -114,18 +114,18 @@ export default function Admin() {
   // --- Render Login ---
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-haq-bone flex items-center justify-center p-4">
-        <form onSubmit={handleLogin} className="bg-white p-8 border border-black/10 rounded-xl shadow-xl w-full max-w-sm text-center">
+      <div className="min-h-screen bg-haq-cream flex items-center justify-center p-4">
+        <form onSubmit={handleLogin} className="bg-white p-8 border border-haq-border rounded-xl shadow-xl w-full max-w-sm text-center">
           <h1 className="font-heading font-bold text-2xl mb-6 text-haq-ink">Đăng nhập Quản trị</h1>
           <input
             type="password"
             placeholder="Mật khẩu"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="w-full border border-black/20 p-3 mb-4 rounded focus:outline-none focus:border-haq-orange"
+            className="w-full border border-haq-border p-3 mb-4 rounded focus:outline-none focus:border-haq-red"
             autoFocus
           />
-          <button type="submit" className="w-full bg-haq-red text-white p-3 font-bold rounded hover:bg-red-700 transition-colors">
+          <button type="submit" className="w-full bg-haq-red text-white p-3 font-bold rounded hover:bg-haq-red/90 transition-colors">
             Vào trang quản lý
           </button>
         </form>
@@ -135,10 +135,10 @@ export default function Admin() {
 
   // --- Render Dashboard ---
   return (
-    <div className="min-h-screen bg-haq-bone flex">
+    <div className="min-h-screen bg-haq-cream flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-black/10 flex flex-col hidden md:flex">
-        <div className="p-6 border-b border-black/10 flex items-center gap-3">
+      <div className="w-64 bg-white border-r border-haq-border flex flex-col hidden md:flex">
+        <div className="p-6 border-b border-haq-border flex items-center gap-3">
           <span className="w-8 h-8 bg-haq-red text-white flex items-center justify-center font-bold text-lg rounded">
             H
           </span>
@@ -148,7 +148,7 @@ export default function Admin() {
           <button 
             onClick={() => setActiveTab('products')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'products' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+              activeTab === 'products' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
             }`}
           >
             <Package className="w-5 h-5" /> Quản lý sản phẩm
@@ -156,7 +156,7 @@ export default function Admin() {
           <button 
             onClick={() => setActiveTab('categories')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'categories' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+              activeTab === 'categories' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
             }`}
           >
             <Pin className="w-5 h-5" /> Quản lý danh mục
@@ -164,7 +164,7 @@ export default function Admin() {
           <button 
             onClick={() => setActiveTab('news')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'news' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+              activeTab === 'news' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
             }`}
           >
             <Newspaper className="w-5 h-5" /> Quản lý tin tức
@@ -172,13 +172,13 @@ export default function Admin() {
           <button 
             onClick={() => setActiveTab('leads')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'leads' ? 'bg-haq-bone text-haq-ink' : 'text-haq-ink/60 hover:bg-black/5 hover:text-haq-ink'
+              activeTab === 'leads' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
             }`}
           >
             <Users className="w-5 h-5" /> Quản lý khách hàng
           </button>
         </div>
-        <div className="p-4 border-t border-black/10">
+        <div className="p-4 border-t border-haq-border">
           <button onClick={handleLogout} className="flex items-center gap-3 w-full p-3 text-red-600 hover:bg-red-50 font-semibold rounded text-sm transition-colors">
             <LogOut className="w-5 h-5" /> Đăng xuất
           </button>
@@ -196,12 +196,12 @@ export default function Admin() {
         ) : (
           <>
             {/* Header */}
-            <header className="bg-white border-b border-black/10 p-4 md:p-6 flex items-center justify-between sticky top-0 z-10">
+            <header className="bg-white border-b border-haq-border p-4 md:p-6 flex items-center justify-between sticky top-0 z-10">
               <div>
                 <h1 className="font-heading font-bold text-2xl text-haq-ink">Danh sách Sản phẩm</h1>
-                <p className="text-sm text-haq-ink/60 mt-1">Đã ghim: <strong className="text-haq-red">{currentPinnedCount}/6</strong> sản phẩm (Hiển thị đầu trang chủ)</p>
+                <p className="text-sm text-haq-text-secondary mt-1">Đã ghim: <strong className="text-haq-red">{currentPinnedCount}/6</strong> sản phẩm (Hiển thị đầu trang chủ)</p>
               </div>
-              <button onClick={openNewModal} className="bg-haq-orange text-white px-4 py-2 rounded font-semibold flex items-center gap-2 hover:bg-orange-600 transition-colors shadow-sm">
+              <button onClick={openNewModal} className="bg-haq-red text-white px-4 py-2 rounded font-semibold flex items-center gap-2 hover:bg-haq-red/90 transition-colors shadow-sm">
                 <Plus className="w-5 h-5" /> <span className="hidden md:inline">Thêm sản phẩm</span>
               </button>
             </header>
@@ -209,25 +209,25 @@ export default function Admin() {
             {/* Content */}
             <main className="flex-1 p-4 md:p-6 overflow-y-auto">
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-64 text-haq-ink/50">
-                  <RefreshCw className="w-8 h-8 animate-spin mb-4 text-haq-orange" />
+                <div className="flex flex-col items-center justify-center h-64 text-haq-text-secondary">
+                  <RefreshCw className="w-8 h-8 animate-spin mb-4 text-haq-red" />
                   <p>Đang tải dữ liệu...</p>
                 </div>
               ) : products.length === 0 ? (
-                <div className="bg-white border border-black/10 rounded-xl p-12 text-center shadow-sm">
-                  <Package className="w-12 h-12 text-haq-ink/20 mx-auto mb-4" />
+                <div className="bg-white border border-haq-border rounded-xl p-12 text-center shadow-sm">
+                  <Package className="w-12 h-12 text-haq-text-secondary/40 mx-auto mb-4" />
                   <h3 className="text-lg font-bold text-haq-ink mb-2">Chưa có sản phẩm nào</h3>
-                  <p className="text-haq-ink/60 mb-6">Hãy thêm sản phẩm đầu tiên của bạn vào hệ thống.</p>
-                  <button onClick={openNewModal} className="text-haq-orange font-semibold hover:underline">
+                  <p className="text-haq-text-secondary mb-6">Hãy thêm sản phẩm đầu tiên của bạn vào hệ thống.</p>
+                  <button onClick={openNewModal} className="text-haq-red font-semibold hover:underline">
                     + Thêm sản phẩm ngay
                   </button>
                 </div>
               ) : (
-                <div className="bg-white border border-black/10 rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-white border border-haq-border rounded-xl shadow-sm overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-haq-bone border-b border-black/10 text-xs uppercase tracking-wider text-haq-ink/60">
+                        <tr className="bg-haq-cream border-b border-haq-border text-xs uppercase tracking-wider text-haq-text-secondary">
                           <th className="p-4 font-mono w-[5%] text-center">Ghim</th>
                           <th className="p-4 font-mono w-[30%]">Sản phẩm</th>
                           <th className="p-4 font-mono w-[15%]">Danh mục</th>
@@ -238,11 +238,11 @@ export default function Admin() {
                       </thead>
                       <tbody>
                         {products.map(p => (
-                          <tr key={p.id} className={`border-b border-black/5 hover:bg-black/[0.02] transition-colors group ${p.is_pinned ? 'bg-orange-50/50' : ''}`}>
+                          <tr key={p.id} className={`border-b border-haq-border hover:bg-haq-cream/30 transition-colors group ${p.is_pinned ? 'bg-red-50/40' : ''}`}>
                             <td className="p-4 text-center">
                               <button 
                                 onClick={() => togglePin(p)} 
-                                className={`p-2 rounded-full transition-colors ${p.is_pinned ? 'text-haq-red hover:bg-red-100' : 'text-black/20 hover:bg-black/5 hover:text-black/50'}`}
+                                className={`p-2 rounded-full transition-colors ${p.is_pinned ? 'text-haq-red hover:bg-red-100' : 'text-haq-text-secondary/40 hover:bg-black/5 hover:text-haq-red'}`}
                                 title={p.is_pinned ? "Bỏ ghim" : "Ghim lên đầu"}
                               >
                                 <Pin className={`w-5 h-5 ${p.is_pinned ? 'fill-haq-red' : ''}`} />

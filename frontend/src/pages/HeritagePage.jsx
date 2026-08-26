@@ -18,9 +18,9 @@ export default function HeritagePage() {
       </section>
       <section className="flex-1 py-20">
         <div className="mx-auto max-w-site px-6 md:px-12 text-center">
-          <div className="bg-white border border-black/5 p-16 max-w-2xl mx-auto">
-            <p className="text-haq-ink/50 text-lg font-medium">Nội dung trang Heritage sẽ được cập nhật sau.</p>
-            <p className="text-haq-ink/30 text-sm mt-4">Bạn có thể chỉnh sửa nội dung tại file HeritagePage.jsx</p>
+          <div className="bg-white border border-haq-border rounded-3xl p-16 max-w-2xl mx-auto shadow-xs">
+            <p className="text-haq-text-secondary text-lg font-medium">Nội dung trang Heritage sẽ được cập nhật sau.</p>
+            <p className="text-haq-text-secondary/40 text-sm mt-4">Bạn có thể chỉnh sửa nội dung tại file HeritagePage.jsx</p>
           </div>
         </div>
       </section>

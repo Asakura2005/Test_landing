@@ -26,7 +26,7 @@ export default function Partners() {
     <section
       id="phan-phoi"
       aria-label="Hệ thống phân phối & Xuất khẩu quốc tế"
-      className="relative bg-white py-20 sm:py-28 border-b border-black/5 overflow-hidden"
+      className="relative bg-white py-20 sm:py-28 border-b border-haq-border overflow-hidden"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
@@ -41,14 +41,14 @@ export default function Partners() {
             <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
               PHỦ SÓNG TOÀN QUỐC & <span className="text-haq-red">XUẤT KHẨU CHÂU Á</span>
             </h2>
-            <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 max-w-2xl leading-relaxed">
+            <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary max-w-2xl leading-relaxed">
               Sản phẩm HAQ FOOD hiện diện tại hơn 3.000 điểm bán lẻ và siêu thị lớn tại Việt Nam,
               đồng thời xuất khẩu chính ngạch sang thị trường Hàn Quốc và Đài Loan.
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <span className="px-4 py-2 bg-haq-bone rounded-full text-xs font-mono font-bold text-haq-ink border border-black/5">
+            <span className="px-4 py-2 bg-haq-cream rounded-full text-xs font-mono font-bold text-haq-ink border border-haq-border">
               HÀN QUỐC · ĐÀI LOAN
             </span>
           </div>
@@ -56,14 +56,14 @@ export default function Partners() {
 
         {/* 2-Column Grid: Distribution Visual & Export Story */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-16">
-          <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-xl border border-black/10">
+          <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-xl border border-haq-border">
             <img
               src={distributionImg}
               alt="Hệ thống kho vận và xuất khẩu HAQ FOOD"
               className="w-full h-full object-cover"
               loading="lazy"
             />
-            <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-4 rounded-2xl text-white flex items-center justify-between">
+            <div className="absolute bottom-4 left-4 right-4 bg-haq-dark/80 backdrop-blur-md p-4 rounded-2xl text-white flex items-center justify-between">
               <div>
                 <div className="text-[10px] font-mono font-bold text-haq-gold uppercase">LOGISTICS & EXPORT</div>
                 <div className="text-xs font-heading font-bold uppercase mt-0.5">Kho vận & Đóng gói pallet tiêu chuẩn</div>
@@ -73,26 +73,26 @@ export default function Partners() {
           </div>
 
           <div className="lg:col-span-6 space-y-6">
-            <div className="p-6 rounded-3xl bg-haq-bone border border-black/5">
+            <div className="p-6 rounded-3xl bg-haq-cream border border-haq-border">
               <div className="flex items-center gap-3 mb-2">
                 <Store className="w-5 h-5 text-haq-red" />
                 <h3 className="font-heading font-black text-base text-haq-ink uppercase">
                   Thị Trường Nội Địa Việt Nam
                 </h3>
               </div>
-              <p className="text-xs text-haq-ink/75 leading-relaxed">
+              <p className="text-xs text-haq-text-secondary leading-relaxed">
                 Đối tác chiến lược của các đại siêu thị, chuỗi cửa hàng tiện lợi và nhà phân phối cấp 1 tại khắp các tỉnh thành.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-haq-bone border border-black/5">
+            <div className="p-6 rounded-3xl bg-haq-cream border border-haq-border">
               <div className="flex items-center gap-3 mb-2">
                 <Globe2 className="w-5 h-5 text-haq-red" />
                 <h3 className="font-heading font-black text-base text-haq-ink uppercase">
                   Thị Trường Xuất Khẩu Châu Á
                 </h3>
               </div>
-              <p className="text-xs text-haq-ink/75 leading-relaxed">
+              <p className="text-xs text-haq-text-secondary leading-relaxed">
                 Xuất khẩu các dòng bánh nướng thượng hạng (Bánh hạnh nhân, Bánh đậu xanh tươi) sang Hàn Quốc và Đài Loan, đáp ứng đầy đủ tiêu chuẩn kiểm dịch và an toàn thực phẩm.
               </p>
             </div>
@@ -100,8 +100,8 @@ export default function Partners() {
         </div>
 
         {/* Real Retail Partner Logos Grid */}
-        <div className="pt-10 border-t border-black/5">
-          <div className="text-xs font-mono font-bold text-haq-ink/50 uppercase tracking-widest mb-8 text-center">
+        <div className="pt-10 border-t border-haq-border">
+          <div className="text-xs font-mono font-bold text-haq-text-secondary uppercase tracking-widest mb-8 text-center">
             ĐỐI TÁC BÁN LẺ & CHUỖI TIỆN LỢI CHIẾN LƯỢC
           </div>
 
@@ -109,7 +109,7 @@ export default function Partners() {
             {RETAIL_PARTNERS.map((partner, idx) => (
               <div
                 key={idx}
-                className="bg-haq-bone/60 hover:bg-white rounded-2xl p-4 border border-black/5 hover:border-black/15 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center group"
+                className="bg-haq-cream hover:bg-white rounded-2xl p-4 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center group"
               >
                 <div className="h-14 w-full flex items-center justify-center mb-2">
                   <img
@@ -122,7 +122,7 @@ export default function Partners() {
                 <span className="text-[11px] font-heading font-bold text-haq-ink uppercase line-clamp-1">
                   {partner.name}
                 </span>
-                <span className="text-[9px] font-mono text-haq-ink/50 mt-0.5 line-clamp-1">
+                <span className="text-[9px] font-mono text-haq-text-secondary mt-0.5 line-clamp-1">
                   {partner.note}
                 </span>
               </div>

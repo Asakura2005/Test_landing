@@ -75,11 +75,11 @@ export default function SearchOverlay({ isOpen, onClose }) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-black/10 overflow-hidden"
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-haq-border overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="p-5 sm:p-6 border-b border-black/10 flex items-center gap-4">
+        <div className="p-5 sm:p-6 border-b border-haq-border flex items-center gap-4">
           <Search className="w-6 h-6 text-haq-red shrink-0" />
           <input
             ref={inputRef}
@@ -87,12 +87,12 @@ export default function SearchOverlay({ isOpen, onClose }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Tìm kiếm sản phẩm, danh mục, thông tin HAQ FOOD..."
-            className="flex-1 text-base sm:text-lg font-heading font-bold text-haq-ink outline-none placeholder:text-haq-ink/40 bg-transparent"
+            className="flex-1 text-base sm:text-lg font-heading font-bold text-haq-ink outline-none placeholder:text-haq-text-secondary bg-transparent"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="p-1 text-haq-ink/40 hover:text-haq-ink"
+              className="p-1 text-haq-text-secondary hover:text-haq-ink"
               aria-label="Xóa nội dung"
             >
               <X className="w-5 h-5" />
@@ -100,7 +100,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
           )}
           <button
             onClick={onClose}
-            className="px-3 py-1.5 rounded-full bg-haq-bone hover:bg-haq-red hover:text-white text-xs font-mono font-bold uppercase text-haq-ink transition-colors"
+            className="px-3 py-1.5 rounded-full bg-haq-cream hover:bg-haq-red hover:text-white text-xs font-mono font-bold uppercase text-haq-ink transition-colors"
           >
             ESC
           </button>
@@ -110,19 +110,19 @@ export default function SearchOverlay({ isOpen, onClose }) {
         <div className="max-h-[60vh] overflow-y-auto p-6">
           {query.trim() ? (
             <div>
-              <div className="text-xs font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-3">
+              <div className="text-xs font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-3">
                 KẾT QUẢ TÌM KIẾM ({results.length})
               </div>
               {results.length > 0 ? (
-                <div className="divide-y divide-black/5">
+                <div className="divide-y divide-haq-border">
                   {results.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => handleSelect(item)}
-                      className="py-3 px-3 rounded-xl hover:bg-haq-bone transition-colors flex items-center justify-between cursor-pointer group"
+                      className="py-3 px-3 rounded-xl hover:bg-haq-cream transition-colors flex items-center justify-between cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-haq-bone overflow-hidden flex items-center justify-center p-1 border border-black/5">
+                        <div className="w-12 h-12 rounded-lg bg-haq-cream overflow-hidden flex items-center justify-center p-1 border border-haq-border">
                           {item.image_url ? (
                             <img
                               src={item.image_url}
@@ -130,31 +130,31 @@ export default function SearchOverlay({ isOpen, onClose }) {
                               className="w-full h-full object-contain"
                             />
                           ) : (
-                            <Package className="w-5 h-5 text-haq-ink/40" />
+                            <Package className="w-5 h-5 text-haq-text-secondary" />
                           )}
                         </div>
                         <div>
                           <div className="text-sm font-heading font-bold text-haq-ink group-hover:text-haq-red transition-colors">
                             {item.name}
                           </div>
-                          <div className="text-xs text-haq-ink/60 line-clamp-1">
+                          <div className="text-xs text-haq-text-secondary line-clamp-1">
                             {item.categories?.name || 'HAQ FOOD'}
                           </div>
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-haq-ink/30 group-hover:text-haq-red group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-4 h-4 text-haq-text-secondary group-hover:text-haq-red group-hover:translate-x-1 transition-all" />
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-10 text-haq-ink/60 text-sm">
+                <div className="text-center py-10 text-haq-text-secondary text-sm">
                   Không tìm thấy kết quả phù hợp cho "<strong>{query}</strong>".
                 </div>
               )}
             </div>
           ) : (
             <div>
-              <div className="text-xs font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-3">
+              <div className="text-xs font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-3">
                 TÌM KIẾM NHANH
               </div>
               <div className="flex flex-wrap gap-2">
@@ -165,7 +165,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
                       onClose()
                       navigate(link.path)
                     }}
-                    className="px-3.5 py-2 rounded-xl bg-haq-bone hover:bg-haq-red hover:text-white text-xs font-heading font-bold text-haq-ink transition-colors flex items-center gap-1.5"
+                    className="px-3.5 py-2 rounded-xl bg-haq-cream hover:bg-haq-red hover:text-white text-xs font-heading font-bold text-haq-ink transition-colors flex items-center gap-1.5"
                   >
                     <Sparkles className="w-3 h-3 text-haq-red group-hover:text-white" />
                     <span>{link.label}</span>

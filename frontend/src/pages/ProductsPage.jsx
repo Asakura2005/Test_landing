@@ -133,7 +133,7 @@ export default function ProductsPage() {
   }, [dbProducts, currentCategorySlug, currentSubCategorySlug, categoryTree])
 
   return (
-    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
+    <div className="min-h-screen bg-haq-cream text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
       {/* Sticky Header with Live Categories */}
       <StickyNav />
 
@@ -142,8 +142,8 @@ export default function ProductsPage() {
 
       <main className="flex-1 pt-24 sm:pt-28 pb-20">
         {/* 1. Breadcrumb Bar */}
-        <div className="bg-white/60 border-b border-black/5">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-3.5 flex items-center gap-2 text-xs text-haq-ink/60 overflow-x-auto whitespace-nowrap">
+        <div className="bg-white/80 border-b border-haq-border">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-3.5 flex items-center gap-2 text-xs text-haq-text-secondary overflow-x-auto whitespace-nowrap">
             <Link
               to="/"
               className="hover:text-haq-red flex items-center gap-1 transition-colors"
@@ -151,7 +151,7 @@ export default function ProductsPage() {
               <Home className="w-3.5 h-3.5" />
               <span>Trang chủ</span>
             </Link>
-            <ChevronRight className="w-3 h-3 text-black/30" />
+            <ChevronRight className="w-3 h-3 text-haq-border" />
             <Link
               to="/san-pham"
               onClick={() => handleRootCategoryChange('all')}
@@ -164,7 +164,7 @@ export default function ProductsPage() {
 
             {activeRootCategory.slug !== 'all' && (
               <>
-                <ChevronRight className="w-3 h-3 text-black/30" />
+                <ChevronRight className="w-3 h-3 text-haq-border" />
                 <button
                   type="button"
                   onClick={() => handleSubCategoryChange(null)}
@@ -179,7 +179,7 @@ export default function ProductsPage() {
 
             {currentSubCategorySlug && activeCategoryNode && (
               <>
-                <ChevronRight className="w-3 h-3 text-black/30" />
+                <ChevronRight className="w-3 h-3 text-haq-border" />
                 <span className="text-haq-red font-bold truncate">
                   {activeCategoryNode.name}
                 </span>
@@ -189,7 +189,7 @@ export default function ProductsPage() {
         </div>
 
         {/* 2. Page Header */}
-        <div className="bg-white border-b border-black/5 py-10 sm:py-14">
+        <div className="bg-white border-b border-haq-border py-10 sm:py-14">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
@@ -204,21 +204,21 @@ export default function ProductsPage() {
                     ? 'TẤT CẢ SẢN PHẨM'
                     : activeCategoryNode.name}
                 </h1>
-                <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 max-w-xl leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary max-w-xl leading-relaxed">
                   {activeCategoryNode.desc || activeRootCategory.desc}
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 text-xs font-mono text-haq-ink/60 bg-haq-bone px-4 py-2.5 rounded-2xl border border-black/5 shrink-0">
+              <div className="flex items-center gap-4 text-xs font-mono text-haq-text-secondary bg-haq-cream px-4 py-2.5 rounded-2xl border border-haq-border shrink-0">
                 <ShieldCheck className="w-4 h-4 text-haq-red" />
                 <span>TIÊU CHUẨN ISO 22000 & HACCP</span>
               </div>
             </div>
 
             {/* 3. Level 1: Primary Category Tabs (Fetched Dynamically from DB) */}
-            <div className="mt-8 pt-6 border-t border-black/5">
+            <div className="mt-8 pt-6 border-t border-haq-border">
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-                <span className="text-xs font-mono font-bold text-haq-ink/40 uppercase mr-2 flex items-center gap-1 shrink-0">
+                <span className="text-xs font-mono font-bold text-haq-text-secondary uppercase mr-2 flex items-center gap-1 shrink-0">
                   <Filter className="w-3.5 h-3.5" />
                   <span>DANH MỤC:</span>
                 </span>
@@ -230,10 +230,10 @@ export default function ProductsPage() {
                       key={cat.id}
                       type="button"
                       onClick={() => handleRootCategoryChange(cat.slug)}
-                      className={`relative px-4 py-2 rounded-full text-xs font-heading font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                      className={`relative px-4 py-2 rounded-full text-xs font-heading font-extrabold uppercase tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer border ${
                         isSelected
-                          ? 'bg-haq-red text-white shadow-sm scale-102'
-                          : 'bg-haq-bone text-haq-ink/80 hover:bg-black/5 hover:text-haq-red'
+                          ? 'bg-haq-red text-white border-haq-red shadow-sm scale-102'
+                          : 'bg-haq-cream text-haq-text-secondary border-haq-border hover:bg-haq-cream/50 hover:text-haq-red'
                       }`}
                     >
                       <span>{cat.shortName || cat.name}</span>
@@ -250,7 +250,7 @@ export default function ProductsPage() {
 
             {/* 4. Level 2: Sub-Category Pills (e.g. Bánh tráng -> Bánh tráng sấy & Bánh tráng trộn) */}
             {activeRootCategory.children && activeRootCategory.children.length > 0 && (
-              <div className="mt-4 pt-3 border-t border-dashed border-black/10 flex items-center gap-2 overflow-x-auto pb-1 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="mt-4 pt-3 border-t border-dashed border-haq-border flex items-center gap-2 overflow-x-auto pb-1 animate-in fade-in slide-in-from-top-1 duration-200">
                 <span className="text-[11px] font-mono font-bold text-haq-red uppercase mr-2 flex items-center gap-1 shrink-0">
                   <Layers className="w-3 h-3" />
                   <span>PHÂN LOẠI {activeRootCategory.name}:</span>
@@ -262,8 +262,8 @@ export default function ProductsPage() {
                   onClick={() => handleSubCategoryChange(null)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-heading font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
                     !currentSubCategorySlug
-                      ? 'bg-haq-ink text-white shadow-2xs'
-                      : 'bg-white text-haq-ink/70 hover:bg-black/5 hover:text-haq-ink border border-black/10'
+                      ? 'bg-haq-dark text-white shadow-2xs'
+                      : 'bg-white text-haq-text-secondary hover:bg-haq-cream hover:text-haq-ink border border-haq-border'
                   }`}
                 >
                   Tất cả {activeRootCategory.name}
@@ -280,7 +280,7 @@ export default function ProductsPage() {
                       className={`px-3.5 py-1.5 rounded-xl text-xs font-heading font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
                         isChildActive
                           ? 'bg-haq-red text-white shadow-2xs'
-                          : 'bg-white text-haq-ink/70 hover:bg-black/5 hover:text-haq-ink border border-black/10'
+                          : 'bg-white text-haq-text-secondary hover:bg-haq-cream hover:text-haq-ink border border-haq-border'
                       }`}
                     >
                       {child.name}
@@ -294,7 +294,7 @@ export default function ProductsPage() {
 
         {/* 5. Products Grid */}
         <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-10 sm:py-14">
-          <div className="flex items-center justify-between mb-8 text-xs font-mono text-haq-ink/60">
+          <div className="flex items-center justify-between mb-8 text-xs font-mono text-haq-text-secondary">
             <span>
               HIỂN THỊ <strong>{filteredProducts.length}</strong> SẢN PHẨM
               {currentSubCategorySlug ? ` (${activeCategoryNode.name})` : ''}
@@ -303,12 +303,12 @@ export default function ProductsPage() {
           </div>
 
           {filteredProducts.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 text-center border border-black/5 shadow-2xs">
-              <Package className="w-12 h-12 text-haq-ink/20 mx-auto mb-4" />
+            <div className="bg-white rounded-3xl p-12 text-center border border-haq-border shadow-2xs">
+              <Package className="w-12 h-12 text-haq-text-secondary/40 mx-auto mb-4" />
               <h3 className="font-heading font-bold text-lg text-haq-ink uppercase">
                 Chưa có sản phẩm nào trong danh mục này
               </h3>
-              <p className="text-xs text-haq-ink/60 mt-1">
+              <p className="text-xs text-haq-text-secondary mt-1">
                 Vui lòng chọn danh mục khác hoặc liên hệ hotline để nhận catalog chi tiết.
               </p>
               <button
@@ -332,11 +332,11 @@ export default function ProductsPage() {
                 return (
                   <div
                     key={prod.id}
-                    className="group bg-white rounded-3xl overflow-hidden border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
+                    className="group bg-white rounded-3xl overflow-hidden border border-haq-border hover:border-haq-red/40 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
                   >
                     <div className="flex-1 flex flex-col">
                       {/* Product Image Frame */}
-                      <div className="relative h-56 sm:h-60 bg-[#f8f9fa] flex items-center justify-center p-6 border-b border-black/5 overflow-hidden">
+                      <div className="relative h-56 sm:h-60 bg-white flex items-center justify-center p-6 border-b border-haq-border overflow-hidden">
                         <img
                           src={productImg}
                           alt={prod.name}
@@ -368,7 +368,7 @@ export default function ProductsPage() {
                           </h3>
 
                           {/* Slot 3: Description (Fixed 2-Line Height) */}
-                          <p className="mt-2 text-xs text-haq-ink/70 leading-relaxed line-clamp-2 h-9 flex items-start">
+                          <p className="mt-2 text-xs text-haq-text-secondary leading-relaxed line-clamp-2 h-9 flex items-start">
                             {prod.description ||
                               'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
                           </p>
@@ -380,7 +380,7 @@ export default function ProductsPage() {
                     <div className="p-6 pt-0 mt-auto">
                       <Link
                         to={`/san-pham/${detailSlug}`}
-                        className="w-full inline-flex items-center justify-center gap-2 bg-haq-bone hover:bg-haq-red text-haq-ink hover:text-white text-xs font-heading font-extrabold uppercase tracking-wider py-3 rounded-2xl transition-all duration-200"
+                        className="w-full inline-flex items-center justify-center gap-2 bg-haq-cream hover:bg-haq-red text-haq-ink hover:text-white border border-haq-border text-xs font-heading font-extrabold uppercase tracking-wider py-3 rounded-2xl transition-all duration-200"
                       >
                         <span>CHI TIẾT SẢN PHẨM</span>
                         <ArrowRight className="w-3.5 h-3.5" />

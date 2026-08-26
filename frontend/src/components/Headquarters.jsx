@@ -16,10 +16,10 @@ export default function Headquarters() {
             
             {/* Left Image (Factory) */}
             <div className="relative">
-              <div className="absolute -inset-4 bg-haq-gold/20 rounded-[40px] transform -rotate-3 z-0"></div>
-              <div className="relative z-10 bg-haq-bone rounded-[32px] overflow-hidden shadow-2xl aspect-[4/3]">
-                <div className="absolute inset-0 flex items-center justify-center bg-haq-gold-dark/10">
-                  <span className="text-haq-gold-dark font-heading font-bold">Ảnh Nhà Máy HAQ FOOD</span>
+              <div className="absolute -inset-4 bg-haq-gold/15 rounded-[40px] transform -rotate-3 z-0"></div>
+              <div className="relative z-10 bg-white border border-haq-border rounded-[32px] overflow-hidden shadow-2xl aspect-[4/3]">
+                <div className="absolute inset-0 flex items-center justify-center bg-haq-cream">
+                  <span className="text-haq-dark font-heading font-bold">Ảnh Nhà Máy HAQ FOOD</span>
                 </div>
               </div>
             </div>
@@ -31,7 +31,7 @@ export default function Headquarters() {
                 NHÀ MÁY HAQ FOOD
               </h2>
               
-              <div className="flex items-start gap-4 mb-8 text-haq-ink/80">
+              <div className="flex items-start gap-4 mb-8 text-haq-text-secondary">
                 <MapPin className="w-6 h-6 text-haq-red shrink-0 mt-1" />
                 <p className="text-lg leading-relaxed font-medium">
                   Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.
@@ -42,7 +42,7 @@ export default function Headquarters() {
                 href="https://maps.google.com" 
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center justify-center gap-3 bg-haq-red text-white font-heading font-bold text-base px-8 py-3 rounded-full hover:bg-haq-gold-dark hover:text-haq-ink transition-colors shadow-lg"
+                className="group inline-flex items-center justify-center gap-3 bg-haq-red text-white font-heading font-bold text-base px-8 py-3 rounded-full hover:bg-haq-dark hover:text-white transition-colors shadow-lg"
               >
                 Xem bản đồ
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />

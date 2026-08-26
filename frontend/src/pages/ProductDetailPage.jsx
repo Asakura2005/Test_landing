@@ -65,12 +65,12 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <main className="min-h-screen bg-[#F5F2E8]">
+      <main className="min-h-screen bg-haq-cream">
         <StickyNav />
         <div className="min-h-screen pt-32 pb-20 flex flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-heading font-bold text-haq-red mb-4">Sản phẩm không tồn tại</h1>
-          <p className="mb-8 text-haq-ink/70">Có thể sản phẩm đã bị xóa hoặc đường dẫn không chính xác.</p>
-          <Link to="/" className="px-6 py-3 bg-haq-gold-dark text-haq-ink font-bold rounded hover:bg-haq-red hover:text-white transition-colors">Về trang chủ</Link>
+          <p className="mb-8 text-haq-text-secondary">Có thể sản phẩm đã bị xóa hoặc đường dẫn không chính xác.</p>
+          <Link to="/" className="px-6 py-3 bg-haq-red text-white font-bold rounded hover:bg-haq-red/90 transition-colors">Về trang chủ</Link>
         </div>
       </main>
     )
@@ -82,40 +82,40 @@ export default function ProductDetailPage() {
     : (product.variants?.map(v => v.img).filter(Boolean) || [])
 
   return (
-    <div className="min-h-screen bg-[#F5F2E8] pt-24">
+    <div className="min-h-screen bg-haq-cream pt-24 text-haq-ink">
       <StickyNav />
       {/* Breadcrumbs */}
-      <div className="bg-white/50 border-b border-black/5">
-        <div className="max-w-site mx-auto px-6 md:px-12 py-3 flex items-center gap-2 text-sm text-haq-ink/60">
+      <div className="bg-white/80 border-b border-haq-border">
+        <div className="max-w-site mx-auto px-6 md:px-12 py-3.5 flex items-center gap-2 text-xs sm:text-sm text-haq-text-secondary">
           <Link to="/" className="hover:text-haq-red flex items-center gap-1"><Home className="w-4 h-4"/> Trang chủ</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <Link to="/#san-pham" className="hover:text-haq-red">Sản phẩm</Link>
+          <ChevronRight className="w-3.5 h-3.5 text-haq-border" />
+          <Link to="/san-pham" className="hover:text-haq-red">Sản phẩm</Link>
           {product.categories && (
             <>
-              <ChevronRight className="w-3.5 h-3.5" />
-              <span className="text-haq-ink/80">{product.categories.name}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-haq-border" />
+              <span className="text-haq-ink font-medium">{product.categories.name}</span>
             </>
           )}
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-haq-red font-semibold truncate">{product.name}</span>
+          <ChevronRight className="w-3.5 h-3.5 text-haq-border" />
+          <span className="text-haq-red font-bold truncate">{product.name}</span>
         </div>
       </div>
 
       <div className="max-w-site mx-auto px-6 md:px-12 py-12 md:py-16">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col lg:flex-row mb-16">
+        <div className="bg-white rounded-3xl border border-haq-border shadow-xl overflow-hidden flex flex-col lg:flex-row mb-16">
           
           {/* Cột Trái: Ảnh */}
-          <div className="w-full lg:w-1/2 p-6 md:p-12 flex flex-col bg-[#FAF9F5] border-b lg:border-b-0 lg:border-r border-black/5">
+          <div className="w-full lg:w-1/2 p-6 md:p-12 flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-haq-border">
             {/* Main Image with Zoom */}
             <div 
-              className="relative w-full aspect-square rounded-xl overflow-hidden bg-white border border-black/5 cursor-crosshair shadow-inner"
+              className="relative w-full aspect-square rounded-2xl overflow-hidden bg-white border border-haq-border cursor-crosshair shadow-inner"
               onMouseEnter={() => setIsZooming(true)}
               onMouseLeave={() => setIsZooming(false)}
               onMouseMove={handleMouseMove}
               ref={imageRef}
             >
               {product.tag && (
-                <div className="absolute top-4 left-4 z-20 bg-haq-red text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm shadow-md">
+                <div className="absolute top-4 left-4 z-20 bg-haq-red text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
                   {product.tag}
                 </div>
               )}
@@ -141,7 +141,7 @@ export default function ProductDetailPage() {
                   ></div>
                 </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-haq-ink/30 italic">Chưa có hình ảnh</div>
+                <div className="w-full h-full flex items-center justify-center text-haq-text-secondary/40 italic">Chưa có hình ảnh</div>
               )}
             </div>
 
@@ -152,8 +152,8 @@ export default function ProductDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImage(img)}
-                    className={`w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-colors bg-white ${
-                      activeImage === img ? 'border-haq-red' : 'border-black/10 hover:border-haq-red/50'
+                    className={`w-20 h-20 shrink-0 rounded-xl overflow-hidden border-2 transition-colors bg-white ${
+                      activeImage === img ? 'border-haq-red shadow-xs' : 'border-haq-border hover:border-haq-red/50'
                     }`}
                   >
                     <img src={img} alt={`thumb-${idx}`} className="w-full h-full object-cover" />
@@ -167,17 +167,17 @@ export default function ProductDetailPage() {
           <div className="w-full lg:w-1/2 p-6 md:p-12 lg:px-16 py-10 flex flex-col">
             <div className="mb-8">
               {product.categories && (
-                <span className="text-sm font-bold text-[#8b6a4a] uppercase tracking-wider block mb-2">{product.categories.name}</span>
+                <span className="text-xs font-mono font-bold text-haq-red uppercase tracking-widest block mb-2">{product.categories.name}</span>
               )}
-              <h1 className="text-3xl md:text-5xl font-heading font-bold text-haq-red leading-tight mb-2" style={{ fontFamily: 'serif' }}>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black text-haq-ink leading-tight mb-2 uppercase">
                 {product.name}
               </h1>
               {product.en_name && (
-                <p className="text-haq-ink/50 text-base">{product.en_name}</p>
+                <p className="text-haq-text-secondary text-sm font-mono">{product.en_name}</p>
               )}
             </div>
 
-            <div className="prose prose-base md:prose-lg text-haq-ink/80 text-justify mb-8 leading-relaxed">
+            <div className="prose prose-base text-haq-text-secondary text-justify mb-8 leading-relaxed">
               {product.description ? (
                 <p>{product.description}</p>
               ) : (
@@ -186,16 +186,16 @@ export default function ProductDetailPage() {
             </div>
 
             {product.highlights && product.highlights.length > 0 && product.highlights[0] !== '' && (
-              <div className="mb-8 bg-[#F5F2E8]/50 p-5 rounded-xl border border-[#8b6a4a]/20">
-                <h4 className="font-bold text-haq-ink mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-haq-orange" />
-                  Điểm nổi bật
+              <div className="mb-8 bg-haq-cream p-5 rounded-2xl border border-haq-border">
+                <h4 className="font-heading font-bold text-sm uppercase text-haq-ink mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-haq-red" />
+                  <span>Điểm nổi bật</span>
                 </h4>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-4">
                   {product.highlights.map((hl, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-haq-ink/80">
-                      <span className="text-[#8b6a4a] mt-1 text-[10px]">●</span> 
-                      <span className="flex-1">{hl}</span>
+                    <li key={idx} className="flex items-start gap-2 text-xs text-haq-text-secondary">
+                      <span className="text-haq-red mt-0.5 text-xs">✓</span> 
+                      <span className="flex-1 font-medium">{hl}</span>
                     </li>
                   ))}
                 </ul>
@@ -203,37 +203,37 @@ export default function ProductDetailPage() {
             )}
 
             <div className="mb-10">
-              <h4 className="font-bold text-haq-ink mb-4">Quy cách đóng gói</h4>
-              <div className="bg-white border border-black/10 rounded-xl overflow-hidden shadow-sm">
+              <h4 className="font-heading font-bold text-sm uppercase text-haq-ink mb-4">Quy cách đóng gói</h4>
+              <div className="bg-white border border-haq-border rounded-2xl overflow-hidden shadow-2xs">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm min-w-[400px]">
-                    <thead className="bg-[#F5F2E8] border-b border-black/10">
+                  <table className="w-full text-left text-xs sm:text-sm min-w-[400px]">
+                    <thead className="bg-haq-cream border-b border-haq-border">
                       <tr>
-                        <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                          <div className="flex items-center gap-1.5"><Package className="w-4 h-4 text-[#8b6a4a]"/> Trọng lượng</div>
+                        <th className="p-3.5 font-bold font-mono text-[11px] uppercase tracking-wider text-haq-ink whitespace-nowrap">
+                          <div className="flex items-center gap-1.5"><Package className="w-3.5 h-3.5 text-haq-red"/> Trọng lượng</div>
                         </th>
-                        <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">Quy cách</th>
-                        <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                          <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-[#8b6a4a]"/> HSD</div>
+                        <th className="p-3.5 font-bold font-mono text-[11px] uppercase tracking-wider text-haq-ink whitespace-nowrap">Quy cách</th>
+                        <th className="p-3.5 font-bold font-mono text-[11px] uppercase tracking-wider text-haq-ink whitespace-nowrap">
+                          <div className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-haq-red"/> HSD</div>
                         </th>
-                        <th className="p-3 font-semibold text-haq-ink whitespace-nowrap">
-                          <div className="flex items-center gap-1.5"><Truck className="w-4 h-4 text-[#8b6a4a]"/> MOQ</div>
+                        <th className="p-3.5 font-bold font-mono text-[11px] uppercase tracking-wider text-haq-ink whitespace-nowrap">
+                          <div className="flex items-center gap-1.5"><Truck className="w-3.5 h-3.5 text-haq-red"/> MOQ</div>
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-black/5">
+                    <tbody className="divide-y divide-haq-border">
                       {product.variants && product.variants.length > 0 ? (
                         product.variants.map((v, idx) => (
-                          <tr key={idx} className="hover:bg-black/[0.02] transition-colors">
-                            <td className="p-3 font-bold text-haq-red whitespace-nowrap">{v.size || '-'}</td>
-                            <td className="p-3 text-haq-ink/80 whitespace-nowrap">{v.pack || '-'}</td>
-                            <td className="p-3 text-haq-ink/80 whitespace-nowrap">{v.shelf || '-'}</td>
-                            <td className="p-3 font-mono text-xs text-haq-ink/60 whitespace-nowrap">{v.moq || 'Liên hệ'}</td>
+                          <tr key={idx} className="hover:bg-haq-cream/30 transition-colors">
+                            <td className="p-3.5 font-bold text-haq-red whitespace-nowrap">{v.size || '-'}</td>
+                            <td className="p-3.5 text-haq-text-secondary whitespace-nowrap">{v.pack || '-'}</td>
+                            <td className="p-3.5 text-haq-text-secondary whitespace-nowrap">{v.shelf || '-'}</td>
+                            <td className="p-3.5 font-mono text-xs text-haq-text-secondary whitespace-nowrap">{v.moq || 'Liên hệ'}</td>
                           </tr>
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="4" className="p-4 text-center text-haq-ink/50 italic">Đang cập nhật thông tin</td>
+                          <td colSpan="4" className="p-4 text-center text-haq-text-secondary italic">Đang cập nhật thông tin</td>
                         </tr>
                       )}
                     </tbody>
@@ -245,10 +245,10 @@ export default function ProductDetailPage() {
             <div className="mt-auto">
               <button 
                 onClick={handleCTA}
-                className="w-full md:w-auto bg-haq-red text-white py-4 px-10 rounded-lg font-bold text-lg hover:bg-red-700 transition-all shadow-md flex items-center justify-center gap-3 group"
+                className="w-full md:w-auto bg-haq-red text-white py-4 px-10 rounded-2xl font-heading font-extrabold text-sm uppercase tracking-wider hover:bg-haq-red/90 transition-all shadow-md flex items-center justify-center gap-3 group"
               >
-                Nhận báo giá
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                <span>Nhận báo giá B2B</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
@@ -258,36 +258,35 @@ export default function ProductDetailPage() {
         {recommended.length > 0 && (
           <div>
             <div className="text-center mb-10">
-              <h3 className="font-heading font-bold text-3xl text-haq-ink mb-2">Sản phẩm tương tự</h3>
-              <div className="w-16 h-1 bg-haq-red mx-auto rounded-full"></div>
+              <h3 className="font-heading font-black text-2xl sm:text-3xl text-haq-ink mb-2 uppercase tracking-tight">Sản phẩm tương tự</h3>
+              <div className="w-12 h-1 bg-haq-red mx-auto rounded-full"></div>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {recommended.map(p => (
-                <Link to={`/san-pham/${p.slug || p.id}`} key={p.id} className="bg-white group overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 relative border border-black/5 flex flex-col h-full rounded-sm">
+                <Link to={`/san-pham/${p.slug || p.id}`} key={p.id} className="bg-white group overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 relative border border-haq-border hover:border-haq-red/40 flex flex-col h-full rounded-2xl">
                   {p.tag && (
-                    <div className="absolute top-3 left-3 bg-white border border-haq-red text-haq-red text-[10px] sm:text-xs font-bold px-2 py-0.5 z-10 rounded-sm">
+                    <div className="absolute top-3 left-3 bg-haq-red text-white text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 z-10 rounded-full shadow-2xs">
                       {p.tag}
                     </div>
                   )}
                   
-                  <div className="h-40 sm:h-48 md:h-56 w-full flex items-center justify-center p-4 bg-white relative overflow-hidden">
+                  <div className="h-40 sm:h-48 md:h-56 w-full flex items-center justify-center p-4 bg-white relative overflow-hidden border-b border-haq-border">
                     {(p.images?.[0] || p.variants?.[0]?.img) ? (
                       <img 
                         src={p.images?.[0] || p.variants?.[0]?.img} 
                         alt={p.name} 
-                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" 
+                        className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" 
                       />
                     ) : (
-                      <div className="text-haq-ink/20 text-xs text-center border-2 border-dashed border-haq-ink/10 p-4 rounded w-full h-full flex items-center justify-center">
+                      <div className="text-haq-text-secondary/30 text-xs text-center border border-dashed border-haq-border p-4 rounded w-full h-full flex items-center justify-center">
                         Chưa có ảnh
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                   </div>
                   
-                  <div className="p-4 flex flex-col items-center justify-center flex-1 text-center bg-white border-t border-black/5">
-                    <h3 className="font-bold text-haq-red text-sm sm:text-base mb-2 font-heading leading-tight group-hover:text-red-700 transition-colors">
+                  <div className="p-4 flex flex-col items-center justify-center flex-1 text-center bg-white">
+                    <h3 className="font-heading font-bold text-haq-ink text-sm sm:text-base mb-1 uppercase leading-snug group-hover:text-haq-red transition-colors line-clamp-2">
                       {p.name}
                     </h3>
                   </div>

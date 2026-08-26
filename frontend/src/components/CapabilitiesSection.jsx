@@ -8,7 +8,7 @@ export default function CapabilitiesSection() {
     <section
       id="nang-luc"
       aria-label="Năng lực sản xuất & Nhà máy HAQ FOOD"
-      className="relative bg-white py-20 sm:py-28 border-b border-black/5 overflow-hidden"
+      className="relative bg-white py-20 sm:py-28 border-b border-haq-border overflow-hidden"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Tag */}
@@ -22,14 +22,14 @@ export default function CapabilitiesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           {/* Left Column: Industrial Factory Visual (Col 7) */}
           <div className="lg:col-span-7 relative">
-            <div className="relative aspect-16/10 rounded-3xl overflow-hidden shadow-2xl border border-black/10">
+            <div className="relative aspect-16/10 rounded-3xl overflow-hidden shadow-2xl border border-haq-border">
               <img
                 src={factoryImg}
                 alt="Dây chuyền sản xuất tự động HAQ FOOD"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-haq-dark/80 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
                 <div>
                   <span className="font-mono text-[11px] font-bold text-haq-gold uppercase tracking-widest">
@@ -47,17 +47,17 @@ export default function CapabilitiesSection() {
 
             {/* Micro Stats Grid */}
             <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="p-4 rounded-2xl bg-haq-bone border border-black/5 text-center">
+              <div className="p-4 rounded-2xl bg-haq-cream border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-haq-red">KHÉP KÍN</div>
-                <div className="text-[11px] font-mono text-haq-ink/65 uppercase mt-0.5">Dây chuyền tự động</div>
+                <div className="text-[11px] font-mono text-haq-text-secondary uppercase mt-0.5">Dây chuyền tự động</div>
               </div>
-              <div className="p-4 rounded-2xl bg-haq-bone border border-black/5 text-center">
+              <div className="p-4 rounded-2xl bg-haq-cream border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-haq-ink">100%</div>
-                <div className="text-[11px] font-mono text-haq-ink/65 uppercase mt-0.5">Kiểm soát từng lô</div>
+                <div className="text-[11px] font-mono text-haq-text-secondary uppercase mt-0.5">Kiểm soát từng lô</div>
               </div>
-              <div className="p-4 rounded-2xl bg-haq-bone border border-black/5 text-center">
+              <div className="p-4 rounded-2xl bg-haq-cream border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-haq-red">OEM/ODM</div>
-                <div className="text-[11px] font-mono text-haq-ink/65 uppercase mt-0.5">Đáp ứng đơn lớn</div>
+                <div className="text-[11px] font-mono text-haq-text-secondary uppercase mt-0.5">Đáp ứng đơn lớn</div>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function CapabilitiesSection() {
               </h2>
             </div>
 
-            <p className="text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+            <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
               HAQ FOOD đầu tư đồng bộ hệ thống máy móc sấy giòn, sấy nổ và đóng gói tự động,
               đáp ứng các tiêu chuẩn vệ sinh nghiêm ngặt nhất cho cả thị trường bán lẻ trong nước và xuất khẩu.
             </p>
@@ -83,7 +83,7 @@ export default function CapabilitiesSection() {
                 <ShieldCheck className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-heading font-bold text-xs uppercase text-haq-ink">Chứng nhận ISO 22000 & HACCP</h4>
-                  <p className="text-xs text-haq-ink/65 mt-0.5">Kiểm soát rủi ro sinh học, hóa học và vật lý trên toàn bộ quy trình.</p>
+                  <p className="text-xs text-haq-text-secondary mt-0.5">Kiểm soát rủi ro sinh học, hóa học và vật lý trên toàn bộ quy trình.</p>
                 </div>
               </div>
 
@@ -91,7 +91,7 @@ export default function CapabilitiesSection() {
                 <Cpu className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-heading font-bold text-xs uppercase text-haq-ink">Công nghệ sấy giòn & Sấy nổ</h4>
-                  <p className="text-xs text-haq-ink/65 mt-0.5">Tối ưu độ giòn xốp tự nhiên mà không làm biến tính dưỡng chất.</p>
+                  <p className="text-xs text-haq-text-secondary mt-0.5">Tối ưu độ giòn xốp tự nhiên mà không làm biến tính dưỡng chất.</p>
                 </div>
               </div>
 
@@ -99,7 +99,7 @@ export default function CapabilitiesSection() {
                 <Factory className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-heading font-bold text-xs uppercase text-haq-ink">Khả năng gia công OEM / ODM</h4>
-                  <p className="text-xs text-haq-ink/65 mt-0.5">Tùy biến công thức, hương vị và thiết kế bao bì theo yêu cầu đối tác.</p>
+                  <p className="text-xs text-haq-text-secondary mt-0.5">Tùy biến công thức, hương vị và thiết kế bao bì theo yêu cầu đối tác.</p>
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function CapabilitiesSection() {
             <div className="pt-4">
               <Link
                 to="/lien-he"
-                className="inline-flex items-center gap-2 bg-haq-ink hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm"
+                className="inline-flex items-center gap-2 bg-haq-dark hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm"
               >
                 <span>LIÊN HỆ HỢP TÁC SẢN XUẤT</span>
                 <ArrowRight className="w-4 h-4" />

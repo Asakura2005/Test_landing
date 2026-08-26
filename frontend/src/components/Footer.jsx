@@ -5,7 +5,7 @@ import logoImg from '../assets/logo-haq.jpg'
 
 export default function Footer() {
   return (
-    <footer className="bg-haq-ink text-white pt-16 pb-12 border-t border-white/10">
+    <footer className="bg-haq-dark text-white pt-16 pb-12 border-t border-white/10">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Sitemap Multi-column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-14 border-b border-white/10">

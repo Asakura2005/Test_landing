@@ -13,7 +13,7 @@ export default function Certifications() {
   const ref = useReveal()
 
   return (
-    <section className="bg-haq-bone py-24 md:py-32 border-t border-black/10">
+    <section className="bg-haq-cream py-24 md:py-32 border-t border-haq-border">
       <div className="mx-auto max-w-site px-6 md:px-12">
         {/* Header */}
         <div ref={ref} className="reveal max-w-2xl">
@@ -28,25 +28,25 @@ export default function Certifications() {
             <br />
             từ nguyên liệu đến đóng gói.
           </h2>
-          <p className="mt-6 text-lg text-haq-ink/70 leading-[1.6]">
+          <p className="mt-6 text-lg text-haq-text-secondary leading-[1.6]">
             Mỗi lô sản xuất được kiểm định và truy xuất nguồn gốc theo tiêu chuẩn quốc tế.
             Con dấu bảo chứng được khắc trực tiếp vào quy trình của chúng tôi.
           </p>
         </div>
 
         {/* Cert grid */}
-        <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-black/10 border border-black/10">
+        <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-haq-border border border-haq-border">
           {CERTS.map(({ code, label, Icon }) => (
             <div
               key={code}
-              className="group bg-haq-bone p-8 md:p-10 flex flex-col min-h-[220px] hover:bg-white transition-colors"
+              className="group bg-haq-cream p-8 md:p-10 flex flex-col min-h-[220px] hover:bg-white transition-colors"
             >
-              <Icon className="w-8 h-8 text-haq-orange mb-12" strokeWidth={1.6} />
+              <Icon className="w-8 h-8 text-haq-red mb-12" strokeWidth={1.6} />
               <div>
                 <div className="font-heading font-extrabold text-xl md:text-2xl text-haq-ink tracking-tight">
                   {code}
                 </div>
-                <div className="font-mono text-[11px] uppercase tracking-wider text-haq-ink/60 mt-3 leading-relaxed">
+                <div className="font-mono text-[11px] uppercase tracking-wider text-haq-text-secondary mt-3 leading-relaxed">
                   {label}
                 </div>
               </div>

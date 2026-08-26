@@ -67,7 +67,7 @@ export default function HeritageTimeline() {
                   ? 'bg-haq-red border-haq-red scale-125 shadow-[0_0_10px_rgba(190,30,45,0.5)]' 
                   : isPast
                     ? 'bg-haq-gold-dark border-haq-gold-dark'
-                    : 'bg-transparent border-black/20 hover:border-haq-gold-dark'
+                    : 'bg-transparent border-haq-border hover:border-haq-red'
               }`}
             />
             

@@ -60,15 +60,15 @@ export default function FloatingContactBar() {
             href={item.href}
             target={item.href.startsWith('http') ? '_blank' : undefined}
             rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className={`group relative flex items-center justify-center w-12 h-12 rounded-full text-white shadow-lg hover:scale-110 transition-all duration-300 ${item.color} ${item.extraClass || ''}`}
+            className={`group relative flex items-center justify-center w-11 h-11 rounded-full text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ${item.color} ${item.extraClass || ''}`}
             title={item.title}
           >
             {item.icon ? (
-              <item.icon className={`w-5 h-5 ${item.icon === Phone ? 'animate-pulse' : ''}`} />
+              <item.icon className={`w-4.5 h-4.5 ${item.icon === Phone ? 'animate-pulse' : ''}`} />
             ) : (
-              <span className="font-heading font-black text-sm tracking-tight">{item.text}</span>
+              <span className="font-heading font-black text-xs tracking-tight">{item.text}</span>
             )}
-            <span className="absolute right-full mr-3 px-3 py-1 bg-haq-ink text-white text-xs font-heading font-bold rounded-lg shadow-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity">
+            <span className="absolute right-full mr-3 px-3 py-1.5 bg-haq-dark text-white text-xs font-heading font-bold rounded-xl shadow-md whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity border border-white/10">
               {item.label}
             </span>
           </a>
@@ -78,17 +78,17 @@ export default function FloatingContactBar() {
       {/* Mobile View (Collapsible Bubble) */}
       <div className="md:hidden relative flex flex-col items-center">
         {/* Expanded Items */}
-        <div className={`flex flex-col items-center gap-3 mb-3 transition-all duration-300 origin-bottom ${
+        <div className={`flex flex-col items-center gap-2.5 mb-2.5 transition-all duration-300 origin-bottom ${
           isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-50 translate-y-10 pointer-events-none'
         }`}>
           {contactItems.map((item, idx) => (
             <a
               key={idx}
               href={item.href}
-              className={`flex items-center justify-center w-11 h-11 rounded-full text-white shadow-md ${item.color} ${item.extraClass || ''}`}
+              className={`flex items-center justify-center w-10 h-10 rounded-full text-white shadow-sm ${item.color} ${item.extraClass || ''}`}
             >
               {item.icon ? (
-                <item.icon className="w-5 h-5" />
+                <item.icon className="w-4.5 h-4.5" />
               ) : (
                 <span className="font-heading font-black text-xs">{item.text}</span>
               )}
@@ -99,14 +99,14 @@ export default function FloatingContactBar() {
         {/* Trigger Bubble */}
         <button
           onClick={toggleMenu}
-          className={`w-13 h-13 rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-300 ${
-            isOpen ? 'bg-haq-ink rotate-0' : 'bg-haq-red rotate-0'
+          className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 cursor-pointer ${
+            isOpen ? 'bg-haq-dark rotate-0' : 'bg-haq-red rotate-0'
           }`}
           aria-label="Menu liên hệ"
         >
-          {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+          {isOpen ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
           {!isOpen && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-haq-gold rounded-full border-2 border-white animate-ping" />
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-haq-gold rounded-full border-2 border-white" />
           )}
         </button>
       </div>

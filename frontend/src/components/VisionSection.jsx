@@ -22,7 +22,7 @@ export default function VisionSection() {
   const ref = useReveal()
 
   return (
-    <section id="tam-nhin" className="py-20 md:py-32 bg-white relative overflow-hidden border-t border-black/10">
+    <section id="tam-nhin" className="py-20 md:py-32 bg-white relative overflow-hidden border-t border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal flex flex-col">
           {/* Header */}
@@ -39,13 +39,13 @@ export default function VisionSection() {
                 <span className="text-haq-red">ĐẾN NHỮNG TIÊU CHUẨN CAO HƠN</span>
               </h2>
             </div>
-            <p className="text-sm sm:text-base text-haq-ink/75 max-w-md leading-relaxed">
+            <p className="text-sm sm:text-base text-haq-text-secondary max-w-md leading-relaxed">
               HAQ hướng tới trở thành doanh nghiệp tiên phong và dẫn đầu trong lĩnh vực sản xuất – phân phối đồ ăn vặt tại Việt Nam và mở rộng sang các thị trường tiêu chuẩn cao.
             </p>
           </div>
 
           {/* Expansion Path Horizontal Flow */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-haq-bone border border-black/5 shadow-2xs mb-12">
+          <div className="p-8 sm:p-10 rounded-3xl bg-haq-cream border border-haq-border shadow-2xs mb-12">
             <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-haq-red uppercase mb-8">
               <Compass className="w-4 h-4" />
               <span>LỘ TRÌNH PHÁT TRIỂN THỊ TRƯỜNG CHIẾN LƯỢC</span>
@@ -57,19 +57,19 @@ export default function VisionSection() {
                   key={item.code}
                   className={`p-5 rounded-2xl border transition-all ${
                     item.current
-                      ? 'bg-white border-haq-red/20 shadow-xs'
-                      : 'bg-white/60 border-black/5 border-dashed'
+                      ? 'bg-white border-haq-red shadow-xs'
+                      : 'bg-white/70 border-haq-border border-dashed'
                   }`}
                 >
                   <div className="flex items-center justify-between text-xs font-mono mb-2">
-                    <span className={item.current ? 'text-haq-red font-bold' : 'text-haq-ink/40'}>
+                    <span className={item.current ? 'text-haq-red font-bold' : 'text-haq-text-secondary'}>
                       0{idx + 1}
                     </span>
                     <span
                       className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
                         item.current
                           ? 'bg-haq-red/10 text-haq-red'
-                          : 'bg-black/5 text-haq-ink/50'
+                          : 'bg-haq-soft text-haq-text-secondary'
                       }`}
                     >
                       {item.status}
@@ -79,7 +79,7 @@ export default function VisionSection() {
                   <h3 className="font-heading font-black text-lg text-haq-ink uppercase">
                     {item.name}
                   </h3>
-                  <div className="text-[11px] font-mono text-haq-ink/50 mt-1">
+                  <div className="text-[11px] font-mono text-haq-text-secondary mt-1">
                     {item.code}
                   </div>
                 </div>
@@ -88,15 +88,15 @@ export default function VisionSection() {
           </div>
 
           {/* Core Values Typography Flow */}
-          <div className="pt-8 border-t border-black/10">
-            <div className="text-xs font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-4 text-center">
+          <div className="pt-8 border-t border-haq-border">
+            <div className="text-xs font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-4 text-center">
               GIÁ TRỊ CỐT LÕI (CORE VALUES)
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               {CORE_VALUES.map((val) => (
                 <span
                   key={val}
-                  className="px-5 py-2.5 rounded-full bg-haq-ink text-white font-mono text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-haq-red transition-colors shadow-2xs"
+                  className="px-5 py-2.5 rounded-full bg-haq-dark text-white font-mono text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-haq-red transition-colors shadow-2xs"
                 >
                   {val}
                 </span>

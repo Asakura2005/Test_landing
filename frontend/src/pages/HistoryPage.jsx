@@ -188,7 +188,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
+    <div className="min-h-screen bg-haq-cream text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
       {/* Sticky Header */}
       <StickyNav />
 
@@ -197,7 +197,7 @@ export default function HistoryPage() {
 
       <main className="flex-1 pt-24 sm:pt-28 pb-20">
         {/* 1. Bibica-Style Executive Milestone Hero */}
-        <section className="bg-haq-ink text-white py-18 sm:py-28 border-b border-black/10 relative overflow-hidden">
+        <section className="bg-haq-dark text-white py-18 sm:py-28 border-b border-haq-border relative overflow-hidden">
           {/* Subtle Tech Coordinate Grid Texture */}
           <div
             className="absolute inset-0 opacity-10"
@@ -254,10 +254,10 @@ export default function HistoryPage() {
         </section>
 
         {/* 2. Sticky Interactive Milestone Scrubber (Navigating Timeline) */}
-        <section className="bg-white border-b border-black/10 py-4 sticky top-[68px] sm:top-[72px] z-30 shadow-xs backdrop-blur-md bg-white/95">
+        <section className="bg-white border-b border-haq-border py-4 sticky top-[68px] sm:top-[72px] z-30 shadow-xs backdrop-blur-md bg-white/95">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              <span className="text-xs font-mono font-bold text-haq-ink/50 uppercase mr-2 shrink-0 flex items-center gap-1.5">
+              <span className="text-xs font-mono font-bold text-haq-text-secondary uppercase mr-2 shrink-0 flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-haq-red" />
                 <span>CHỌN MỐC THỜI GIAN:</span>
               </span>
@@ -272,12 +272,12 @@ export default function HistoryPage() {
                     className={`px-4 py-2 rounded-full text-xs font-heading font-black uppercase tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                       isSelected
                         ? 'bg-haq-red text-white shadow-sm scale-102'
-                        : 'bg-haq-bone text-haq-ink/75 hover:bg-black/5 hover:text-haq-ink'
+                        : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
                     }`}
                   >
                     <span>{item.year}</span>
                     <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${
-                      isSelected ? 'bg-white/20 text-white' : 'bg-black/5 text-haq-ink/50'
+                      isSelected ? 'bg-white/20 text-white' : 'bg-haq-soft text-haq-text-secondary'
                     }`}>
                       {item.phase}
                     </span>
@@ -289,7 +289,7 @@ export default function HistoryPage() {
         </section>
 
         {/* 3. Bibica-Style Alternating Chapters of Growth (Trục Lịch Sử Trực Quan) */}
-        <section className="py-20 sm:py-28 bg-haq-bone">
+        <section className="py-20 sm:py-28 bg-haq-cream">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="max-w-3xl mb-16">
               <div className="flex items-center gap-2 mb-2">
@@ -301,7 +301,7 @@ export default function HistoryPage() {
               <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase">
                 5 DẤU MỐC CHIẾN LƯỢC KIẾN TẠO THƯƠNG HIỆU
               </h2>
-              <p className="mt-3 text-xs sm:text-sm text-haq-ink/70 leading-relaxed">
+              <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                 Khám phá chi tiết từng giai đoạn phát triển, các bước ngoặt mở rộng sản phẩm và thành tựu thương mại của HAQ FOOD.
               </p>
             </div>
@@ -309,7 +309,7 @@ export default function HistoryPage() {
             {/* Alternating Chapters Container */}
             <div className="space-y-20 sm:space-y-28 relative">
               {/* Central Vertical Connector Line (Desktop) */}
-              <div className="hidden lg:block absolute top-12 bottom-12 left-1/2 w-0.5 bg-black/10 -translate-x-1/2" />
+              <div className="hidden lg:block absolute top-12 bottom-12 left-1/2 w-0.5 bg-haq-border -translate-x-1/2" />
 
               {CHAPTERS.map((chap, idx) => {
                 const isEven = idx % 2 === 0
@@ -322,13 +322,13 @@ export default function HistoryPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-start">
                       {/* Visual Media Column */}
                       <div className="lg:col-span-6">
-                        <div className="relative aspect-video lg:aspect-16/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-black/5 bg-haq-ink group">
+                        <div className="relative aspect-video lg:aspect-16/10 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-haq-border bg-haq-dark group">
                           <img
                             src={chap.image}
                             alt={chap.title}
                             className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-haq-dark/80 via-transparent to-transparent" />
                           
                           {/* Year Badge Overlay */}
                           <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-haq-red text-white font-heading font-black text-[10px] sm:text-sm uppercase px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-md flex items-center gap-2">
@@ -361,12 +361,12 @@ export default function HistoryPage() {
                             {chap.title}
                           </h3>
 
-                          <p className="mt-2 text-[11px] sm:text-sm font-mono font-bold text-haq-ink/80 leading-relaxed border-l-2 border-haq-red pl-3">
+                          <p className="mt-2 text-[11px] sm:text-sm font-mono font-bold text-haq-text-secondary leading-relaxed border-l-2 border-haq-red pl-3">
                             {chap.lead}
                           </p>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                           {chap.desc}
                         </p>
 
@@ -375,10 +375,10 @@ export default function HistoryPage() {
                           {chap.achievements.map((ach, aIdx) => (
                             <div
                               key={aIdx}
-                              className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-black/5 shadow-2xs"
+                              className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-haq-border shadow-2xs"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5 text-haq-red shrink-0 mt-0.5" />
-                              <span className="text-[11px] sm:text-xs text-haq-ink/85 leading-relaxed font-medium">
+                              <span className="text-[11px] sm:text-xs text-haq-text-secondary leading-relaxed font-medium">
                                 {ach}
                               </span>
                             </div>
@@ -395,9 +395,9 @@ export default function HistoryPage() {
         </section>
 
         {/* 4. Credentials & Achievements Showcase (Học Hỏi Bibica) */}
-        <section className="py-20 sm:py-24 bg-white border-y border-black/5">
+        <section className="py-20 sm:py-24 bg-white border-y border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 pb-4 border-b border-black/5 gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 pb-4 border-b border-haq-border gap-4">
               <div>
                 <span className="font-mono text-xs font-bold text-haq-red uppercase tracking-widest">
                   CREDENTIALS & STANDARDS
@@ -406,7 +406,7 @@ export default function HistoryPage() {
                   Nền Tảng Tiêu Chuẩn & Chứng Nhận Quốc Tế
                 </h2>
               </div>
-              <p className="text-xs sm:text-sm text-haq-ink/60 max-w-md">
+              <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md">
                 Bảo chứng cho chất lượng đồng nhất, an toàn vệ sinh thực phẩm và uy tín hợp tác bền vững.
               </p>
             </div>
@@ -417,19 +417,19 @@ export default function HistoryPage() {
                 return (
                   <div
                     key={idx}
-                    className="p-6 rounded-3xl bg-haq-bone border border-black/5 hover:border-haq-red/30 transition-all flex flex-col justify-between shadow-2xs hover:shadow-md"
+                    className="p-6 rounded-3xl bg-haq-cream border border-haq-border hover:border-haq-red transition-all flex flex-col justify-between shadow-2xs hover:shadow-md"
                   >
                     <div>
-                      <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-haq-red mb-4 shadow-2xs">
+                      <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-haq-red mb-4 shadow-2xs border border-haq-border">
                         <Icon className="w-6 h-6" />
                       </div>
                       <h3 className="font-heading font-black text-lg text-haq-ink uppercase">
                         {item.title}
                       </h3>
-                      <div className="font-mono text-[11px] font-bold text-haq-red/90 uppercase mt-1 mb-2">
+                      <div className="font-mono text-[11px] font-bold text-haq-red uppercase mt-1 mb-2">
                         {item.sub}
                       </div>
-                      <p className="text-xs text-haq-ink/70 leading-relaxed">
+                      <p className="text-xs text-haq-text-secondary leading-relaxed">
                         {item.desc}
                       </p>
                     </div>
@@ -439,9 +439,9 @@ export default function HistoryPage() {
             </div>
 
             {/* Strategic Retail Partners Grid */}
-            <div className="mt-14 pt-10 border-t border-black/5">
+            <div className="mt-14 pt-10 border-t border-haq-border">
               <div className="text-center mb-8">
-                <span className="font-mono text-xs font-bold text-haq-ink/50 uppercase tracking-widest">
+                <span className="font-mono text-xs font-bold text-haq-text-secondary uppercase tracking-widest">
                   MẠNG LƯỚI ĐỐI TÁC PHÂN PHỐI CHIẾN LƯỢC TOÀN QUỐC
                 </span>
               </div>
@@ -456,7 +456,7 @@ export default function HistoryPage() {
                 ].map((partner, pIdx) => (
                   <div
                     key={pIdx}
-                    className="bg-haq-bone h-20 rounded-2xl p-4 flex items-center justify-center border border-black/5 hover:border-haq-red/20 transition-all shadow-2xs"
+                    className="bg-haq-cream h-20 rounded-2xl p-4 flex items-center justify-center border border-haq-border hover:border-haq-red transition-all shadow-2xs"
                   >
                     <img
                       src={partner.logo}
@@ -471,12 +471,12 @@ export default function HistoryPage() {
         </section>
 
         {/* 5. Navigation Bridge to Overview & Capabilities */}
-        <section className="py-16 bg-haq-bone border-b border-black/5">
+        <section className="py-16 bg-haq-cream border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Link
                 to="/gioi-thieu"
-                className="group bg-white p-8 rounded-3xl border border-black/5 hover:border-haq-red shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between"
+                className="group bg-white p-8 rounded-3xl border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="font-mono text-[10px] font-bold text-haq-red uppercase tracking-widest mb-1">
@@ -485,7 +485,7 @@ export default function HistoryPage() {
                   <h3 className="font-heading font-black text-xl text-haq-ink group-hover:text-haq-red transition-colors uppercase">
                     01. Giới Thiệu Tổng Quan & Sứ Mệnh
                   </h3>
-                  <p className="text-xs text-haq-ink/70 mt-2 leading-relaxed">
+                  <p className="text-xs text-haq-text-secondary mt-2 leading-relaxed">
                     Tìm hiểu triết lý kinh doanh, tầm nhìn chiến lược và 5 giá trị văn hóa cốt lõi của HAQ FOOD.
                   </p>
                 </div>
@@ -496,7 +496,7 @@ export default function HistoryPage() {
 
               <Link
                 to="/nang-luc"
-                className="group bg-white p-8 rounded-3xl border border-black/5 hover:border-haq-red shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between"
+                className="group bg-white p-8 rounded-3xl border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="font-mono text-[10px] font-bold text-haq-red uppercase tracking-widest mb-1">
@@ -505,7 +505,7 @@ export default function HistoryPage() {
                   <h3 className="font-heading font-black text-xl text-haq-ink group-hover:text-haq-red transition-colors uppercase">
                     03. Cơ Sở Sản Xuất & Tiêu Chuẩn Chất Lượng
                   </h3>
-                  <p className="text-xs text-haq-ink/70 mt-2 leading-relaxed">
+                  <p className="text-xs text-haq-text-secondary mt-2 leading-relaxed">
                     Khám phá dây chuyền sấy giòn khép kín, quy trình kiểm soát 5 bước ISO 22000 và giải pháp OEM/ODM.
                   </p>
                 </div>

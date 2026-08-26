@@ -11,7 +11,7 @@ import FloatingContactBar from '../components/FloatingContactBar'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
+    <div className="min-h-screen bg-haq-cream text-haq-text-primary font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
       {/* 0. Sticky Minimal Header */}
       <StickyNav />
 

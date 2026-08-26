@@ -36,21 +36,39 @@ export default function CategoryManager({ products = [] }) {
   }, [])
 
   const generateSlug = (text) => {
-    return text.toString().toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w\-]+/g, '')
-      .replace(/\-\-+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '');
+    if (!text) return ''
+    return text
+      .toString()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[đĐ]/g, 'd')
+      .replace(/([^0-9a-z-\s])/g, '')
+      .replace(/(\s+)/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '')
+  }
+
+  const ensureUniqueSlug = (baseSlug, currentId = null) => {
+    let cleanSlug = generateSlug(baseSlug) || 'danh-muc'
+    let uniqueSlug = cleanSlug
+    let counter = 1
+    
+    // Check if another category (excluding the current one being edited) already has this slug
+    while (categories.some(c => c.slug === uniqueSlug && c.id !== currentId)) {
+      uniqueSlug = `${cleanSlug}-${counter}`
+      counter++
+    }
+    return uniqueSlug
   }
 
   const handleNameChange = (e) => {
     const name = e.target.value
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       name,
       slug: generateSlug(name)
-    })
+    }))
   }
 
   const resetForm = () => {
@@ -82,13 +100,21 @@ export default function CategoryManager({ products = [] }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      if (!formData.name.trim()) {
+        alert("Vui lòng nhập tên danh mục!")
+        return
+      }
+
+      // Auto ensure unique slug and valid format
+      const finalSlug = ensureUniqueSlug(formData.slug || formData.name, isEditing)
+
       const payload = {
-        name: formData.name,
-        slug: formData.slug,
-        sort_order: formData.sort_order,
+        name: formData.name.trim(),
+        slug: finalSlug,
+        sort_order: Number(formData.sort_order) || 0,
         is_active: formData.is_active,
         parent_id: isSubCategory && formData.parent_id ? formData.parent_id : null,
-        description: !isSubCategory ? formData.description : null
+        description: !isSubCategory ? (formData.description || null) : null
       }
 
       if (isEditing) {
@@ -99,7 +125,11 @@ export default function CategoryManager({ products = [] }) {
       await fetchCategories()
       resetForm()
     } catch (err) {
-      alert("Lỗi khi lưu: " + err.message)
+      if (err.message && err.message.includes('categories_slug_key')) {
+        alert("Đường dẫn (slug) này đã bị trùng với một danh mục khác. Vui lòng kiểm tra lại slug.")
+      } else {
+        alert("Lỗi khi lưu: " + err.message)
+      }
     }
   }
 
@@ -156,35 +186,35 @@ export default function CategoryManager({ products = [] }) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6 h-full overflow-y-auto bg-haq-bone">
+    <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6 h-full overflow-y-auto bg-haq-cream">
       {/* Cột Danh sách */}
-      <div className="flex-1 bg-white border border-black/10 rounded-xl shadow-sm overflow-hidden flex flex-col min-w-0">
-        <div className="p-4 border-b border-black/10 bg-white flex justify-between items-center sticky top-0 z-10">
+      <div className="flex-1 bg-white border border-haq-border rounded-xl shadow-sm overflow-hidden flex flex-col min-w-0">
+        <div className="p-4 border-b border-haq-border bg-white flex justify-between items-center sticky top-0 z-10">
           <h2 className="font-bold text-lg text-haq-ink">Cây Danh mục</h2>
         </div>
         
         <div className="flex-1 overflow-auto p-4">
           {categories.length === 0 ? (
-            <div className="p-8 text-center text-haq-ink/50 border-2 border-dashed rounded-xl">
+            <div className="p-8 text-center text-haq-text-secondary border-2 border-dashed border-haq-border rounded-xl">
               Chưa có danh mục nào. Hãy thêm Mục Lớn đầu tiên.
             </div>
           ) : (
             <div className="space-y-4">
               {categoryTree.map(parent => (
-                <div key={parent.id} className="border border-black/10 rounded-xl overflow-hidden bg-white shadow-sm">
+                <div key={parent.id} className="border border-haq-border rounded-xl overflow-hidden bg-white shadow-sm">
                   {/* Parent Row */}
-                  <div className="flex items-center justify-between p-4 bg-black/[0.02] border-b border-black/5 hover:bg-black/[0.05] transition-colors group">
+                  <div className="flex items-center justify-between p-4 bg-haq-cream/30 border-b border-haq-border hover:bg-haq-cream/60 transition-colors group">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs bg-black/10 px-2 py-0.5 rounded text-haq-ink/70">{parent.sort_order}</span>
+                        <span className="font-mono text-xs bg-haq-cream px-2 py-0.5 rounded text-haq-ink/70 border border-haq-border">{parent.sort_order}</span>
                         <h3 className="font-bold text-lg text-haq-ink truncate">{parent.name}</h3>
                         {!parent.is_active && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold">ẨN</span>}
                       </div>
-                      <p className="text-xs text-haq-ink/50 mt-1 truncate">{parent.slug}</p>
+                      <p className="text-xs text-haq-text-secondary mt-1 truncate">{parent.slug}</p>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
-                      <span className="text-xs font-semibold text-haq-ink/50 hidden md:inline">Mục lớn</span>
-                      <button onClick={() => toggleActive(parent)} className="p-2 text-haq-ink/40 hover:text-haq-orange rounded transition-colors" title={parent.is_active ? "Đang hiện - Click để ẩn" : "Đang ẩn - Click để hiện"}>
+                      <span className="text-xs font-semibold text-haq-text-secondary hidden md:inline">Mục lớn</span>
+                      <button onClick={() => toggleActive(parent)} className="p-2 text-haq-text-secondary hover:text-haq-red rounded transition-colors" title={parent.is_active ? "Đang hiện - Click để ẩn" : "Đang ẩn - Click để hiện"}>
                         <RefreshCw className="w-4 h-4" />
                       </button>
                       <button onClick={() => handleEdit(parent)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Sửa">
@@ -198,25 +228,25 @@ export default function CategoryManager({ products = [] }) {
                   
                   {/* Children Rows */}
                   {parent.children.length > 0 && (
-                    <div className="divide-y divide-black/5">
+                    <div className="divide-y divide-haq-border">
                       {parent.children.map(child => {
                         const productCount = products.filter(p => p.category_id === child.id).length;
                         return (
-                          <div key={child.id} className="flex items-center justify-between p-3 pl-10 hover:bg-black/[0.02] transition-colors group">
+                          <div key={child.id} className="flex items-center justify-between p-3 pl-10 hover:bg-haq-cream/30 transition-colors group">
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <ChevronRight className="w-4 h-4 text-black/20" />
-                              <span className="font-mono text-xs text-haq-ink/50">{child.sort_order}</span>
+                              <ChevronRight className="w-4 h-4 text-haq-border" />
+                              <span className="font-mono text-xs text-haq-text-secondary">{child.sort_order}</span>
                               <div className="flex flex-col">
                                 <span className="font-semibold text-haq-ink text-sm">{child.name}</span>
-                                <span className="text-[10px] text-haq-ink/40">{child.slug}</span>
+                                <span className="text-[10px] text-haq-text-secondary">{child.slug}</span>
                               </div>
                               {!child.is_active && <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold ml-2">ẨN</span>}
                             </div>
                             <div className="flex items-center gap-3 ml-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span className="inline-block bg-haq-bone text-haq-ink font-bold text-xs px-2 py-1 rounded" title={`${productCount} sản phẩm`}>
+                              <span className="inline-block bg-haq-cream border border-haq-border text-haq-ink font-bold text-xs px-2 py-1 rounded" title={`${productCount} sản phẩm`}>
                                 {productCount} sp
                               </span>
-                              <button onClick={() => toggleActive(child)} className="p-1.5 text-haq-ink/40 hover:text-haq-orange rounded transition-colors">
+                              <button onClick={() => toggleActive(child)} className="p-1.5 text-haq-text-secondary hover:text-haq-red rounded transition-colors">
                                 <RefreshCw className="w-3.5 h-3.5" />
                               </button>
                               <button onClick={() => handleEdit(child)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors">
@@ -232,7 +262,7 @@ export default function CategoryManager({ products = [] }) {
                     </div>
                   )}
                   {parent.children.length === 0 && (
-                    <div className="p-3 pl-12 text-xs text-haq-ink/40 italic bg-black/[0.01]">
+                    <div className="p-3 pl-12 text-xs text-haq-text-secondary italic bg-haq-cream/20">
                       Chưa có mục nhỏ nào.
                     </div>
                   )}
@@ -245,23 +275,23 @@ export default function CategoryManager({ products = [] }) {
 
       {/* Cột Form */}
       <div className="w-full lg:w-96 shrink-0">
-        <form onSubmit={handleSubmit} className="bg-white border border-black/10 rounded-xl shadow-sm p-5 sticky top-4">
-          <div className="flex items-center justify-between mb-4 border-b border-black/10 pb-3">
-            <h2 className="font-bold text-lg text-haq-orange">
+        <form onSubmit={handleSubmit} className="bg-white border border-haq-border rounded-xl shadow-sm p-5 sticky top-4">
+          <div className="flex items-center justify-between mb-4 border-b border-haq-border pb-3">
+            <h2 className="font-bold text-lg text-haq-red">
               {isEditing ? 'Sửa Danh mục' : 'Thêm Danh mục mới'}
             </h2>
             <div className="flex gap-2">
               <button 
                 type="button"
                 onClick={() => setIsSubCategory(false)}
-                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${!isSubCategory ? 'bg-haq-ink text-white' : 'bg-black/5 text-haq-ink/60 hover:bg-black/10'}`}
+                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${!isSubCategory ? 'bg-haq-ink text-white' : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/60'}`}
               >
                 Mục Lớn
               </button>
               <button 
                 type="button"
                 onClick={() => setIsSubCategory(true)}
-                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${isSubCategory ? 'bg-haq-ink text-white' : 'bg-black/5 text-haq-ink/60 hover:bg-black/10'}`}
+                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${isSubCategory ? 'bg-haq-ink text-white' : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/60'}`}
               >
                 Mục Nhỏ
               </button>
@@ -276,7 +306,7 @@ export default function CategoryManager({ products = [] }) {
                   required 
                   value={formData.parent_id} 
                   onChange={e => setFormData({...formData, parent_id: e.target.value})} 
-                  className="w-full border border-black/20 p-2.5 rounded text-sm focus:border-haq-orange focus:outline-none bg-haq-bone"
+                  className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none bg-haq-cream"
                 >
                   <option value="">-- Chọn Mục Lớn --</option>
                   {parentCategories.map(p => (
@@ -288,18 +318,18 @@ export default function CategoryManager({ products = [] }) {
 
             <div className="space-y-1">
               <label className="text-sm font-semibold">Tên danh mục *</label>
-              <input required type="text" value={formData.name} onChange={handleNameChange} className="w-full border border-black/20 p-2.5 rounded text-sm focus:border-haq-orange focus:outline-none" placeholder="VD: Bánh Truyền Thống" />
+              <input required type="text" value={formData.name} onChange={handleNameChange} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" placeholder="VD: Bánh Truyền Thống" />
             </div>
 
             <div className="space-y-1">
               <label className="text-sm font-semibold">Slug (Đường dẫn) *</label>
-              <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-black/20 p-2.5 rounded text-sm focus:border-haq-orange focus:outline-none" placeholder="banh-truyen-thong" />
+              <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" placeholder="banh-truyen-thong" />
             </div>
 
             <div className="space-y-1">
               <label className="text-sm font-semibold">Thứ tự hiển thị</label>
-              <input type="number" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: parseInt(e.target.value) || 0})} className="w-full border border-black/20 p-2.5 rounded text-sm focus:border-haq-orange focus:outline-none" />
-              <p className="text-[11px] text-haq-ink/50 mt-1 font-mono">Số nhỏ xếp trước.</p>
+              <input type="number" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: parseInt(e.target.value) || 0})} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" />
+              <p className="text-[11px] text-haq-text-secondary mt-1 font-mono">Số nhỏ xếp trước.</p>
             </div>
 
             {!isSubCategory && (
@@ -309,29 +339,29 @@ export default function CategoryManager({ products = [] }) {
                   rows={4} 
                   value={formData.description} 
                   onChange={e => setFormData({...formData, description: e.target.value})} 
-                  className="w-full border border-black/20 p-2.5 rounded text-sm focus:border-haq-orange focus:outline-none"
+                  className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none"
                   placeholder="Kế thừa di sản ẩm thực bánh kẹo truyền thống..."
                 />
               </div>
             )}
 
-            <label className="flex items-center gap-2 cursor-pointer mt-4 bg-haq-bone p-3 rounded-lg border border-black/5 hover:bg-black/5">
+            <label className="flex items-center gap-2 cursor-pointer mt-4 bg-haq-cream p-3 rounded-lg border border-haq-border hover:bg-haq-cream/50">
               <input 
                 type="checkbox" 
                 checked={formData.is_active}
                 onChange={e => setFormData({...formData, is_active: e.target.checked})}
-                className="w-4 h-4 text-haq-red rounded border-black/20 focus:ring-haq-red"
+                className="w-4 h-4 text-haq-red rounded border-haq-border focus:ring-haq-red"
               />
               <span className="text-sm font-semibold text-haq-ink">Hiển thị trên Website</span>
             </label>
           </div>
 
           <div className="mt-6 flex flex-col gap-2">
-            <button type="submit" className="w-full bg-haq-red text-white py-2.5 rounded font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+            <button type="submit" className="w-full bg-haq-red text-white py-2.5 rounded font-bold hover:bg-haq-red/90 transition-colors flex items-center justify-center gap-2">
               {isEditing ? <><Check className="w-4 h-4" /> Cập nhật</> : <><Plus className="w-4 h-4" /> Thêm mới</>}
             </button>
             {isEditing && (
-              <button type="button" onClick={resetForm} className="w-full bg-black/5 text-haq-ink py-2.5 rounded font-semibold hover:bg-black/10 transition-colors flex items-center justify-center gap-2">
+              <button type="button" onClick={resetForm} className="w-full bg-haq-cream border border-haq-border text-haq-ink py-2.5 rounded font-semibold hover:bg-haq-cream/50 transition-colors flex items-center justify-center gap-2">
                 <X className="w-4 h-4" /> Hủy sửa
               </button>
             )}

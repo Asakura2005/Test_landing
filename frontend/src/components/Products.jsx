@@ -121,21 +121,21 @@ export default function Products() {
   }, [categories, products])
 
   return (
-    <section id="san-pham" className="py-20 sm:py-28 bg-white border-b border-black/5">
+    <section id="san-pham" className="py-20 sm:py-28 bg-white border-b border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header kiểu Orion */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
           <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
             SẢN PHẨM
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-haq-ink/70 italic font-serif">
+          <p className="mt-3 text-sm sm:text-base text-haq-text-secondary italic font-serif">
             HAQ FOOD luôn đặt chất lượng và an toàn hàng đầu cho từng sản phẩm
           </p>
         </div>
 
         {/* Circular Product Category Grid */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-3 text-haq-ink/50">
+          <div className="flex flex-col items-center justify-center py-16 gap-3 text-haq-text-secondary">
             <Loader2 className="w-8 h-8 animate-spin text-haq-red" />
             <span className="font-mono text-xs uppercase tracking-widest">Đang tải danh mục sản phẩm...</span>
           </div>
@@ -148,10 +148,7 @@ export default function Products() {
                 className="group flex flex-col items-center text-center w-full max-w-[160px] xs:max-w-[200px] sm:max-w-[240px]"
               >
                 {/* Outer Circle Container */}
-                <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-linear-to-b from-[#f8f9fa] to-[#efefef] border border-black/5 shadow-2xs group-hover:shadow-xl group-hover:border-haq-red/20 group-hover:bg-white transition-all duration-400 flex items-center justify-center p-3 xs:p-4 relative overflow-hidden">
-                  {/* Subtle Inner Glow */}
-                  <div className="absolute inset-0 rounded-full bg-radial from-transparent to-black/5 opacity-50 pointer-events-none" />
-
+                <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-haq-cream border border-haq-border shadow-xs group-hover:shadow-md group-hover:border-haq-red group-hover:bg-white transition-all duration-400 flex items-center justify-center p-3 xs:p-4 relative overflow-hidden">
                   {/* Product Pack Floating in Circle */}
                   <img
                     src={item.image}

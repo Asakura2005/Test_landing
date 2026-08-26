@@ -7,14 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        'haq-bone': '#F9F7F2',
-        'haq-ink': '#1A1A1A',
-        'haq-orange': '#F26522',
-        'haq-red': '#BE1E2D',
-        'haq-gold': '#FFD200',
-        'haq-gold-dark': '#DAA520',
-        'haq-cream': '#FFF8E7',
-        'haq-brown': '#7A3E26',
+        'haq-cream': '#F5F1E8',
+        'haq-soft': '#ECE7DC',
+        'haq-white': '#FFFFFF',
+        'haq-dark': '#191919',
+        'haq-charcoal': '#191919',
+        'haq-ink': '#191919',
+        'haq-deep-black': '#191919',
+        'haq-bone': '#F5F1E8',
+        'haq-red': '#C92332',
+        'haq-gold': '#D9A900',
+        'haq-yellow': '#D9A900',
+        'haq-text-primary': '#191919',
+        'haq-text-secondary': '#666666',
+        'haq-border': '#DED8CC',
       },
       fontFamily: {
         heading: ['"Manrope"', 'ui-sans-serif', 'system-ui', 'sans-serif'],

@@ -46,7 +46,7 @@ function NewsColumn({ title, items }) {
       <div className="flex flex-col gap-8 flex-1">
         {items.map((item, idx) => (
           <div key={idx} className="flex gap-4 items-start group">
-            <div className="shrink-0 overflow-hidden rounded-md border border-black/5 shadow-sm">
+            <div className="shrink-0 overflow-hidden rounded-md border border-haq-border shadow-sm">
               <img 
                 src={item.image} 
                 alt={item.title} 

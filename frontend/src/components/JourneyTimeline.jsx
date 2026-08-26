@@ -44,7 +44,7 @@ export default function JourneyTimeline() {
     <section
       id="hanh-trinh"
       aria-label="Hành trình phát triển HAQ FOOD"
-      className="relative bg-haq-bone py-20 sm:py-28 border-b border-black/5 overflow-hidden"
+      className="relative bg-haq-cream py-20 sm:py-28 border-b border-haq-border overflow-hidden"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
@@ -58,7 +58,7 @@ export default function JourneyTimeline() {
           <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
             HÀNH TRÌNH TỪ <span className="text-haq-red">2021 ĐẾN 2025</span>
           </h2>
-          <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+          <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
             Mỗi cột mốc là một bước tiến vững chắc trong việc chuẩn hóa chất lượng,
             mở rộng quy mô công nghiệp và khẳng định giá trị nông sản chế biến Việt Nam.
           </p>
@@ -71,7 +71,7 @@ export default function JourneyTimeline() {
             return (
               <div
                 key={item.year}
-                className="group relative bg-white rounded-3xl p-6 border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-white rounded-3xl p-6 border border-haq-border hover:border-haq-red shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Big Year Number */}
@@ -79,7 +79,7 @@ export default function JourneyTimeline() {
                     <span className="font-heading font-black text-3xl sm:text-4xl text-haq-ink group-hover:text-haq-red transition-colors tracking-tight">
                       {item.year}
                     </span>
-                    <div className="w-10 h-10 rounded-2xl bg-haq-bone group-hover:bg-haq-red group-hover:text-white text-haq-ink flex items-center justify-center transition-colors">
+                    <div className="w-10 h-10 rounded-2xl bg-haq-cream group-hover:bg-haq-red group-hover:text-white text-haq-ink flex items-center justify-center transition-colors">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
@@ -92,12 +92,12 @@ export default function JourneyTimeline() {
                     {item.title}
                   </h3>
 
-                  <p className="text-xs text-haq-ink/70 leading-relaxed mt-2.5">
+                  <p className="text-xs text-haq-text-secondary leading-relaxed mt-2.5">
                     {item.desc}
                   </p>
                 </div>
 
-                <div className="pt-4 mt-6 border-t border-black/5 flex items-center justify-between text-[10px] font-mono text-haq-ink/40">
+                <div className="pt-4 mt-6 border-t border-haq-border flex items-center justify-between text-[10px] font-mono text-haq-text-secondary">
                   <span>MỐC 0{idx + 1}</span>
                   <span>HAQ FOOD</span>
                 </div>

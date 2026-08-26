@@ -87,7 +87,7 @@ export default function StatsCounter() {
             {STATS.map((stat, i) => {
               const Icon = stat.icon
               return (
-                <div key={i} className="relative bg-white rounded-3xl p-8 pt-14 text-center shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-black/5 hover:-translate-y-2 transition-transform duration-300">
+                <div key={i} className="relative bg-white rounded-3xl p-8 pt-14 text-center shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-haq-border hover:-translate-y-2 transition-transform duration-300">
                   {/* Overlapping Icon */}
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md border-4 border-haq-cream">
                     <Icon className="w-8 h-8 text-haq-red" strokeWidth={1.5} />

@@ -85,7 +85,7 @@ export default function CapabilitiesPage() {
   const [activeStep, setActiveStep] = useState(0)
 
   return (
-    <div className="min-h-screen bg-haq-bone text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
+    <div className="min-h-screen bg-haq-cream text-haq-ink font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
       {/* Sticky Header */}
       <StickyNav />
 
@@ -94,7 +94,7 @@ export default function CapabilitiesPage() {
 
       <main className="flex-1 pt-24 sm:pt-28 pb-20">
         {/* 1. Subpage Hero Header */}
-        <section className="bg-white border-b border-black/5 py-14 sm:py-20">
+        <section className="bg-white border-b border-haq-border py-14 sm:py-20">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="max-w-3xl">
               <div className="flex items-center gap-2 mb-3">
@@ -107,7 +107,7 @@ export default function CapabilitiesPage() {
                 NĂNG LỰC SẢN XUẤT & <br />
                 <span className="text-haq-red">KIỂM SOÁT CHẤT LƯỢNG</span>
               </h1>
-              <p className="mt-4 text-sm sm:text-base text-haq-ink/75 leading-relaxed">
+              <p className="mt-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed">
                 Hạ tầng nhà máy hiện đại đạt chuẩn ISO 22000 & HACCP, dây chuyền sấy giòn khép kín,
                 phòng kiểm định độc lập và năng lực gia công OEM/ODM toàn diện cho đối tác.
               </p>
@@ -116,10 +116,10 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* 2. Manufacturing Power & Cleanroom (Factory) */}
-        <section id="nha-may" className="py-20 border-b border-black/5 bg-haq-bone">
+        <section id="nha-may" className="py-20 border-b border-haq-border bg-haq-cream">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-              <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-2xl border border-black/10">
+              <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-2xl border border-haq-border">
                 <img
                   src={factoryImg}
                   alt="Nhà máy sản xuất HAQ FOOD"
@@ -138,21 +138,21 @@ export default function CapabilitiesPage() {
                   <h2 className="font-heading font-black text-3xl text-haq-ink uppercase mt-1">
                     Dây Chuyền Khép Kín Chuẩn ISO 22000
                   </h2>
-                  <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                     Hệ thống máy sấy nhiệt đối lưu, buồng sấy nổ công nghệ cao và máy đóng gói nhiều lớp giúp bảo toàn hương vị tự nhiên và độ giòn đặc trưng của từng mẻ bánh.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-2">
-                  <div className="bg-white p-5 rounded-2xl border border-black/5">
+                  <div className="bg-white p-5 rounded-2xl border border-haq-border">
                     <Cpu className="w-5 h-5 text-haq-red mb-2" />
                     <div className="font-heading font-black text-lg text-haq-ink">100%</div>
-                    <div className="text-[11px] text-haq-ink/60 mt-0.5">Tự động hóa khâu trộn & sấy</div>
+                    <div className="text-[11px] text-haq-text-secondary mt-0.5">Tự động hóa khâu trộn & sấy</div>
                   </div>
-                  <div className="bg-white p-5 rounded-2xl border border-black/5">
+                  <div className="bg-white p-5 rounded-2xl border border-haq-border">
                     <Factory className="w-5 h-5 text-haq-red mb-2" />
                     <div className="font-heading font-black text-lg text-haq-ink">PHÒNG SẠCH</div>
-                    <div className="text-[11px] text-haq-ink/60 mt-0.5">Vô trùng áp suất dương</div>
+                    <div className="text-[11px] text-haq-text-secondary mt-0.5">Vô trùng áp suất dương</div>
                   </div>
                 </div>
               </div>
@@ -161,7 +161,7 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* 3. 5-Step Quality Process (ISO 22000 / HACCP) */}
-        <section id="chat-luong" className="py-20 border-b border-black/5 bg-white">
+        <section id="chat-luong" className="py-20 border-b border-haq-border bg-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="max-w-3xl mb-14">
               <span className="font-mono text-xs font-bold text-haq-red uppercase tracking-widest">
@@ -170,7 +170,7 @@ export default function CapabilitiesPage() {
               <h2 className="font-heading font-black text-3xl sm:text-4xl text-haq-ink uppercase mt-1">
                 Quy Trình Kiểm Soát 5 Bước Nghiêm Ngặt
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+              <p className="mt-2 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                 Áp dụng quy chuẩn HACCP và ISO 22000 trong mọi công đoạn từ tuyển chọn nguyên liệu đến lưu mẫu bảo chứng.
               </p>
             </div>
@@ -186,12 +186,12 @@ export default function CapabilitiesPage() {
                       onClick={() => setActiveStep(idx)}
                       className={`w-full text-left p-5 rounded-2xl border transition-all flex items-center gap-4 cursor-pointer ${
                         isActive
-                          ? 'bg-haq-bone border-haq-red shadow-md scale-[1.01]'
-                          : 'bg-white border-black/5 hover:bg-haq-bone/50'
+                          ? 'bg-haq-cream border-haq-red shadow-md scale-[1.01]'
+                          : 'bg-white border-haq-border hover:bg-haq-cream/50'
                       }`}
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-heading font-black text-xs ${
-                        isActive ? 'bg-haq-red text-white' : 'bg-black/5 text-haq-ink/60'
+                        isActive ? 'bg-haq-red text-white' : 'bg-haq-cream text-haq-text-secondary'
                       }`}>
                         {item.step}
                       </div>
@@ -205,8 +205,8 @@ export default function CapabilitiesPage() {
                 })}
               </div>
 
-              <div className="lg:col-span-6 bg-haq-bone rounded-3xl p-6 sm:p-8 border border-black/10 shadow-lg">
-                <div className="relative aspect-16/10 rounded-2xl overflow-hidden mb-6 bg-black/5">
+              <div className="lg:col-span-6 bg-haq-cream rounded-3xl p-6 sm:p-8 border border-haq-border shadow-lg">
+                <div className="relative aspect-16/10 rounded-2xl overflow-hidden mb-6 bg-haq-soft">
                   <img
                     src={labImg}
                     alt="Phòng Lab kiểm nghiệm HAQ"
@@ -220,7 +220,7 @@ export default function CapabilitiesPage() {
                 <h3 className="font-heading font-black text-xl text-haq-ink uppercase mt-1 mb-2">
                   {QUALITY_STEPS[activeStep].name}
                 </h3>
-                <p className="text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+                <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                   {QUALITY_STEPS[activeStep].desc}
                 </p>
               </div>
@@ -229,7 +229,7 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* 4. OEM / ODM Partnership Platform */}
-        <section id="oem-odm" className="py-20 border-b border-black/5 bg-haq-bone">
+        <section id="oem-odm" className="py-20 border-b border-haq-border bg-haq-cream">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
               <div className="lg:col-span-6 space-y-6">
@@ -240,30 +240,30 @@ export default function CapabilitiesPage() {
                   <h2 className="font-heading font-black text-3xl text-haq-ink uppercase mt-1">
                     Dịch Vụ Gia Công OEM / ODM Chuyên Nghiệp
                   </h2>
-                  <p className="mt-3 text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                     Đồng hành cùng các thương hiệu bán lẻ, chuỗi F&B và nhà phân phối phát triển các dòng sản phẩm bánh tráng và đồ ăn vặt đóng gói riêng.
                   </p>
                 </div>
 
                 <div className="space-y-3">
-                  <div className="p-4 bg-white rounded-2xl border border-black/5 flex items-start gap-3">
+                  <div className="p-4 bg-white rounded-2xl border border-haq-border flex items-start gap-3">
                     <FileCheck className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-heading font-bold text-sm text-haq-ink uppercase">Hỗ trợ hồ sơ tự công bố & Kiểm nghiệm</h4>
-                      <p className="text-xs text-haq-ink/65 mt-0.5">Tư vấn đầy đủ thủ tục pháp lý, kiểm nghiệm vi sinh và công bố chất lượng.</p>
+                      <p className="text-xs text-haq-text-secondary mt-0.5">Tư vấn đầy đủ thủ tục pháp lý, kiểm nghiệm vi sinh và công bố chất lượng.</p>
                     </div>
                   </div>
-                  <div className="p-4 bg-white rounded-2xl border border-black/5 flex items-start gap-3">
+                  <div className="p-4 bg-white rounded-2xl border border-haq-border flex items-start gap-3">
                     <Boxes className="w-5 h-5 text-haq-red shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-heading font-bold text-sm text-haq-ink uppercase">Tùy biến bao bì & công thức gia vị</h4>
-                      <p className="text-xs text-haq-ink/65 mt-0.5">Linh hoạt kích cỡ túi zip, hũ nắp nhôm, hộp quà tặng và khẩu vị vùng miền.</p>
+                      <p className="text-xs text-haq-text-secondary mt-0.5">Linh hoạt kích cỡ túi zip, hũ nắp nhôm, hộp quà tặng và khẩu vị vùng miền.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-xl border border-black/10">
+              <div className="lg:col-span-6 relative aspect-16/10 rounded-3xl overflow-hidden shadow-xl border border-haq-border">
                 <img
                   src={b2bImg}
                   alt="Hợp tác B2B cùng HAQ FOOD"
@@ -275,7 +275,7 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* 5. Distribution & Logistics */}
-        <section id="phan-phoi" className="py-20 border-b border-black/5 bg-white">
+        <section id="phan-phoi" className="py-20 border-b border-haq-border bg-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="max-w-3xl mb-12">
               <span className="font-mono text-xs font-bold text-haq-red uppercase tracking-widest">
@@ -284,14 +284,14 @@ export default function CapabilitiesPage() {
               <h2 className="font-heading font-black text-3xl text-haq-ink uppercase mt-1">
                 Mạng Lưới Bán Lẻ & Xuất Khẩu Quốc Tế
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-haq-ink/75 leading-relaxed">
+              <p className="mt-2 text-xs sm:text-sm text-haq-text-secondary leading-relaxed">
                 Hiện diện tại hơn 3.000 điểm bán lẻ tại Việt Nam và xuất khẩu chính ngạch sang Hàn Quốc, Đài Loan.
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
               {RETAIL_PARTNERS.map((partner, idx) => (
-                <div key={idx} className="bg-haq-bone p-4 rounded-2xl border border-black/5 flex flex-col items-center justify-center text-center">
+                <div key={idx} className="bg-haq-cream p-4 rounded-2xl border border-haq-border flex flex-col items-center justify-center text-center">
                   <img
                     src={partner.logo}
                     alt={partner.name}
@@ -302,13 +302,13 @@ export default function CapabilitiesPage() {
               ))}
             </div>
 
-            <div className="relative aspect-21/9 rounded-3xl overflow-hidden border border-black/10 shadow-lg">
+            <div className="relative aspect-21/9 rounded-3xl overflow-hidden border border-haq-border shadow-lg">
               <img
                 src={distributionImg}
                 alt="Kho vận xuất khẩu HAQ"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-6 sm:p-10 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-haq-dark/80 via-transparent to-transparent flex items-end p-6 sm:p-10 text-white">
                 <div>
                   <div className="font-mono text-xs font-bold text-haq-gold uppercase">LOGISTICS & EXPORT</div>
                   <h3 className="font-heading font-black text-xl sm:text-2xl uppercase mt-1">
@@ -321,7 +321,7 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* 6. Contact CTA */}
-        <section className="py-16 bg-haq-ink text-white">
+        <section className="py-16 bg-haq-dark text-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 text-center max-w-2xl">
             <h2 className="font-heading font-black text-2xl sm:text-3xl uppercase">
               HỢP TÁC DOANH NGHIỆP CÙNG HAQ FOOD

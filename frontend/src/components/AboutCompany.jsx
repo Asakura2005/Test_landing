@@ -47,7 +47,7 @@ export default function AboutCompany() {
             {/* Certifications */}
             <div className="flex items-center gap-4 mb-12">
               {CERT_LOGOS.map((src, i) => (
-                <img key={i} src={src} alt="Chứng nhận" className="h-16 w-16 md:h-20 md:w-20 object-contain rounded-full border border-black/10 shadow-sm bg-white" />
+                <img key={i} src={src} alt="Chứng nhận" className="h-16 w-16 md:h-20 md:w-20 object-contain rounded-full border border-haq-border shadow-sm bg-white" />
               ))}
               <div className="h-16 w-16 md:h-20 md:w-20 object-contain rounded-full border border-haq-red bg-white flex items-center justify-center p-2 text-center text-haq-red font-bold text-xs shadow-sm">
                 OEM<br/>ODM

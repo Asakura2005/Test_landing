@@ -130,8 +130,8 @@ export default function StickyNav() {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-xs h-[68px] sm:h-[72px] border-b border-black/5 flex items-center'
-          : 'bg-white h-[72px] sm:h-[76px] border-b border-black/5 flex items-center'
+          ? 'bg-white/95 backdrop-blur-md shadow-xs h-[68px] sm:h-[72px] border-b border-haq-border flex items-center'
+          : 'bg-white h-[72px] sm:h-[76px] border-b border-haq-border flex items-center'
       }`}
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between w-full">
@@ -141,7 +141,7 @@ export default function StickyNav() {
           className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded-lg"
           title="HAQ FOOD - Trang chủ"
         >
-          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-lg overflow-hidden border border-black/5 bg-white p-0.5 shrink-0">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-lg overflow-hidden border border-haq-border bg-white p-0.5 shrink-0">
             <img
               src={logoImg}
               alt="HAQ FOOD Logo"
@@ -179,7 +179,7 @@ export default function StickyNav() {
               }`}
             >
               <span>VỀ CHÚNG TÔI</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-red' : 'text-haq-ink/50'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-red' : 'text-haq-text-secondary'}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-red transition-all duration-200 ${
                 activeMenu === 've-chung-toi' || isAboutActive ? 'w-full' : 'w-0'
               }`} />
@@ -188,11 +188,11 @@ export default function StickyNav() {
             {activeMenu === 've-chung-toi' && (
               <div
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
-                className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-2xl border border-black/10 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-xl border border-haq-border p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
-                <div className="text-[10px] font-mono font-bold tracking-widest text-haq-red uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-black/5">
+                <div className="text-[10px] font-mono font-bold tracking-widest text-haq-red uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
                   <span>ABOUT HAQ FOOD HANOI JSC</span>
-                  <span className="text-haq-ink/40 font-normal">3 CHUYÊN MỤC CON</span>
+                  <span className="text-haq-text-secondary font-normal">3 CHUYÊN MỤC CON</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 pt-1">
@@ -208,8 +208,8 @@ export default function StickyNav() {
                         }}
                         className={`group block p-3 rounded-2xl transition-all ${
                           isSubActive
-                            ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
-                            : 'hover:bg-haq-bone/60'
+                            ? 'bg-haq-cream border border-haq-red/20 shadow-2xs'
+                            : 'hover:bg-haq-soft'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -219,15 +219,15 @@ export default function StickyNav() {
                             {sub.title}
                           </span>
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-[9px] font-bold text-haq-red/80 uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
+                            <span className="font-mono text-[9px] font-bold text-haq-red uppercase px-2 py-0.5 bg-haq-red/10 rounded-md">
                               {sub.badge}
                             </span>
                             <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
-                              isSubActive ? 'text-haq-red' : 'text-black/20 group-hover:text-haq-red'
+                              isSubActive ? 'text-haq-red' : 'text-haq-text-secondary group-hover:text-haq-red'
                             }`} />
                           </div>
                         </div>
-                        <p className="text-[11px] text-haq-ink/60 mt-1 line-clamp-1">
+                        <p className="text-[11px] text-haq-text-secondary mt-1 line-clamp-1">
                           {sub.desc}
                         </p>
                       </Link>
@@ -261,17 +261,17 @@ export default function StickyNav() {
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[740px] bg-white rounded-3xl shadow-2xl border border-black/10 p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[740px] bg-white rounded-3xl shadow-xl border border-haq-border p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="grid grid-cols-12 gap-6">
                   {/* Left Column: Dynamic Database Categories */}
-                  <div className="col-span-7 border-r border-black/10 pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
+                  <div className="col-span-7 border-r border-haq-border pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
                     <div className="text-[11px] font-mono font-bold tracking-widest text-haq-red uppercase mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>DANH MỤC SẢN PHẨM</span>
                       </div>
-                      <span className="text-[10px] text-haq-ink/50 font-normal">HAQ FOOD CATALOG</span>
+                      <span className="text-[10px] text-haq-text-secondary font-normal">HAQ FOOD CATALOG</span>
                     </div>
 
                     {categoryTree.map((cat) => {
@@ -284,8 +284,8 @@ export default function StickyNav() {
                             onClick={() => setActiveMenu(null)}
                             className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
                               isHovered
-                                ? 'bg-haq-bone border-haq-red/20 shadow-2xs'
-                                : 'hover:bg-haq-bone/60'
+                                ? 'bg-haq-cream border border-haq-red/20 shadow-2xs'
+                                : 'hover:bg-haq-soft'
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -295,10 +295,10 @@ export default function StickyNav() {
                                 {cat.name}
                               </span>
                               <ArrowRight className={`w-3.5 h-3.5 ${
-                                isHovered ? 'text-haq-red' : 'text-black/20'
+                                isHovered ? 'text-haq-red' : 'text-haq-text-secondary'
                               }`} />
                             </div>
-                            <p className="text-[11px] text-haq-ink/60 mt-0.5 line-clamp-1">
+                            <p className="text-[11px] text-haq-text-secondary mt-0.5 line-clamp-1">
                               {cat.desc}
                             </p>
                           </Link>
@@ -312,7 +312,7 @@ export default function StickyNav() {
                                   to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
                                   onMouseEnter={() => setHoveredCategory(child)}
                                   onClick={() => setActiveMenu(null)}
-                                  className="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-haq-ink/75 hover:text-haq-red bg-haq-bone/70 hover:bg-haq-red/10 px-2.5 py-1 rounded-lg transition-colors border border-black/5"
+                                  className="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-haq-ink/80 hover:text-haq-red bg-haq-soft hover:bg-haq-red/10 px-2.5 py-1 rounded-lg transition-colors border border-haq-border"
                                 >
                                   <span>↳ {child.name}</span>
                                 </Link>
@@ -323,7 +323,7 @@ export default function StickyNav() {
                       )
                     })}
 
-                    <div className="pt-3 border-t border-black/5">
+                    <div className="pt-3 border-t border-haq-border">
                       <Link
                         to="/san-pham"
                         onClick={() => setActiveMenu(null)}
@@ -335,8 +335,8 @@ export default function StickyNav() {
                   </div>
 
                   {/* Right Column: Dynamic Product Grid */}
-                  <div className="col-span-5 bg-haq-bone rounded-2xl p-5 border border-black/5 flex flex-col">
-                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-ink/50 uppercase mb-4">
+                  <div className="col-span-5 bg-haq-cream rounded-2xl p-5 border border-haq-border flex flex-col">
+                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-4">
                       {hoveredCategory?.name || 'SẢN PHẨM'}
                     </div>
                     <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] scrollbar-thin">
@@ -354,7 +354,7 @@ export default function StickyNav() {
                               onClick={() => setActiveMenu(null)}
                               className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
                             >
-                              <div className="w-16 h-16 rounded-full overflow-hidden border border-black/5 shadow-sm shrink-0 bg-haq-bone flex items-center justify-center">
+                              <div className="w-16 h-16 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
                                 <img
                                   src={imgSrc}
                                   alt={p.name}
@@ -433,13 +433,13 @@ export default function StickyNav() {
 
       {/* Mobile Drawer (Accordion) */}
       <div
-        className={`md:hidden fixed inset-x-0 top-[68px] sm:top-[72px] bg-white border-b border-black/10 transition-all duration-500 ease-in-out z-30 overflow-hidden ${
+        className={`md:hidden fixed inset-x-0 top-[68px] sm:top-[72px] bg-white border-b border-haq-border transition-all duration-500 ease-in-out z-30 overflow-hidden ${
           mobileOpen ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-6 py-8 space-y-5 overflow-y-auto max-h-[85vh] scrollbar-thin">
           {/* VỀ CHÚNG TÔI */}
-          <div className="border-b border-black/5 pb-3">
+          <div className="border-b border-haq-border pb-3">
             <button
               type="button"
               onClick={() => toggleMobileAccordion('ve-chung-toi')}
@@ -453,7 +453,7 @@ export default function StickyNav() {
                 mobileAccordion === 've-chung-toi' ? 'max-h-60 mt-3 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <div className="pl-4 space-y-3 py-1 text-xs text-haq-ink/75">
+              <div className="pl-4 space-y-3 py-1 text-xs text-haq-text-secondary">
                 {ABOUT_SUBPAGES.map((sub, idx) => (
                   <Link
                     key={idx}
@@ -469,7 +469,7 @@ export default function StickyNav() {
           </div>
 
           {/* SẢN PHẨM */}
-          <div className="border-b border-black/5 pb-3">
+          <div className="border-b border-haq-border pb-3">
             <button
               type="button"
               onClick={() => toggleMobileAccordion('san-pham')}
@@ -483,7 +483,7 @@ export default function StickyNav() {
                 mobileAccordion === 'san-pham' ? 'max-h-[400px] mt-3 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              <div className="pl-4 space-y-4 py-1 text-xs text-haq-ink/75 overflow-y-auto scrollbar-none">
+              <div className="pl-4 space-y-4 py-1 text-xs text-haq-text-secondary overflow-y-auto scrollbar-none">
                 {categoryTree.map((cat) => (
                   <div key={cat.id} className="space-y-2">
                     <Link
@@ -494,13 +494,13 @@ export default function StickyNav() {
                       {cat.name}
                     </Link>
                     {cat.children && cat.children.length > 0 && (
-                      <div className="pl-3 space-y-2 border-l border-black/10">
+                      <div className="pl-3 space-y-2 border-l border-haq-border">
                         {cat.children.map((child) => (
                           <Link
                             key={child.id}
                             to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
                             onClick={() => setMobileOpen(false)}
-                            className="block py-0.5 text-haq-ink/70 hover:text-haq-red"
+                            className="block py-0.5 text-haq-text-secondary hover:text-haq-red"
                           >
                             ↳ {child.name}
                           </Link>
@@ -512,7 +512,7 @@ export default function StickyNav() {
                 <Link
                   to="/san-pham"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-2 py-2 font-black text-haq-red pt-3 border-t border-black/5 w-full uppercase tracking-widest text-[11px]"
+                  className="inline-flex items-center gap-2 py-2 font-black text-haq-red pt-3 border-t border-haq-border w-full uppercase tracking-widest text-[11px]"
                 >
                   <span>XEM TẤT CẢ SẢN PHẨM</span>
                   <ArrowRight className="w-3 h-3" />
@@ -522,7 +522,7 @@ export default function StickyNav() {
           </div>
 
           {/* TIN TỨC */}
-          <div className="border-b border-black/5 pb-3">
+          <div className="border-b border-haq-border pb-3">
             <Link
               to="/tin-tuc"
               onClick={() => setMobileOpen(false)}
