@@ -332,9 +332,9 @@ export default function ProductsPage() {
                 return (
                   <div
                     key={prod.id}
-                    className="group bg-white rounded-3xl overflow-hidden border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                    className="group bg-white rounded-3xl overflow-hidden border border-black/5 hover:border-black/20 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
                   >
-                    <div>
+                    <div className="flex-1 flex flex-col">
                       {/* Product Image */}
                       <div className="relative aspect-4/3 overflow-hidden bg-haq-bone/60 flex items-center justify-center p-3 sm:p-4">
                         <img
@@ -351,28 +351,30 @@ export default function ProductsPage() {
                       </div>
 
                       {/* Product Content */}
-                      <div className="p-6">
-                        <div className="text-[10px] font-mono font-bold text-haq-red uppercase tracking-widest mb-1.5">
-                          {prod.categories?.name ||
-                            activeRootCategory.name ||
-                            'HAQ FOOD'}
+                      <div className="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="text-[10px] font-mono font-bold text-haq-red uppercase tracking-widest mb-1.5">
+                            {prod.categories?.name ||
+                              activeRootCategory.name ||
+                              'HAQ FOOD'}
+                          </div>
+
+                          <h3 className="font-heading font-black text-base sm:text-lg text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug line-clamp-2 min-h-[3.25rem] flex items-center">
+                            <Link to={`/san-pham/${detailSlug}`}>
+                              {prod.name}
+                            </Link>
+                          </h3>
+
+                          <p className="mt-2 text-xs text-haq-ink/70 leading-relaxed line-clamp-2 min-h-[2.5rem]">
+                            {prod.description ||
+                              'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
+                          </p>
                         </div>
-
-                        <h3 className="font-heading font-black text-lg text-haq-ink group-hover:text-haq-red transition-colors uppercase leading-snug">
-                          <Link to={`/san-pham/${detailSlug}`}>
-                            {prod.name}
-                          </Link>
-                        </h3>
-
-                        <p className="mt-2.5 text-xs text-haq-ink/70 leading-relaxed line-clamp-2">
-                          {prod.description ||
-                            'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
-                        </p>
                       </div>
                     </div>
 
                     {/* Card Footer */}
-                    <div className="p-6 pt-0">
+                    <div className="p-6 pt-0 mt-auto">
                       <Link
                         to={`/san-pham/${detailSlug}`}
                         className="w-full inline-flex items-center justify-center gap-2 bg-haq-bone hover:bg-haq-red text-haq-ink hover:text-white text-xs font-heading font-extrabold uppercase tracking-wider py-3 rounded-2xl transition-all duration-200"
