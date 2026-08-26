@@ -202,13 +202,13 @@ export function buildCategoryTree(rawCategories = []) {
 }
 
 /**
- * Lấy tất cả category IDs (bao gồm cả con) thuộc về 1 slug
+ * Lấy tất cả category IDs (bao gồm cả con) thuộc về 1 slug hoặc ID
  */
-export function getCategoryAndChildrenIds(categoryTree, targetSlug) {
-  if (!targetSlug || targetSlug === 'all') return null
+export function getCategoryAndChildrenIds(categoryTree, targetSlugOrId) {
+  if (!targetSlugOrId || targetSlugOrId === 'all') return null
 
   for (const root of categoryTree) {
-    if (root.slug === targetSlug) {
+    if (root.slug === targetSlugOrId || root.id === targetSlugOrId) {
       const ids = [root.id]
       if (root.children && root.children.length > 0) {
         root.children.forEach((c) => ids.push(c.id))
@@ -216,12 +216,12 @@ export function getCategoryAndChildrenIds(categoryTree, targetSlug) {
       return ids
     }
     if (root.children && root.children.length > 0) {
-      const child = root.children.find((c) => c.slug === targetSlug)
+      const child = root.children.find((c) => c.slug === targetSlugOrId || c.id === targetSlugOrId)
       if (child) return [child.id]
     }
   }
 
-  return null
+  return [targetSlugOrId]
 }
 
 /**
@@ -231,9 +231,9 @@ export function findCategoryBySlug(categoryTree, slug) {
   if (!slug || slug === 'all') return categoryTree[0]
 
   for (const root of categoryTree) {
-    if (root.slug === slug) return root
+    if (root.slug === slug || root.id === slug) return root
     if (root.children && root.children.length > 0) {
-      const child = root.children.find((c) => c.slug === slug)
+      const child = root.children.find((c) => c.slug === slug || c.id === slug)
       if (child) return child
     }
   }
@@ -260,21 +260,27 @@ export function filterProductsByDbCategory(products = [], activeSlug = 'all', su
     if (p.categories) {
       if (matchingIds && matchingIds.includes(p.categories.id)) return true
       if (p.categories.slug === effectiveSlug) return true
-      if (effectiveSlug === 'banh-trang' && (p.categories.slug === 'banh-trang-say' || p.categories.slug === 'banh-trang-tron')) return true
+      if (effectiveSlug === 'banh-trang' && (p.categories.slug === 'banh-trang-say' || p.categories.slug === 'banh-trang-say-gion' || p.categories.slug === 'banh-trang-tron' || p.categories.slug === 'bnh-trng-trn')) return true
+      if (effectiveSlug === 'cac-loai-banh' && (p.categories.slug === 'banh-dau-xanh' || p.categories.slug === 'banh-hanh-nhan' || p.categories.slug === 'banh-sua' || p.categories.slug === 'banh-deo' || p.categories.slug === 'banh-khac')) return true
     }
 
     // 3. Fallback theo chuỗi slug trực tiếp
     if (p.category === effectiveSlug) return true
-    if (effectiveSlug === 'banh-trang' && (p.category === 'banh-trang-say' || p.category === 'banh-trang-tron')) return true
+    if (effectiveSlug === 'banh-trang' && (p.category === 'banh-trang-say' || p.category === 'banh-trang-say-gion' || p.category === 'banh-trang-tron' || p.category === 'bnh-trng-trn')) return true
+    if (effectiveSlug === 'cac-loai-banh' && (p.category === 'banh-dau-xanh' || p.category === 'banh-hanh-nhan' || p.category === 'banh-sua' || p.category === 'banh-deo' || p.category === 'banh-khac')) return true
 
-    // 4. Fallback theo tên
+    // 4. Fallback theo tên sản phẩm chính xác
     const nameLower = (p.name || '').toLowerCase()
-    if (effectiveSlug === 'banh-trang-say' && (nameLower.includes('sấy') || nameLower.includes('hoki-bánh tráng sấy'))) return true
-    if (effectiveSlug === 'banh-trang-tron' && (nameLower.includes('trộn') || nameLower.includes('sa tế') || nameLower.includes('gà lá chanh'))) return true
+    if ((effectiveSlug === 'banh-trang-say' || effectiveSlug === 'banh-trang-say-gion') && (nameLower.includes('sấy') || nameLower.includes('bánh tráng sấy'))) return true
+    if ((effectiveSlug === 'banh-trang-tron' || effectiveSlug === 'bnh-trng-trn') && (nameLower.includes('trộn') || nameLower.includes('sa tế') || nameLower.includes('gà lá chanh'))) return true
     if (effectiveSlug === 'banh-trang' && nameLower.includes('bánh tráng')) return true
     if (effectiveSlug === 'bap-rang-bo' && nameLower.includes('bắp')) return true
     if ((effectiveSlug === 'thot-kho' || effectiveSlug === 'thit-kho') && (nameLower.includes('thịt') || nameLower.includes('khô'))) return true
-    if (effectiveSlug === 'banh-hanh-nhan' && (nameLower.includes('hạnh nhân') || nameLower.includes('bánh'))) return true
+    if (effectiveSlug === 'banh-hanh-nhan' && nameLower.includes('hạnh nhân')) return true
+    if ((effectiveSlug === 'banh-dau-xanh' || effectiveSlug === 'banh-dau-xanh-tuoi') && (nameLower.includes('đậu xanh') || nameLower.includes('dau xanh'))) return true
+    if (effectiveSlug === 'banh-sua' && (nameLower.includes('sữa dừa') || nameLower.includes('bánh sữa'))) return true
+    if (effectiveSlug === 'banh-deo' && nameLower.includes('dẻo')) return true
+    if (effectiveSlug === 'cac-loai-banh' && (nameLower.includes('hạnh nhân') || nameLower.includes('đậu xanh') || nameLower.includes('sữa dừa') || nameLower.includes('bánh dẻo'))) return true
 
     return false
   })

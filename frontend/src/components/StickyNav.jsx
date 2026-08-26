@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
-import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage } from '../data/productCategories'
+import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
 import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
 
@@ -275,7 +275,7 @@ export default function StickyNav() {
                     </div>
 
                     {categoryTree.map((cat) => {
-                      const isHovered = activePreviewCat?.id === cat.id
+                      const isHovered = hoveredCategory?.id === cat.id || hoveredCategory?.parent_id === cat.id
                       return (
                         <div key={cat.id} className="space-y-1">
                           <Link
@@ -306,17 +306,24 @@ export default function StickyNav() {
                           {/* Subcategories */}
                           {cat.children && cat.children.length > 0 && (
                             <div className="pl-4 pr-1 py-1 flex flex-wrap gap-1.5">
-                              {cat.children.map((child) => (
-                                <Link
-                                  key={child.id}
-                                  to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
-                                  onMouseEnter={() => setHoveredCategory(child)}
-                                  onClick={() => setActiveMenu(null)}
-                                  className="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-haq-ink/80 hover:text-haq-red bg-haq-soft hover:bg-haq-red/10 px-2.5 py-1 rounded-lg transition-colors border border-haq-border"
-                                >
-                                  <span>↳ {child.name}</span>
-                                </Link>
-                              ))}
+                              {cat.children.map((child) => {
+                                const isChildHovered = hoveredCategory?.id === child.id || hoveredCategory?.slug === child.slug
+                                return (
+                                  <Link
+                                    key={child.id}
+                                    to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
+                                    onMouseEnter={() => setHoveredCategory(child)}
+                                    onClick={() => setActiveMenu(null)}
+                                    className={`inline-flex items-center gap-1 text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg transition-colors border ${
+                                      isChildHovered
+                                        ? 'bg-haq-red text-white border-haq-red shadow-2xs'
+                                        : 'text-haq-ink/80 hover:text-haq-red bg-haq-soft hover:bg-haq-red/10 border-haq-border'
+                                    }`}
+                                  >
+                                    <span>↳ {child.name}</span>
+                                  </Link>
+                                )
+                              })}
                             </div>
                           )}
                         </div>
@@ -336,16 +343,23 @@ export default function StickyNav() {
 
                   {/* Right Column: Dynamic Product Grid */}
                   <div className="col-span-5 bg-haq-cream rounded-2xl p-5 border border-haq-border flex flex-col">
-                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-4">
-                      {hoveredCategory?.name || 'SẢN PHẨM'}
+                    <div className="text-[10px] font-mono font-bold tracking-widest text-haq-text-secondary uppercase mb-4 flex items-center justify-between">
+                      <span>{hoveredCategory?.name || 'SẢN PHẨM'}</span>
+                      <span className="text-[9px] font-normal text-haq-text-secondary/70">
+                        {filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree).length} sản phẩm
+                      </span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] scrollbar-thin">
-                      {allProducts
-                        .filter(p => hoveredCategory?.id === '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966' || // 'all' or specific cat
-                                     p.category_id === hoveredCategory?.id || 
-                                     p.categories?.slug === hoveredCategory?.slug)
-                        .slice(0, 8) // Limit to 8 for cleanliness
-                        .map((p) => {
+                      {(() => {
+                        const filtered = filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree)
+                        if (filtered.length === 0) {
+                          return (
+                            <div className="col-span-2 py-8 text-center text-xs text-haq-text-secondary">
+                              Đang cập nhật sản phẩm...
+                            </div>
+                          )
+                        }
+                        return filtered.slice(0, 8).map((p) => {
                           const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
                           return (
                             <Link
@@ -370,7 +384,8 @@ export default function StickyNav() {
                               </span>
                             </Link>
                           )
-                        })}
+                        })
+                      })()}
                     </div>
                   </div>
                 </div>
