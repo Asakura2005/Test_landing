@@ -74,13 +74,27 @@ export default function LeadForm() {
 
             {/* Contact info */}
             <div className="mt-12 space-y-6">
-              <a href="tel:0993308319" className="flex items-start gap-4 group">
-                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-orange transition-colors">
+              <a href="tel:02423235656" className="flex items-start gap-4 group">
+                <span className="mt-1 w-10 h-10 grid place-items-center bg-white/10 group-hover:bg-haq-red transition-colors">
                   <Phone className="w-5 h-5 text-white" strokeWidth={1.8} />
                 </span>
                 <span>
                   <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
-                    Hotline / Zalo
+                    Hotline (Điện thoại bàn)
+                  </span>
+                  <span className="font-heading font-bold text-lg text-white">
+                    024 23 23 56 56
+                  </span>
+                </span>
+              </a>
+
+              <a href="https://zalo.me/0993308319" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 group">
+                <span className="mt-1 w-10 h-10 grid place-items-center bg-[#0068FF]/30 group-hover:bg-[#0068FF] transition-colors rounded">
+                  <span className="text-white font-bold text-sm">Z</span>
+                </span>
+                <span>
+                  <span className="block font-mono text-[11px] uppercase tracking-widest text-white/50">
+                    Zalo Công Ty
                   </span>
                   <span className="font-heading font-bold text-lg text-white">
                     0993 308 319

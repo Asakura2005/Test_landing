@@ -106,7 +106,7 @@ export default function CapabilitiesSection() {
 
             <div className="pt-4">
               <Link
-                to="/lien-he"
+                to="/lien-he?type=oem"
                 className="inline-flex items-center gap-2 bg-haq-dark hover:bg-haq-red text-white text-xs font-heading font-extrabold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm"
               >
                 <span>LIÊN HỆ HỢP TÁC SẢN XUẤT</span>

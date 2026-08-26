@@ -103,7 +103,13 @@ export default function Footer() {
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-haq-red shrink-0" />
                 <span>
-                  <strong>Hotline / Zalo:</strong> <a href="tel:0993308319" className="hover:text-haq-gold font-mono font-bold">0993 308 319</a>
+                  <strong>Hotline:</strong> <a href="tel:02423235656" className="hover:text-haq-gold font-mono font-bold">024 23 23 56 56</a>
+                </span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <span className="w-4 h-4 text-haq-red shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">Z</span>
+                <span>
+                  <strong>Zalo:</strong> <a href="https://zalo.me/0993308319" target="_blank" rel="noopener noreferrer" className="hover:text-haq-gold font-mono font-bold">0993 308 319</a>
                 </span>
               </li>
               <li className="flex items-center gap-2.5">

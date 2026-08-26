@@ -8,18 +8,18 @@ export default function FloatingContactBar() {
 
   const contactItems = [
     {
-      href: 'tel:0993308319',
+      href: 'tel:02423235656',
       icon: Phone,
-      label: 'Hotline: 0993 308 319',
+      label: 'Hotline: 024 23 23 56 56',
       color: 'bg-haq-red',
-      title: 'Gọi Hotline',
+      title: 'Gọi Hotline (024 23 23 56 56)',
     },
     {
       href: 'https://zalo.me/0993308319',
       icon: null,
-      label: 'Chat Zalo tư vấn',
+      label: 'Chat Zalo: 0993 308 319',
       color: 'bg-[#0068FF]',
-      title: 'Chat Zalo: 0993 308 319',
+      title: 'Chat Zalo (0993 308 319)',
       text: 'Zalo',
     },
     {
@@ -38,7 +38,7 @@ export default function FloatingContactBar() {
       title: 'Gửi Email hợp tác',
     },
     {
-      href: '/lien-he',
+      href: '/lien-he?type=oem',
       icon: Sparkles,
       label: 'Hợp tác B2B / OEM',
       color: 'bg-haq-ink',

@@ -23,7 +23,7 @@ export default function ProductDetailModal({ product, onClose }) {
     if (leadForm) {
       leadForm.scrollIntoView({ behavior: 'smooth' })
     } else {
-      window.location.href = '/lien-he'
+      window.location.href = '/lien-he?type=products'
     }
   }
 
