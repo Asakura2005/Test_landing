@@ -1,129 +1,184 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Loader2 } from 'lucide-react'
+import { getCategories, getProducts } from '../services/supabase'
+import { DEFAULT_DB_CATEGORIES } from '../data/productCategories'
 
-import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
-import catBanhImg from '../assets/categories/category_banh.jpg'
+// Default fallback images for categories / products
+import banhTrangSayImg from '../assets/products/banh_trang_say_tom_50g.jpg'
+import banhTrangTronImg from '../assets/products/banh_trang_soi_sa_te_tom_100g.jpg'
+import banhDauXanhImg from '../assets/products/banh_dau_xanh_tuoi_250g.jpg'
+import banhHanhNhanImg from '../assets/products/banh_hanh_nhan_truyen_thong_130g.jpg'
+import banhSuaDuaImg from '../assets/products/banh_sua_dua_130g.jpg'
 import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
 import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
+import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
 
-const FEATURED_CATEGORIES = [
-  {
-    id: 'banh-trang',
-    name: 'BÁNH TRÁNG',
-    subtitle: 'Bánh tráng sấy giòn & Bánh tráng trộn',
-    desc: 'Dây chuyền sấy giòn khép kín, đa dạng hương vị bò, tôm, phô mai và gà lá chanh.',
-    image: catBanhTrangImg,
-    badge: 'CHỦ LỰC',
-    link: '/san-pham?category=banh-trang',
-    gridClass: 'lg:col-span-7 aspect-16/10 lg:aspect-auto min-h-[340px]',
-  },
-  {
-    id: 'banh-hanh-nhan',
-    name: 'BÁNH THƯỢNG HẠNG',
-    subtitle: 'Bánh hạnh nhân & Bánh đậu xanh tươi',
-    desc: 'Bánh nướng bùi thơm hạt hạnh nhân tự nhiên và đậu xanh tươi nguyên chất.',
-    image: catBanhImg,
-    badge: 'XUẤT KHẨU',
-    link: '/san-pham?category=banh-hanh-nhan',
-    gridClass: 'lg:col-span-5 aspect-16/10 lg:aspect-auto min-h-[340px]',
-  },
-  {
-    id: 'bap-rang-bo',
-    name: 'ĐỒ ĂN VẶT ĐÓNG GÓI',
-    subtitle: 'Bắp rang bơ sấy nổ công nghệ cao',
-    desc: 'Hạt bắp nổ tròn đều phủ sốt bơ caramel và phô mai béo ngậy, giữ độ giòn lâu.',
-    image: catDoAnVatImg,
-    badge: 'TIÊU CHUẨN ISO',
-    link: '/san-pham?category=bap-rang-bo',
-    gridClass: 'lg:col-span-5 aspect-16/10 lg:aspect-auto min-h-[340px]',
-  },
-  {
-    id: 'thot-kho',
-    name: 'THỊT KHÔ HẢO HẠNG',
-    subtitle: 'Thịt bò & thịt heo sấy gia vị tự nhiên',
-    desc: 'Thịt tươi tẩm ướp gia vị sả ớt truyền thống, kiểm soát nghiêm ngặt từng lô hàng.',
-    image: catDoAnKhoImg,
-    badge: 'AN TOÀN HACCP',
-    link: '/san-pham?category=thot-kho',
-    gridClass: 'lg:col-span-7 aspect-16/10 lg:aspect-auto min-h-[340px]',
-  },
-]
+// Category image map lookup by slug or keywords
+const CATEGORY_IMAGE_LOOKUP = {
+  'banh-trang': banhTrangSayImg,
+  'banh-trang-say': banhTrangSayImg,
+  'banh-trang-tron': banhTrangTronImg,
+  'banh-hanh-nhan': banhHanhNhanImg,
+  'banh-dau-xanh': banhDauXanhImg,
+  'banh-khac': banhDauXanhImg,
+  'banh-sua': banhSuaDuaImg,
+  'banh-deo': banhHanhNhanImg,
+  'bap-rang-bo': catDoAnVatImg,
+  'thot-kho': catDoAnKhoImg,
+  'thit-kho': catDoAnKhoImg,
+}
 
 export default function Products() {
-  return (
-    <section id="san-pham" className="py-24 sm:py-32 bg-white border-b border-black/5">
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="font-mono text-xs font-bold tracking-[0.25em] text-haq-red uppercase">
-                HAQ FOOD · PRODUCT SHOWCASE
-              </span>
-              <span className="h-px w-10 bg-haq-red" />
-            </div>
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
-              KHÁM PHÁ SẢN PHẨM
-            </h2>
-          </div>
+  const [categories, setCategories] = useState(DEFAULT_DB_CATEGORIES)
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
+  useEffect(() => {
+    let isMounted = true
+    const fetchData = async () => {
+      try {
+        const [cats, prods] = await Promise.all([
+          getCategories().catch(() => null),
+          getProducts().catch(() => null),
+        ])
+
+        if (isMounted) {
+          if (cats && cats.length > 0) {
+            setCategories(cats)
+          }
+          if (prods && prods.length > 0) {
+            setProducts(prods)
+          }
+        }
+      } catch (err) {
+        console.warn('Lỗi khi tải danh mục từ database:', err)
+      } finally {
+        if (isMounted) setIsLoading(false)
+      }
+    }
+
+    fetchData()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Chuẩn bị danh sách danh mục hiển thị dạng tròn:
+  // Nếu danh mục có con (như Bánh tráng -> Bánh tráng sấy, Bánh tráng trộn), ta hiển thị các danh mục con hoặc danh mục cha độc lập
+  const displayCategories = React.useMemo(() => {
+    // Tách cha và con
+    const childCategories = categories.filter((c) => c.parent_id !== null && c.slug !== 'all')
+    const parentCategoriesWithoutChildren = categories.filter(
+      (c) =>
+        c.parent_id === null &&
+        c.slug !== 'all' &&
+        !categories.some((child) => child.parent_id === c.id)
+    )
+
+    // Kết hợp các danh mục cụ thể (bao gồm danh mục con như Bánh tráng sấy, Bánh tráng trộn và các danh mục cha không chia nhỏ)
+    let combined = [...childCategories, ...parentCategoriesWithoutChildren]
+
+    // Nếu không có danh mục con thì lấy tất cả danh mục cha
+    if (combined.length === 0) {
+      combined = categories.filter((c) => c.slug !== 'all')
+    }
+
+    // Sắp xếp theo sort_order nếu có
+    combined.sort((a, b) => (a.sort_order ?? 99) - (b.sort_order ?? 99))
+
+    return combined.map((cat) => {
+      // Tìm ảnh sản phẩm đại diện từ DB products thuộc category này nếu có
+      let representativeImage = null
+      if (products && products.length > 0) {
+        const matchedProduct = products.find(
+          (p) =>
+            p.category_id === cat.id ||
+            p.categories?.slug === cat.slug ||
+            p.category_slug === cat.slug
+        )
+        if (matchedProduct?.image_url) {
+          representativeImage = matchedProduct.image_url
+        }
+      }
+
+      // Fallback sang mapping local nếu chưa có ảnh từ DB
+      if (!representativeImage) {
+        representativeImage =
+          CATEGORY_IMAGE_LOOKUP[cat.slug] ||
+          CATEGORY_IMAGE_LOOKUP[cat.slug?.replace(/-/g, '_')] ||
+          banhTrangSayImg
+      }
+
+      return {
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        image: representativeImage,
+        link: `/san-pham?category=${cat.slug}`,
+      }
+    })
+  }, [categories, products])
+
+  return (
+    <section id="san-pham" className="py-20 sm:py-28 bg-white border-b border-black/5">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+        {/* Section Header kiểu Orion */}
+        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+          <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase">
+            SẢN PHẨM
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-haq-ink/70 italic font-serif">
+            HAQ FOOD luôn đặt chất lượng và an toàn hàng đầu cho từng sản phẩm
+          </p>
+        </div>
+
+        {/* Circular Product Category Grid */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-3 text-haq-ink/50">
+            <Loader2 className="w-8 h-8 animate-spin text-haq-red" />
+            <span className="font-mono text-xs uppercase tracking-widest">Đang tải danh mục sản phẩm...</span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-12 lg:gap-14 justify-items-center">
+            {displayCategories.map((item) => (
+              <Link
+                key={item.id || item.slug}
+                to={item.link}
+                className="group flex flex-col items-center text-center w-full max-w-[240px]"
+              >
+                {/* Outer Circle Container */}
+                <div className="w-40 h-40 sm:w-52 sm:h-52 lg:w-56 lg:h-56 rounded-full bg-linear-to-b from-[#f8f9fa] to-[#efefef] border border-black/5 shadow-2xs group-hover:shadow-xl group-hover:border-haq-red/20 group-hover:bg-white transition-all duration-400 flex items-center justify-center p-4 relative overflow-hidden">
+                  {/* Subtle Inner Glow */}
+                  <div className="absolute inset-0 rounded-full bg-radial from-transparent to-black/5 opacity-50 pointer-events-none" />
+
+                  {/* Product Pack Floating in Circle */}
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-contain filter drop-shadow-md transform transition-transform duration-500 ease-out group-hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+
+                {/* Category Name Below Circle */}
+                <h3 className="mt-5 font-heading font-black text-sm sm:text-base text-haq-ink uppercase tracking-tight group-hover:text-haq-red transition-colors duration-200">
+                  {item.name}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom CTA to Full Catalog */}
+        <div className="mt-16 sm:mt-20 text-center">
           <Link
             to="/san-pham"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-extrabold text-haq-red hover:text-haq-ink uppercase tracking-wider transition-colors group"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-haq-ink text-white hover:bg-haq-red text-xs sm:text-sm font-heading font-extrabold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group"
           >
             <span>XEM TẤT CẢ SẢN PHẨM</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </Link>
-        </div>
-
-        {/* Asymmetric Editorial Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
-          {FEATURED_CATEGORIES.map((item) => (
-            <Link
-              key={item.id}
-              to={item.link}
-              className={`group relative rounded-3xl overflow-hidden shadow-2xs hover:shadow-2xl transition-all duration-500 flex flex-col justify-end p-6 sm:p-10 ${item.gridClass}`}
-            >
-              {/* Background Image with Zoom on Hover */}
-              <div className="absolute inset-0 z-0 overflow-hidden bg-haq-bone">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover transform group-hover:scale-106 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-                {/* Gradient for Text Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
-              </div>
-
-              {/* Top Badge */}
-              <div className="absolute top-6 left-6 z-10">
-                <span className="bg-haq-red/90 backdrop-blur-xs text-white font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
-                  {item.badge}
-                </span>
-              </div>
-
-              {/* Bottom Content */}
-              <div className="relative z-10 text-white">
-                <div className="text-xs font-mono text-white/70 uppercase tracking-widest mb-1">
-                  {item.subtitle}
-                </div>
-                <h3 className="font-heading font-black text-2xl sm:text-3xl text-white uppercase tracking-tight group-hover:text-haq-gold transition-colors">
-                  {item.name}
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed max-w-md line-clamp-2">
-                  {item.desc}
-                </p>
-
-                <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-heading font-extrabold uppercase tracking-wider text-white group-hover:text-haq-gold transition-colors">
-                  <span>KHÁM PHÁ DANH MỤC</span>
-                  <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1.5 transition-transform" />
-                </div>
-              </div>
-            </Link>
-          ))}
         </div>
       </div>
     </section>
