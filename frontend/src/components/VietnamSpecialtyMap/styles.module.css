@@ -450,6 +450,12 @@
   overflow: hidden;
 }
 
+@media (max-width: 1023px) {
+  .lineOverlay {
+    display: none !important;
+  }
+}
+
 .connectionPath {
   fill: none;
   stroke: #0a0a0a;

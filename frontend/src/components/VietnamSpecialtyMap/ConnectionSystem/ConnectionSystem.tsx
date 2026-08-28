@@ -219,6 +219,11 @@ export const ConnectionSystem: React.FC<ConnectionSystemProps> = ({
         cardRect.top > mapRect.bottom - 20 ||
         cardRect.left < mapRect.left + 50;
 
+      // On Mobile / Stacked layout (< 1024px), completely turn off the connection line
+      if (isStacked) {
+        return null;
+      }
+
       // 3. Calculate Dynamic Direction-Aware Map Edge Anchor (Phase 12)
       const edgeResult = getMapEdgeAnchor({
         provincePt: provinceStart,
@@ -228,26 +233,18 @@ export const ConnectionSystem: React.FC<ConnectionSystemProps> = ({
       });
       const edgeStart = edgeResult.anchor;
 
-      // 4. Determine Destination Endpoint
+      // 4. Determine Destination Endpoint (Desktop 2-Column layout connects to Story Card Entrance Port on the right)
       let endX: number;
       let endY: number;
 
-      if (isStacked) {
-        // Mobile / Stacked layout: Line terminates cleanly at the BOTTOM EDGE of the Map Container.
-        // Flow: Province -> Map Bottom Edge (clean, editorial, avoids diagonal screen clutter).
-        endX = edgeStart.x;
-        endY = edgeStart.y;
+      const anchorEl = card.querySelector<HTMLElement>('[data-card-anchor="true"]');
+      if (anchorEl) {
+        const portRect = anchorEl.getBoundingClientRect();
+        endX = portRect.left - experienceRect.left;
+        endY = portRect.top - experienceRect.top;
       } else {
-        // Desktop 2-Column layout: Connects to Story Card Entrance Port on the right
-        const anchorEl = card.querySelector<HTMLElement>('[data-card-anchor="true"]');
-        if (anchorEl) {
-          const portRect = anchorEl.getBoundingClientRect();
-          endX = portRect.left - experienceRect.left;
-          endY = portRect.top - experienceRect.top;
-        } else {
-          endX = cardRect.left - experienceRect.left;
-          endY = cardRect.top - experienceRect.top + 42;
-        }
+        endX = cardRect.left - experienceRect.left;
+        endY = cardRect.top - experienceRect.top + 42;
       }
 
       // 5. PHASE 13: Calculate smooth Hermite scale interpolation
