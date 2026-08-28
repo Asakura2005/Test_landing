@@ -20,6 +20,7 @@ import {
   MessageSquare,
   HelpCircle,
   ExternalLink,
+  ChevronDown,
 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
@@ -30,68 +31,63 @@ import { submitLead } from '../services/supabase'
 const TOPICS = [
   {
     id: 'partnership',
-    aliases: ['distribution', 'daily', 'partner'],
-    title: 'Đại lý & Nhà phân phối',
+    aliases: ['daily', 'npp', 'partner', 'distribution'],
+    title: 'Đại lý & NPP',
     shortTitle: 'Đại lý & NPP',
-    tag: 'Chính sách sỉ toàn quốc',
-    desc: 'Nhận bảng giá sỉ cạnh tranh, chiết khấu hấp dẫn và chính sách bảo hộ khu vực kinh doanh độc quyền.',
+    tag: 'Giải pháp Phân phối Toàn quốc',
+    desc: 'Mở rộng mạng lưới phân phối với chính sách linh hoạt và hỗ trợ sát sao.',
     dept: 'Phòng Phát triển Đại lý & NPP',
     icon: Handshake,
     hotline: '024 23 23 56 56 (Ext 102)',
     leadNeed: 'Hợp tác Đại lý & Nhà phân phối',
-    highlights: ['Chiết khấu đại lý tốt', 'Hỗ trợ mẫu thử & POSM', 'Bảo hộ thị trường'],
   },
   {
     id: 'products',
-    aliases: ['mua-hang', 'don-hang', 'ban-buon'],
+    aliases: ['mua-hang', 'don-hang', 'ban-buon', 'wholesale'],
     title: 'Mua sỉ & Đơn hàng lớn',
     shortTitle: 'Mua sỉ & Bán buôn',
-    tag: 'Báo giá nhanh trong 2h',
-    desc: 'Báo giá trực tiếp cho chuỗi cửa hàng, siêu thị mini, bếp ăn, quà biếu doanh nghiệp và sự kiện.',
+    tag: 'Giải pháp Đơn hàng sỉ & Quà tặng',
+    desc: 'Báo giá nhanh cho chuỗi cửa hàng tiện lợi, siêu thị mini, bếp ăn công nghiệp và các đơn hàng lớn.',
     dept: 'Phòng Kinh doanh & Bán lẻ',
     icon: Package,
     hotline: '024 23 23 56 56 (Ext 101)',
     leadNeed: 'Mua sỉ & Tìm hiểu sản phẩm',
-    highlights: ['Giao hàng hỏa tốc', 'Hạn sử dụng mới nhất', 'Đầy đủ hóa đơn VAT'],
   },
   {
     id: 'export',
-    aliases: ['international', 'global'],
-    title: 'Thương mại Xuất khẩu',
+    aliases: ['international', 'global', 'thi-truong-moi'],
+    title: 'Xuất khẩu & Thị trường mới',
     shortTitle: 'Xuất khẩu Quốc tế',
-    tag: 'Hồ sơ CO/CQ đầy đủ',
-    desc: 'Cung ứng thực phẩm sấy sạch đạt tiêu chuẩn xuất khẩu sang Hàn Quốc, Đài Loan, Nhật Bản, Hoa Kỳ...',
+    tag: 'Thương mại & Xuất khẩu Chính ngạch',
+    desc: 'Cung ứng sản phẩm đạt tiêu chuẩn, phù hợp với nhu cầu thị trường quốc tế.',
     dept: 'Phòng Thương mại Quốc tế',
     icon: Globe2,
     hotline: '024 23 23 56 56 (Ext 103)',
     leadNeed: 'Đối tác Thương mại Xuất khẩu',
-    highlights: ['Chứng nhận ATTP & Test report', 'Đóng gói container chuyên dụng', 'Hỗ trợ kiểm dịch & hải quan'],
   },
   {
     id: 'oem',
-    aliases: ['private-label', 'giacong'],
-    title: 'Gia công Thực phẩm (OEM / ODM)',
-    shortTitle: 'Gia công OEM / ODM',
-    tag: 'Theo công thức riêng',
-    desc: 'Sản xuất, sấy sạch và đóng gói thực phẩm theo thương hiệu riêng, tùy chỉnh hương vị & bao bì đối tác.',
+    aliases: ['private-label', 'giacong', 'san-xuat'],
+    title: 'Sản xuất & Gia công',
+    shortTitle: 'Sản xuất & Gia công',
+    tag: 'Sản xuất & Gia công Thương hiệu riêng',
+    desc: 'Giải pháp sản xuất và gia công theo yêu cầu doanh nghiệp.',
     dept: 'Trung tâm R&D & Gia công OEM',
     icon: Building2,
     hotline: '024 23 23 56 56 (Ext 104)',
     leadNeed: 'Sản xuất Private Label & Gia công OEM',
-    highlights: ['Quy trình sấy khép kín', 'Tùy biến bao bì & quy cách', 'Bảo mật công thức tuyệt đối'],
   },
   {
     id: 'general',
-    aliases: ['support', 'contact', 'other'],
-    title: 'Chăm sóc & Hỗ trợ chung',
-    shortTitle: 'Hỗ trợ khách hàng',
-    tag: 'Phản hồi trong ngày',
-    desc: 'Tra cứu chứng từ, chính sách đổi trả, đề xuất truyền thông, ứng tuyển hoặc trao đổi công việc khác.',
+    aliases: ['support', 'contact', 'other', 'cham-soc'],
+    title: 'Chăm sóc & Hỗ trợ',
+    shortTitle: 'Hỗ trợ đối tác',
+    tag: 'Dịch vụ Khách hàng & Hợp tác chung',
+    desc: 'Tra cứu chứng từ, chính sách đổi trả và hỗ trợ trong quá trình hợp tác.',
     dept: 'Bộ phận Chăm sóc Khách hàng',
     icon: Headphones,
     hotline: '024 23 23 56 56',
     leadNeed: 'Liên hệ & Hỗ trợ chung',
-    highlights: ['Hỗ trợ hóa đơn chứng từ', 'Chính sách đổi trả minh bạch', 'Tiếp nhận phản hồi 24/7'],
   },
 ]
 
@@ -142,7 +138,7 @@ export default function ContactPage() {
   // Determine initial selected topic based on URL query param ?type=...
   const getInitialTopic = () => {
     const typeParam = (searchParams.get('type') || '').toLowerCase()
-    if (!typeParam) return 'partnership' // Default to partnership
+    if (!typeParam) return 'partnership'
 
     const match = TOPICS.find(
       (t) => t.id === typeParam || (t.aliases && t.aliases.includes(typeParam))
@@ -163,11 +159,7 @@ export default function ContactPage() {
     phone: '',
     country: 'Việt Nam',
     region: '',
-    distributionChannel: '',
-    productInterest: '',
-    estimatedVolume: '',
-    packagingRequirement: '',
-    topic: '',
+    topic: getInitialTopic(),
     message: '',
   })
 
@@ -180,30 +172,32 @@ export default function ContactPage() {
       )
       if (match && match.id !== activeTopicId) {
         setActiveTopicId(match.id)
+        setFormData((prev) => ({ ...prev, topic: match.id }))
       }
     }
   }, [searchParams])
 
   const handleSelectTopic = (topicId) => {
     setActiveTopicId(topicId)
+    setFormData((prev) => ({ ...prev, topic: topicId }))
     setSearchParams({ type: topicId })
     setSubmitSuccess(false)
     setErrorMessage('')
-
-    // Smooth scroll to form on mobile devices
-    if (window.innerWidth < 1024 && formRef.current) {
-      setTimeout(() => {
-        formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 100)
-    }
   }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value }
+      if (name === 'topic') {
+        setActiveTopicId(value)
+        setSearchParams({ type: value })
+      }
+      return updated
+    })
   }
 
-  const activeTopic = TOPICS.find((t) => t.id === activeTopicId) || TOPICS[0]
+  const activeTopic = TOPICS.find((t) => t.id === (activeTopicId || formData.topic)) || TOPICS[0]
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -214,14 +208,8 @@ export default function ContactPage() {
       // Build note details
       const noteDetails = []
       if (formData.email) noteDetails.push(`Email: ${formData.email}`)
-      if (formData.country && activeTopicId === 'export') noteDetails.push(`Quốc gia: ${formData.country}`)
       if (formData.region) noteDetails.push(`Khu vực: ${formData.region}`)
-      if (formData.distributionChannel) noteDetails.push(`Kênh phân phối: ${formData.distributionChannel}`)
-      if (formData.productInterest) noteDetails.push(`Sản phẩm quan tâm: ${formData.productInterest}`)
-      if (formData.estimatedVolume) noteDetails.push(`Sản lượng dự kiến: ${formData.estimatedVolume}`)
-      if (formData.packagingRequirement) noteDetails.push(`Yêu cầu bao bì/đóng gói: ${formData.packagingRequirement}`)
-      if (formData.topic) noteDetails.push(`Chủ đề: ${formData.topic}`)
-      if (formData.message) noteDetails.push(`Nội dung: ${formData.message}`)
+      if (formData.message) noteDetails.push(`Ghi chú: ${formData.message}`)
 
       const leadPayload = {
         name: formData.fullName || 'Khách hàng liên hệ website',
@@ -243,11 +231,7 @@ export default function ContactPage() {
         phone: '',
         country: 'Việt Nam',
         region: '',
-        distributionChannel: '',
-        productInterest: '',
-        estimatedVolume: '',
-        packagingRequirement: '',
-        topic: '',
+        topic: activeTopicId || 'partnership',
         message: '',
       })
     } catch (err) {
@@ -265,7 +249,6 @@ export default function ContactPage() {
     setErrorMessage('')
   }
 
- 
   return (
     <div className="bg-white min-h-screen flex flex-col selection:bg-[#16A34A]/20 selection:text-haq-green-dark font-sans">
       <StickyNav />
@@ -338,160 +321,171 @@ export default function ContactPage() {
         </section>
 
         {/* =========================================================================
-            02 — CONSULTATION & INQUIRY SECTION (HUMAN & NATURAL)
+            02 — CORPORATE B2B PARTNERSHIP SOLUTIONS & ACCORDION SELECTION
             ========================================================================= */}
-        <section id="tu-van" className="py-14 sm:py-20 bg-white relative">
+        <section id="tu-van" className="py-16 sm:py-24 bg-white relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             
             {/* Section Header */}
-            <div className="max-w-2xl mb-10 sm:mb-12">
-              <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                HÌNH THỨC HỢP TÁC DOANH NGHIỆP
-              </span>
-              <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
-                BẠN ĐANG QUAN TÂM ĐẾN NHU CẦU NÀO?
+            <div className="max-w-3xl mb-10 sm:mb-14">
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                  HỢP TÁC DOANH NGHIỆP · BUSINESS SOLUTIONS
+                </span>
+              </div>
+              <h2 className="font-heading font-extrabold text-2xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+                HAQ CÓ GIẢI PHÁP CHO TỪNG MÔ HÌNH HỢP TÁC
               </h2>
-              <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 font-normal">
-                Hãy chọn chủ đề phù hợp để biểu mẫu tự động chuẩn bị thông tin và kết nối với bộ phận phụ trách chuyên sâu.
+              <p className="text-sm sm:text-base text-haq-text-secondary mt-3 font-normal leading-relaxed">
+                Lựa chọn mô hình phù hợp để nhận chính sách chiết khấu, bảng giá sỉ và hồ sơ năng lực tối ưu nhất từ đội ngũ chuyên trách HAQ FOOD.
               </p>
             </div>
 
-            {/* Main Layout: Topic Cards + Friendly Inquiry Form */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Main 2-Column Balanced Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
               
-              {/* Left Column: 5 Elegant Consultation Topic Cards */}
-              <div className="lg:col-span-5 space-y-3.5">
+              {/* Left Column: 5 B2B Business Solution Cards with Smooth Accordion UI */}
+              <div className="lg:col-span-5 space-y-2.5">
                 {TOPICS.map((topic) => {
-                  const isSelected = activeTopicId === topic.id
+                  const isExpanded = activeTopicId === topic.id
                   const Icon = topic.icon
 
                   return (
                     <div
                       key={topic.id}
                       onClick={() => handleSelectTopic(topic.id)}
-                      className={`p-5 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all duration-300 cursor-pointer relative overflow-hidden group ${
-                        isSelected
-                          ? 'bg-haq-sage/40 border-[#16A34A] shadow-md ring-2 ring-[#16A34A]/20 translate-x-1 sm:translate-x-2'
-                          : 'bg-white hover:bg-haq-sage/20 border-haq-border shadow-2xs hover:shadow-md hover:border-[#16A34A]/40'
+                      className={`rounded-2xl border transition-all duration-250 cursor-pointer relative overflow-hidden select-none group ${
+                        isExpanded
+                          ? 'bg-[#16A34A]/[0.04] border-[#16A34A] shadow-sm ring-1 ring-[#16A34A]/25'
+                          : 'bg-white hover:bg-haq-sage/20 border-haq-border shadow-2xs hover:border-[#16A34A]/40'
                       }`}
                     >
                       {/* Active Indicator Strip */}
-                      {isSelected && (
+                      {isExpanded && (
                         <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-[#16A34A]" />
                       )}
 
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
+                      {/* Header Row: Always visible */}
+                      <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3.5 min-w-0">
                           <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                              isSelected
-                                ? 'bg-[#16A34A] text-white'
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                              isExpanded
+                                ? 'bg-[#16A34A] text-white shadow-xs'
                                 : 'bg-haq-sage text-[#0F5132] group-hover:bg-haq-sage/80'
                             }`}
                           >
-                            <Icon className="w-5 h-5" />
+                            <Icon className="w-4.5 h-4.5 sm:w-5 sm:h-5" strokeWidth={1.9} />
                           </div>
-                          <div>
-                            <span className="text-[10px] sm:text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider block">
-                              {topic.tag}
-                            </span>
-                            <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase leading-snug">
-                              {topic.title}
-                            </h3>
-                          </div>
+                          <h3 className="font-heading font-extrabold text-sm sm:text-base text-haq-ink uppercase tracking-tight truncate">
+                            {topic.title}
+                          </h3>
                         </div>
 
-                        {isSelected ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#16A34A] bg-[#16A34A]/10 px-2.5 py-1 rounded-full shrink-0">
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Đang chọn</span>
-                          </span>
-                        ) : (
-                          <div className="w-7 h-7 rounded-full bg-haq-sage flex items-center justify-center text-haq-text-secondary group-hover:text-haq-ink shrink-0 transition-colors">
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </div>
-                        )}
+                        {/* Chevron Icon with smooth rotation */}
+                        <div
+                          className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-250 ${
+                            isExpanded
+                              ? 'bg-[#16A34A]/10 text-[#16A34A] rotate-180'
+                              : 'bg-haq-sage/60 text-haq-text-secondary group-hover:text-haq-ink group-hover:bg-white'
+                          }`}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
                       </div>
 
-                      <p className="text-xs text-haq-text-secondary mt-3 leading-relaxed font-normal">
-                        {topic.desc}
-                      </p>
-
-                      {/* Highlights Pill Tags */}
-                      <div className="mt-3.5 flex items-center gap-1.5 flex-wrap">
-                        {topic.highlights.map((h, i) => (
-                          <span
-                            key={i}
-                            className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
-                              isSelected
-                                ? 'bg-white text-haq-ink border border-haq-border/80'
-                                : 'bg-haq-sage/60 text-haq-text-secondary'
-                            }`}
-                          >
-                            • {h}
-                          </span>
-                        ))}
+                      {/* Smooth Expandable Description Body */}
+                      <div
+                        className={`grid transition-all duration-250 ease-in-out ${
+                          isExpanded
+                            ? 'grid-rows-[1fr] opacity-100'
+                            : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="px-4 sm:px-4.5 pb-4 sm:pb-4.5 pt-0">
+                            <div className="pt-3 border-t border-[#16A34A]/15">
+                              <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
+                                {topic.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )
                 })}
 
-                {/* Warm Consultation Promise Box */}
-                <div className="p-5 rounded-2xl bg-haq-sage/30 border border-haq-border text-haq-ink shadow-2xs">
-                  <div className="flex items-center gap-2.5 font-heading text-xs font-bold uppercase text-[#16A34A]">
-                    <Clock className="w-4 h-4 text-[#16A34A]" />
-                    <span>Cam kết hỗ trợ đối tác</span>
+                {/* Direct Assistance Box */}
+                <div className="p-4 sm:p-4.5 rounded-2xl bg-haq-sage/20 border border-haq-border/80 text-haq-ink flex items-center justify-between gap-4 flex-wrap mt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white text-[#16A34A] flex items-center justify-center shadow-2xs border border-haq-border shrink-0">
+                      <Clock className="w-4 h-4 text-[#16A34A]" />
+                    </div>
+                    <div>
+                      <span className="font-heading text-xs font-bold uppercase text-haq-ink block">
+                        Cần kết nối chuyên viên ngay?
+                      </span>
+                      <span className="text-xs text-haq-text-secondary">
+                        Hotline: <strong className="text-haq-ink font-mono font-bold">024 23 23 56 56</strong>
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-haq-text-secondary mt-1.5 leading-relaxed font-normal">
-                    Mọi yêu cầu tư vấn và đăng ký mẫu thử sẽ được chuyên viên của HAQ FOOD liên hệ trực tiếp trong vòng <strong>24 giờ làm việc</strong>.
-                  </p>
+                  <a
+                    href="tel:02423235656"
+                    className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
+                  >
+                    <span>Gọi trực tiếp</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </div>
 
-              {/* Right Column: Friendly & Hospitable Inquiry Form */}
+              {/* Right Column: Streamlined & Frictionless Business Inquiry Form */}
               <div ref={formRef} className="lg:col-span-7">
-                <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-xl relative">
+                <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
                   
                   {/* Form Header */}
                   <div className="border-b border-haq-border pb-6 mb-6">
                     <div className="flex items-center justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] animate-pulse" />
-                        <span className="font-heading text-xs font-bold text-[#16A34A] uppercase">
+                        <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
+                        <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wide">
                           {activeTopic.dept}
                         </span>
                       </div>
-                      <span className="text-xs font-heading text-haq-text-secondary bg-haq-sage/40 px-3 py-1 rounded-full border border-haq-border">
-                        {activeTopic.tag}
+                      <span className="text-xs font-heading font-semibold text-haq-text-secondary bg-haq-sage/40 px-3 py-1 rounded-full border border-haq-border">
+                        {activeTopic.title}
                       </span>
                     </div>
 
-                    <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-3">
-                      PHIẾU ĐĂNG KÝ TƯ VẤN · {activeTopic.shortTitle}
+                    <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-3xl text-haq-ink uppercase mt-2.5 leading-snug">
+                      BẮT ĐẦU TRAO ĐỔI HỢP TÁC
                     </h3>
                     <p className="text-xs sm:text-sm text-haq-text-secondary mt-1.5 leading-relaxed font-normal">
-                      Quý khách vui lòng để lại thông tin liên hệ. Chúng tôi sẽ chuẩn bị bảng giá, hồ sơ mẫu và chính sách phù hợp nhất trước khi trao đổi.
+                      Để lại thông tin để bộ phận chuyên trách gửi bảng giá, chính sách chiết khấu và hồ sơ năng lực phù hợp nhất.
                     </p>
                   </div>
 
                   {/* Success State */}
                   {submitSuccess ? (
-                    <div className="py-12 text-center space-y-4">
-                      <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                    <div className="py-10 text-center space-y-4">
+                      <div className="w-16 h-16 bg-emerald-50 text-[#16A34A] rounded-full flex items-center justify-center mx-auto border border-emerald-200 shadow-inner">
                         <CheckCircle2 className="w-10 h-10" />
                       </div>
                       <h4 className="font-heading font-extrabold text-2xl text-haq-ink uppercase">
                         CẢM ƠN QUÝ KHÁCH ĐÃ KẾT NỐI VỚI HAQ FOOD
                       </h4>
-                      <p className="text-sm sm:text-base text-haq-text-secondary max-w-md mx-auto leading-relaxed font-normal">
+                      <p className="text-sm text-haq-text-secondary max-w-md mx-auto leading-relaxed font-normal">
                         Thông tin của bạn đã được chuyển đến <strong>{activeTopic.dept}</strong>. 
-                        Chuyên viên phụ trách sẽ liên hệ lại qua số điện thoại hoặc email trong thời gian sớm nhất.
+                        Chuyên viên phụ trách sẽ liên hệ lại qua số điện thoại hoặc email trong vòng 24 giờ làm việc.
                       </p>
                       <div className="pt-4 flex items-center justify-center gap-3 flex-wrap">
                         <button
                           type="button"
                           onClick={resetForm}
-                          className="bg-haq-green-dark hover:bg-[#16A34A] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
+                          className="bg-[#16A34A] hover:bg-[#0F5132] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
                         >
                           GỬI THÊM YÊU CẦU KHÁC
                         </button>
@@ -506,7 +500,7 @@ export default function ContactPage() {
                       </div>
                     </div>
                   ) : (
-                    /* Dynamic Form */
+                    /* Simplified B2B Form */
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                       {errorMessage && (
                         <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm rounded-xl">
@@ -514,11 +508,11 @@ export default function ContactPage() {
                         </div>
                       )}
 
-                      {/* Full Name & Company */}
+                      {/* 1. Họ tên & Doanh nghiệp */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                            Họ và tên người liên hệ <span className="text-[#16A34A]">*</span>
+                            Họ và tên <span className="text-[#16A34A]">*</span>
                           </label>
                           <input
                             type="text"
@@ -527,27 +521,27 @@ export default function ContactPage() {
                             value={formData.fullName}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: Nguyễn Văn An"
-                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
 
                         <div>
                           <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                            {activeTopicId === 'partnership' ? 'Tên Doanh nghiệp / Đại lý *' : 'Tên Công ty / Cửa hàng'}
+                            Tên Doanh nghiệp / Cửa hàng <span className="text-[#16A34A]">*</span>
                           </label>
                           <input
                             type="text"
                             name="company"
-                            required={activeTopicId === 'partnership' || activeTopicId === 'oem' || activeTopicId === 'export'}
+                            required
                             value={formData.company}
                             onChange={handleInputChange}
-                            placeholder="Ví dụ: Công ty TNHH Thực phẩm ABC"
-                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                            placeholder="Ví dụ: Công ty / Đại lý ABC"
+                            className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
                       </div>
 
-                      {/* Email & Phone */}
+                      {/* 2. Email & Số điện thoại */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
@@ -559,14 +553,14 @@ export default function ContactPage() {
                             required
                             value={formData.email}
                             onChange={handleInputChange}
-                            placeholder="email@doanhnghiep.com"
-                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                            placeholder="contact@doanhnghiep.com"
+                            className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
 
                         <div>
                           <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                            {activeTopicId === 'export' ? 'Số điện thoại / WhatsApp / Zalo *' : 'Số điện thoại liên hệ *'}
+                            Số điện thoại liên hệ <span className="text-[#16A34A]">*</span>
                           </label>
                           <input
                             type="tel"
@@ -575,204 +569,68 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="Ví dụ: 0912 345 678"
-                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                            className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
                       </div>
 
-                      {/* Dynamic Fields Per Topic */}
-
-                      {/* 01. PRODUCTS SPECIFIC */}
-                      {activeTopicId === 'products' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Dòng sản phẩm quan tâm
-                            </label>
-                            <select
-                              name="productInterest"
-                              value={formData.productInterest}
-                              onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            >
-                              <option value="">-- Chọn dòng sản phẩm --</option>
-                              <option value="Bánh tráng sấy giòn HOKI">Bánh tráng sấy giòn HOKI (Tôm, Bò, Chà bông)</option>
-                              <option value="Bánh đậu xanh tươi truyền thống">Bánh đậu xanh tươi truyền thống</option>
-                              <option value="Bánh hạnh nhân & Bánh sữa dừa">Bánh hạnh nhân & Bánh sữa dừa</option>
-                              <option value="Bánh tráng sợi sa tế tôm & Cuộn gà lá chanh">Bánh tráng sợi & Cuộn gà lá chanh</option>
-                              <option value="Toàn bộ danh mục sản phẩm">Toàn bộ danh mục sản phẩm HAQ FOOD</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Số lượng dự kiến
-                            </label>
-                            <input
-                              type="text"
-                              name="estimatedVolume"
-                              value={formData.estimatedVolume}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: 30 - 50 thùng / tháng"
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 02. PARTNERSHIP SPECIFIC */}
-                      {activeTopicId === 'partnership' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Khu vực / Tỉnh thành phụ trách <span className="text-[#16A34A]">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              name="region"
-                              required
-                              value={formData.region}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: Hà Nội & Các tỉnh Miền Bắc"
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Kênh bán hàng hiện tại
-                            </label>
-                            <select
-                              name="distributionChannel"
-                              value={formData.distributionChannel}
-                              onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            >
-                              <option value="">-- Chọn kênh phân phối --</option>
-                              <option value="Tạp hóa & Bán lẻ truyền thống (GT)">Tạp hóa & Bán lẻ truyền thống (GT)</option>
-                              <option value="Chuỗi siêu thị mini & Tiện lợi (MT)">Chuỗi siêu thị mini & Tiện lợi (MT)</option>
-                              <option value="Đại lý cấp 1 / Tổng kho phân phối sỉ">Đại lý cấp 1 / Tổng kho phân phối sỉ</option>
-                              <option value="Kênh Horeca, Trường học & Căng tin">Kênh Horeca, Trường học & Căng tin</option>
-                              <option value="Thương mại điện tử & Online">Thương mại điện tử & Bán online</option>
-                            </select>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 03. EXPORT SPECIFIC */}
-                      {activeTopicId === 'export' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Quốc gia / Thị trường mục tiêu <span className="text-[#16A34A]">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              name="country"
-                              required
-                              value={formData.country}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: South Korea, Taiwan, Japan, USA..."
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Sản lượng dự kiến / Container
-                            </label>
-                            <input
-                              type="text"
-                              name="estimatedVolume"
-                              value={formData.estimatedVolume}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: 1 x 20ft Container / Tháng"
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 04. OEM SPECIFIC */}
-                      {activeTopicId === 'oem' && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Dòng sản phẩm muốn gia công
-                            </label>
-                            <input
-                              type="text"
-                              name="productInterest"
-                              value={formData.productInterest}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: Bánh tráng sấy giòn vị đặc biệt"
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                              Quy cách đóng gói & Sản lượng
-                            </label>
-                            <input
-                              type="text"
-                              name="packagingRequirement"
-                              value={formData.packagingRequirement}
-                              onChange={handleInputChange}
-                              placeholder="Ví dụ: Túi zipper 50g, 10.000 túi/tháng"
-                              className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 05. GENERAL SPECIFIC */}
-                      {activeTopicId === 'general' && (
+                      {/* 3. Nhu cầu hợp tác & Khu vực / Tỉnh thành (Cân đối 2 cột hài hòa) */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                            Chủ đề liên hệ
+                            Nhu cầu hợp tác <span className="text-[#16A34A]">*</span>
+                          </label>
+                          <select
+                            name="topic"
+                            required
+                            value={activeTopicId}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors text-haq-ink font-medium"
+                          >
+                            {TOPICS.map((t) => (
+                              <option key={t.id} value={t.id}>
+                                {t.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-heading font-semibold text-haq-text-secondary uppercase mb-1.5">
+                            Khu vực / Tỉnh thành <span className="text-[11px] font-normal text-haq-text-secondary/70 lowercase">(không bắt buộc)</span>
                           </label>
                           <input
                             type="text"
-                            name="topic"
-                            value={formData.topic}
+                            name="region"
+                            value={formData.region}
                             onChange={handleInputChange}
-                            placeholder="Ví dụ: Tra cứu hóa đơn / Đề xuất hợp tác truyền thông / Khác"
-                            className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                            placeholder="Ví dụ: Hà Nội, TP.HCM, Miền Bắc..."
+                            className="w-full px-4 py-3 bg-haq-sage/10 border border-haq-border/80 rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/40 text-haq-ink"
                           />
                         </div>
-                      )}
+                      </div>
 
-                      {/* Message Textarea */}
-                      <div>
-                        <label className="block text-xs font-heading font-bold text-haq-ink uppercase mb-1.5">
-                          {activeTopicId === 'general' ? 'Nội dung chi tiết *' : 'Ghi chú thêm về yêu cầu của bạn'}
+                      {/* 4. Ghi chú (Visually Secondary) */}
+                      <div className="pt-1">
+                        <label className="block text-xs font-heading font-semibold text-haq-text-secondary uppercase mb-1.5">
+                          Ghi chú & Yêu cầu cụ thể <span className="text-[11px] font-normal text-haq-text-secondary/70 lowercase">(không bắt buộc)</span>
                         </label>
                         <textarea
-                          rows={4}
+                          rows={3}
                           name="message"
-                          required={activeTopicId === 'general'}
                           value={formData.message}
                           onChange={handleInputChange}
-                          placeholder={
-                            activeTopicId === 'oem'
-                              ? 'Mô tả chi tiết yêu cầu kỹ thuật, tiêu chuẩn chất lượng hoặc mong muốn riêng của bạn...'
-                              : activeTopicId === 'export'
-                              ? 'Cung cấp thông tin thị trường sở tại, các chứng nhận cần có hoặc câu hỏi cụ thể...'
-                              : activeTopicId === 'partnership'
-                              ? 'Chia sẻ thêm về kế hoạch phát triển đại lý hoặc câu hỏi về chính sách hợp tác...'
-                              : 'Nhập nội dung bạn muốn trao đổi cùng đội ngũ HAQ FOOD...'
-                          }
-                          className="w-full px-4 py-3 bg-haq-sage/20 border border-haq-border rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors resize-none"
+                          placeholder="Chia sẻ thêm về nhu cầu, sản lượng dự kiến hoặc mong muốn hợp tác của bạn..."
+                          className="w-full px-4 py-3 bg-haq-sage/10 border border-haq-border/80 rounded-xl text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/40 text-haq-ink resize-none"
                         />
                       </div>
 
-                      {/* Submit Action */}
+                      {/* 5. CTA Button */}
                       <div className="pt-2">
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full inline-flex items-center justify-center gap-3 bg-[#16A34A] text-white py-4 rounded-xl font-heading font-bold text-sm uppercase tracking-wider hover:bg-[#0F5132] transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2.5 bg-[#16A34A] hover:bg-[#13863d] text-white py-4 rounded-xl font-heading font-extrabold text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
                         >
                           {isSubmitting ? (
                             <>
@@ -780,26 +638,20 @@ export default function ContactPage() {
                               <span>ĐANG GỬI THÔNG TIN...</span>
                             </>
                           ) : (
-                            <>
-                              <span>GỬI YÊU CẦU NHẬN TƯ VẤN & BÁO GIÁ</span>
-                              <Send className="w-4 h-4" />
-                            </>
+                            <span>NHẬN TƯ VẤN & BÁO GIÁ →</span>
                           )}
                         </button>
                       </div>
 
-                      {/* Security & Direct Call Reminder */}
-                      <div className="flex items-center justify-between gap-4 pt-2 text-[11px] text-haq-text-secondary flex-wrap">
-                        <span className="flex items-center gap-1.5">
-                          <ShieldCheck className="w-4 h-4 text-[#16A34A] shrink-0" />
-                          <span>Thông tin được bảo mật và chỉ dùng để liên hệ tư vấn B2B.</span>
-                        </span>
-                        <a
-                          href="tel:02423235656"
-                          className="hover:text-[#16A34A] font-medium transition-colors"
-                        >
-                          Cần gấp? Gọi ngay: <strong>024 23 23 56 56</strong>
-                        </a>
+                      {/* 7. Small Trust Row Below CTA */}
+                      <div className="pt-1 text-center">
+                        <p className="text-[12px] sm:text-[13px] text-haq-text-secondary font-medium flex items-center justify-center gap-2 flex-wrap">
+                          <span>Phản hồi trong 24 giờ làm việc</span>
+                          <span className="text-[#16A34A]">•</span>
+                          <span>Tư vấn theo nhu cầu doanh nghiệp</span>
+                          <span className="text-[#16A34A]">•</span>
+                          <span>Bảo mật thông tin</span>
+                        </p>
                       </div>
                     </form>
                   )}
