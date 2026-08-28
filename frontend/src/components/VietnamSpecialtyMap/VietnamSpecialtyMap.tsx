@@ -267,7 +267,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         />
 
         {/* Storytelling Card Area (Hỗ trợ Product Story, Empty State & Loading Skeleton) */}
-        <div className={styles.cardArea}>
+        <div className={styles.cardArea} data-scrollable-panel="true">
           <AnimatePresence mode="wait">
             {selectedProvinceId && (
               <SpecialtyStoryCard

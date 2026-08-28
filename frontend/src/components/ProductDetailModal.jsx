@@ -69,7 +69,10 @@ export default function ProductDetailModal({ product, onClose }) {
         </div>
 
         {/* Right: Product Details */}
-        <div className="w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 lg:p-10 overflow-y-auto font-sans">
+        <div 
+          data-scrollable-panel="true"
+          className="w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 lg:p-10 overflow-y-auto font-sans"
+        >
           {/* Category & Title */}
           <div className="mb-6">
             <div className="flex items-center gap-2 flex-wrap mb-2">

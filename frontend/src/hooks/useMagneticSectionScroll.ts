@@ -231,6 +231,33 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
 
     let isListening = false
 
+/**
+ * Helper: Detects whether a DOM node is inside a scrollable child panel (e.g. Product Detail Panel / Modal / Card)
+ * that currently possesses scrollable content (scrollHeight > clientHeight + 1).
+ */
+function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
+  let el = target
+  while (el && el !== document.body && el !== document.documentElement) {
+    const isExplicit =
+      el.hasAttribute('data-scrollable-panel') ||
+      el.classList.contains('overflow-y-auto') ||
+      el.classList.contains('overflow-auto')
+
+    const style = window.getComputedStyle(el)
+    const isOverflowScrollable =
+      style.overflowY === 'auto' ||
+      style.overflowY === 'scroll' ||
+      isExplicit
+
+    if (isOverflowScrollable && el.scrollHeight > el.clientHeight + 1) {
+      return el
+    }
+
+    el = el.parentElement
+  }
+  return null
+}
+
     const handleWheel = (e: WheelEvent) => {
       if (!mediaQuery.matches) return
 
@@ -240,8 +267,9 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
       const footerTop = getFooterTop()
       const currentY = window.scrollY
 
-      // 1. MAP ISOLATION: Map zoom consumes wheel exclusively
       const target = e.target as HTMLElement | null
+
+      // 1. MAP ISOLATION: Map zoom consumes wheel exclusively when directly over map SVG / canvas
       if (
         target &&
         (target.closest('[data-map-viewport="true"]') ||
@@ -252,6 +280,36 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
           startSpringBack()
         }
         return
+      }
+
+      // 2. BOUNDARY-AWARE PRODUCT DETAIL / INTERNAL SCROLLABLE PANEL HANDLING:
+      // Product Detail panel/modal has its own internal scrollbar.
+      // - If panel can continue scrolling in the wheel direction -> allow native scroll (do NOT preventDefault)
+      // - If panel reaches boundary (top on wheel UP, bottom on wheel DOWN) or has no overflow:
+      //   -> allow wheel event to propagate to Magnetic Section Scroll
+      const scrollablePanel = findScrollableParent(target)
+      if (scrollablePanel) {
+        const scrollTop = scrollablePanel.scrollTop
+        const clientHeight = scrollablePanel.clientHeight
+        const scrollHeight = scrollablePanel.scrollHeight
+
+        // Tolerance for subpixel floating point values
+        const atTop = scrollTop <= 1.5
+        const atBottom = scrollTop + clientHeight >= scrollHeight - 1.5
+
+        const isScrollingDown = e.deltaY > 0
+        const isScrollingUp = e.deltaY < 0
+
+        if ((isScrollingDown && !atBottom) || (isScrollingUp && !atTop)) {
+          // Panel CAN continue scrolling internally in this direction
+          if (scrollStateRef.current === 'RESISTING') {
+            startSpringBack()
+          }
+          return // Consume wheel inside panel, DO NOT engage Magnetic Section Scroll
+        }
+
+        // When atTop (wheel UP) or atBottom (wheel DOWN), do NOT return!
+        // Release wheel control so Magnetic Section Scroll takes over seamlessly.
       }
 
       // 2. FOOTER NATURAL SCROLL ZONE:

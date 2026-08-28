@@ -38,6 +38,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
     <motion.div
       ref={cardRef}
       className={styles.storyCard}
+      data-scrollable-panel="true"
       variants={cardAnimation}
       initial="initial"
       animate="animate"

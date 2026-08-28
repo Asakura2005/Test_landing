@@ -82,6 +82,26 @@ export function useSectionNavigation(options = {}) {
         return
       }
 
+      // 2. Boundary-aware panel handling
+      let scrollableEl = target
+      while (scrollableEl && scrollableEl !== document.body && scrollableEl !== document.documentElement) {
+        if (
+          scrollableEl.hasAttribute('data-scrollable-panel') ||
+          scrollableEl.classList.contains('overflow-y-auto') ||
+          scrollableEl.classList.contains('overflow-auto')
+        ) {
+          if (scrollableEl.scrollHeight > scrollableEl.clientHeight + 1) {
+            const atTop = scrollableEl.scrollTop <= 1.5
+            const atBottom = scrollableEl.scrollTop + scrollableEl.clientHeight >= scrollableEl.scrollHeight - 1.5
+            if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) {
+              accumulatedDeltaRef.current = 0
+              return
+            }
+          }
+        }
+        scrollableEl = scrollableEl.parentElement
+      }
+
       // 2. If navigating lock is active, ignore further scroll triggers
       if (isNavigatingRef.current) {
         return
