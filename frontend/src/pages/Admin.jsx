@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users, Newspaper } from 'lucide-react'
+import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users, Newspaper, MapPin } from 'lucide-react'
 import { getProducts, deleteProduct, createProduct, updateProduct } from '../services/supabase'
 import ProductModal from '../components/admin/ProductModal'
 import LeadsManager from '../components/admin/LeadsManager'
 import CategoryManager from '../components/admin/CategoryManager'
 import NewsManager from '../components/admin/NewsManager'
+import ProvinceManager from '../components/admin/ProvinceManager'
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -162,6 +163,14 @@ export default function Admin() {
             <Pin className="w-5 h-5" /> Quản lý danh mục
           </button>
           <button 
+            onClick={() => setActiveTab('provinces')}
+            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
+              activeTab === 'provinces' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
+            }`}
+          >
+            <MapPin className="w-5 h-5" /> Quản lý Đặc sản & Bản đồ
+          </button>
+          <button 
             onClick={() => setActiveTab('news')}
             className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
               activeTab === 'news' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
@@ -191,6 +200,8 @@ export default function Admin() {
           <LeadsManager />
         ) : activeTab === 'categories' ? (
           <CategoryManager products={products} />
+        ) : activeTab === 'provinces' ? (
+          <ProvinceManager products={products} onProductsChange={fetchData} />
         ) : activeTab === 'news' ? (
           <NewsManager />
         ) : (
@@ -254,11 +265,18 @@ export default function Admin() {
                             </td>
                             <td className="p-4">
                               <div className="font-bold text-haq-ink/80">{p.category || 'Chưa phân loại'}</div>
-                              {p.tag && (
-                                <span className="inline-block bg-haq-red/10 text-haq-red text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap mt-1">
-                                  {p.tag}
-                               </span>
-                              )}
+                              <div className="flex items-center gap-1 flex-wrap mt-1">
+                                {p.provinces?.name && (
+                                  <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">
+                                    <MapPin className="w-2.5 h-2.5" /> {p.provinces.name}
+                                  </span>
+                                )}
+                                {p.tag && (
+                                  <span className="inline-block bg-haq-red/10 text-haq-red text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">
+                                    {p.tag}
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="p-4">
                               <div className="text-sm text-haq-ink/70 line-clamp-2" title={p.description}>

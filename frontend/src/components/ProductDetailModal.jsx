@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { X, CheckCircle, Package, Calendar, Truck, ArrowRight } from 'lucide-react'
+import { X, CheckCircle, Package, Calendar, Truck, ArrowRight, MapPin } from 'lucide-react'
 
 export default function ProductDetailModal({ product, onClose }) {
   // Prevent body scroll when modal is open
@@ -72,7 +72,14 @@ export default function ProductDetailModal({ product, onClose }) {
         <div className="w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 lg:p-10 overflow-y-auto font-sans">
           {/* Category & Title */}
           <div className="mb-6">
-            <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block mb-2">{product.category}</span>
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block">{product.category}</span>
+              {product.provinces && (
+                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 text-[11px] px-2.5 py-0.5 rounded-full font-semibold border border-emerald-200">
+                  <MapPin className="w-3 h-3 text-emerald-600" /> Đặc sản {product.provinces.name}
+                </span>
+              )}
+            </div>
             <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-haq-ink uppercase leading-tight">
               {product.name}
             </h2>

@@ -212,7 +212,7 @@ export default function Footer() {
             {/* Official Tax and Corporate Registry Verification Link */}
             <div className="shrink-0">
               <a
-                href="https://vntax.net/0109547016-cong-ty-co-phan-haq-ha-noi"
+                href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi#goog_fullscreen_ad"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all border border-white/15 hover:border-[#16A34A] shadow-xs"

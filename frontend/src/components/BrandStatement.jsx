@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react'
 
 export default function BrandStatement() {
   return (
-    <section id="gioi-thieu" className="py-24 sm:py-32 bg-haq-sage/60 border-b border-haq-border relative overflow-hidden">
+    <section id="gioi-thieu" className="py-14 sm:py-18 lg:py-20 bg-haq-sage/60 border-b border-haq-border relative overflow-hidden">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Left Column: Huge 2021 Typography */}
           <div className="lg:col-span-4">
             <div className="font-heading font-extrabold text-6xl sm:text-7xl lg:text-8xl text-haq-green-dark/15 leading-none select-none tracking-tighter">

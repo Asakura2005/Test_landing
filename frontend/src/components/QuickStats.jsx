@@ -28,18 +28,18 @@ const PILLARS = [
 
 export default function QuickStats() {
   return (
-    <section id="nang-luc" className="py-24 sm:py-32 bg-white border-b border-haq-border">
+    <section id="nang-luc" className="py-14 sm:py-18 lg:py-20 bg-white border-b border-haq-border">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2.5">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                 TIÊU CHUẨN & NĂNG LỰC · CAPABILITY
               </span>
               <span className="h-px w-10 bg-[#16A34A]" />
             </div>
-            <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
+            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink tracking-tight uppercase leading-tight">
               NỀN TẢNG SẢN XUẤT VỮNG CHẮC
             </h2>
           </div>
@@ -54,13 +54,13 @@ export default function QuickStats() {
         </div>
 
         {/* 3 Core Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {PILLARS.map((pillar) => {
             const Icon = pillar.icon
             return (
               <div
                 key={pillar.num}
-                className="group bg-haq-sage rounded-3xl p-8 sm:p-10 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group bg-haq-sage rounded-3xl p-6 sm:p-8 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-8">

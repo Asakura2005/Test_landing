@@ -48,7 +48,7 @@ export default function Hero() {
       aria-label="HAQ FOOD Hero Showcase"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative w-full min-h-[520px] xs:min-h-[580px] sm:min-h-[640px] lg:min-h-screen bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center pt-16 sm:pt-18 lg:pt-20"
+      className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-screen bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center pt-16 sm:pt-18 lg:pt-20"
     >
       {/* 1. Cinematic Background Slider */}
       {SLIDES.map((slide, idx) => (

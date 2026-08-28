@@ -1,0 +1,898 @@
+/* ==========================================================================
+   Interactive Vietnam Specialty Map — Master Design System (HAQ FOOD)
+   Pure White #FFFFFF Base, Warm Terracotta Accent, Editorial Typography
+   ========================================================================== */
+
+/* Container & Header */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 8px 12px 12px;
+  background-color: #ffffff;
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 12px 20px 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 14px 24px 18px;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 6px;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-shrink: 0;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #737373;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.title {
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 20px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #0a0a0a;
+  margin: 0 0 2px;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 26px;
+    margin: 0 0 4px;
+  }
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #525252;
+  margin: 0 0 6px;
+  font-weight: 300;
+  line-height: 1.35;
+}
+
+@media (min-width: 768px) {
+  .subtitle {
+    font-size: 12.5px;
+    margin: 0 0 6px;
+  }
+}
+
+.headerToolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  margin-top: 4px;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #8c867a;
+  letter-spacing: 0.03em;
+  font-weight: 400;
+  background-color: #f7f6f2;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid #eae7e0;
+  max-width: 100%;
+  text-align: left;
+}
+
+.hintDot {
+  width: 5px;
+  height: 5px;
+  min-width: 5px;
+  border-radius: 50%;
+  background-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+/* Main Interactive Layout (Stage) */
+.experience {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  gap: 12px;
+}
+
+@media (min-width: 1024px) {
+  .experience {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+    gap: 28px;
+    align-items: center;
+    min-height: 0;
+    height: 100%;
+    flex-direction: initial;
+  }
+}
+
+/* Map Wrapper & Canvas */
+.mapContainer {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #faf9f6;
+  border: 1px solid #f0eee9;
+  border-radius: 8px;
+  padding: 8px 4px;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.mapSvg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: visible;
+  touch-action: none;
+}
+
+.canGrab {
+  cursor: grab;
+}
+
+.isGrabbing {
+  cursor: grabbing;
+}
+
+/* Province Vector Paths */
+.provincePath {
+  fill: #ece9e2;
+  stroke: #d1cdc4;
+  stroke-width: 0.85;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  cursor: default;
+  outline: none;
+  transition: fill 200ms ease, stroke 200ms ease, opacity 250ms ease;
+}
+
+.provincePath,
+.provincePath:focus,
+.provincePath:focus-visible,
+.provinceMarkerGroup,
+.provinceMarkerGroup:focus,
+.provinceMarkerGroup:focus-visible,
+.provinceLabelGroup,
+.provinceLabelGroup:focus,
+.provinceLabelGroup:focus-visible,
+.provinceLabel,
+.provinceLabel:focus,
+.provinceLabel:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.provincePath.hasProducts {
+  fill: #e5e1d8;
+  cursor: pointer;
+}
+
+.provincePath.hasProducts:hover {
+  fill: #d8d2c6;
+  stroke: #736d62;
+}
+
+.provincePath.isActive {
+  fill: #16a34a;
+  stroke: #15803d;
+  stroke-width: 1.4;
+  opacity: 1 !important;
+}
+
+.provincePath.isDimmed {
+  opacity: 0.6;
+}
+
+/* Province Markers */
+.provinceMarkerGroup {
+  cursor: pointer;
+  outline: none;
+}
+
+.markerPulseWave {
+  fill: none;
+  stroke: #16a34a;
+  stroke-width: 1.5;
+}
+
+.markerOuterRing {
+  fill: #ffffff;
+  stroke: #16a34a;
+  stroke-width: 2;
+}
+
+.markerInnerCore {
+  fill: #16a34a;
+}
+
+.markerRestingDot {
+  fill: #16a34a;
+  opacity: 0.85;
+  transition: r 200ms ease, opacity 200ms ease;
+}
+
+/* Province Labels — Permanent Editorial Typography */
+.provinceLabelGroup {
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.provinceLabel {
+  font-family: inherit;
+  font-size: 7.8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: #222222;
+  /* Cartography halo stroke for maximum legibility across any map background */
+  paint-order: stroke fill;
+  stroke: #faf9f6;
+  stroke-width: 2.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  transition: fill 180ms ease, stroke 180ms ease, font-weight 180ms ease;
+}
+
+.provinceLabel.labelHovered {
+  fill: #16a34a;
+  font-weight: 700;
+  stroke: #ffffff;
+  stroke-width: 3.2px;
+}
+
+.provinceLabel.labelActive {
+  fill: #16a34a;
+  font-weight: 700;
+  stroke: #ffffff;
+  stroke-width: 3.4px;
+}
+
+/* Quần đảo Hoàng Sa & Trường Sa Secondary Decorative Layer */
+.islandsLayer {
+  pointer-events: none;
+  user-select: none;
+}
+
+.islandPath {
+  fill: #ded8ce;
+  fill-opacity: 0.45;
+  stroke: #c8c0b2;
+  stroke-width: 0.6px;
+  pointer-events: none;
+}
+
+.territorialLabelGroup {
+  pointer-events: none;
+  user-select: none;
+}
+
+.territorialLabel {
+  font-family: inherit;
+  font-size: 5.6px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  fill: #8c8275;
+  fill-opacity: 0.7;
+  paint-order: stroke fill;
+  stroke: #faf9f6;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* Minimalist Editorial Map Controls */
+.mapControls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  z-index: 30;
+  overflow: hidden;
+}
+
+.controlBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #262626;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+@media (min-width: 768px) {
+  .controlBtn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.controlBtn:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  color: #000000;
+}
+
+.controlBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.controlDivider {
+  width: 100%;
+  height: 1px;
+  background-color: #eeeeee;
+}
+
+/* Tooltip — Floating auxiliary hover pill */
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 4px 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  border-radius: 4px;
+}
+
+.tooltipProvince {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin-bottom: 2px;
+}
+
+.tooltipMeta {
+  display: flex;
+  align-items: center;
+}
+
+.tooltipCountBadge {
+  font-size: 10px;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.tooltipRegionText {
+  font-size: 10px;
+  color: #888888;
+  font-weight: 400;
+}
+
+/* Connection Line Overlay & Adaptive Crossfade */
+.lineOverlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 25;
+  overflow: hidden;
+}
+
+.connectionPath {
+  fill: none;
+  stroke: #0a0a0a;
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.connectionPathEdge {
+  fill: none;
+  stroke: #404040;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lineOriginMarker {
+  fill: #16a34a;
+  stroke: #ffffff;
+  stroke-width: 1.2;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lineEdgeMarker {
+  fill: #404040;
+  stroke: #ffffff;
+  stroke-width: 1;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lineDestinationMarker {
+  fill: #0a0a0a;
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Storytelling Card Area */
+.cardArea {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 35;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+@media (min-width: 1024px) {
+  .cardArea {
+    max-width: 440px;
+    height: 100%;
+    align-items: center;
+  }
+}
+
+.storyCard {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  padding: 18px 16px 16px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  position: relative;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+@media (min-width: 768px) {
+  .storyCard {
+    padding: 22px 20px 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .storyCard {
+    padding: 24px 22px 22px;
+    border-radius: 2px;
+  }
+}
+
+.cardAnchorPort {
+  position: absolute;
+  left: 0;
+  top: 42px; /* Aligned with the header baseline on desktop */
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .cardAnchorPort {
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.cardHeaderTitles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardProvinceName {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  font-weight: 700;
+}
+
+.cardRegionName {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  font-weight: 500;
+}
+
+.cardCloseBtn {
+  background: none;
+  border: none;
+  color: #8c8c8c;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 160ms ease;
+}
+
+.cardCloseBtn:hover {
+  color: #0a0a0a;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Product Image & Fallback */
+.productImageContainer {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: #faf9f6;
+  border: 1px solid #eeebe4;
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.productImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 350ms ease-in-out;
+}
+
+.imageLoaded {
+  opacity: 1;
+}
+
+.productImageFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #faf9f6 0%, #f1eee6 100%);
+  color: #8c867a;
+}
+
+.fallbackPattern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.fallbackEmblem {
+  width: 44px;
+  height: 44px;
+  color: #16a34a;
+}
+
+.fallbackCategory {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #736d62;
+}
+
+.fallbackProvince {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #a39d91;
+  text-transform: uppercase;
+}
+
+/* Story Details */
+.cardCategory {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #16a34a;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.cardProductTitle {
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #0a0a0a;
+  margin: 0 0 14px;
+}
+
+.cardStoryDescription {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #4a4a4a;
+  margin: 0 0 26px;
+  font-weight: 300;
+}
+
+/* Card Footer & Navigator */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid #f2f2f2;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #0a0a0a;
+  text-decoration: none;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.cardCta:hover {
+  transform: translateX(4px);
+  color: #16a34a;
+}
+
+.ctaArrow {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.productNavigator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navCounter {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #737373;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.navCounterSlash {
+  color: #cccccc;
+  margin: 0 1px;
+}
+
+.navButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.navBtn {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #262626;
+  transition: all 180ms ease;
+}
+
+.navBtn:hover {
+  border-color: #0a0a0a;
+  background-color: #0a0a0a;
+  color: #ffffff;
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #e5e5e5;
+  background: none;
+  color: #a3a3a3;
+}
+
+/* Empty State & Loading Skeleton */
+.emptyIllustrationBox {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, #f4f8f4 0%, #ebf3ec 100%);
+  border: 1px dashed #d8e5da;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hintDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  display: inline-block;
+}
+
+/* Quick Region Selector Bar */
+.regionFilterBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0;
+  background: #f7f5f0;
+  padding: 3px;
+  border-radius: 9999px;
+  border: 1px solid #e7e3d8;
+}
+
+.regionFilterBtn {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #736d62;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.regionFilterBtn:hover {
+  color: #0a0a0a;
+}
+
+.regionFilterBtn.activeRegionBtn {
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+}
+
+.emptyEmblemCircle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #d8e5da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.08);
+}
+
+.emptyBadgeText {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.08);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.skeletonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #f0f0f0;
+  border-radius: 4px;
+  animation: pulseSkeleton 1.5s infinite ease-in-out;
+}
+
+.skeletonTag {
+  width: 40%;
+  height: 14px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  animation: pulseSkeleton 1.5s infinite ease-in-out;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  animation: pulseSkeleton 1.5s infinite ease-in-out;
+}
+
+.skeletonText {
+  width: 100%;
+  height: 48px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  animation: pulseSkeleton 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseSkeleton {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+

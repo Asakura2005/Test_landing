@@ -64,9 +64,26 @@ export async function deleteLead(id) {
 }
 
 /**
- * Lấy danh sách sản phẩm (kèm variants và categories)
+ * Lấy danh sách sản phẩm (kèm variants, categories và provinces)
  */
 export async function getProducts() {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories(*),
+        provinces(*),
+        variants:product_variants(*)
+      `)
+      .order('is_pinned', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
+
+    if (!error && data) return data
+  } catch (e) {
+    // graceful fallback
+  }
+
   const { data, error } = await supabase
     .from('products')
     .select(`
@@ -88,7 +105,29 @@ export async function getProductBySlug(slug) {
   // Kiểm tra xem slug có phải là UUID không (dùng cho các sản phẩm cũ chưa có slug)
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
 
-  let query = supabase
+  try {
+    let query = supabase
+      .from('products')
+      .select(`
+        *,
+        categories(*),
+        provinces(*),
+        variants:product_variants(*)
+      `)
+
+    if (isUUID) {
+      query = query.eq('id', slug)
+    } else {
+      query = query.eq('slug', slug)
+    }
+
+    const { data, error } = await query.single()
+    if (!error && data) return data
+  } catch (e) {
+    // graceful fallback
+  }
+
+  let fallbackQuery = supabase
     .from('products')
     .select(`
       *,
@@ -97,12 +136,12 @@ export async function getProductBySlug(slug) {
     `)
 
   if (isUUID) {
-    query = query.eq('id', slug)
+    fallbackQuery = fallbackQuery.eq('id', slug)
   } else {
-    query = query.eq('slug', slug)
+    fallbackQuery = fallbackQuery.eq('slug', slug)
   }
 
-  const { data, error } = await query.single()
+  const { data, error } = await fallbackQuery.single()
 
   if (error) throw error
   return data
@@ -374,3 +413,180 @@ export async function uploadNewsImage(file) {
 
   return publicUrl
 }
+
+/**
+ * ==================================================
+ * PROVINCE APIS (Specialty Map CMS)
+ * ==================================================
+ */
+
+/**
+ * Lấy danh sách tất cả các tỉnh/thành (kèm các sản phẩm liên kết)
+ * @param {boolean} onlyActive - Nếu true chỉ lấy tỉnh đang active (dùng cho map)
+ */
+export async function getProvinces(onlyActive = false) {
+  let query = supabase
+    .from('provinces')
+    .select(`
+      *,
+      products:products(id, name, slug, tag, images, is_pinned)
+    `)
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true })
+
+  if (onlyActive) {
+    query = query.eq('is_active', true)
+  }
+
+  const { data, error } = await query
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Lấy thông tin 1 tỉnh theo canonical code (vd: 'tayninh', 'haiphong')
+ */
+export async function getProvinceByCode(code) {
+  const { data, error } = await supabase
+    .from('provinces')
+    .select(`
+      *,
+      products:products(
+        *,
+        categories(*),
+        variants:product_variants(*)
+      )
+    `)
+    .eq('code', code)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Tạo tỉnh/thành mới
+ */
+export async function createProvince(provinceData) {
+  const { data, error } = await supabase
+    .from('provinces')
+    .insert([provinceData])
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Cập nhật thông tin tỉnh/thành
+ */
+export async function updateProvince(id, provinceData) {
+  const { data, error } = await supabase
+    .from('provinces')
+    .update(provinceData)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Xóa tỉnh/thành
+ */
+export async function deleteProvince(id) {
+  const { error } = await supabase
+    .from('provinces')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw error
+  return true
+}
+
+/**
+ * Tải ảnh đại diện tỉnh/thành lên bucket 'assets'
+ */
+export async function uploadProvinceImage(file, provinceCode) {
+  const fileExt = file.name.split('.').pop()
+  const fileName = `provinces/${provinceCode || 'general'}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+
+  const { error } = await supabase.storage
+    .from('assets')
+    .upload(fileName, file)
+
+  if (error) throw error
+
+  const { data: publicUrlData } = supabase.storage
+    .from('assets')
+    .getPublicUrl(fileName)
+
+  return publicUrlData.publicUrl
+}
+
+/**
+ * Xóa ảnh tỉnh/thành từ bucket 'assets'
+ */
+export async function deleteProvinceImage(imageUrl) {
+  if (!imageUrl) return
+  const match = imageUrl.match(/\/storage\/v1\/object\/public\/assets\/(.+)$/)
+  if (match && match[1]) {
+    const path = match[1]
+    const { error } = await supabase.storage
+      .from('assets')
+      .remove([path])
+
+    if (error) console.error("Error deleting province image:", error)
+  }
+}
+
+/**
+ * Gán hoặc gỡ sản phẩm vào một tỉnh/thành
+ */
+export async function assignProductProvince(productId, provinceId) {
+  const { data, error } = await supabase
+    .from('products')
+    .update({ province_id: provinceId })
+    .eq('id', productId)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Gán nhiều sản phẩm vào một tỉnh/thành cùng lúc
+ */
+export async function assignMultipleProductsToProvince(productIds, provinceId) {
+  if (!productIds || productIds.length === 0) return []
+
+  const { data, error } = await supabase
+    .from('products')
+    .update({ province_id: provinceId })
+    .in('id', productIds)
+    .select()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Bật/tắt ghim nổi bật cho sản phẩm trong tỉnh (is_pinned)
+ */
+export async function toggleProductPinned(productId, isPinned) {
+  const { data, error } = await supabase
+    .from('products')
+    .update({ is_pinned: isPinned })
+    .eq('id', productId)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+

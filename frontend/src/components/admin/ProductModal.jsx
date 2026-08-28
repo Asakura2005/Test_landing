@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { X, Plus, Trash2, Pin, Upload, Image as ImageIcon } from 'lucide-react'
-import { uploadProductImage, deleteProductImage, getCategories } from '../../services/supabase'
+import { X, Plus, Trash2, Pin, Upload, Image as ImageIcon, MapPin } from 'lucide-react'
+import { uploadProductImage, deleteProductImage, getCategories, getProvinces } from '../../services/supabase'
 
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount }) {
   const [categories, setCategories] = useState([])
+  const [provinces, setProvinces] = useState([])
   const [formData, setFormData] = useState({
     slug: '',
     name: '',
@@ -12,6 +13,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     tag: '',
     category: '', // for backward compatibility
     category_id: '',
+    province_id: '',
     highlights: [''],
     is_pinned: false,
     images: [], // Global gallery
@@ -23,15 +25,19 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    const fetchCats = async () => {
+    const fetchInitialData = async () => {
       try {
-        const data = await getCategories()
-        setCategories(data || [])
+        const [catsData, provsData] = await Promise.all([
+          getCategories().catch(() => []),
+          getProvinces(true).catch(() => [])
+        ])
+        setCategories(catsData || [])
+        setProvinces(provsData || [])
       } catch (err) {
-        console.error("Lỗi tải danh mục:", err)
+        console.error("Lỗi tải danh mục/tỉnh thành:", err)
       }
     }
-    fetchCats()
+    fetchInitialData()
   }, [])
 
   useEffect(() => {
@@ -44,6 +50,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         tag: product.tag || '',
         category: product.category || '',
         category_id: product.category_id || '',
+        province_id: product.province_id || '',
         highlights: product.highlights?.length ? product.highlights : [''],
         is_pinned: product.is_pinned || false,
         images: product.images || [],
@@ -239,6 +246,32 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                           ))}
                         </optgroup>
                       ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold flex items-center justify-between">
+                      <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-haq-red" /> Tỉnh/Thành đặc sản (Bản đồ)</span>
+                      <span className="text-xs text-haq-text-secondary">Tùy chọn</span>
+                    </label>
+                    <select 
+                      value={formData.province_id || ''} 
+                      onChange={e => setFormData({...formData, province_id: e.target.value || null})} 
+                      className="w-full border border-haq-border p-2 rounded bg-haq-cream/50"
+                    >
+                      <option value="">-- Không gán tỉnh / Không hiển thị trên Bản đồ --</option>
+                      {['Miền Bắc', 'Miền Trung', 'Miền Nam'].map(region => {
+                        const regionProvs = provinces.filter(p => p.region === region)
+                        if (regionProvs.length === 0) return null
+                        return (
+                          <optgroup key={region} label={region}>
+                            {regionProvs.map(prov => (
+                              <option key={prov.id} value={prov.id}>
+                                {prov.name} ({prov.code})
+                              </option>
+                            ))}
+                          </optgroup>
+                        )
+                      })}
                     </select>
                   </div>
                   <div className="space-y-1">

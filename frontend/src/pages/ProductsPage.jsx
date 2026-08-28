@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Home, ChevronRight, ArrowRight, Filter, Package, ShieldCheck, Layers } from 'lucide-react'
+import { Home, ChevronRight, ArrowRight, Filter, Package, ShieldCheck, Layers, MapPin } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
@@ -348,11 +348,18 @@ export default function ProductsPage() {
                       {/* Product Content with Strict Height Locking */}
                       <div className="p-6 flex-1 flex flex-col justify-between">
                         <div>
-                          {/* Slot 1: Category Tag (Fixed Height) */}
-                          <div className="text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider h-4 flex items-center mb-1.5 truncate">
-                            {prod.categories?.name ||
-                              activeRootCategory.name ||
-                              'HAQ FOOD'}
+                          {/* Slot 1: Category Tag & Province Badge (Fixed Height) */}
+                          <div className="flex items-center justify-between gap-1.5 h-5 mb-1.5 overflow-hidden">
+                            <span className="text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider truncate">
+                              {prod.categories?.name ||
+                                activeRootCategory.name ||
+                                'HAQ FOOD'}
+                            </span>
+                            {prod.provinces && (
+                              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                                <MapPin className="w-2.5 h-2.5 text-emerald-600" /> {prod.provinces.name}
+                              </span>
+                            )}
                           </div>
 
                           {/* Slot 2: Product Name (Fixed 2-Line Height) */}
