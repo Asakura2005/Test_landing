@@ -23,9 +23,9 @@ interface InteractiveMapProps {
   isAnimated: boolean;
   onWheel?: (e: React.WheelEvent<SVGSVGElement> | WheelEvent) => void;
   onMouseDown: (e: React.MouseEvent<SVGSVGElement>) => void;
-  onTouchStart: (e: React.TouchEvent<SVGSVGElement>) => void;
-  onTouchMove: (e: React.TouchEvent<SVGSVGElement>) => void;
-  onTouchEnd: () => void;
+  onTouchStart: (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
+  onTouchMove: (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
+  onTouchEnd: (e?: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onReset: () => void;
@@ -72,6 +72,37 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       container.removeEventListener("wheel", handleNativeWheel);
     };
   }, [mapContainerRef, onWheel]);
+
+  // Direct non-passive touch listeners on SVG for flawless pinch zoom without browser page zoom
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const handleNativeTouchStart = (e: TouchEvent) => {
+      onTouchStart(e);
+    };
+
+    const handleNativeTouchMove = (e: TouchEvent) => {
+      onTouchMove(e);
+    };
+
+    const handleNativeTouchEnd = (e: TouchEvent) => {
+      onTouchEnd(e);
+    };
+
+    svg.addEventListener("touchstart", handleNativeTouchStart, { passive: true });
+    svg.addEventListener("touchmove", handleNativeTouchMove, { passive: false });
+    svg.addEventListener("touchend", handleNativeTouchEnd, { passive: true });
+    svg.addEventListener("touchcancel", handleNativeTouchEnd, { passive: true });
+
+    return () => {
+      svg.removeEventListener("touchstart", handleNativeTouchStart);
+      svg.removeEventListener("touchmove", handleNativeTouchMove);
+      svg.removeEventListener("touchend", handleNativeTouchEnd);
+      svg.removeEventListener("touchcancel", handleNativeTouchEnd);
+    };
+  }, [svgRef, onTouchStart, onTouchMove, onTouchEnd]);
+
   return (
     <div
       className={styles.mapContainer}
@@ -86,9 +117,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Bản đồ tương tác đặc sản Việt Nam"
         onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
       >
         {/* Transform Group for smooth 60 FPS Zoom & Pan */}
         <g

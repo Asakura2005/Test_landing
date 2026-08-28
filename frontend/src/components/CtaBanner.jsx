@@ -4,8 +4,8 @@ import { ArrowRight, PhoneCall } from 'lucide-react'
 
 export default function CtaBanner() {
   return (
-    <section className="py-14 sm:py-18 lg:py-20 bg-haq-sage/50 border-b border-haq-border">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+    <section className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-sage/50 border-b border-haq-border flex items-center justify-center py-16 sm:py-20 lg:py-0">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center w-full">
         <span className="font-heading text-xs font-bold uppercase tracking-wider text-[#16A34A]">
           HAQ FOOD · ĐỒNG HÀNH & PHÁT TRIỂN
         </span>

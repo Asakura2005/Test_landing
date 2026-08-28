@@ -4,12 +4,12 @@ import { ArrowRight } from 'lucide-react'
 
 export default function BrandStatement() {
   return (
-    <section id="gioi-thieu" className="py-14 sm:py-18 lg:py-20 bg-haq-sage/60 border-b border-haq-border relative overflow-hidden">
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+    <section id="gioi-thieu" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-sage/60 border-b border-haq-border relative overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-0">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           {/* Left Column: Huge 2021 Typography */}
           <div className="lg:col-span-4">
-            <div className="font-heading font-extrabold text-6xl sm:text-7xl lg:text-8xl text-haq-green-dark/15 leading-none select-none tracking-tighter">
+            <div className="font-heading font-extrabold text-6xl sm:text-8xl lg:text-9xl text-haq-green-dark/15 leading-none select-none tracking-tighter">
               2021
             </div>
             <div className="font-heading text-xs font-bold uppercase tracking-widest text-[#16A34A] mt-2">

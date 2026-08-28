@@ -23,15 +23,33 @@ interface UseMapTransformReturn {
   isAnimated: boolean;
   handleWheel: (e: React.WheelEvent<SVGSVGElement> | WheelEvent) => void;
   handleMouseDown: (e: React.MouseEvent<SVGSVGElement>) => void;
-  handleTouchStart: (e: React.TouchEvent<SVGSVGElement>) => void;
-  handleTouchMove: (e: React.TouchEvent<SVGSVGElement>) => void;
-  handleTouchEnd: () => void;
+  handleTouchStart: (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
+  handleTouchMove: (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
+  handleTouchEnd: (e?: React.TouchEvent<SVGSVGElement> | TouchEvent) => void;
   zoomIn: () => void;
   zoomOut: () => void;
   resetTransform: () => void;
   focusOnProvince: (province: ProvinceInfo) => void;
   focusOnRegion: (region: "ALL" | "Miền Bắc" | "Miền Trung" | "Miền Nam") => void;
 }
+
+type TouchSession =
+  | {
+      type: "single";
+      startX: number;
+      startY: number;
+      startTx: number;
+      startTy: number;
+      scaleRatio: number;
+    }
+  | {
+      type: "pinch";
+      startDistance: number;
+      startScale: number;
+      startWorldX: number;
+      startWorldY: number;
+    }
+  | null;
 
 export function useMapTransform({
   svgRef,
@@ -45,33 +63,37 @@ export function useMapTransform({
     y: 0,
   });
   const [isDragging, setIsDragging] = useState(false);
-  const isAnimated = false; // Synchronous RAF driven transforms ensure 0ms latency
+  const isAnimated = false;
 
   const transformRef = useRef<MapTransform>(transform);
   transformRef.current = transform;
 
-  const dragStartRef = useRef<{
+  const mouseDragRef = useRef<{
     clientX: number;
     clientY: number;
     startTx: number;
     startTy: number;
-    svgWidth: number;
-    svgHeight: number;
+    scaleRatio: number;
   } | null>(null);
 
-  const touchDistanceRef = useRef<number | null>(null);
-  const touchCenterRef = useRef<Point | null>(null);
+  const touchSessionRef = useRef<TouchSession>(null);
+  const lastTapRef = useRef<{ time: number; x: number; y: number } | null>(null);
   const rafAnimationRef = useRef<number | null>(null);
 
-  // Helper to create a consistent MapTransform object
+  // Helper to create a consistent MapTransform object with finite guards
   const makeTransform = useCallback(
-    (scale: number, tx: number, ty: number): MapTransform => ({
-      scale,
-      translateX: tx,
-      translateY: ty,
-      x: tx,
-      y: ty,
-    }),
+    (scale: number, tx: number, ty: number): MapTransform => {
+      const safeScale = Number.isFinite(scale) ? Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale)) : 1;
+      const safeTx = Number.isFinite(tx) ? tx : 0;
+      const safeTy = Number.isFinite(ty) ? ty : 0;
+      return {
+        scale: safeScale,
+        translateX: safeTx,
+        translateY: safeTy,
+        x: safeTx,
+        y: safeTy,
+      };
+    },
     []
   );
 
@@ -80,19 +102,19 @@ export function useMapTransform({
    */
   const clampBounds = useCallback(
     (scale: number, tx: number, ty: number): MapTransform => {
-      if (scale <= 1.01) {
+      if (!Number.isFinite(scale) || scale <= 1.01) {
         return makeTransform(1, 0, 0);
       }
-      const minTx = (1 - scale) * MAP_WIDTH - 320;
+      const safeScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+      const minTx = (1 - safeScale) * MAP_WIDTH - 320;
       const maxTx = 320;
-      const minTy = (1 - scale) * MAP_HEIGHT - 320;
+      const minTy = (1 - safeScale) * MAP_HEIGHT - 320;
       const maxTy = 320;
 
-      return makeTransform(
-        scale,
-        Math.max(minTx, Math.min(maxTx, tx)),
-        Math.max(minTy, Math.min(maxTy, ty))
-      );
+      const safeTx = Number.isFinite(tx) ? Math.max(minTx, Math.min(maxTx, tx)) : 0;
+      const safeTy = Number.isFinite(ty) ? Math.max(minTy, Math.min(maxTy, ty)) : 0;
+
+      return makeTransform(safeScale, safeTx, safeTy);
     },
     [makeTransform]
   );
@@ -109,7 +131,6 @@ export function useMapTransform({
 
   /**
    * Smooth Frame-Synchronized Camera Animator
-   * Drives both the SVG Map and Connection Line synchronously at 60 FPS
    */
   const animateTo = useCallback(
     (target: MapTransform, duration = 450) => {
@@ -121,22 +142,21 @@ export function useMapTransform({
       const tick = (now: number) => {
         const elapsed = now - startTime;
         const progress = Math.min(1, elapsed / duration);
-
-        // Smooth cubic ease-out: f(t) = 1 - (1 - t)^3
-        const ease = 1 - Math.pow(1 - progress, 3);
+        const ease = 1 - Math.pow(1 - progress, 3); // Cubic ease out
 
         const currentScale = start.scale + (target.scale - start.scale) * ease;
-        const currentTx =
-          start.translateX + (target.translateX - start.translateX) * ease;
-        const currentTy =
-          start.translateY + (target.translateY - start.translateY) * ease;
+        const currentTx = start.translateX + (target.translateX - start.translateX) * ease;
+        const currentTy = start.translateY + (target.translateY - start.translateY) * ease;
 
-        setTransform(makeTransform(currentScale, currentTx, currentTy));
+        const next = makeTransform(currentScale, currentTx, currentTy);
+        transformRef.current = next;
+        setTransform(next);
 
         if (progress < 1) {
           rafAnimationRef.current = requestAnimationFrame(tick);
         } else {
           rafAnimationRef.current = null;
+          transformRef.current = target;
           setTransform(target);
         }
       };
@@ -146,8 +166,28 @@ export function useMapTransform({
     [cancelAnimation, makeTransform]
   );
 
+  // Helper to compute SVG Root Coordinates (0..703, 0..900) from screen clientX/clientY
+  const getSvgCoordinates = useCallback(
+    (clientX: number, clientY: number, svgRect: DOMRect): Point => {
+      const scaleRatio = Math.min(
+        svgRect.width / MAP_VIEWBOX_WIDTH,
+        svgRect.height / MAP_VIEWBOX_HEIGHT
+      );
+      const viewWidth = MAP_VIEWBOX_WIDTH * scaleRatio;
+      const viewHeight = MAP_VIEWBOX_HEIGHT * scaleRatio;
+      const letterboxX = svgRect.left + (svgRect.width - viewWidth) / 2;
+      const letterboxY = svgRect.top + (svgRect.height - viewHeight) / 2;
+
+      return {
+        x: (clientX - letterboxX) / (scaleRatio || 1),
+        y: (clientY - letterboxY) / (scaleRatio || 1),
+      };
+    },
+    []
+  );
+
   /**
-   * Exact Mouse-Centered Zoom (Pointer-Invariant)
+   * Pointer-Invariant Mouse Wheel Zoom
    */
   const processWheelZoom = useCallback(
     (e: { clientX: number; clientY: number; deltaY: number; preventDefault?: () => void; stopPropagation?: () => void }) => {
@@ -163,44 +203,30 @@ export function useMapTransform({
       if (svgRect.width <= 0 || svgRect.height <= 0) return;
 
       const zoomFactor = e.deltaY < 0 ? 1.15 : 0.87;
+      const prev = transformRef.current;
+      const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, prev.scale * zoomFactor));
 
-      setTransform((prev) => {
-        const newScale = Math.min(
-          MAX_SCALE,
-          Math.max(MIN_SCALE, prev.scale * zoomFactor)
-        );
+      if (Math.abs(newScale - prev.scale) < 0.0001) return;
 
-        if (Math.abs(newScale - prev.scale) < 0.0001) return prev;
+      if (newScale <= 1.01) {
+        const resetT = makeTransform(1, 0, 0);
+        transformRef.current = resetT;
+        setTransform(resetT);
+        return;
+      }
 
-        if (newScale <= 1.01) {
-          return makeTransform(1, 0, 0);
-        }
+      const svgCursor = getSvgCoordinates(e.clientX, e.clientY, svgRect);
+      const worldX = (svgCursor.x - prev.translateX) / prev.scale;
+      const worldY = (svgCursor.y - prev.translateY) / prev.scale;
 
-        // Calculate cursor position in SVG (0..703, 0..900) coordinates
-        const scaleRatio = Math.min(
-          svgRect.width / MAP_VIEWBOX_WIDTH,
-          svgRect.height / MAP_VIEWBOX_HEIGHT
-        );
-        const viewWidth = MAP_VIEWBOX_WIDTH * scaleRatio;
-        const viewHeight = MAP_VIEWBOX_HEIGHT * scaleRatio;
-        const letterboxX = svgRect.left + (svgRect.width - viewWidth) / 2;
-        const letterboxY = svgRect.top + (svgRect.height - viewHeight) / 2;
+      const newTx = svgCursor.x - worldX * newScale;
+      const newTy = svgCursor.y - worldY * newScale;
 
-        const svgCursorX = (e.clientX - letterboxX) / scaleRatio;
-        const svgCursorY = (e.clientY - letterboxY) / scaleRatio;
-
-        // World coordinate under cursor before zoom
-        const worldX = (svgCursorX - prev.translateX) / prev.scale;
-        const worldY = (svgCursorY - prev.translateY) / prev.scale;
-
-        // New translation preserving the point under cursor
-        const newTx = svgCursorX - worldX * newScale;
-        const newTy = svgCursorY - worldY * newScale;
-
-        return clampBounds(newScale, newTx, newTy);
-      });
+      const next = clampBounds(newScale, newTx, newTy);
+      transformRef.current = next;
+      setTransform(next);
     },
-    [svgRef, cancelAnimation, makeTransform, clampBounds]
+    [svgRef, cancelAnimation, makeTransform, clampBounds, getSvgCoordinates]
   );
 
   const handleWheel = useCallback(
@@ -210,43 +236,25 @@ export function useMapTransform({
     [processWheelZoom]
   );
 
-  // Native non-passive Wheel listener registration on Map container
-  useEffect(() => {
-    const el = containerRef?.current || svgRef.current;
-    if (!el) return;
-
-    const onNativeWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      processWheelZoom(e);
-    };
-
-    el.addEventListener("wheel", onNativeWheel, { passive: false });
-
-    return () => {
-      el.removeEventListener("wheel", onNativeWheel);
-    };
-  }, [containerRef, svgRef, processWheelZoom]);
-
-
-  // Mouse Drag Pan
+  // Mouse Drag Handlers
   const handleMouseDown = useCallback(
     (e: React.MouseEvent<SVGSVGElement>) => {
-      if (e.button !== 0) return; // Only primary button
+      if (e.button !== 0) return;
       cancelAnimation();
 
       const svg = svgRef.current;
       if (!svg) return;
 
       const rect = svg.getBoundingClientRect();
+      const scaleRatio = Math.min(rect.width / MAP_WIDTH, rect.height / MAP_HEIGHT) || 1;
+
       setIsDragging(true);
-      dragStartRef.current = {
+      mouseDragRef.current = {
         clientX: e.clientX,
         clientY: e.clientY,
         startTx: transformRef.current.translateX,
         startTy: transformRef.current.translateY,
-        svgWidth: rect.width || MAP_WIDTH,
-        svgHeight: rect.height || MAP_HEIGHT,
+        scaleRatio,
       };
     },
     [svgRef, cancelAnimation]
@@ -254,22 +262,20 @@ export function useMapTransform({
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!dragStartRef.current) return;
-      const { clientX, clientY, startTx, startTy, svgWidth, svgHeight } =
-        dragStartRef.current;
+      if (!mouseDragRef.current) return;
+      const { clientX, clientY, startTx, startTy, scaleRatio } = mouseDragRef.current;
 
-      const scaleRatio = Math.min(svgWidth / MAP_WIDTH, svgHeight / MAP_HEIGHT);
-      const deltaX = (e.clientX - clientX) / (scaleRatio || 1);
-      const deltaY = (e.clientY - clientY) / (scaleRatio || 1);
+      const deltaX = (e.clientX - clientX) / scaleRatio;
+      const deltaY = (e.clientY - clientY) / scaleRatio;
 
-      setTransform((prev) =>
-        clampBounds(prev.scale, startTx + deltaX, startTy + deltaY)
-      );
+      const next = clampBounds(transformRef.current.scale, startTx + deltaX, startTy + deltaY);
+      transformRef.current = next;
+      setTransform(next);
     };
 
     const handleMouseUp = () => {
-      if (dragStartRef.current) {
-        dragStartRef.current = null;
+      if (mouseDragRef.current) {
+        mouseDragRef.current = null;
         setIsDragging(false);
       }
     };
@@ -282,105 +288,214 @@ export function useMapTransform({
     };
   }, [clampBounds]);
 
-  // Touch Pinch and Pan
+  /**
+   * Double Tap to Zoom / Reset on Mobile
+   */
+  const handleDoubleTap = useCallback(
+    (clientX: number, clientY: number) => {
+      const svg = svgRef.current;
+      if (!svg) return;
+
+      const svgRect = svg.getBoundingClientRect();
+      if (svgRect.width <= 0 || svgRect.height <= 0) return;
+
+      const current = transformRef.current;
+      if (current.scale > 1.5) {
+        animateTo(makeTransform(1, 0, 0), 380);
+      } else {
+        const targetScale = 2.2;
+        const svgCursor = getSvgCoordinates(clientX, clientY, svgRect);
+        const worldX = (svgCursor.x - current.translateX) / current.scale;
+        const worldY = (svgCursor.y - current.translateY) / current.scale;
+
+        const targetTx = MAP_WIDTH / 2 - worldX * targetScale;
+        const targetTy = MAP_HEIGHT / 2 - worldY * targetScale;
+
+        animateTo(clampBounds(targetScale, targetTx, targetTy), 420);
+      }
+    },
+    [svgRef, animateTo, makeTransform, clampBounds, getSvgCoordinates]
+  );
+
+  /**
+   * Mobile Touch Handlers — Zero Runaway, Invariant Pinch & Pan
+   */
   const handleTouchStart = useCallback(
-    (e: React.TouchEvent<SVGSVGElement>) => {
+    (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => {
       cancelAnimation();
       const svg = svgRef.current;
       if (!svg) return;
-      const rect = svg.getBoundingClientRect();
 
-      if (e.touches.length === 1) {
+      const svgRect = svg.getBoundingClientRect();
+      if (svgRect.width <= 0 || svgRect.height <= 0) return;
+
+      const touches = e.touches;
+
+      if (touches.length === 1) {
+        // Single finger pan setup
+        const t = touches[0];
+        const scaleRatio = Math.min(svgRect.width / MAP_WIDTH, svgRect.height / MAP_HEIGHT) || 1;
+
         setIsDragging(true);
-        dragStartRef.current = {
-          clientX: e.touches[0].clientX,
-          clientY: e.touches[0].clientY,
+        touchSessionRef.current = {
+          type: "single",
+          startX: t.clientX,
+          startY: t.clientY,
           startTx: transformRef.current.translateX,
           startTy: transformRef.current.translateY,
-          svgWidth: rect.width || MAP_WIDTH,
-          svgHeight: rect.height || MAP_HEIGHT,
+          scaleRatio,
         };
-      } else if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        touchDistanceRef.current = Math.hypot(dx, dy);
+      } else if (touches.length >= 2) {
+        // Multi-touch pinch & pan setup
+        if (e.cancelable) e.preventDefault();
 
-        touchCenterRef.current = {
-          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
-          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        const t0 = touches[0];
+        const t1 = touches[1];
+        const dist = Math.max(10, Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY));
+        const centerScreenX = (t0.clientX + t1.clientX) / 2;
+        const centerScreenY = (t0.clientY + t1.clientY) / 2;
+
+        const centerSvg = getSvgCoordinates(centerScreenX, centerScreenY, svgRect);
+        const curScale = transformRef.current.scale;
+        const curTx = transformRef.current.translateX;
+        const curTy = transformRef.current.translateY;
+
+        const worldX = (centerSvg.x - curTx) / curScale;
+        const worldY = (centerSvg.y - curTy) / curScale;
+
+        setIsDragging(true);
+        touchSessionRef.current = {
+          type: "pinch",
+          startDistance: dist,
+          startScale: curScale,
+          startWorldX: worldX,
+          startWorldY: worldY,
         };
       }
     },
-    [svgRef, cancelAnimation]
+    [svgRef, cancelAnimation, getSvgCoordinates]
   );
 
   const handleTouchMove = useCallback(
-    (e: React.TouchEvent<SVGSVGElement>) => {
+    (e: React.TouchEvent<SVGSVGElement> | TouchEvent) => {
       const svg = svgRef.current;
-      if (!svg) return;
-      const rect = svg.getBoundingClientRect();
+      if (!svg || !touchSessionRef.current) return;
 
-      if (e.touches.length === 1 && dragStartRef.current) {
-        const { clientX, clientY, startTx, startTy, svgWidth, svgHeight } =
-          dragStartRef.current;
+      const svgRect = svg.getBoundingClientRect();
+      if (svgRect.width <= 0 || svgRect.height <= 0) return;
 
-        const scaleRatio = Math.min(
-          svgWidth / MAP_WIDTH,
-          svgHeight / MAP_HEIGHT
+      const touches = e.touches;
+
+      if (touches.length === 1 && touchSessionRef.current.type === "single") {
+        // Single finger pan: Allow native touch pan
+        const t = touches[0];
+        const session = touchSessionRef.current;
+        const deltaX = (t.clientX - session.startX) / session.scaleRatio;
+        const deltaY = (t.clientY - session.startY) / session.scaleRatio;
+
+        const next = clampBounds(
+          transformRef.current.scale,
+          session.startTx + deltaX,
+          session.startTy + deltaY
         );
-        const deltaX = (e.touches[0].clientX - clientX) / (scaleRatio || 1);
-        const deltaY = (e.touches[0].clientY - clientY) / (scaleRatio || 1);
+        transformRef.current = next;
+        setTransform(next);
+      } else if (touches.length >= 2) {
+        // Multi-touch pinch & pan: Stop page zoom and compute closed-form transform
+        if (e.cancelable) e.preventDefault();
 
-        setTransform((prev) =>
-          clampBounds(prev.scale, startTx + deltaX, startTy + deltaY)
-        );
-      } else if (
-        e.touches.length === 2 &&
-        touchDistanceRef.current !== null &&
-        touchCenterRef.current !== null
-      ) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        const currentDist = Math.hypot(dx, dy);
+        const t0 = touches[0];
+        const t1 = touches[1];
+        const dist = Math.max(10, Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY));
+        const centerScreenX = (t0.clientX + t1.clientX) / 2;
+        const centerScreenY = (t0.clientY + t1.clientY) / 2;
+        const centerSvg = getSvgCoordinates(centerScreenX, centerScreenY, svgRect);
 
-        const ratio = currentDist / touchDistanceRef.current;
-        touchDistanceRef.current = currentDist;
+        // If session was single finger, upgrade smoothly to pinch without jumping
+        if (touchSessionRef.current.type !== "pinch") {
+          const curScale = transformRef.current.scale;
+          const curTx = transformRef.current.translateX;
+          const curTy = transformRef.current.translateY;
 
-        setTransform((prev) => {
-          const newScale = Math.min(
-            MAX_SCALE,
-            Math.max(MIN_SCALE, prev.scale * ratio)
-          );
-          if (newScale <= 1.01) return makeTransform(1, 0, 0);
+          touchSessionRef.current = {
+            type: "pinch",
+            startDistance: dist,
+            startScale: curScale,
+            startWorldX: (centerSvg.x - curTx) / curScale,
+            startWorldY: (centerSvg.y - curTy) / curScale,
+          };
+          return;
+        }
 
-          const scaleRatio = Math.min(
-            (rect.width || MAP_WIDTH) / MAP_WIDTH,
-            (rect.height || MAP_HEIGHT) / MAP_HEIGHT
-          );
-          const center = touchCenterRef.current!;
-          const svgX = (center.x - rect.left) / scaleRatio;
-          const svgY = (center.y - rect.top) / scaleRatio;
+        const session = touchSessionRef.current;
+        const scaleMultiplier = dist / session.startDistance;
+        let newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, session.startScale * scaleMultiplier));
 
-          const worldX = (svgX - prev.translateX) / prev.scale;
-          const worldY = (svgY - prev.translateY) / prev.scale;
+        if (!Number.isFinite(newScale)) newScale = 1;
 
-          const newTx = svgX - worldX * newScale;
-          const newTy = svgY - worldY * newScale;
+        let newTx = 0;
+        let newTy = 0;
 
-          return clampBounds(newScale, newTx, newTy);
-        });
+        if (newScale > 1.01) {
+          newTx = centerSvg.x - session.startWorldX * newScale;
+          newTy = centerSvg.y - session.startWorldY * newScale;
+        }
+
+        const next = clampBounds(newScale, newTx, newTy);
+        transformRef.current = next;
+        setTransform(next);
       }
     },
-    [svgRef, clampBounds, makeTransform]
+    [svgRef, clampBounds, getSvgCoordinates]
   );
 
-  const handleTouchEnd = useCallback(() => {
-    dragStartRef.current = null;
-    touchDistanceRef.current = null;
-    touchCenterRef.current = null;
-    setIsDragging(false);
-  }, []);
+  const handleTouchEnd = useCallback(
+    (e?: React.TouchEvent<SVGSVGElement> | TouchEvent) => {
+      const touches = e ? e.touches : undefined;
 
+      if (!touches || touches.length === 0) {
+        // All fingers lifted
+        setIsDragging(false);
+
+        // Double tap detection on release of single touch
+        if (e && 'changedTouches' in e && e.changedTouches.length === 1) {
+          const ct = e.changedTouches[0];
+          const now = performance.now();
+          if (lastTapRef.current && now - lastTapRef.current.time < 300) {
+            const dist = Math.hypot(ct.clientX - lastTapRef.current.x, ct.clientY - lastTapRef.current.y);
+            if (dist < 32) {
+              handleDoubleTap(ct.clientX, ct.clientY);
+              lastTapRef.current = null;
+              touchSessionRef.current = null;
+              return;
+            }
+          }
+          lastTapRef.current = { time: now, x: ct.clientX, y: ct.clientY };
+        }
+
+        touchSessionRef.current = null;
+      } else if (touches.length === 1) {
+        // Transition from 2 fingers down to 1 finger smoothly without jumping
+        const svg = svgRef.current;
+        if (svg) {
+          const svgRect = svg.getBoundingClientRect();
+          const scaleRatio = Math.min(svgRect.width / MAP_WIDTH, svgRect.height / MAP_HEIGHT) || 1;
+          const t = touches[0];
+          touchSessionRef.current = {
+            type: "single",
+            startX: t.clientX,
+            startY: t.clientY,
+            startTx: transformRef.current.translateX,
+            startTy: transformRef.current.translateY,
+            scaleRatio,
+          };
+        }
+      }
+    },
+    [svgRef, handleDoubleTap]
+  );
+
+  // Zoom controls
   const zoomIn = useCallback(() => {
     const prev = transformRef.current;
     const newScale = Math.min(MAX_SCALE, prev.scale * 1.3);
@@ -409,7 +524,6 @@ export function useMapTransform({
 
   /**
    * Dynamic Province Auto-Focus
-   * Computes scale based on province bounding box and centers province anchor
    */
   const focusOnProvince = useCallback(
     (province: ProvinceInfo) => {
@@ -418,9 +532,7 @@ export function useMapTransform({
       const svg = svgRef.current;
       if (svg) {
         try {
-          const pathEl = svg.querySelector<SVGPathElement>(
-            `#province-${province.id}`
-          );
+          const pathEl = svg.querySelector<SVGPathElement>(`#province-${province.id}`);
           if (pathEl) {
             const domBBox = pathEl.getBBox();
             if (domBBox.width > 0 && domBBox.height > 0) {
@@ -439,26 +551,21 @@ export function useMapTransform({
         }
       }
 
-      // Usable viewport dimensions with 25% comfortable padding
       const usableWidth = MAP_WIDTH * (1 - PROVINCE_PADDING_RATIO);
       const usableHeight = MAP_HEIGHT * (1 - PROVINCE_PADDING_RATIO);
 
-      // Required scale to fit province comfortably inside the viewport
       const scaleX = usableWidth / Math.max(bbox.width, 35);
       const scaleY = usableHeight / Math.max(bbox.height, 35);
       const requiredScale = Math.min(scaleX, scaleY);
 
-      // Clamp between 1.8x and 3.0x
       const targetScale = Math.min(
         MAX_PROVINCE_SCALE,
         Math.max(MIN_PROVINCE_SCALE, requiredScale)
       );
 
-      // Focus on canonical geographic anchor (or bbox center)
       const centerX = province.anchor?.x ?? (bbox.minX + bbox.maxX) / 2;
       const centerY = province.anchor?.y ?? (bbox.minY + bbox.maxY) / 2;
 
-      // Translation to center the province in viewport (351.5, 450)
       const targetTx = MAP_WIDTH / 2 - centerX * targetScale;
       const targetTy = MAP_HEIGHT / 2 - centerY * targetScale;
 

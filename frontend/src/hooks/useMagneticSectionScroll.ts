@@ -12,12 +12,11 @@ export interface MagneticScrollOptions {
   commitDuration?: number
   lockDuration?: number
   inactivityTimeout?: number
+  desktopBreakpoint?: number // default 1024px
 }
 
-// Cubic ease out for smooth commit transition
+// Easing functions
 const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3)
-
-// Soft ease out for spring back
 const easeOutQuad = (t: number): number => 1 - (1 - t) * (1 - t)
 
 export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
@@ -25,56 +24,85 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     headerHeight = 72,
     enabled = true,
     resistance = 0.35,
-    commitThreshold = 65,
-    maxPullOffset = 130,
-    springDuration = 280,
+    commitThreshold = 60,
+    maxPullOffset = 120,
+    springDuration = 260,
     commitDuration = 480,
     lockDuration = 220,
-    inactivityTimeout = 220,
+    inactivityTimeout = 200,
+    desktopBreakpoint = 1024,
   } = options
 
   const [activeSectionId, setActiveSectionId] = useState<string>('hero')
   const [scrollState, setScrollState] = useState<ScrollState>('IDLE')
 
-  // Refs for tracking animation & physics state
   const scrollStateRef = useRef<ScrollState>('IDLE')
   const currentSectionIndexRef = useRef<number>(0)
   const pullOffsetRef = useRef<number>(0)
   const baseScrollYRef = useRef<number>(0)
-  
+
   const animFrameIdRef = useRef<number | null>(null)
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lockTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  const touchStartYRef = useRef<number | null>(null)
-  const touchStartXRef = useRef<number | null>(null)
-  const isTouchActiveRef = useRef<boolean>(false)
 
   const setInternalState = (state: ScrollState) => {
     scrollStateRef.current = state
     setScrollState(state)
   }
 
-  // Get all registered sections in DOM order
-  const getSections = useCallback((): HTMLElement[] => {
-    return Array.from(document.querySelectorAll<HTMLElement>('[data-section]'))
+  // Query all 6 100vh snap sections: Hero, Specialty Map, Brand Statement, Quick Stats, Brand Visual, CtaBanner
+  const getSnapSections = useCallback((): HTMLElement[] => {
+    return Array.from(
+      document.querySelectorAll<HTMLElement>(
+        '[data-section="hero"], [data-section="specialty-map"], [data-section="brand-statement"], [data-section="quick-stats"], [data-section="brand-visual"], [data-section="cta-banner"]'
+      )
+    )
   }, [])
 
-  // Calculate precise top position of section i
-  const getSectionTargetTop = useCallback((index: number, sections: HTMLElement[]): number => {
-    if (index <= 0 || !sections[index]) return 0
-    const el = sections[index]
-    const rect = el.getBoundingClientRect()
-    const absoluteTop = rect.top + window.scrollY
-    return Math.max(0, Math.round(absoluteTop - headerHeight))
-  }, [headerHeight])
+  // Calculate target top for a snap section
+  const getSectionTargetTop = useCallback(
+    (index: number, sections: HTMLElement[]): number => {
+      if (index <= 0 || !sections[index]) return 0
+      const el = sections[index]
+      const rect = el.getBoundingClientRect()
+      const absoluteTop = rect.top + window.scrollY
+      return Math.max(0, Math.round(absoluteTop - headerHeight))
+    },
+    [headerHeight]
+  )
 
-  // Initialize and synchronize current section index with actual scroll position
+  // Get top position of Footer
+  const getFooterTop = useCallback((): number => {
+    const footerEl = document.querySelector<HTMLElement>('[data-section="footer"]')
+    if (footerEl) {
+      const rect = footerEl.getBoundingClientRect()
+      return Math.max(0, Math.round(rect.top + window.scrollY - headerHeight))
+    }
+    const snapSections = getSnapSections()
+    const lastSnap = snapSections[snapSections.length - 1]
+    if (lastSnap) {
+      const rect = lastSnap.getBoundingClientRect()
+      return Math.max(0, Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - headerHeight))
+    }
+    return 0
+  }, [headerHeight, getSnapSections])
+
+  // Synchronize current section index with actual scroll position
   const syncCurrentIndex = useCallback(() => {
-    const sections = getSections()
+    const sections = getSnapSections()
     if (sections.length === 0) return
 
     const currentScroll = window.scrollY
+    const footerTop = getFooterTop()
+
+    // If scroll is in the Footer zone
+    if (currentScroll >= footerTop - 15) {
+      currentSectionIndexRef.current = sections.length // Index = sections.length represents Footer
+      baseScrollYRef.current = footerTop
+      setActiveSectionId('footer')
+      return
+    }
+
     let closestIndex = 0
     let minDiff = Infinity
 
@@ -89,12 +117,12 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
 
     currentSectionIndexRef.current = closestIndex
     baseScrollYRef.current = getSectionTargetTop(closestIndex, sections)
-    
+
     const secId = sections[closestIndex]?.getAttribute('data-section') || ''
     if (secId) setActiveSectionId(secId)
-  }, [getSections, getSectionTargetTop])
+  }, [getSnapSections, getSectionTargetTop, getFooterTop])
 
-  // Spring Back Animation (Smoothly restore to base section position)
+  // Spring back animation
   const startSpringBack = useCallback(() => {
     if (scrollStateRef.current === 'COMMITTING' || scrollStateRef.current === 'LOCKED') return
 
@@ -134,72 +162,85 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     animFrameIdRef.current = requestAnimationFrame(animate)
   }, [springDuration])
 
-  // Continuous Commit Transition (Seamlessly glide to next/prev section from current position)
-  const startCommitTransition = useCallback((direction: 1 | -1) => {
-    const sections = getSections()
-    if (sections.length === 0) {
-      startSpringBack()
-      return
-    }
+  // Transition to specific snap target index
+  const startCommitTransition = useCallback(
+    (targetIndex: number) => {
+      const sections = getSnapSections()
+      const footerTop = getFooterTop()
 
-    const nextIndex = currentSectionIndexRef.current + direction
-
-    // Boundary check
-    if (nextIndex < 0 || nextIndex >= sections.length) {
-      startSpringBack()
-      return
-    }
-
-    if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
-
-    setInternalState('COMMITTING')
-
-    const startScroll = window.scrollY
-    const targetScroll = getSectionTargetTop(nextIndex, sections)
-    const distance = targetScroll - startScroll
-    const startTime = performance.now()
-
-    const animate = (now: number) => {
-      const elapsed = now - startTime
-      const progress = Math.min(1, elapsed / commitDuration)
-      const eased = easeOutCubic(progress)
-
-      const nextY = startScroll + distance * eased
-      window.scrollTo(0, nextY)
-
-      if (progress < 1) {
-        animFrameIdRef.current = requestAnimationFrame(animate)
-      } else {
-        // Arrival at target section
-        window.scrollTo(0, targetScroll)
-        currentSectionIndexRef.current = nextIndex
-        baseScrollYRef.current = targetScroll
-        pullOffsetRef.current = 0
-
-        const secId = sections[nextIndex]?.getAttribute('data-section') || ''
-        if (secId) setActiveSectionId(secId)
-
-        // Lock briefly to absorb leftover inertia
-        setInternalState('LOCKED')
-        if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
-        lockTimerRef.current = setTimeout(() => {
-          setInternalState('IDLE')
-        }, lockDuration)
+      if (targetIndex < 0 || targetIndex > sections.length) {
+        startSpringBack()
+        return
       }
-    }
 
-    animFrameIdRef.current = requestAnimationFrame(animate)
-  }, [getSections, getSectionTargetTop, commitDuration, lockDuration, startSpringBack])
+      if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
 
-  // Mouse Wheel Event Listener
+      setInternalState('COMMITTING')
+
+      const startScroll = window.scrollY
+      let targetScroll = 0
+      if (targetIndex === sections.length) {
+        targetScroll = footerTop
+      } else {
+        targetScroll = getSectionTargetTop(targetIndex, sections)
+      }
+
+      const distance = targetScroll - startScroll
+      const startTime = performance.now()
+
+      const animate = (now: number) => {
+        const elapsed = now - startTime
+        const progress = Math.min(1, elapsed / commitDuration)
+        const eased = easeOutCubic(progress)
+
+        const nextY = startScroll + distance * eased
+        window.scrollTo(0, nextY)
+
+        if (progress < 1) {
+          animFrameIdRef.current = requestAnimationFrame(animate)
+        } else {
+          window.scrollTo(0, targetScroll)
+          currentSectionIndexRef.current = targetIndex
+          baseScrollYRef.current = targetScroll
+          pullOffsetRef.current = 0
+
+          const secId =
+            targetIndex === sections.length
+              ? 'footer'
+              : sections[targetIndex]?.getAttribute('data-section') || ''
+          if (secId) setActiveSectionId(secId)
+
+          setInternalState('LOCKED')
+          if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
+          lockTimerRef.current = setTimeout(() => {
+            setInternalState('IDLE')
+          }, lockDuration)
+        }
+      }
+
+      animFrameIdRef.current = requestAnimationFrame(animate)
+    },
+    [getSnapSections, getSectionTargetTop, getFooterTop, commitDuration, lockDuration, startSpringBack]
+  )
+
   useEffect(() => {
     if (!enabled) return
 
-    // Sync on mount
-    syncCurrentIndex()
+    // Media query for desktop viewport isolation (>= 1024px)
+    const mediaQuery = window.matchMedia(`(min-width: ${desktopBreakpoint}px)`)
+
+    let isListening = false
 
     const handleWheel = (e: WheelEvent) => {
-      // 1. MAP ISOLATION: If pointer is inside VietnamSpecialtyMap or canvas
+      if (!mediaQuery.matches) return
+
+      const sections = getSnapSections()
+      if (sections.length === 0) return
+
+      const footerTop = getFooterTop()
+      const currentY = window.scrollY
+
+      // 1. MAP ISOLATION: Map zoom consumes wheel exclusively
       const target = e.target as HTMLElement | null
       if (
         target &&
@@ -207,14 +248,65 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
           target.closest('svg.mapSvg') ||
           target.closest('[data-consume-wheel="true"]'))
       ) {
-        // Map consumes wheel for zoom -> spring back any pending pull
         if (scrollStateRef.current === 'RESISTING') {
           startSpringBack()
         }
         return
       }
 
-      // 2. If locked or committing, block scroll to prevent multi-section skips
+      // 2. FOOTER NATURAL SCROLL ZONE:
+      if (currentY >= footerTop - 15) {
+        // If scrolling DOWN, or scrolling UP inside the footer:
+        if (e.deltaY > 0 || currentY > footerTop + 10) {
+          // 100% Native free scroll inside Footer
+          if (scrollStateRef.current !== 'IDLE') {
+            setInternalState('IDLE')
+          }
+          pullOffsetRef.current = 0
+          return
+        }
+
+        // If user is at top edge of Footer (currentY <= footerTop + 10) and scrolls UP:
+        if (e.deltaY < 0) {
+          e.preventDefault()
+
+          if (scrollStateRef.current === 'LOCKED' || scrollStateRef.current === 'COMMITTING') {
+            return
+          }
+
+          if (scrollStateRef.current === 'SPRING_BACK' && animFrameIdRef.current) {
+            cancelAnimationFrame(animFrameIdRef.current)
+          }
+
+          baseScrollYRef.current = footerTop
+          const delta = e.deltaY * resistance * 0.8
+          pullOffsetRef.current = Math.max(-maxPullOffset, Math.min(0, pullOffsetRef.current + delta))
+
+          const visualY = baseScrollYRef.current + pullOffsetRef.current
+          window.scrollTo(0, Math.max(0, visualY))
+          setInternalState('RESISTING')
+
+          if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
+            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+            startCommitTransition(sections.length - 1) // Commit back up to CtaBanner (Index 5)
+            return
+          }
+
+          if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+          inactivityTimerRef.current = setTimeout(() => {
+            if (scrollStateRef.current === 'RESISTING') {
+              if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
+                startCommitTransition(sections.length - 1)
+              } else {
+                startSpringBack()
+              }
+            }
+          }, inactivityTimeout)
+          return
+        }
+      }
+
+      // 3. 100VH SECTIONS ZONE (HERO -> MAP -> GIỚI THIỆU -> NĂNG LỰC -> TẦM NHÌN QUỐC TẾ -> CTA BANNER)
       if (scrollStateRef.current === 'LOCKED' || scrollStateRef.current === 'COMMITTING') {
         e.preventDefault()
         return
@@ -222,45 +314,54 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
 
       e.preventDefault()
 
-      // If we were in SPRING_BACK, cancel it and resume user control seamlessly
       if (scrollStateRef.current === 'SPRING_BACK' && animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current)
       }
 
-      const sections = getSections()
       const currentIndex = currentSectionIndexRef.current
-      const isAtTopBoundary = currentIndex === 0 && e.deltaY < 0
-      const isAtBottomBoundary = currentIndex === sections.length - 1 && e.deltaY > 0
-
-      // Damping factor
-      let damping = 1 - Math.min(0.8, Math.abs(pullOffsetRef.current) / (maxPullOffset * 1.5))
-      if (isAtTopBoundary || isAtBottomBoundary) {
-        damping *= 0.15 // Heavy rubber-band resistance at boundaries
+      if (currentIndex < sections.length) {
+        baseScrollYRef.current = getSectionTargetTop(currentIndex, sections)
+      } else {
+        baseScrollYRef.current = footerTop
       }
+
+      const isAtTopBoundary = currentIndex === 0 && e.deltaY < 0
+      let damping = 1 - Math.min(0.8, Math.abs(pullOffsetRef.current) / (maxPullOffset * 1.5))
+      if (isAtTopBoundary) damping *= 0.15
 
       const delta = e.deltaY * resistance * damping
       pullOffsetRef.current = Math.max(-maxPullOffset, Math.min(maxPullOffset, pullOffsetRef.current + delta))
 
-      // Direct, glitch-free window scroll position during resistance
       const visualY = baseScrollYRef.current + pullOffsetRef.current
       window.scrollTo(0, Math.max(0, visualY))
       setInternalState('RESISTING')
 
-      // Check if threshold reached immediately
+      // Check threshold
       if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
         if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
         const direction = pullOffsetRef.current > 0 ? 1 : -1
-        startCommitTransition(direction)
+        const nextIndex = currentIndex + direction
+
+        if (nextIndex >= 0 && nextIndex <= sections.length) {
+          startCommitTransition(nextIndex)
+        } else {
+          startSpringBack()
+        }
         return
       }
 
-      // Inactivity debounce: if user stops scrolling before threshold, spring back
+      // Inactivity debounce
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
       inactivityTimerRef.current = setTimeout(() => {
         if (scrollStateRef.current === 'RESISTING') {
           if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
             const direction = pullOffsetRef.current > 0 ? 1 : -1
-            startCommitTransition(direction)
+            const nextIndex = currentIndex + direction
+            if (nextIndex >= 0 && nextIndex <= sections.length) {
+              startCommitTransition(nextIndex)
+            } else {
+              startSpringBack()
+            }
           } else {
             startSpringBack()
           }
@@ -268,143 +369,80 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
       }, inactivityTimeout)
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: false })
-    window.addEventListener('resize', syncCurrentIndex)
+    const handleScroll = () => {
+      if (scrollStateRef.current === 'IDLE' && mediaQuery.matches) {
+        syncCurrentIndex()
+      }
+    }
 
-    return () => {
+    const attachDesktopListeners = () => {
+      if (isListening) return
+      isListening = true
+      syncCurrentIndex()
+      window.addEventListener('wheel', handleWheel, { passive: false })
+      window.addEventListener('scroll', handleScroll, { passive: true })
+      window.addEventListener('resize', syncCurrentIndex)
+    }
+
+    const detachDesktopListeners = () => {
+      if (!isListening) return
+      isListening = false
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', syncCurrentIndex)
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
       if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
       if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
+      pullOffsetRef.current = 0
+      setInternalState('IDLE')
+    }
+
+    // Dynamic breakpoint watcher
+    const handleBreakpointChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
+        attachDesktopListeners()
+      } else {
+        detachDesktopListeners()
+      }
+    }
+
+    // Initial check
+    if (mediaQuery.matches) {
+      attachDesktopListeners()
+    }
+
+    // Modern and legacy event listener support for matchMedia
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleBreakpointChange)
+    } else {
+      mediaQuery.addListener(handleBreakpointChange)
+    }
+
+    return () => {
+      detachDesktopListeners()
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleBreakpointChange)
+      } else {
+        mediaQuery.removeListener(handleBreakpointChange)
+      }
     }
   }, [
     enabled,
+    desktopBreakpoint,
     resistance,
     maxPullOffset,
     commitThreshold,
     inactivityTimeout,
-    getSections,
+    getSnapSections,
+    getSectionTargetTop,
+    getFooterTop,
     syncCurrentIndex,
     startCommitTransition,
     startSpringBack,
   ])
 
-  // Mobile Touch Swipe Listener
-  useEffect(() => {
-    if (!enabled) return
-
-    const handleTouchStart = (e: TouchEvent) => {
-      const target = e.target as HTMLElement | null
-      if (
-        target &&
-        (target.closest('[data-map-viewport="true"]') ||
-          target.closest('svg.mapSvg') ||
-          target.closest('[data-consume-wheel="true"]'))
-      ) {
-        touchStartYRef.current = null
-        touchStartXRef.current = null
-        isTouchActiveRef.current = false
-        return
-      }
-
-      if (e.touches.length === 1 && scrollStateRef.current !== 'LOCKED' && scrollStateRef.current !== 'COMMITTING') {
-        if (scrollStateRef.current === 'SPRING_BACK' && animFrameIdRef.current) {
-          cancelAnimationFrame(animFrameIdRef.current)
-        }
-        touchStartYRef.current = e.touches[0].clientY
-        touchStartXRef.current = e.touches[0].clientX
-        isTouchActiveRef.current = true
-      }
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isTouchActiveRef.current || touchStartYRef.current === null) return
-
-      if (scrollStateRef.current === 'LOCKED' || scrollStateRef.current === 'COMMITTING') {
-        if (e.cancelable) e.preventDefault()
-        return
-      }
-
-      const currentY = e.touches[0].clientY
-      const currentX = e.touches[0].clientX
-      const diffY = touchStartYRef.current - currentY
-      const diffX = (touchStartXRef.current ?? currentX) - currentX
-
-      if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 8) {
-        if (e.cancelable) e.preventDefault()
-
-        const sections = getSections()
-        const currentIndex = currentSectionIndexRef.current
-        const isAtTopBoundary = currentIndex === 0 && diffY < 0
-        const isAtBottomBoundary = currentIndex === sections.length - 1 && diffY > 0
-
-        let touchDamping = 0.55 * (1 - Math.min(0.8, Math.abs(diffY) / (maxPullOffset * 1.5)))
-        if (isAtTopBoundary || isAtBottomBoundary) {
-          touchDamping *= 0.2
-        }
-
-        const offset = diffY * touchDamping
-        pullOffsetRef.current = Math.max(-maxPullOffset, Math.min(maxPullOffset, offset))
-
-        const visualY = baseScrollYRef.current + pullOffsetRef.current
-        window.scrollTo(0, Math.max(0, visualY))
-        setInternalState('RESISTING')
-      }
-    }
-
-    const handleTouchEnd = () => {
-      if (!isTouchActiveRef.current) return
-      isTouchActiveRef.current = false
-      touchStartYRef.current = null
-      touchStartXRef.current = null
-
-      if (scrollStateRef.current === 'RESISTING') {
-        if (Math.abs(pullOffsetRef.current) >= commitThreshold * 0.75) {
-          const direction = pullOffsetRef.current > 0 ? 1 : -1
-          startCommitTransition(direction)
-        } else {
-          startSpringBack()
-        }
-      }
-    }
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true })
-    window.addEventListener('touchmove', handleTouchMove, { passive: false })
-    window.addEventListener('touchend', handleTouchEnd, { passive: true })
-    window.addEventListener('touchcancel', handleTouchEnd, { passive: true })
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
-      window.removeEventListener('touchend', handleTouchEnd)
-      window.removeEventListener('touchcancel', handleTouchEnd)
-    }
-  }, [
-    enabled,
-    maxPullOffset,
-    commitThreshold,
-    getSections,
-    startCommitTransition,
-    startSpringBack,
-  ])
-
-  // Programmatic scroll helper
-  const scrollToSection = useCallback((sectionId: string) => {
-    const sections = getSections()
-    const targetIdx = sections.findIndex(s => s.getAttribute('data-section') === sectionId)
-    if (targetIdx !== -1) {
-      const targetTop = getSectionTargetTop(targetIdx, sections)
-      window.scrollTo({ top: targetTop, behavior: 'smooth' })
-      currentSectionIndexRef.current = targetIdx
-      baseScrollYRef.current = targetTop
-      setActiveSectionId(sectionId)
-    }
-  }, [getSections, getSectionTargetTop])
-
   return {
     activeSectionId,
     scrollState,
-    scrollToSection,
   }
 }

@@ -28,12 +28,12 @@ const PILLARS = [
 
 export default function QuickStats() {
   return (
-    <section id="nang-luc" className="py-14 sm:py-18 lg:py-20 bg-white border-b border-haq-border">
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+    <section id="nang-luc" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-white border-b border-haq-border flex items-center justify-center py-14 sm:py-18 lg:py-0">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 sm:mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6 sm:mb-8 lg:mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-2.5">
+            <div className="flex items-center gap-2 mb-2">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                 TIÊU CHUẨN & NĂNG LỰC · CAPABILITY
               </span>
@@ -54,36 +54,36 @@ export default function QuickStats() {
         </div>
 
         {/* 3 Core Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
           {PILLARS.map((pillar) => {
             const Icon = pillar.icon
             return (
               <div
                 key={pillar.num}
-                className="group bg-haq-sage rounded-3xl p-6 sm:p-8 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group bg-haq-sage rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-6 border border-haq-border hover:border-[#16A34A] shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="font-heading font-black text-3xl sm:text-4xl text-[#16A34A]">
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <span className="font-heading font-black text-2xl sm:text-3xl text-[#16A34A]">
                       {pillar.num}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-haq-border flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-[#16A34A] group-hover:text-white group-hover:border-[#16A34A] transition-colors">
-                      <Icon className="w-6 h-6" />
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white border border-haq-border flex items-center justify-center text-haq-ink shadow-2xs group-hover:bg-[#16A34A] group-hover:text-white group-hover:border-[#16A34A] transition-colors">
+                      <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <div className="font-heading text-xs font-bold uppercase tracking-wider text-haq-text-secondary mb-1">
+                  <div className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-wider text-haq-text-secondary mb-1">
                     {pillar.label}
                   </div>
-                  <h3 className="font-heading font-bold text-xl sm:text-2xl text-haq-ink">
+                  <h3 className="font-heading font-bold text-lg sm:text-xl text-haq-ink">
                     {pillar.title}
                   </h3>
-                  <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
+                  <p className="mt-2 text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
                     {pillar.desc}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-haq-border">
+                <div className="mt-5 sm:mt-6 pt-4 border-t border-haq-border">
                   <Link
                     to="/nang-luc"
                     className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-[#16A34A] group-hover:text-[#0F5132] transition-colors"
