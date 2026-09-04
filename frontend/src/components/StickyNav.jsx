@@ -12,7 +12,6 @@ import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterPr
 import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
-import { HeaderLanguageSwitcher } from './LanguageSwitcher'
 
 const ABOUT_SUBPAGES = [
   {
@@ -425,9 +424,8 @@ export default function StickyNav() {
           </Link>
         </nav>
 
-        {/* 3. Language Switcher & CTA */}
+        {/* 3. CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <HeaderLanguageSwitcher />
           <Link
             to="/lien-he"
             className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
