@@ -1,14 +1,23 @@
 import React, { useEffect } from 'react'
 import { X, CheckCircle, Package, Calendar, Truck, ArrowRight, MapPin } from 'lucide-react'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 export default function ProductDetailModal({ product, onClose }) {
-  // Prevent body scroll when modal is open
+  const { trackProductView, trackContactClick, stopProductSessionRecording } = useAnalytics()
+
+  // Prevent body scroll when modal is open and track product view
   useEffect(() => {
     document.body.style.overflow = 'hidden'
+    if (product) {
+      trackProductView(product)
+    }
     return () => {
       document.body.style.overflow = 'unset'
+      if (typeof stopProductSessionRecording === 'function') {
+        stopProductSessionRecording()
+      }
     }
-  }, [])
+  }, [product, trackProductView, stopProductSessionRecording])
 
   if (!product) return null
 

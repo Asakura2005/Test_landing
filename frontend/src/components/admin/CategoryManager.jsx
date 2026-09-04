@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, Check, X, RefreshCw, ChevronRight } from 'lucide-react'
-import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/supabase'
+import React, { useState, useEffect, useMemo } from 'react'
+import { Plus, Edit2, Trash2, Check, X, RefreshCw, ChevronRight, ChevronDown, Folder, Layers, Search, MapPin, Package } from 'lucide-react'
+import { getCategories, createCategory, updateCategory, deleteCategory, getProvinces } from '../../services/supabase'
 
 export default function CategoryManager({ products = [] }) {
   const [categories, setCategories] = useState([])
+  const [provinces, setProvinces] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('categories') // 'categories' | 'regions'
+  const [searchQuery, setSearchQuery] = useState('')
+  const [collapsedParents, setCollapsedParents] = useState({})
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null)
   
   const [formData, setFormData] = useState({
     name: '',
@@ -17,22 +23,27 @@ export default function CategoryManager({ products = [] }) {
   })
   
   const [isSubCategory, setIsSubCategory] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
-  const fetchCategories = async () => {
+  const fetchData = async () => {
     try {
       setIsLoading(true)
-      const data = await getCategories()
-      setCategories(data || [])
+      const [catData, provData] = await Promise.all([
+        getCategories(),
+        getProvinces(false)
+      ])
+      setCategories(catData || [])
+      setProvinces(provData || [])
     } catch (err) {
       console.error(err)
-      alert("Lỗi tải danh mục: " + err.message)
+      alert("Lỗi tải danh mục / vùng miền: " + err.message)
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchCategories()
+    fetchData()
   }, [])
 
   const generateSlug = (text) => {
@@ -54,7 +65,6 @@ export default function CategoryManager({ products = [] }) {
     let uniqueSlug = cleanSlug
     let counter = 1
     
-    // Check if another category (excluding the current one being edited) already has this slug
     while (categories.some(c => c.slug === uniqueSlug && c.id !== currentId)) {
       uniqueSlug = `${cleanSlug}-${counter}`
       counter++
@@ -84,17 +94,32 @@ export default function CategoryManager({ products = [] }) {
     setIsSubCategory(false)
   }
 
+  const handleOpenAdd = (parentCat = null) => {
+    resetForm()
+    if (parentCat) {
+      setIsSubCategory(true)
+      setFormData(prev => ({
+        ...prev,
+        parent_id: parentCat.id
+      }))
+    } else {
+      setIsSubCategory(false)
+    }
+    setIsDrawerOpen(true)
+  }
+
   const handleEdit = (category) => {
     setIsEditing(category.id)
     setIsSubCategory(!!category.parent_id)
     setFormData({
       name: category.name,
       slug: category.slug,
-      sort_order: category.sort_order,
-      is_active: category.is_active,
+      sort_order: category.sort_order ?? 0,
+      is_active: category.is_active ?? true,
       parent_id: category.parent_id || '',
       description: category.description || ''
     })
+    setIsDrawerOpen(true)
   }
 
   const handleSubmit = async (e) => {
@@ -105,7 +130,7 @@ export default function CategoryManager({ products = [] }) {
         return
       }
 
-      // Auto ensure unique slug and valid format
+      setIsSaving(true)
       const finalSlug = ensureUniqueSlug(formData.slug || formData.name, isEditing)
 
       const payload = {
@@ -122,14 +147,17 @@ export default function CategoryManager({ products = [] }) {
       } else {
         await createCategory(payload)
       }
-      await fetchCategories()
+      await fetchData()
       resetForm()
+      setIsDrawerOpen(false)
     } catch (err) {
       if (err.message && err.message.includes('categories_slug_key')) {
         alert("Đường dẫn (slug) này đã bị trùng với một danh mục khác. Vui lòng kiểm tra lại slug.")
       } else {
         alert("Lỗi khi lưu: " + err.message)
       }
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -142,9 +170,9 @@ export default function CategoryManager({ products = [] }) {
       }
     }
 
-    const productsInCat = products.filter(p => p.category_id === id)
+    const productsInCat = products.filter(p => p.category_id === id || p.category === name)
     if (productsInCat.length > 0) {
-      alert(`Danh mục "${name}" đang có ${productsInCat.length} sản phẩm.\n\nVui lòng chuyển sản phẩm sang danh mục khác hoặc TẮT TRẠNG THÁI (Ngừng hiển thị) thay vì xóa.`)
+      alert(`Danh mục "${name}" đang có ${productsInCat.length} sản phẩm liên kết.\n\nVui lòng chuyển sản phẩm sang danh mục khác hoặc TẮT TRẠNG THÁI (Ngừng hiển thị) thay vì xóa.`)
       return
     }
 
@@ -152,7 +180,8 @@ export default function CategoryManager({ products = [] }) {
 
     try {
       await deleteCategory(id)
-      await fetchCategories()
+      await fetchData()
+      if (selectedCategoryId === id) setSelectedCategoryId(null)
     } catch (err) {
       alert("Lỗi khi xóa: " + err.message)
     }
@@ -161,213 +190,663 @@ export default function CategoryManager({ products = [] }) {
   const toggleActive = async (category) => {
     try {
       await updateCategory(category.id, { is_active: !category.is_active })
-      await fetchCategories()
+      await fetchData()
     } catch (err) {
       alert("Lỗi khi cập nhật trạng thái: " + err.message)
     }
   }
 
+  const toggleCollapse = (parentId) => {
+    setCollapsedParents(prev => ({
+      ...prev,
+      [parentId]: !prev[parentId]
+    }))
+  }
+
   const parentCategories = categories.filter(c => !c.parent_id)
   
-  // Xây dựng cây danh mục để hiển thị
-  const categoryTree = parentCategories.map(parent => ({
-    ...parent,
-    children: categories.filter(c => c.parent_id === parent.id).sort((a,b) => a.sort_order - b.sort_order)
-  })).sort((a,b) => a.sort_order - b.sort_order)
+  // Tree building with search filter
+  const categoryTree = useMemo(() => {
+    return parentCategories
+      .map(parent => {
+        const children = categories.filter(c => c.parent_id === parent.id).sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+        const parentMatches = !searchQuery || parent.name.toLowerCase().includes(searchQuery.toLowerCase()) || parent.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        const filteredChildren = children.filter(child => 
+          !searchQuery || child.name.toLowerCase().includes(searchQuery.toLowerCase()) || child.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        const hasMatchingChildren = filteredChildren.length > 0
 
+        if (!searchQuery || parentMatches || hasMatchingChildren) {
+          return {
+            ...parent,
+            children: searchQuery ? (parentMatches ? children : filteredChildren) : children,
+            isMatch: parentMatches || hasMatchingChildren
+          }
+        }
+        return null
+      })
+      .filter(Boolean)
+      .sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+  }, [categories, parentCategories, searchQuery])
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 text-haq-ink/50">
-        <RefreshCw className="w-8 h-8 animate-spin mb-4 text-haq-orange" />
-        <p>Đang tải danh mục...</p>
-      </div>
-    )
+  // Region breakdown
+  const regionBreakdown = useMemo(() => {
+    const regions = ['Miền Bắc', 'Miền Trung', 'Miền Nam']
+    return regions.map((regionName, idx) => {
+      const regionProvs = provinces.filter(p => p.region === regionName)
+      const activeCount = regionProvs.filter(p => p.is_active !== false).length
+      return {
+        id: idx + 1,
+        name: regionName,
+        totalProvinces: regionProvs.length,
+        activeProvinces: activeCount,
+        provinces: regionProvs
+      }
+    })
+  }, [provinces])
+
+  // Count total products in category
+  const getProductCountForCat = (catId, catName) => {
+    return products.filter(p => p.category_id === catId || p.category === catName).length
+  }
+
+  const getProductCountForParent = (parent) => {
+    const directCount = getProductCountForCat(parent.id, parent.name)
+    const children = categories.filter(c => c.parent_id === parent.id)
+    const childrenCount = children.reduce((sum, c) => sum + getProductCountForCat(c.id, c.name), 0)
+    return directCount + childrenCount
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6 h-full overflow-y-auto bg-haq-cream">
-      {/* Cột Danh sách */}
-      <div className="flex-1 bg-white border border-haq-border rounded-xl shadow-sm overflow-hidden flex flex-col min-w-0">
-        <div className="p-4 border-b border-haq-border bg-white flex justify-between items-center sticky top-0 z-10">
-          <h2 className="font-bold text-lg text-haq-ink">Cây Danh mục</h2>
+    <div className="space-y-4 pb-12 font-sans text-gray-800 antialiased">
+      
+      {/* 1. PAGE HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-lg border border-[#E2E8E4]">
+        <div>
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">
+            Danh mục & Vùng miền
+          </h1>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Quản lý danh mục sản phẩm và phân nhóm vùng miền.
+          </p>
+          <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 font-medium">
+            <span>{parentCategories.length} mục lớn</span>
+            <span>•</span>
+            <span>{categories.length - parentCategories.length} mục nhỏ</span>
+            <span>•</span>
+            <span className="text-emerald-700 font-semibold">
+              {categories.filter(c => c.is_active !== false).length}/{categories.length} đang hiển thị
+            </span>
+          </div>
         </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button 
+            onClick={fetchData} 
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-[#E2E8E4] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors cursor-pointer"
+            title="Làm mới danh mục"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#0F5132]' : ''}`} />
+            <span>Làm mới</span>
+          </button>
+
+          <button 
+            onClick={() => handleOpenAdd(null)} 
+            className="px-3.5 py-2 rounded-md bg-[#0F5132] hover:bg-[#14532D] text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> 
+            <span>+ Thêm danh mục</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 2. NAVIGATION TABS & SEARCH */}
+      <div className="bg-white p-3 rounded-lg border border-[#E2E8E4] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Switch View Tabs */}
+        <div className="flex items-center gap-1 bg-gray-100/80 p-1 rounded-md border border-gray-200">
+          <button
+            onClick={() => setActiveTab('categories')}
+            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors cursor-pointer ${
+              activeTab === 'categories'
+                ? 'bg-white text-gray-900 shadow-2xs'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Cây danh mục sản phẩm ({categories.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('regions')}
+            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors cursor-pointer ${
+              activeTab === 'regions'
+                ? 'bg-white text-gray-900 shadow-2xs'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Phân nhóm vùng miền (3 miền)
+          </button>
+        </div>
+
+        {/* Search for Category tab */}
+        {activeTab === 'categories' && (
+          <div className="relative w-full sm:w-72">
+            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input 
+              type="text"
+              placeholder="Tìm kiếm danh mục..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full h-8.5 pl-9 pr-3 text-xs rounded-md border border-[#E2E8E4] bg-gray-50/50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#0F5132] focus:bg-white transition-colors"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* 3. MAIN TAB CONTENT */}
+      {isLoading ? (
+        <div className="bg-white rounded-lg border border-[#E2E8E4] p-12 flex flex-col items-center justify-center text-gray-500">
+          <RefreshCw className="w-6 h-6 animate-spin mb-3 text-[#0F5132]" />
+          <p className="text-xs font-medium">Đang tải danh mục & phân nhóm...</p>
+        </div>
+      ) : activeTab === 'categories' ? (
         
-        <div className="flex-1 overflow-auto p-4">
-          {categories.length === 0 ? (
-            <div className="p-8 text-center text-haq-text-secondary border-2 border-dashed border-haq-border rounded-xl">
-              Chưa có danh mục nào. Hãy thêm Mục Lớn đầu tiên.
+        /* TAB 1: CATEGORY TREE TABLE */
+        <div className="rounded-lg border border-[#E2E8E4] bg-white overflow-hidden shadow-2xs">
+          {categoryTree.length === 0 ? (
+            <div className="p-12 text-center text-gray-500">
+              <Folder className="w-10 h-10 text-gray-400 mx-auto mb-2" />
+              <h3 className="text-sm font-semibold text-gray-900">Không tìm thấy danh mục nào</h3>
+              <p className="text-xs text-gray-400 mt-1 mb-3">Tạo mục lớn đầu tiên để bắt đầu phân loại sản phẩm.</p>
+              <button 
+                onClick={() => handleOpenAdd(null)} 
+                className="text-xs font-semibold text-[#0F5132] hover:underline"
+              >
+                + Thêm mục lớn mới
+              </button>
             </div>
           ) : (
-            <div className="space-y-4">
-              {categoryTree.map(parent => (
-                <div key={parent.id} className="border border-haq-border rounded-xl overflow-hidden bg-white shadow-sm">
-                  {/* Parent Row */}
-                  <div className="flex items-center justify-between p-4 bg-haq-cream/30 border-b border-haq-border hover:bg-haq-cream/60 transition-colors group">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs bg-haq-cream px-2 py-0.5 rounded text-haq-ink/70 border border-haq-border">{parent.sort_order}</span>
-                        <h3 className="font-bold text-lg text-haq-ink truncate">{parent.name}</h3>
-                        {!parent.is_active && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold">ẨN</span>}
-                      </div>
-                      <p className="text-xs text-haq-text-secondary mt-1 truncate">{parent.slug}</p>
-                    </div>
-                    <div className="flex items-center gap-2 ml-4">
-                      <span className="text-xs font-semibold text-haq-text-secondary hidden md:inline">Mục lớn</span>
-                      <button onClick={() => toggleActive(parent)} className="p-2 text-haq-text-secondary hover:text-haq-red rounded transition-colors" title={parent.is_active ? "Đang hiện - Click để ẩn" : "Đang ẩn - Click để hiện"}>
-                        <RefreshCw className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleEdit(parent)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Sửa">
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDelete(parent.id, parent.name, true)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors" title="Xóa">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Children Rows */}
-                  {parent.children.length > 0 && (
-                    <div className="divide-y divide-haq-border">
-                      {parent.children.map(child => {
-                        const productCount = products.filter(p => p.category_id === child.id).length;
-                        return (
-                          <div key={child.id} className="flex items-center justify-between p-3 pl-10 hover:bg-haq-cream/30 transition-colors group">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <ChevronRight className="w-4 h-4 text-haq-border" />
-                              <span className="font-mono text-xs text-haq-text-secondary">{child.sort_order}</span>
-                              <div className="flex flex-col">
-                                <span className="font-semibold text-haq-ink text-sm">{child.name}</span>
-                                <span className="text-[10px] text-haq-text-secondary">{child.slug}</span>
-                              </div>
-                              {!child.is_active && <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold ml-2">ẨN</span>}
-                            </div>
-                            <div className="flex items-center gap-3 ml-4 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span className="inline-block bg-haq-cream border border-haq-border text-haq-ink font-bold text-xs px-2 py-1 rounded" title={`${productCount} sản phẩm`}>
-                                {productCount} sp
-                              </span>
-                              <button onClick={() => toggleActive(child)} className="p-1.5 text-haq-text-secondary hover:text-haq-red rounded transition-colors">
-                                <RefreshCw className="w-3.5 h-3.5" />
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#F7F8F6] border-b border-[#E2E8E4] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+                  <tr>
+                    <th className="py-2.5 px-3 w-10 text-center"></th>
+                    <th className="py-2.5 px-3">Tên danh mục / Cấu trúc phân cấp</th>
+                    <th className="py-2.5 px-3 w-32">Phân loại</th>
+                    <th className="py-2.5 px-3 w-28 text-center">Sản phẩm</th>
+                    <th className="py-2.5 px-3 w-28 text-center">Hiển thị</th>
+                    <th className="py-2.5 px-3 w-20 text-center">Thứ tự</th>
+                    <th className="py-2.5 px-4 w-36 text-right">Thao tác</th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-[#E2E8E4] text-xs">
+                  {categoryTree.map((parent) => {
+                    const isCollapsed = !!collapsedParents[parent.id]
+                    const totalProducts = getProductCountForParent(parent)
+                    const isSelected = selectedCategoryId === parent.id
+                    const isParentActive = parent.is_active !== false
+
+                    return (
+                      <React.Fragment key={parent.id}>
+                        {/* PARENT ROW */}
+                        <tr 
+                          onClick={() => setSelectedCategoryId(parent.id)}
+                          className={`group transition-colors cursor-pointer ${
+                            isSelected 
+                              ? 'bg-emerald-50/50' 
+                              : 'bg-gray-50/40 hover:bg-gray-100/60'
+                          }`}
+                        >
+                          {/* Expand/Collapse Toggle */}
+                          <td className="py-2.5 px-3 w-10 text-center">
+                            {parent.children && parent.children.length > 0 ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  toggleCollapse(parent.id)
+                                }}
+                                className="p-1 text-gray-500 hover:text-gray-900 rounded hover:bg-gray-200 transition-colors"
+                              >
+                                {isCollapsed ? (
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                ) : (
+                                  <ChevronDown className="w-3.5 h-3.5" />
+                                )}
                               </button>
-                              <button onClick={() => handleEdit(child)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors">
+                            ) : (
+                              <span className="inline-block w-3.5 h-3.5 text-gray-300">•</span>
+                            )}
+                          </td>
+
+                          {/* Category Name & Slug */}
+                          <td className="py-2.5 px-3">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-sm text-gray-900">
+                                {parent.name}
+                              </span>
+                              <span className="font-mono text-[11px] text-gray-400">
+                                /{parent.slug}
+                              </span>
+                            </div>
+                            {parent.description && (
+                              <p className="text-[11px] text-gray-500 line-clamp-1 mt-0.5 max-w-md">
+                                {parent.description}
+                              </p>
+                            )}
+                          </td>
+
+                          {/* Category Type */}
+                          <td className="py-2.5 px-3 w-32">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                              Mục lớn
+                            </span>
+                          </td>
+
+                          {/* Product Count */}
+                          <td className="py-2.5 px-3 w-28 text-center font-mono font-semibold text-gray-700">
+                            {totalProducts} SP
+                          </td>
+
+                          {/* Visibility Toggle */}
+                          <td className="py-2.5 px-3 w-28 text-center">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleActive(parent)
+                              }}
+                              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium transition-colors whitespace-nowrap ${
+                                isParentActive 
+                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100' 
+                                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200'
+                              }`}
+                              title={isParentActive ? "Click để ẩn danh mục" : "Click để hiển thị"}
+                            >
+                              <span className={`w-1.5 h-1.5 rounded-full ${isParentActive ? 'bg-emerald-600' : 'bg-gray-400'}`} />
+                              {isParentActive ? 'Hiển thị' : 'Ẩn'}
+                            </button>
+                          </td>
+
+                          {/* Sort Order */}
+                          <td className="py-2.5 px-3 w-20 text-center font-mono text-gray-500">
+                            {parent.sort_order ?? 0}
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-2.5 px-4 w-36 text-right">
+                            <div className="flex items-center justify-end gap-1" onClick={e => e.stopPropagation()}>
+                              <button 
+                                onClick={() => handleOpenAdd(parent)} 
+                                className="p-1 text-gray-500 hover:text-[#0F5132] hover:bg-emerald-50 rounded transition-colors" 
+                                title="Thêm mục nhỏ trực thuộc"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={() => handleEdit(parent)} 
+                                className="p-1 text-[#0F5132] hover:bg-emerald-50 rounded transition-colors" 
+                                title="Sửa mục lớn"
+                              >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
-                              <button onClick={() => handleDelete(child.id, child.name, false)} className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
+                              <button 
+                                onClick={() => handleDelete(parent.id, parent.name, true)} 
+                                className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" 
+                                title="Xóa"
+                              >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                  {parent.children.length === 0 && (
-                    <div className="p-3 pl-12 text-xs text-haq-text-secondary italic bg-haq-cream/20">
-                      Chưa có mục nhỏ nào.
-                    </div>
-                  )}
-                </div>
-              ))}
+                          </td>
+                        </tr>
+
+                        {/* CHILD ROWS (Tree view with indentation) */}
+                        {!isCollapsed && parent.children && parent.children.map((child, cIdx) => {
+                          const childProducts = getProductCountForCat(child.id, child.name)
+                          const isChildSelected = selectedCategoryId === child.id
+                          const isChildActive = child.is_active !== false
+                          const isLast = cIdx === parent.children.length - 1
+
+                          return (
+                            <tr 
+                              key={child.id}
+                              onClick={() => setSelectedCategoryId(child.id)}
+                              className={`transition-colors cursor-pointer ${
+                                isChildSelected 
+                                  ? 'bg-emerald-50/40' 
+                                  : 'bg-white hover:bg-gray-50'
+                              }`}
+                            >
+                              {/* Indent connector */}
+                              <td className="py-2.5 px-3 w-10 text-center text-gray-300 font-mono text-xs">
+                                {isLast ? '└──' : '├──'}
+                              </td>
+
+                              {/* Child Name & Slug */}
+                              <td className="py-2.5 px-3 pl-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-xs text-gray-800">
+                                    {child.name}
+                                  </span>
+                                  <span className="font-mono text-[10px] text-gray-400">
+                                    /{child.slug}
+                                  </span>
+                                </div>
+                              </td>
+
+                              {/* Category Type */}
+                              <td className="py-2.5 px-3 w-32">
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                  Mục nhỏ
+                                </span>
+                              </td>
+
+                              {/* Product Count */}
+                              <td className="py-2.5 px-3 w-28 text-center font-mono text-gray-600">
+                                {childProducts} SP
+                              </td>
+
+                              {/* Visibility */}
+                              <td className="py-2.5 px-3 w-28 text-center">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    toggleActive(child)
+                                  }}
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${
+                                    isChildActive 
+                                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                                      : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                  }`}
+                                >
+                                  {isChildActive ? 'Hiển thị' : 'Ẩn'}
+                                </button>
+                              </td>
+
+                              {/* Sort Order */}
+                              <td className="py-2.5 px-3 w-20 text-center font-mono text-gray-400">
+                                {child.sort_order ?? 0}
+                              </td>
+
+                              {/* Actions */}
+                              <td className="py-2.5 px-4 w-36 text-right">
+                                <div className="flex items-center justify-end gap-1" onClick={e => e.stopPropagation()}>
+                                  <button 
+                                    onClick={() => handleEdit(child)} 
+                                    className="p-1 text-[#0F5132] hover:bg-emerald-50 rounded transition-colors" 
+                                    title="Sửa mục nhỏ"
+                                  >
+                                    <Edit2 className="w-3 h-3" />
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDelete(child.id, child.name, false)} 
+                                    className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" 
+                                    title="Xóa"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </React.Fragment>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Cột Form */}
-      <div className="w-full lg:w-96 shrink-0">
-        <form onSubmit={handleSubmit} className="bg-white border border-haq-border rounded-xl shadow-sm p-5 sticky top-4">
-          <div className="flex items-center justify-between mb-4 border-b border-haq-border pb-3">
-            <h2 className="font-bold text-lg text-haq-red">
-              {isEditing ? 'Sửa Danh mục' : 'Thêm Danh mục mới'}
-            </h2>
-            <div className="flex gap-2">
-              <button 
-                type="button"
-                onClick={() => setIsSubCategory(false)}
-                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${!isSubCategory ? 'bg-haq-ink text-white' : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/60'}`}
-              >
-                Mục Lớn
-              </button>
-              <button 
-                type="button"
-                onClick={() => setIsSubCategory(true)}
-                className={`px-3 py-1.5 text-xs font-bold rounded transition-colors ${isSubCategory ? 'bg-haq-ink text-white' : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/60'}`}
-              >
-                Mục Nhỏ
-              </button>
-            </div>
+          {/* Footer stats */}
+          <div className="px-4 py-3 bg-[#F7F8F6] border-t border-[#E2E8E4] flex items-center justify-between text-xs text-gray-500">
+            <span>Tổng cộng: <strong>{parentCategories.length}</strong> mục lớn, <strong>{categories.length - parentCategories.length}</strong> mục nhỏ</span>
+            <span>Hiển thị phân cấp theo thứ tự ưu tiên</span>
           </div>
-          
-          <div className="space-y-4">
-            {isSubCategory && (
-              <div className="space-y-1">
-                <label className="text-sm font-semibold">Thuộc Mục Lớn *</label>
-                <select 
-                  required 
-                  value={formData.parent_id} 
-                  onChange={e => setFormData({...formData, parent_id: e.target.value})} 
-                  className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none bg-haq-cream"
-                >
-                  <option value="">-- Chọn Mục Lớn --</option>
-                  {parentCategories.map(p => (
-                    <option key={p.id} value={p.id}>{p.name}</option>
-                  ))}
-                </select>
+
+        </div>
+
+      ) : (
+
+        /* TAB 2: REGION MANAGEMENT TABLE */
+        <div className="rounded-lg border border-[#E2E8E4] bg-white overflow-hidden shadow-2xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-[#F7F8F6] border-b border-[#E2E8E4] text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+                <tr>
+                  <th className="py-2.5 px-4 w-16 text-center">STT</th>
+                  <th className="py-2.5 px-4">Vùng miền</th>
+                  <th className="py-2.5 px-4 w-36 text-center">Số tỉnh / thành</th>
+                  <th className="py-2.5 px-4 w-36 text-center">Trạng thái</th>
+                  <th className="py-2.5 px-4 w-32 text-center">Thứ tự</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E2E8E4] text-xs">
+                {regionBreakdown.map((r, idx) => (
+                  <tr key={r.name} className="hover:bg-gray-50/80 transition-colors">
+                    <td className="py-3 px-4 w-16 text-center font-mono text-gray-400 font-medium">
+                      0{idx + 1}
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-[#0F5132]" />
+                        <span className="font-semibold text-sm text-gray-900">{r.name}</span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-0.5">
+                        Gồm các tỉnh: {r.provinces.slice(0, 4).map(p => p.name).join(', ')}{r.provinces.length > 4 ? '...' : ''}
+                      </p>
+                    </td>
+                    <td className="py-3 px-4 w-36 text-center font-mono font-semibold text-gray-800">
+                      {r.totalProvinces} tỉnh
+                    </td>
+                    <td className="py-3 px-4 w-36 text-center">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        {r.activeProvinces}/{r.totalProvinces} hiển thị
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 w-32 text-center font-mono text-gray-500">
+                      {idx + 1}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="px-4 py-3 bg-[#F7F8F6] border-t border-[#E2E8E4] text-xs text-gray-500">
+            Dữ liệu tỉnh thành thuộc vùng miền được quản lý đồng bộ tại mục <strong>Bản đồ đặc sản</strong>.
+          </div>
+        </div>
+
+      )}
+
+      {/* ======================================================== */}
+      {/* 4. ADD / EDIT CATEGORY DRAWER */}
+      {/* ======================================================== */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-2xs animate-fadeIn">
+          <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between border-l border-[#E2E8E4] animate-slideLeft">
+            
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-[#E2E8E4] flex items-center justify-between bg-gray-50/80">
+              <div>
+                <h3 className="font-bold text-sm text-gray-900">
+                  {isEditing ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Phân cấp danh mục sản phẩm phục vụ bộ lọc và SEO.
+                </p>
               </div>
-            )}
-
-            <div className="space-y-1">
-              <label className="text-sm font-semibold">Tên danh mục *</label>
-              <input required type="text" value={formData.name} onChange={handleNameChange} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" placeholder="VD: Bánh Truyền Thống" />
+              <button 
+                onClick={() => {
+                  setIsDrawerOpen(false)
+                  resetForm()
+                }}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-md transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-sm font-semibold">Slug (Đường dẫn) *</label>
-              <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" placeholder="banh-truyen-thong" />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-sm font-semibold">Thứ tự hiển thị</label>
-              <input type="number" value={formData.sort_order} onChange={e => setFormData({...formData, sort_order: parseInt(e.target.value) || 0})} className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none" />
-              <p className="text-[11px] text-haq-text-secondary mt-1 font-mono">Số nhỏ xếp trước.</p>
-            </div>
-
-            {!isSubCategory && (
+            {/* Drawer Form Body */}
+            <form id="category-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+              
+              {/* Category Type Toggle */}
               <div className="space-y-1">
-                <label className="text-sm font-semibold">Câu chuyện / Mô tả (Cho Banner)</label>
-                <textarea 
-                  rows={4} 
-                  value={formData.description} 
-                  onChange={e => setFormData({...formData, description: e.target.value})} 
-                  className="w-full border border-haq-border p-2.5 rounded text-sm focus:border-haq-red focus:outline-none"
-                  placeholder="Kế thừa di sản ẩm thực bánh kẹo truyền thống..."
+                <label className="font-semibold text-gray-800">Loại danh mục</label>
+                <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100/80 rounded-md border border-gray-200">
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setIsSubCategory(false)
+                      setFormData(prev => ({ ...prev, parent_id: '' }))
+                    }}
+                    className={`py-1.5 text-xs font-semibold rounded transition-colors cursor-pointer ${
+                      !isSubCategory 
+                        ? 'bg-white text-gray-900 shadow-2xs' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Mục lớn (Cha)
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setIsSubCategory(true)
+                      if (!formData.parent_id && parentCategories.length > 0) {
+                        setFormData(prev => ({ ...prev, parent_id: parentCategories[0].id }))
+                      }
+                    }}
+                    className={`py-1.5 text-xs font-semibold rounded transition-colors cursor-pointer ${
+                      isSubCategory 
+                        ? 'bg-white text-gray-900 shadow-2xs' 
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Mục nhỏ (Con)
+                  </button>
+                </div>
+              </div>
+
+              {/* Parent Category Selector (Only for subcategory) */}
+              {isSubCategory && (
+                <div className="space-y-1">
+                  <label className="font-semibold text-gray-800">Danh mục cha *</label>
+                  <select 
+                    required 
+                    value={formData.parent_id} 
+                    onChange={e => setFormData({ ...formData, parent_id: e.target.value })} 
+                    className="w-full h-9 px-3 rounded-md border border-[#E2E8E4] bg-white text-gray-900 focus:outline-none focus:border-[#0F5132] cursor-pointer"
+                  >
+                    <option value="">-- Chọn danh mục cha --</option>
+                    {parentCategories.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Category Name */}
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-800">Tên danh mục *</label>
+                <input 
+                  required 
+                  type="text" 
+                  value={formData.name} 
+                  onChange={handleNameChange} 
+                  className="w-full h-9 px-3 rounded-md border border-[#E2E8E4] text-gray-900 focus:outline-none focus:border-[#0F5132]" 
+                  placeholder="VD: Bánh Tráng, Bắp Rang Bơ..." 
                 />
               </div>
-            )}
 
-            <label className="flex items-center gap-2 cursor-pointer mt-4 bg-haq-cream p-3 rounded-lg border border-haq-border hover:bg-haq-cream/50">
-              <input 
-                type="checkbox" 
-                checked={formData.is_active}
-                onChange={e => setFormData({...formData, is_active: e.target.checked})}
-                className="w-4 h-4 text-haq-red rounded border-haq-border focus:ring-haq-red"
-              />
-              <span className="text-sm font-semibold text-haq-ink">Hiển thị trên Website</span>
-            </label>
-          </div>
+              {/* Slug */}
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-800 flex justify-between">
+                  <span>Slug (Đường dẫn URL SEO) *</span>
+                  <span className="text-[10px] text-gray-400 font-normal">Tự động sinh</span>
+                </label>
+                <input 
+                  required 
+                  type="text" 
+                  value={formData.slug} 
+                  onChange={e => setFormData({ ...formData, slug: e.target.value })} 
+                  className="w-full h-9 px-3 rounded-md border border-[#E2E8E4] bg-gray-50/50 font-mono text-gray-900 focus:outline-none focus:border-[#0F5132]" 
+                  placeholder="banh-trang" 
+                />
+              </div>
 
-          <div className="mt-6 flex flex-col gap-2">
-            <button type="submit" className="w-full bg-haq-red text-white py-2.5 rounded font-bold hover:bg-haq-red/90 transition-colors flex items-center justify-center gap-2">
-              {isEditing ? <><Check className="w-4 h-4" /> Cập nhật</> : <><Plus className="w-4 h-4" /> Thêm mới</>}
-            </button>
-            {isEditing && (
-              <button type="button" onClick={resetForm} className="w-full bg-haq-cream border border-haq-border text-haq-ink py-2.5 rounded font-semibold hover:bg-haq-cream/50 transition-colors flex items-center justify-center gap-2">
-                <X className="w-4 h-4" /> Hủy sửa
+              {/* Sort Order */}
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-800">Thứ tự hiển thị</label>
+                <input 
+                  type="number" 
+                  value={formData.sort_order} 
+                  onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })} 
+                  className="w-full h-9 px-3 rounded-md border border-[#E2E8E4] font-mono text-gray-900 focus:outline-none focus:border-[#0F5132]" 
+                />
+                <p className="text-[10px] text-gray-400">Số nhỏ hơn sẽ được ưu tiên hiển thị trước.</p>
+              </div>
+
+              {/* Story / Description (Only for Parent Categories) */}
+              {!isSubCategory && (
+                <div className="space-y-1">
+                  <label className="font-semibold text-gray-800">Mô tả / Câu chuyện (Banner & SEO)</label>
+                  <textarea 
+                    rows={3} 
+                    value={formData.description} 
+                    onChange={e => setFormData({ ...formData, description: e.target.value })} 
+                    className="w-full p-2.5 rounded-md border border-[#E2E8E4] text-gray-900 focus:outline-none focus:border-[#0F5132]"
+                    placeholder="Mô tả tóm tắt đặc trưng của dòng danh mục này..."
+                  />
+                </div>
+              )}
+
+              {/* Active Toggle */}
+              <label className="flex items-center gap-2 cursor-pointer pt-2">
+                <input 
+                  type="checkbox" 
+                  checked={formData.is_active}
+                  onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
+                  className="w-4 h-4 text-[#0F5132] rounded focus:ring-emerald-500"
+                />
+                <span className="font-medium text-gray-800">Hiển thị danh mục trên Website & Bộ lọc</span>
+              </label>
+
+            </form>
+
+            {/* Drawer Footer */}
+            <div className="p-3 border-t border-[#E2E8E4] bg-gray-50 flex items-center justify-end gap-2">
+              <button 
+                type="button" 
+                onClick={() => {
+                  setIsDrawerOpen(false)
+                  resetForm()
+                }} 
+                className="px-3 py-1.5 rounded-md border border-[#E2E8E4] bg-white text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                Hủy
               </button>
-            )}
+
+              <button 
+                type="submit" 
+                form="category-form"
+                disabled={isSaving} 
+                className="px-4 py-1.5 rounded-md bg-[#0F5132] hover:bg-[#14532D] text-white text-xs font-semibold transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              >
+                {isSaving ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Check className="w-3.5 h-3.5" />
+                )}
+                <span>{isEditing ? 'Lưu thay đổi' : 'Thêm danh mục'}</span>
+              </button>
+            </div>
+
           </div>
-        </form>
-      </div>
+        </div>
+      )}
+
     </div>
   )
 }

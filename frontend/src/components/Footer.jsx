@@ -161,14 +161,14 @@ export default function Footer() {
                   Z
                 </span>
                 <span>
-                  <strong className="text-white">Zalo Hotline:</strong>{' '}
+                  <strong className="text-white">Zalo Doanh Nghiệp:</strong>{' '}
                   <a
-                    href="https://zalo.me/0993308319"
+                    href="https://zalo.me/1361851474644984696"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white font-semibold hover:text-[#C89B3C] transition-colors"
                   >
-                    0993 308 319
+                    HAQ Hà Nội
                   </a>
                 </span>
               </li>
@@ -275,13 +275,13 @@ export default function Footer() {
 
           <div className="flex items-center gap-4 text-xs font-heading font-medium">
             <a
-              href="https://zalo.me/0993308319"
+              href="https://zalo.me/1361851474644984696"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#16A34A] transition-colors"
-              aria-label="Liên hệ Zalo HAQ FOOD"
+              aria-label="Liên hệ Zalo OA HAQ Hà Nội"
             >
-              Zalo Official
+              Zalo OA (HAQ Hà Nội)
             </a>
             <span className="text-white/20">·</span>
             <a

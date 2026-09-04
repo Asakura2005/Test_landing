@@ -208,7 +208,7 @@ export default function PrivacyPolicyPage() {
                 <div className="p-4 bg-haq-cream rounded-2xl border border-haq-border text-xs sm:text-sm space-y-2">
                   <p><strong>CÔNG TY CỔ PHẦN HAQ HÀ NỘI</strong></p>
                   <p><strong>Địa chỉ:</strong> Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam</p>
-                  <p><strong>Hotline:</strong> 024 23 23 56 56 | <strong>Zalo:</strong> 0993 308 319</p>
+                  <p><strong>Hotline:</strong> 024 23 23 56 56 | <strong>Zalo OA:</strong> <a href="https://zalo.me/1361851474644984696" target="_blank" rel="noopener noreferrer" className="text-[#0068FF] hover:underline font-semibold">HAQ Hà Nội</a> (0993 308 319)</p>
                   <p><strong>Email tiếp nhận:</strong> info@haq.com.vn</p>
                 </div>
               </section>

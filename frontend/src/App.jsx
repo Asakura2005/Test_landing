@@ -16,11 +16,14 @@ import TermsOfServicePage from './pages/TermsOfServicePage.jsx'
 import Admin from './pages/Admin.jsx'
 import ProductDetailPage from './pages/ProductDetailPage.jsx'
 
-// Scroll to top on route change
-function ScrollToTop() {
+import { initPostHog, recordSessionVisit } from './services/posthog'
+
+// Scroll to top and track session visit on route change
+function ScrollToTopAndTrack() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
+    recordSessionVisit()
   }, [pathname])
   return null
 }
@@ -28,7 +31,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <Router>
-      <ScrollToTop />
+      <ScrollToTopAndTrack />
       <div className="w-full overflow-x-hidden">
         <Routes>
           <Route path="/" element={<Home />} />

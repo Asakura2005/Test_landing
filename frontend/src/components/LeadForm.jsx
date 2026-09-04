@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { Phone, Mail, MapPin, CheckCircle, Loader2 } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Phone, Mail, MapPin, CheckCircle, Loader2, Tag, Sparkles } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
 import { submitLead } from '../services/supabase'
+import { useAnalytics } from '../hooks/useAnalytics'
 
-const NEED_OPTIONS = ['Báo giá sỉ', 'Phân phối đại lý', 'Xuất khẩu', 'Khác']
+const NEED_OPTIONS = ['Báo giá sỉ', 'Phân phối đại lý', 'Xuất khẩu', 'Gia công OEM', 'Khác']
 
 function Field({ label, children }) {
   return (
@@ -18,6 +19,10 @@ function Field({ label, children }) {
 
 export default function LeadForm() {
   const ref = useReveal()
+  const { trackContactFormStart, trackContactFormSubmit, getCurrentTrackingContext } = useAnalytics()
+  const [hasStartedForm, setHasStartedForm] = useState(false)
+  const [lastProduct, setLastProduct] = useState(null)
+  
   const [form, setForm] = useState({
     full_name: '',
     company: '',
@@ -28,6 +33,22 @@ export default function LeadForm() {
   const [status, setStatus] = useState('idle') // idle | loading | done | error
   const [errMsg, setErrMsg] = useState('')
 
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('haq_last_viewed_product')
+      if (saved) {
+        setLastProduct(JSON.parse(saved))
+      }
+    } catch (e) {}
+  }, [])
+
+  const handleFocus = () => {
+    if (!hasStartedForm) {
+      setHasStartedForm(true)
+      trackContactFormStart(lastProduct)
+    }
+  }
+
   const update = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
 
@@ -37,8 +58,21 @@ export default function LeadForm() {
     setStatus('loading')
     setErrMsg('')
 
+    const trackingContext = getCurrentTrackingContext()
+    const fullLeadPayload = {
+      ...form,
+      ...trackingContext,
+      last_product_id: lastProduct?.id || null,
+      last_product_name: lastProduct?.name || '',
+    }
+
     try {
-      await submitLead(form)
+      const result = await submitLead(fullLeadPayload)
+      const createdLead = Array.isArray(result) ? result[0] : (result || fullLeadPayload)
+      
+      // Bắn event PostHog
+      trackContactFormSubmit(createdLead)
+      
       setStatus('done')
       setForm({ full_name: '', company: '', phone: '', need: 'Báo giá sỉ', note: '' })
     } catch (err) {
@@ -87,7 +121,7 @@ export default function LeadForm() {
                 </div>
               </a>
 
-              <a href="https://zalo.me/0993308319" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
+              <a href="https://zalo.me/1361851474644984696" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group">
                 <div className="w-10 h-10 rounded-xl bg-[#0068FF]/20 text-[#0068FF] flex items-center justify-center shrink-0 group-hover:bg-[#0068FF] group-hover:text-white transition-colors font-bold text-sm">
                   Z
                 </div>
@@ -96,7 +130,7 @@ export default function LeadForm() {
                     Zalo Doanh Nghiệp (24/7)
                   </span>
                   <span className="font-heading font-bold text-base text-white">
-                    0993 308 319
+                    HAQ Hà Nội
                   </span>
                 </div>
               </a>
@@ -155,7 +189,19 @@ export default function LeadForm() {
                 </div>
               ) : (
                 /* Form */
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} onFocus={handleFocus} className="space-y-6">
+                  {lastProduct?.name && (
+                    <div className="bg-[#16A34A]/15 border border-[#16A34A]/40 rounded-xl p-3.5 flex items-center gap-3 text-white">
+                      <div className="w-8 h-8 rounded-lg bg-[#16A34A] text-white flex items-center justify-center shrink-0">
+                        <Tag className="w-4 h-4" />
+                      </div>
+                      <div className="text-xs">
+                        <span className="text-white/60 block uppercase font-heading tracking-wider text-[10px]">Sản phẩm bạn đang quan tâm:</span>
+                        <strong className="text-[#86EFAC] font-semibold text-sm">{lastProduct.name}</strong>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <Field label="Họ và tên *">
                       <input
@@ -202,6 +248,20 @@ export default function LeadForm() {
                     </Field>
                   </div>
 
+                  {/* Honeypot Field (Invisible to real users, catches automated spam bots) */}
+                  <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+                    <label htmlFor="hp_fax_code">Fax Number</label>
+                    <input 
+                      id="hp_fax_code" 
+                      name="hp_fax_code" 
+                      type="text" 
+                      tabIndex={-1} 
+                      autoComplete="off"
+                      value={form.hp_fax_code || ''}
+                      onChange={update('hp_fax_code')}
+                    />
+                  </div>
+
                   <Field label="Ghi chú nhu cầu chi tiết">
                     <textarea
                       value={form.note}
@@ -213,7 +273,10 @@ export default function LeadForm() {
                   </Field>
 
                   {errMsg && (
-                    <p className="text-red-400 text-xs font-sans">{errMsg}</p>
+                    <div className="p-3.5 bg-red-950/60 border border-red-500/40 rounded-xl text-red-300 text-xs font-sans flex items-start gap-2">
+                      <span className="font-bold shrink-0">⚠️ Lưu ý:</span>
+                      <span>{errMsg}</span>
+                    </div>
                   )}
 
                   <button

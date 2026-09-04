@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProductBySlug, getProducts } from '../services/supabase'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { CheckCircle, Package, Calendar, Truck, ArrowRight, Home, ChevronRight, MapPin } from 'lucide-react'
 import Footer from '../components/Footer'
 import StickyNav from '../components/StickyNav'
 
 export default function ProductDetailPage() {
   const { slug } = useParams()
+  const { trackProductView, trackContactClick } = useAnalytics()
   const [product, setProduct] = useState(null)
   const [recommended, setRecommended] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -24,6 +26,9 @@ export default function ProductDetailPage() {
         setIsLoading(true)
         const data = await getProductBySlug(slug)
         setProduct(data)
+        if (data) {
+          trackProductView(data)
+        }
         
         // Set default active image from images array or fallback to old variant img
         if (data.images && data.images.length > 0) {

@@ -205,20 +205,15 @@ export default function ContactPage() {
     setErrorMessage('')
 
     try {
-      // Build note details
-      const noteDetails = []
-      if (formData.email) noteDetails.push(`Email: ${formData.email}`)
-      if (formData.region) noteDetails.push(`Khu vực: ${formData.region}`)
-      if (formData.message) noteDetails.push(`Ghi chú: ${formData.message}`)
-
       const leadPayload = {
         name: formData.fullName || 'Khách hàng liên hệ website',
         company: formData.company || undefined,
         phone: formData.phone,
-        email: formData.email,
+        email: formData.email || '',
+        region: formData.region || '',
         need: activeTopic.leadNeed,
         source: 'contact_page_form',
-        notes: noteDetails.join(' | '),
+        note: formData.message || '',
       }
 
       await submitLead(leadPayload)
@@ -297,7 +292,7 @@ export default function ContactPage() {
                 </a>
 
                 <a
-                  href="https://zalo.me/0993308319"
+                  href="https://zalo.me/1361851474644984696"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#0068FF] hover:text-[#0068FF] transition-all text-xs sm:text-sm font-semibold"
@@ -305,7 +300,7 @@ export default function ContactPage() {
                   <div className="w-4 h-4 rounded bg-[#0068FF] text-white flex items-center justify-center text-[10px] font-black">
                     Z
                   </div>
-                  <span>Zalo Doanh nghiệp: 0993 308 319</span>
+                  <span>Zalo Doanh nghiệp: HAQ Hà Nội</span>
                 </a>
 
                 <a
@@ -490,12 +485,12 @@ export default function ContactPage() {
                           GỬI THÊM YÊU CẦU KHÁC
                         </button>
                         <a
-                          href="https://zalo.me/0993308319"
+                          href="https://zalo.me/1361851474644984696"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 bg-[#0068FF] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full hover:bg-[#0052cc] transition-colors"
                         >
-                          <span>NHẮN ZALO TRỰC TIẾP</span>
+                          <span>NHẮN ZALO DOANH NGHIỆP</span>
                         </a>
                       </div>
                     </div>
@@ -769,14 +764,14 @@ export default function ContactPage() {
                           Zalo Tư Vấn Doanh Nghiệp
                         </span>
                         <a
-                          href="https://zalo.me/0993308319"
+                          href="https://zalo.me/1361851474644984696"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-heading font-bold text-lg text-haq-ink hover:text-[#0068FF] transition-colors"
                         >
-                          0993 308 319
+                          HAQ Hà Nội
                         </a>
-                        <p className="text-[11px] text-haq-text-secondary">Hỗ trợ trực tuyến 24/7</p>
+                        <p className="text-[11px] text-haq-text-secondary">Zalo OA chính thức – Hỗ trợ 24/7</p>
                       </div>
                     </div>
 

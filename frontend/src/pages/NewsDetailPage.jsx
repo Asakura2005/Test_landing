@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, User, ArrowLeft, Share2, Tag } from 'lucide-react'
+import { Calendar, User, ArrowLeft, Share2, Tag, Globe, ExternalLink } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { getNewsBySlug } from '../services/supabase'
@@ -60,9 +60,33 @@ export default function NewsDetailPage() {
             <h1 className="font-heading font-black text-3xl md:text-5xl text-haq-ink leading-tight mb-6 uppercase">
               {news.title}
             </h1>
-            <div className="flex items-center gap-6 text-xs text-haq-text-secondary font-mono uppercase tracking-tight">
-              <span className="flex items-center gap-2"><Calendar className="w-4 h-4 text-haq-red" /> {new Date(news.published_at).toLocaleDateString('vi-VN')}</span>
-              <span className="flex items-center gap-2"><User className="w-4 h-4 text-haq-red" /> {news.author}</span>
+            <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-haq-text-secondary font-mono uppercase tracking-tight">
+              <span className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-haq-red" /> 
+                {new Date(news.published_at).toLocaleDateString('vi-VN')}
+              </span>
+              <span className="flex items-center gap-2">
+                <User className="w-4 h-4 text-haq-red" /> 
+                {news.author || 'HAQ FOOD'}
+              </span>
+              {(news.source_name || news.source_url) && (
+                <span className="flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-haq-red" />
+                  Nguồn: {news.source_url ? (
+                    <a 
+                      href={news.source_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-haq-red hover:underline font-bold inline-flex items-center gap-1 normal-case tracking-normal"
+                    >
+                      {news.source_name || 'Bài viết gốc'}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ) : (
+                    <span className="normal-case tracking-normal font-semibold text-haq-ink">{news.source_name}</span>
+                  )}
+                </span>
+              )}
             </div>
           </div>
 
@@ -79,7 +103,9 @@ export default function NewsDetailPage() {
             dangerouslySetInnerHTML={{ __html: news.content }}
           />
 
-          <div className="mt-12 pt-8 border-t border-haq-border flex items-center justify-between">
+
+
+          <div className="mt-8 pt-8 border-t border-haq-border flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-haq-text-secondary">
               <Tag className="w-4 h-4 text-haq-red" /> {news.category}
             </div>

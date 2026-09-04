@@ -1,52 +1,177 @@
-import React, { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, LogOut, Package, RefreshCw, Pin, Users, Newspaper, MapPin } from 'lucide-react'
-import { getProducts, deleteProduct, createProduct, updateProduct } from '../services/supabase'
+import React, { useState, useEffect, Component } from 'react'
+import { 
+  Plus, 
+  Sparkles,
+  ShieldCheck,
+  KeyRound,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  RefreshCw,
+  Home,
+  Mail,
+  Lock,
+  ArrowRight,
+  UserCheck
+} from 'lucide-react'
+import { getProducts, deleteProduct, createProduct, updateProduct, getLeads } from '../services/supabase'
+import { loginUser, getCurrentUser, logoutUser } from '../services/auth'
+import AdminLayout from '../components/admin/AdminLayout'
+import DashboardOverview from '../components/admin/DashboardOverview'
+import ProductsManager from '../components/admin/ProductsManager'
 import ProductModal from '../components/admin/ProductModal'
 import LeadsManager from '../components/admin/LeadsManager'
 import CategoryManager from '../components/admin/CategoryManager'
 import NewsManager from '../components/admin/NewsManager'
 import ProvinceManager from '../components/admin/ProvinceManager'
+import SettingsManager from '../components/admin/SettingsManager'
+import MarketingDashboard from '../components/admin/MarketingDashboard'
+import SalesDashboard from '../components/admin/SalesDashboard'
+import ManagementDashboard from '../components/admin/ManagementDashboard'
+
+// Error Boundary to prevent any blank screen crashes
+class AdminErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Admin Error Caught:", error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 max-w-xl mx-auto my-12 bg-white rounded-3xl border border-red-200 shadow-xl text-center space-y-4 font-body">
+          <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold font-heading text-[#11261B]">Đã xảy ra lỗi khi tải module này</h2>
+          <p className="text-xs text-gray-500 font-mono bg-gray-50 p-3 rounded-xl border border-gray-200 text-left overflow-x-auto">
+            {this.state.error?.message || 'Lỗi không xác định'}
+          </p>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-5 py-2.5 bg-[#0F5132] text-white text-xs font-bold rounded-xl flex items-center gap-2 hover:bg-[#16A34A] transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Tải lại trang
+            </button>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false, error: null })
+                if (this.props.onResetTab) this.props.onResetTab()
+              }}
+              className="px-5 py-2.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl flex items-center gap-2 hover:bg-gray-200 transition-colors"
+            >
+              <Home className="w-4 h-4" />
+              Về Trang Tổng Quan
+            </button>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser())
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getCurrentUser()))
+  
+  // Login Form State
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(true)
+  const [loginError, setLoginError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Products & Leads Data State
   const [products, setProducts] = useState([])
+  const [leads, setLeads] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   
-  const [activeTab, setActiveTab] = useState('products') // 'products' | 'leads'
+  // Tabs: 'dashboard' | 'products' | 'leads' | 'provinces' | 'categories' | 'news' | 'settings'
+  const [activeTab, setActiveTab] = useState('dashboard')
 
-  const currentPinnedCount = products.filter(p => p.is_pinned).length
+  const isSales = currentUser?.role === 'SALES'
+  const currentPinnedCount = (products || []).filter(p => p && p.is_pinned).length
+  const newLeadsCount = (leads || []).filter(l => l && (l.status === 'NEW' || l.status === 'new' || !l.status)).length
 
-  // Login handler
-  const handleLogin = (e) => {
-    e.preventDefault()
-    if (password === 'haqfood2024') {
-      setIsAuthenticated(true)
-      localStorage.setItem('haq_admin_auth', 'true')
-    } else {
-      alert('Mật khẩu không đúng!')
-    }
-  }
-
-  // Check auth on mount
+  // Check auth session on mount
   useEffect(() => {
-    if (localStorage.getItem('haq_admin_auth') === 'true') {
+    const user = getCurrentUser()
+    if (user) {
+      setCurrentUser(user)
       setIsAuthenticated(true)
     }
   }, [])
 
-  // Fetch data
+  // Login handler
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoginError('')
+    if (!email || !password) {
+      setLoginError('Vui lòng nhập đầy đủ Gmail và Mật khẩu!')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      const user = await loginUser(email, password, rememberMe)
+      setCurrentUser(user)
+      setIsAuthenticated(true)
+      setPassword('')
+      setActiveTab('dashboard')
+    } catch (err) {
+      setLoginError(err.message || 'Mật khẩu hoặc Gmail không chính xác! Vui lòng thử lại.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Logout handler
+  const handleLogout = async () => {
+    if (window.confirm("Bạn có chắc chắn muốn đăng xuất khỏi HAQ FOOD Portal?")) {
+      await logoutUser()
+      setCurrentUser(null)
+      setIsAuthenticated(false)
+      setPassword('')
+      setActiveTab('dashboard')
+    }
+  }
+
+  // Fetch all products and leads
   const fetchData = async () => {
     try {
       setIsLoading(true)
-      const data = await getProducts()
-      setProducts(data || [])
+      const [productsData, leadsData] = await Promise.allSettled([
+        getProducts(),
+        getLeads()
+      ])
+      
+      if (productsData.status === 'fulfilled' && Array.isArray(productsData.value)) {
+        setProducts(productsData.value)
+      } else {
+        setProducts([])
+      }
+      if (leadsData.status === 'fulfilled' && Array.isArray(leadsData.value)) {
+        setLeads(leadsData.value)
+      } else {
+        setLeads([])
+      }
     } catch (err) {
       console.error(err)
-      alert("Lỗi tải dữ liệu: " + err.message)
     } finally {
       setIsLoading(false)
     }
@@ -58,18 +183,52 @@ export default function Admin() {
     }
   }, [isAuthenticated])
 
-  // Handlers
+  // Product CRUD Handlers (Only for Admin)
   const handleDelete = async (id, name) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${name}"?`)) return
+    if (isSales) return
+    if (!window.confirm(`Bạn có chắc chắn muốn xóa "${name}"? Thao tác này không thể hoàn tác.`)) return
     try {
       await deleteProduct(id)
       await fetchData()
     } catch (err) {
-      alert("Lỗi khi xóa: " + err.message)
+      alert("Lỗi khi xóa sản phẩm: " + err.message)
+    }
+  }
+
+  const handleDuplicate = async (product) => {
+    if (isSales) return
+    try {
+      const duplicateData = {
+        name: `${product.name} (Bản sao)`,
+        slug: `${product.slug}-copy-${Date.now().toString().slice(-4)}`,
+        category: product.category,
+        category_id: product.category_id,
+        description: product.description,
+        images: product.images || [],
+        tag: product.tag,
+        is_pinned: false,
+        is_active: true,
+        province_id: product.province_id
+      }
+      const duplicateVariants = (product.variants || []).map(v => ({
+        sku: v.sku ? `${v.sku}-COPY` : '',
+        name: v.name,
+        price: v.price,
+        wholesale_price: v.wholesale_price,
+        unit: v.unit,
+        weight: v.weight,
+        min_order: v.min_order
+      }))
+      await createProduct(duplicateData, duplicateVariants)
+      await fetchData()
+      alert("Đã nhân bản sản phẩm thành công!")
+    } catch (err) {
+      alert("Lỗi nhân bản: " + err.message)
     }
   }
 
   const handleSave = async (productData, variantsData) => {
+    if (isSales) return
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, productData, variantsData)
@@ -79,239 +238,298 @@ export default function Admin() {
       setIsModalOpen(false)
       await fetchData()
     } catch (err) {
-      throw err // Let modal handle the error alert
+      throw err
     }
   }
 
   const openNewModal = () => {
+    if (isSales) return
     setEditingProduct(null)
     setIsModalOpen(true)
   }
 
   const openEditModal = (product) => {
+    if (isSales) return
     setEditingProduct(product)
     setIsModalOpen(true)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('haq_admin_auth')
-    setIsAuthenticated(false)
-  }
-
   const togglePin = async (product) => {
+    if (isSales) return
     if (!product.is_pinned && currentPinnedCount >= 6) {
-      alert("Đã đạt tối đa 6 sản phẩm ghim. Vui lòng bỏ ghim sản phẩm khác trước.")
+      alert("Đã đạt tối đa 6 sản phẩm ghim TOP trang chủ. Vui lòng bỏ ghim sản phẩm khác trước.")
       return
     }
     try {
-      // Just updating the product's is_pinned status, we don't need to touch variants
       await updateProduct(product.id, { is_pinned: !product.is_pinned }, product.variants)
       await fetchData()
-    } catch(err) {
+    } catch (err) {
       alert("Lỗi khi đổi trạng thái ghim: " + err.message)
     }
   }
 
-  // --- Render Login ---
+  const toggleActive = async (product) => {
+    if (isSales) return
+    try {
+      const nextStatus = product.is_active === false ? true : false
+      await updateProduct(product.id, { is_active: nextStatus }, product.variants)
+      await fetchData()
+    } catch (err) {
+      alert("Lỗi khi cập nhật trạng thái: " + err.message)
+    }
+  }
+
+  // Helper quick fill for testing credentials
+  const fillCredentials = (type) => {
+    if (type === 'admin') {
+      setEmail('trantienhung4112005@gmail.com')
+      setPassword('Hung4112005@')
+    } else if (type === 'sales') {
+      setEmail('sales@haqfood.vn')
+      setPassword('HaqFood@2024')
+    }
+  }
+
+  // --- FRAME 01: LOGIN SCREEN ---
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-haq-cream flex items-center justify-center p-4">
-        <form onSubmit={handleLogin} className="bg-white p-8 border border-haq-border rounded-xl shadow-xl w-full max-w-sm text-center">
-          <h1 className="font-heading font-bold text-2xl mb-6 text-haq-ink">Đăng nhập Quản trị</h1>
-          <input
-            type="password"
-            placeholder="Mật khẩu"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className="w-full border border-haq-border p-3 mb-4 rounded focus:outline-none focus:border-haq-red"
-            autoFocus
-          />
-          <button type="submit" className="w-full bg-haq-red text-white p-3 font-bold rounded hover:bg-haq-red/90 transition-colors">
-            Vào trang quản lý
-          </button>
-        </form>
+      <div className="min-h-screen bg-[#F4F8F4] flex items-center justify-center p-4 selection:bg-[#0F5132] selection:text-white font-body relative overflow-hidden">
+        
+        {/* Subtle Eco-Pattern Watermark Background */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#0F5132_1px,transparent_1px)] [background-size:20px_20px]" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#0F5132]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#C89B3C]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="bg-white p-8 sm:p-10 border border-[#D8E5DA] rounded-3xl shadow-2xl shadow-emerald-950/10 w-full max-w-md text-center space-y-6 relative z-10 animate-scaleUp">
+          
+          {/* Logo HAQ FOOD Dập Nổi */}
+          <div className="relative inline-block">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#0F5132] via-[#145e3c] to-[#16A34A] text-white flex items-center justify-center font-heading font-black text-3xl mx-auto shadow-xl shadow-emerald-950/20 border-2 border-white/40 transform hover:scale-105 transition-transform">
+              H
+            </div>
+            <div className="absolute -bottom-1 -right-1 bg-[#C89B3C] text-white p-1.5 rounded-full shadow-md border border-white">
+              <Sparkles className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[#0F5132] text-[11px] font-extrabold uppercase tracking-wider">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              B2B Enterprise Portal
+            </div>
+            <h1 className="font-heading font-black text-2xl sm:text-3xl text-[#11261B] tracking-tight">
+              HAQ FOOD PORTAL
+            </h1>
+            <p className="text-xs font-semibold text-[#52665A]">
+              Hệ thống quản trị kinh doanh & phân quyền bảo mật B2B
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3.5 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-xs font-bold animate-fadeIn text-left flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4 text-left">
+            {/* Email Field */}
+            <div className="space-y-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center justify-between">
+                <span>Gmail / Tài Khoản</span>
+                <span className="text-[10px] text-[#52665A] font-normal">Được cấp quyền</span>
+              </label>
+              
+              <div className="relative">
+                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  placeholder="admin@haqfood.vn hoặc gmail..."
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full border border-[#D8E5DA] pl-10 pr-4 py-3 rounded-2xl text-xs sm:text-sm text-[#11261B] font-semibold focus:outline-none focus:border-[#0F5132] focus:ring-4 focus:ring-[#0F5132]/10 bg-[#F4F8F4]/50 transition-all font-mono"
+                  autoFocus
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center justify-between">
+                <span>Mật Khẩu</span>
+                <span className="text-[10px] text-[#52665A] font-normal">Bảo mật SHA-256</span>
+              </label>
+              
+              <div className="relative">
+                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Nhập mật khẩu..."
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full border border-[#D8E5DA] pl-10 pr-11 py-3 rounded-2xl text-xs sm:text-sm text-[#11261B] font-semibold focus:outline-none focus:border-[#0F5132] focus:ring-4 focus:ring-[#0F5132]/10 bg-[#F4F8F4]/50 transition-all"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#52665A] hover:text-[#11261B] p-1"
+                  title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Remember Me Checkbox */}
+              <div className="flex items-center justify-between mt-2.5 text-[11px]">
+                <label className="flex items-center gap-2 cursor-pointer text-[#52665A] hover:text-[#11261B] select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={e => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 text-[#0F5132] rounded focus:ring-emerald-500 cursor-pointer"
+                  />
+                  <span>Ghi nhớ phiên đăng nhập</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Quick Demo Fill Credentials */}
+            <div className="p-3 bg-[#F4F8F4] border border-[#D8E5DA] rounded-2xl space-y-1.5 text-xs">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#52665A]">
+                Tài khoản mẫu thử nghiệm:
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fillCredentials('admin')}
+                  className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-[#D8E5DA] hover:border-[#0F5132] text-[11px] font-bold text-[#0F5132] transition-colors"
+                >
+                  👑 Admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillCredentials('sales')}
+                  className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-[#D8E5DA] hover:border-amber-600 text-[11px] font-bold text-amber-800 transition-colors"
+                >
+                  💼 Sales
+                </button>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full bg-[#0F5132] hover:bg-[#16A34A] text-white p-3.5 font-black rounded-2xl text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-emerald-950/15 flex items-center justify-center gap-2 group disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <KeyRound className="w-4 h-4 group-hover:rotate-45 transition-transform" />
+              )}
+              <span>{isSubmitting ? 'Đang xác thực bảo mật...' : 'Đăng Nhập Vào Hệ Thống'}</span>
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#D8E5DA] flex items-center justify-center gap-2 text-[11px] text-[#52665A]">
+            <ShieldCheck className="w-4 h-4 text-[#0F5132]" />
+            <span>Mã hóa SHA-256 + Salt • Supabase RLS RBAC</span>
+          </div>
+        </div>
       </div>
     )
   }
 
-  // --- Render Dashboard ---
+  const [autoOpenNewsCreate, setAutoOpenNewsCreate] = useState(false)
+
+  // --- RENDER DASHBOARD LAYOUT & ACTIVE TAB ---
   return (
-    <div className="min-h-screen bg-haq-cream flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-haq-border flex flex-col hidden md:flex">
-        <div className="p-6 border-b border-haq-border flex items-center gap-3">
-          <span className="w-8 h-8 bg-haq-red text-white flex items-center justify-center font-bold text-lg rounded">
-            H
-          </span>
-          <span className="font-heading font-bold text-lg tracking-tight">Admin Portal</span>
-        </div>
-        <div className="flex-1 p-4 space-y-2">
-          <button 
-            onClick={() => setActiveTab('products')}
-            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'products' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
-            }`}
-          >
-            <Package className="w-5 h-5" /> Quản lý sản phẩm
-          </button>
-          <button 
-            onClick={() => setActiveTab('categories')}
-            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'categories' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
-            }`}
-          >
-            <Pin className="w-5 h-5" /> Quản lý danh mục
-          </button>
-          <button 
-            onClick={() => setActiveTab('provinces')}
-            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'provinces' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
-            }`}
-          >
-            <MapPin className="w-5 h-5" /> Quản lý Đặc sản & Bản đồ
-          </button>
-          <button 
-            onClick={() => setActiveTab('news')}
-            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'news' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
-            }`}
-          >
-            <Newspaper className="w-5 h-5" /> Quản lý tin tức
-          </button>
-          <button 
-            onClick={() => setActiveTab('leads')}
-            className={`flex items-center gap-3 w-full p-3 font-semibold rounded text-sm transition-colors ${
-              activeTab === 'leads' ? 'bg-haq-cream text-haq-ink' : 'text-haq-text-secondary hover:bg-haq-cream/50 hover:text-haq-ink'
-            }`}
-          >
-            <Users className="w-5 h-5" /> Quản lý khách hàng
-          </button>
-        </div>
-        <div className="p-4 border-t border-haq-border">
-          <button onClick={handleLogout} className="flex items-center gap-3 w-full p-3 text-red-600 hover:bg-red-50 font-semibold rounded text-sm transition-colors">
-            <LogOut className="w-5 h-5" /> Đăng xuất
-          </button>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {activeTab === 'leads' ? (
-          <LeadsManager />
-        ) : activeTab === 'categories' ? (
-          <CategoryManager products={products} />
-        ) : activeTab === 'provinces' ? (
-          <ProvinceManager products={products} onProductsChange={fetchData} />
-        ) : activeTab === 'news' ? (
-          <NewsManager />
-        ) : (
-          <>
-            {/* Header */}
-            <header className="bg-white border-b border-haq-border p-4 md:p-6 flex items-center justify-between sticky top-0 z-10">
-              <div>
-                <h1 className="font-heading font-bold text-2xl text-haq-ink">Danh sách Sản phẩm</h1>
-                <p className="text-sm text-haq-text-secondary mt-1">Đã ghim: <strong className="text-haq-red">{currentPinnedCount}/6</strong> sản phẩm (Hiển thị đầu trang chủ)</p>
-              </div>
-              <button onClick={openNewModal} className="bg-haq-red text-white px-4 py-2 rounded font-semibold flex items-center gap-2 hover:bg-haq-red/90 transition-colors shadow-sm">
-                <Plus className="w-5 h-5" /> <span className="hidden md:inline">Thêm sản phẩm</span>
-              </button>
-            </header>
-
-            {/* Content */}
-            <main className="flex-1 p-4 md:p-6 overflow-y-auto">
-              {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-64 text-haq-text-secondary">
-                  <RefreshCw className="w-8 h-8 animate-spin mb-4 text-haq-red" />
-                  <p>Đang tải dữ liệu...</p>
-                </div>
-              ) : products.length === 0 ? (
-                <div className="bg-white border border-haq-border rounded-xl p-12 text-center shadow-sm">
-                  <Package className="w-12 h-12 text-haq-text-secondary/40 mx-auto mb-4" />
-                  <h3 className="text-lg font-bold text-haq-ink mb-2">Chưa có sản phẩm nào</h3>
-                  <p className="text-haq-text-secondary mb-6">Hãy thêm sản phẩm đầu tiên của bạn vào hệ thống.</p>
-                  <button onClick={openNewModal} className="text-haq-red font-semibold hover:underline">
-                    + Thêm sản phẩm ngay
-                  </button>
-                </div>
-              ) : (
-                <div className="bg-white border border-haq-border rounded-xl shadow-sm overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-haq-cream border-b border-haq-border text-xs uppercase tracking-wider text-haq-text-secondary">
-                          <th className="p-4 font-mono w-[5%] text-center">Ghim</th>
-                          <th className="p-4 font-mono w-[30%]">Sản phẩm</th>
-                          <th className="p-4 font-mono w-[15%]">Danh mục</th>
-                          <th className="p-4 font-mono w-[30%]">Mô tả ngắn</th>
-                          <th className="p-4 font-mono w-[10%] text-center">Variants</th>
-                          <th className="p-4 font-mono w-[10%] text-right">Thao tác</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {products.map(p => (
-                          <tr key={p.id} className={`border-b border-haq-border hover:bg-haq-cream/30 transition-colors group ${p.is_pinned ? 'bg-red-50/40' : ''}`}>
-                            <td className="p-4 text-center">
-                              <button 
-                                onClick={() => togglePin(p)} 
-                                className={`p-2 rounded-full transition-colors ${p.is_pinned ? 'text-haq-red hover:bg-red-100' : 'text-haq-text-secondary/40 hover:bg-black/5 hover:text-haq-red'}`}
-                                title={p.is_pinned ? "Bỏ ghim" : "Ghim lên đầu"}
-                              >
-                                <Pin className={`w-5 h-5 ${p.is_pinned ? 'fill-haq-red' : ''}`} />
-                              </button>
-                            </td>
-                            <td className="p-4">
-                              <div className="font-bold text-haq-ink">{p.name}</div>
-                              <div className="text-xs text-haq-ink/50 mt-1">{p.slug}</div>
-                            </td>
-                            <td className="p-4">
-                              <div className="font-bold text-haq-ink/80">{p.category || 'Chưa phân loại'}</div>
-                              <div className="flex items-center gap-1 flex-wrap mt-1">
-                                {p.provinces?.name && (
-                                  <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">
-                                    <MapPin className="w-2.5 h-2.5" /> {p.provinces.name}
-                                  </span>
-                                )}
-                                {p.tag && (
-                                  <span className="inline-block bg-haq-red/10 text-haq-red text-[10px] px-2 py-0.5 rounded font-semibold whitespace-nowrap">
-                                    {p.tag}
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              <div className="text-sm text-haq-ink/70 line-clamp-2" title={p.description}>
-                                {p.description || '-'}
-                              </div>
-                            </td>
-                            <td className="p-4 text-center">
-                              <span className="inline-block bg-black/5 text-xs px-2 py-1 rounded font-mono font-bold">
-                                {p.variants?.length || 0}
-                              </span>
-                            </td>
-                            <td className="p-4 text-right">
-                              <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => openEditModal(p)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Sửa">
-                                  <Edit2 className="w-4 h-4" />
-                                </button>
-                                <button onClick={() => handleDelete(p.id, p.name)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors" title="Xóa">
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </main>
-          </>
+    <AdminLayout
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      onLogout={handleLogout}
+      currentUser={currentUser}
+      productsCount={products.length}
+      newLeadsCount={newLeadsCount}
+      products={products}
+      leads={leads}
+      onQuickAddProduct={openNewModal}
+      onQuickAddNews={() => {
+        setActiveTab('news')
+        setAutoOpenNewsCreate(true)
+      }}
+      onQuickAddProvince={() => setActiveTab('provinces')}
+    >
+      <AdminErrorBoundary onResetTab={() => setActiveTab('dashboard')}>
+        
+        {/* 📊 Frame 02: Master Dashboard Overview (Cả Admin và Sales đều xem được) */}
+        {activeTab === 'dashboard' && (
+          <DashboardOverview 
+            products={products}
+            leads={leads}
+            onNavigateTab={setActiveTab}
+            onOpenProductModal={!isSales ? openNewModal : undefined}
+            isSales={isSales}
+          />
         )}
-      </div>
 
-      {/* Modal */}
-      {isModalOpen && (
+        {/* 📦 Frame 03: Quản lý Sản phẩm & Biến thể SKU (Admin full, Sales read-only) */}
+        {activeTab === 'products' && (
+          <ProductsManager
+            products={products}
+            isLoading={isLoading}
+            onRefresh={fetchData}
+            onOpenCreateModal={openNewModal}
+            onOpenEditModal={openEditModal}
+            onDuplicateProduct={handleDuplicate}
+            onDeleteProduct={handleDelete}
+            onTogglePin={togglePin}
+            onToggleActive={toggleActive}
+            currentPinnedCount={currentPinnedCount}
+            isReadOnly={isSales}
+          />
+        )}
+
+        {/* 👥 Frame 05: Quản lý Leads CRM & Pipeline */}
+        {activeTab === 'leads' && <LeadsManager />}
+
+        {/* 🗺️ Frame 06: Quản lý Đặc sản Vùng miền & Bản đồ 34 Vùng (Sales chỉ xem tra cứu) */}
+        {activeTab === 'provinces' && (
+          <ProvinceManager 
+            products={products} 
+            onProductsChange={fetchData} 
+            isReadOnly={isSales}
+          />
+        )}
+
+        {/* 🗂️ Module Danh mục (Chỉ Admin mới có quyền truy cập & chỉnh sửa) */}
+        {activeTab === 'categories' && !isSales && (
+          <CategoryManager 
+            products={products} 
+          />
+        )}
+
+        {/* 📰 Frame 07: Quản lý Tin tức & Bài viết B2B (Admin only) */}
+        {activeTab === 'news' && !isSales && (
+          <NewsManager 
+            autoOpenCreate={autoOpenNewsCreate}
+            onResetAutoOpen={() => setAutoOpenNewsCreate(false)}
+          />
+        )}
+
+        {/* ⚙️ Module Cài đặt & Phân quyền (Admin only) */}
+        {activeTab === 'settings' && !isSales && <SettingsManager />}
+
+        {/* 📈 Advanced Sub-Dashboards (Admin only) */}
+        {activeTab === 'dashboard_marketing' && !isSales && <MarketingDashboard />}
+        {activeTab === 'dashboard_sales' && <SalesDashboard />}
+        {activeTab === 'dashboard_management' && !isSales && <ManagementDashboard />}
+      </AdminErrorBoundary>
+
+      {/* Frame 04: Drawer / Modal Thêm/Sửa Sản phẩm (Multi-tab) */}
+      {isModalOpen && !isSales && (
         <ProductModal 
           product={editingProduct}
           onClose={() => setIsModalOpen(false)}
@@ -319,6 +537,6 @@ export default function Admin() {
           currentPinnedCount={currentPinnedCount}
         />
       )}
-    </div>
+    </AdminLayout>
   )
 }

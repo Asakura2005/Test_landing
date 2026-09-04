@@ -15,11 +15,11 @@ export default function FloatingContactBar() {
       title: 'Gọi Hotline (024 23 23 56 56)',
     },
     {
-      href: 'https://zalo.me/0993308319',
+      href: 'https://zalo.me/1361851474644984696',
       icon: null,
-      label: 'Chat Zalo: 0993 308 319',
+      label: 'Zalo OA: HAQ Hà Nội',
       color: 'bg-[#0068FF]',
-      title: 'Chat Zalo (0993 308 319)',
+      title: 'Chat Zalo Doanh Nghiệp (HAQ Hà Nội)',
       text: 'Zalo',
     },
     {
