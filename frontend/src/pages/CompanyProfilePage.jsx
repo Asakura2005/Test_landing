@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight,
@@ -17,6 +18,7 @@ import {
   Handshake,
   Heart,
   Leaf,
+  X,
 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
@@ -194,66 +196,100 @@ const COMMITMENTS = [
 export default function CompanyProfilePage() {
   const [selectedCapability, setSelectedCapability] = useState(null)
 
+  useEffect(() => {
+    if (selectedCapability) {
+      document.body.style.overflow = 'hidden'
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') setSelectedCapability(null)
+      }
+      window.addEventListener('keydown', handleKeyDown)
+      return () => {
+        document.body.style.overflow = ''
+        window.removeEventListener('keydown', handleKeyDown)
+      }
+    } else {
+      document.body.style.overflow = ''
+    }
+  }, [selectedCapability])
+
   const CapabilityModal = ({ capability, onClose }) => {
     if (!capability) return null
-    return (
-      <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 lg:p-12">
+
+    return createPortal(
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 lg:p-10">
+        {/* Full-screen Backdrop */}
         <div 
-          className="absolute inset-0 bg-haq-deep-black/90 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
-        <div className="relative bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row max-h-[90vh]">
+
+        {/* Modal Window */}
+        <div className="relative z-10 bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row max-h-[88vh] border border-haq-border">
+          {/* Close Button */}
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-haq-cream rounded-full hover:bg-haq-border transition-colors cursor-pointer"
+            aria-label="Đóng cửa sổ"
+            className="absolute top-4 right-4 z-20 p-2.5 bg-white/95 hover:bg-white text-haq-ink rounded-full shadow-md border border-haq-border transition-all hover:scale-105 cursor-pointer"
           >
-            <ChevronRight className="w-6 h-6 rotate-90 text-haq-ink" />
+            <X className="w-5 h-5 text-haq-ink" />
           </button>
           
-          <div className="lg:w-1/2 relative bg-[#0C1E15] aspect-square lg:aspect-auto">
+          {/* Left Column: Visual Image & Number */}
+          <div className="lg:w-1/2 relative bg-[#0C1E15] min-h-[220px] lg:min-h-full">
             <img 
               src={factoryImg} 
               alt={capability.vn} 
-              className="w-full h-full object-cover opacity-80"
+              className="w-full h-full object-cover opacity-85"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-transparent to-transparent" />
-            <div className="absolute bottom-8 left-8">
-              <span className="font-heading font-extrabold text-6xl text-[#C89B3C] opacity-40">{capability.num}</span>
-              <h3 className="font-heading font-extrabold text-3xl text-white uppercase mt-2">{capability.vn}</h3>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-[#0C1E15]/30 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <span className="font-heading font-extrabold text-5xl sm:text-6xl text-[#C89B3C] opacity-60">{capability.num}</span>
+              <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-white uppercase mt-1 leading-tight">{capability.vn}</h3>
             </div>
           </div>
 
-          <div className="lg:w-1/2 p-8 sm:p-12 overflow-y-auto">
+          {/* Right Column: Information & Specs */}
+          <div className="lg:w-1/2 p-6 sm:p-10 overflow-y-auto max-h-[55vh] lg:max-h-[88vh]">
             <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">{capability.title}</span>
             <div className="h-1 w-12 bg-haq-red mt-2 mb-6" />
             
-            <div className="space-y-6 text-haq-text-secondary leading-relaxed font-normal">
-              <p className="text-lg font-medium text-haq-ink">{capability.desc}</p>
+            <div className="space-y-5 text-haq-text-secondary leading-relaxed font-normal text-xs sm:text-sm">
+              <p className="text-base sm:text-lg font-bold text-haq-ink">{capability.desc}</p>
               <p>
                 Tại HAQ FOOD, chúng tôi áp dụng các tiêu chuẩn vận hành công nghiệp tiên tiến nhất để đảm bảo tính đồng nhất của từng mẻ hàng. 
                 Hệ thống kiểm soát nhiệt độ và độ ẩm được chuẩn hóa, giúp duy trì cấu trúc giòn xốp đặc trưng và bảo quản trọn vẹn dinh dưỡng tự nhiên của nông sản.
               </p>
-              <div className="pt-6 border-t border-haq-border">
+              <div className="pt-5 border-t border-haq-border">
                 <h4 className="font-heading font-bold uppercase text-haq-ink mb-3 text-xs tracking-wider">Thông số kỹ thuật tiêu chuẩn:</h4>
-                <ul className="grid grid-cols-2 gap-4 text-xs font-heading uppercase font-medium text-haq-ink">
+                <ul className="grid grid-cols-2 gap-3 text-xs font-heading uppercase font-semibold text-haq-ink">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> ISO 22000:2018
+                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" /> ISO 22000:2018
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> HACCP CODEX
+                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" /> HACCP CODEX
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> OEM/ODM READY
+                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" /> OEM/ODM READY
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> KCS INDEPENDENT
+                    <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0" /> KCS INDEPENDENT
                   </li>
                 </ul>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end">
+                <button
+                  onClick={onClose}
+                  className="px-5 py-2.5 bg-haq-cream hover:bg-haq-border text-haq-ink font-heading font-bold text-xs uppercase rounded-xl transition-colors cursor-pointer"
+                >
+                  Đóng
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>,
+      document.body
     )
   }
 
