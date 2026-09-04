@@ -1,0 +1,361 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Về chúng tôi",
+    "overview": "Giới thiệu tổng quan",
+    "history": "Lịch sử & Dấu mốc",
+    "capabilities": "Cơ sở sản xuất & Chất lượng",
+    "products": "Sản phẩm",
+    "news": "Tin tức",
+    "contact": "Liên hệ",
+    "cta": "LIÊN HỆ BÁO GIÁ"
+  },
+  "common": {
+    "read_more": "Xem chi tiết",
+    "contact_now": "Liên hệ ngay",
+    "close": "Đóng",
+    "view_all": "Xem tất cả",
+    "learn_more": "Tìm hiểu thêm",
+    "explore": "Khám phá chi tiết",
+    "partner_b2b": "Hợp tác B2B",
+    "spec": "Tiêu chuẩn kỹ thuật",
+    "switch_language": "Đổi ngôn ngữ"
+  },
+  "profile": {
+    "hero_badge": "HAQ FOOD · GIỚI THIỆU DOANH NGHIỆP",
+    "hero_location": "HÀ NỘI, VIỆT NAM",
+    "hero_title": "HAQ FOOD",
+    "hero_sub": "DOANH NGHIỆP SẢN XUẤT & XUẤT KHẨU THỰC PHẨM VIỆT NAM",
+    "hero_desc": "Công ty Cổ phần HAQ Hà Nội là doanh nghiệp sản xuất và phân phối thực phẩm chế biến đóng gói tại Việt Nam. Chúng tôi kết hợp nguồn nông sản địa phương với quy trình sản xuất sấy sạch khép kín, hướng tới tiêu chuẩn an toàn và nâng tầm giá trị ẩm thực Việt.",
+    "hero_cta": "TÌM HIỂU VỀ HAQ FOOD",
+    "pillars": [
+      {
+        "tag": "NGUỒN NGUYÊN LIỆU",
+        "title": "TỰ NHIÊN",
+        "desc": "Từ nông sản Việt Nam"
+      },
+      {
+        "tag": "QUY TRÌNH",
+        "title": "KHÉP KÍN",
+        "desc": "Sản xuất sấy sạch hiện đại"
+      },
+      {
+        "tag": "KIỂM SOÁT CHẤT LƯỢNG",
+        "title": "NGHIÊM NGẶT",
+        "desc": "Đảm bảo an toàn thực phẩm"
+      },
+      {
+        "tag": "ĐỊNH HƯỚNG",
+        "title": "TOÀN CẦU",
+        "desc": "Đưa ẩm thực Việt ra thế giới"
+      }
+    ],
+    "sec1_badge": "01 — TỔNG QUAN DOANH NGHIỆP",
+    "sec1_title": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI",
+    "sec1_desc": "Thành lập từ năm 2021 tại Thủ đô Hà Nội, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối thực phẩm chế biến đóng gói. Doanh nghiệp làm chủ công nghệ sấy sạch đối lưu, tập trung vào các dòng bánh tráng sấy giòn, bánh nướng truyền thống và nông sản sấy, phục vụ hệ thống siêu thị, đại lý trên toàn quốc và thị trường xuất khẩu.",
+    "fact_header": "HỒ SƠ ĐĂNG KÝ DOANH NGHIỆP",
+    "fact_est": "THÀNH LẬP 2021",
+    "fact_legal_name_label": "Tên pháp nhân",
+    "fact_legal_name": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI",
+    "fact_intl_name_label": "Tên giao dịch quốc tế",
+    "fact_intl_name": "HAQ FOOD HANOI JOINT STOCK COMPANY",
+    "fact_tax_label": "Mã số thuế / ĐKKD",
+    "fact_tax_val": "0109675204",
+    "fact_tax_sub": "— Sở Kế hoạch & Đầu tư TP. Hà Nội cấp",
+    "fact_hq_label": "Trụ sở & Vận hành",
+    "fact_hq_val": "Thành phố Hà Nội, Việt Nam",
+    "fact_scope_label": "Lĩnh vực sản xuất",
+    "fact_scope_val": "Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh nướng hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.",
+    "fact_dist_label": "Hệ thống phân phối",
+    "fact_dist_val": "Chuỗi bán lẻ hiện đại (WinMart, Circle K, GS25, Bách Hóa Xanh, K-Market...), đại lý phân phối toàn quốc và xuất khẩu (Hàn Quốc, Đài Loan).",
+    "fact_coop_label": "Mô hình hợp tác B2B",
+    "fact_coop_val": "Cung ứng sỉ, Gia công sản phẩm theo đơn đặt hàng (OEM/ODM), Gia công nhãn hàng riêng (Private Label).",
+    "photo_caption": "Cơ sở sản xuất HAQ FOOD tại Hà Nội: Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đối lưu đến đóng gói bao bì màng nhôm tiệt trùng.",
+    "coop_box_title": "Liên hệ hợp tác phân phối & OEM",
+    "coop_box_desc": "Tiếp nhận yêu cầu báo giá sỉ, hợp đồng gia công và gửi mẫu thử.",
+    "core_caps": [
+      {
+        "num": "01 · CÔNG NGHỆ SẢN XUẤT",
+        "title": "Sấy Sạch Đối Lưu Khép Kín",
+        "desc": "Ứng dụng công nghệ sấy tuần hoàn nhiệt kín, kiểm soát chính xác nhiệt độ và độ ẩm, giữ trọn độ giòn xốp tự nhiên mà không tồn dư dầu chiên."
+      },
+      {
+        "num": "02 · NGUỒN NGUYÊN LIỆU",
+        "title": "Liên Kết Nông Sản Bản Địa",
+        "desc": "Ưu tiên kết nối và thu mua nguồn nông sản Việt Nam sạch, rõ ràng nguồn gốc xuất xứ, kiểm nghiệm định kỳ các chỉ tiêu vi sinh và an toàn thực phẩm."
+      },
+      {
+        "num": "03 · NĂNG LỰC CUNG ỨNG B2B",
+        "title": "Gia Công OEM / ODM Linh Hoạt",
+        "desc": "Hỗ trợ đối tác chuỗi bán lẻ và xuất khẩu từ khâu R&D phát triển hương vị, gửi mẫu thử, thiết kế quy cách đóng gói đến hoàn tất hồ sơ tự công bố."
+      }
+    ],
+    "sec2_badge": "02 ── CÂU CHUYỆN THƯƠNG HIỆU",
+    "sec2_title_1": "MỖI SẢN PHẨM",
+    "sec2_title_2": "ĐỀU BẮT ĐẦU",
+    "sec2_title_3": "TỪ TỰ NHIÊN",
+    "sec2_desc_1": "Chúng tôi tin rằng thực phẩm ngon phải bắt đầu từ nguyên liệu tốt, quy trình đúng và con người có trách nhiệm. HAQ FOOD không ngừng đổi mới để mang đến những sản phẩm tiện lợi, an toàn và giữ trọn hương vị truyền thống Việt Nam.",
+    "sec2_desc_2": "Chúng tôi xây dựng chuỗi giá trị khép kín từ khâu tuyển chọn nguyên liệu tươi sạch tại các vùng nông nghiệp trọng điểm cho đến dây chuyền sấy giòn đối lưu và đóng gói tiệt trùng, phục vụ khách hàng tiêu dùng và xuất khẩu.",
+    "sec2_photo_tag": "NGUỒN NGUYÊN LIỆU & SẢN XUẤT",
+    "sec2_photo_title": "Kết Hợp Nông Sản Bản Địa & Công Nghệ Sấy Sạch",
+    "sec2_values_tag": "TRIẾT LÝ VẬN HÀNH",
+    "sec2_values_title": "Giá Trị Cốt Lõi HAQ FOOD",
+    "sec3_badge": "03 — NĂNG LỰC SẢN XUẤT & NHÀ MÁY",
+    "sec3_title_1": "TỪ NGUYÊN LIỆU",
+    "sec3_title_2": "ĐẾN THÀNH PHẨM CHUẨN MỰC.",
+    "sec3_desc": "Năng lực sản xuất toàn diện từ khâu sơ chế, chế biến nhiệt, sấy giòn đến đóng gói tiêu chuẩn xuất khẩu.",
+    "sec3_card_spec": "TIÊU CHUẨN KỸ THUẬT HAQ",
+    "sec3_kcs_tag": "TIÊU CHUẨN VẬN HÀNH & KCS",
+    "sec3_kcs_title_1": "CHUẨN HÓA",
+    "sec3_kcs_title_2": "CHẤT LƯỢNG ĐỒNG NHẤT.",
+    "sec3_kcs_desc": "Nhà máy sản xuất HAQ FOOD được đầu tư đồng bộ với hệ thống máy móc sấy đối lưu, phòng pha chế nguyên liệu vô trùng và kho lưu trữ tiêu chuẩn.",
+    "sec3_kcs_points": [
+      {
+        "title": "Vệ Sinh An Toàn Thực Phẩm Tuyệt Đối",
+        "desc": "Quy trình kiểm soát nghiêm ngặt từ trang phục công nhân đến khu vực chế biến."
+      },
+      {
+        "title": "Độ Đồng Đều Sản Phẩm Cao",
+        "desc": "Công nghệ tự động hóa kiểm soát nhiệt độ sấy, đảm bảo chất lượng đồng nhất giữa các lô."
+      },
+      {
+        "title": "Kiểm Tra KCS Độc Lập",
+        "desc": "Mọi lô hàng trước khi xuất kho đều phải vượt qua bài kiểm tra cảm quan và vi sinh."
+      }
+    ],
+    "sec4_badge": "04 — TIÊU CHUẨN SẢN XUẤT KHÉP KÍN",
+    "sec4_title": "Quy Trình Sản Xuất 7 Công Đoạn",
+    "sec4_desc": "Hệ thống vận hành liên hoàn kiểm soát nhiệt ẩm và an toàn vệ sinh thực phẩm nghiêm ngặt từ khâu nguyên liệu đầu vào đến thành phẩm đóng gói xuất xưởng.",
+    "sec5_badge": "05 — DANH MỤC SẢN PHẨM",
+    "sec5_title": "Danh Mục Sản Phẩm Tiêu Biểu",
+    "sec5_all_btn": "XEM TẤT CẢ SẢN PHẨM",
+    "sec6_badge": "06 — XUẤT KHẨU QUỐC TẾ",
+    "sec6_title_1": "TỪ VIỆT NAM",
+    "sec6_title_2": "VƯƠN RA THẾ GIỚI.",
+    "sec6_desc": "HAQ FOOD định hướng phát triển mạnh mẽ trên thị trường quốc tế, đưa các sản phẩm nông sản chế biến đậm đà bản sắc Việt Nam đến với đối tác và người tiêu dùng toàn cầu.",
+    "sec6_markets": [
+      {
+        "region": "NỘI ĐỊA",
+        "country": "VIỆT NAM"
+      },
+      {
+        "region": "ĐÔNG BẮC Á",
+        "country": "HÀN QUỐC"
+      },
+      {
+        "region": "ĐÔNG Á",
+        "country": "ĐÀI LOAN"
+      }
+    ],
+    "sec7_badge": "07 — TRÁCH NHIỆM DOANH NGHIỆP",
+    "sec7_title": "Trách Nhiệm Phát Triển Bền Vững",
+    "sec7_desc": "Cam kết dài hạn đối với người tiêu dùng, đối tác, nhân sự và nông sản Việt Nam.",
+    "cta_badge": "KẾT NỐI HỢP TÁC B2B",
+    "cta_title_1": "ĐỒNG HÀNH CÙNG",
+    "cta_title_2": "PHÁT TRIỂN BỀN VỮNG",
+    "cta_desc": "HAQ FOOD sẵn sàng đồng hành cùng các nhà phân phối, chuỗi bán lẻ và đối tác quốc tế với chính sách hợp tác linh hoạt, sản phẩm chất lượng cao và năng lực cung ứng ổn định.",
+    "cta_btn": "GỬI YÊU CẦU HỢP TÁC"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "eyebrow": "NHÀ SẢN XUẤT & PHÂN PHỐI THỰC PHẨM VIỆT NAM",
+          "title": "CHẤT LƯỢNG LÀ CỐT LÕI CỦA THƯƠNG HIỆU",
+          "subtext": "HAQ FOOD — Doanh nghiệp sản xuất và phân phối thực phẩm Việt Nam, khẳng định uy tín qua từng dòng sản phẩm đạt chuẩn ISO 22000 & HACCP."
+        },
+        {
+          "eyebrow": "TIÊU CHUẨN AN TOÀN & CÔNG NGHỆ KHÉP KÍN",
+          "title": "HƯƠNG VỊ VIỆT CHO NGƯỜI TIÊU DÙNG HIỆN ĐẠI",
+          "subtext": "Dây chuyền sấy giòn tự động, kết hợp tinh hoa gia vị truyền thống và quy chuẩn kiểm định nghiêm ngặt."
+        },
+        {
+          "eyebrow": "BẢN SẮC ẨM THỰC · VƯƠN TẦM QUỐC TẾ",
+          "title": "KẾT NỐI GIÁ TRỊ TỪ NÔNG SẢN ĐẾN THÀNH PHẨM",
+          "subtext": "Đồng hành cùng chuỗi siêu thị lớn trong nước và mở rộng xuất khẩu sang Hàn Quốc, Đài Loan."
+        }
+      ],
+      "cta_explore": "KHÁM PHÁ SẢN PHẨM",
+      "cta_about": "VỀ HAQ FOOD",
+      "slide_prev": "Slide trước",
+      "slide_next": "Slide kế tiếp",
+      "slide_to": "Chuyển tới slide"
+    },
+    "specialty_map": {
+      "eyebrow": "BẢN ĐỒ NÔNG SẢN VIỆT NAM",
+      "title": "HỆ SINH THÁI SẢN PHẨM HAQ FOOD",
+      "subtitle": "KHÁM PHÁ ĐẶC SẢN VIỆT NAM — Mỗi vùng đất, một câu chuyện hương vị nguyên bản",
+      "hint": "Cuộn chuột để thu phóng · Kéo để xoay chuyển · Nhấp tỉnh để khám phá",
+      "regions": {
+        "all": "TOÀN QUỐC",
+        "north": "MIỀN BẮC",
+        "central": "MIỀN TRUNG",
+        "south": "MIỀN NAM"
+      },
+      "card": {
+        "explore_product": "KHÁM PHÁ SẢN PHẨM",
+        "view_all_products": "XEM TẤT CẢ SẢN PHẨM",
+        "in_development": "ĐANG PHÁT TRIỂN",
+        "local_culture": "VĂN HÓA ẨM THỰC ĐỊA PHƯƠNG",
+        "close": "Đóng"
+      }
+    },
+    "brand_statement": {
+      "est": "THÀNH LẬP TẠI HÀ NỘI",
+      "badge": "VỀ HAQ FOOD · GIỚI THIỆU DOANH NGHIỆP",
+      "title": "Sản xuất & Phân phối Thực phẩm Đạt Chuẩn An Toàn Quốc Tế",
+      "desc": "Thành lập năm 2021, HAQ Hà Nội hoạt động trong lĩnh vực sản xuất và phân phối thực phẩm, hướng đến việc đưa các sản phẩm nông sản và ẩm thực Việt Nam chất lượng cao đến người tiêu dùng trong nước và nhiều thị trường quốc tế.",
+      "cta": "TÌM HIỂU THÊM VỀ CHÚNG TÔI"
+    },
+    "quick_stats": {
+      "badge": "TIÊU CHUẨN & NĂNG LỰC",
+      "title": "NỀN TẢNG SẢN XUẤT VỮNG CHẮC",
+      "view_detail": "XEM CHI TIẾT NĂNG LỰC",
+      "learn_more": "TÌM HIỂU THÊM",
+      "pillars": [
+        {
+          "num": "01",
+          "label": "CHẤT LƯỢNG",
+          "title": "Chất Lượng Đồng Nhất",
+          "desc": "Kiểm soát chặt chẽ từ nguyên liệu đầu vào, quy trình chế biến khép kín đến từng lô sản phẩm xuất xưởng."
+        },
+        {
+          "num": "02",
+          "label": "TIÊU CHUẨN QUỐC TẾ",
+          "title": "An Toàn Thực Phẩm",
+          "desc": "Hệ thống quản lý chất lượng đạt chuẩn quốc tế ISO 22000 và HACCP, đảm bảo độ an toàn tuyệt đối."
+        },
+        {
+          "num": "03",
+          "label": "GIA CÔNG THEO YÊU CẦU",
+          "title": "Giải Pháp Gia Công",
+          "desc": "Năng lực sản xuất linh hoạt theo yêu cầu đối tác, hỗ trợ trọn gói từ công thức, bao bì đến hồ sơ công bố."
+        }
+      ]
+    },
+    "brand_visual": {
+      "badge": "TẦM NHÌN QUỐC TẾ",
+      "title_1": "TỪ NÔNG SẢN VIỆT",
+      "title_2": "VƯƠN TẦM CHÂU Á",
+      "markets": "VIỆT NAM · HÀN QUỐC · ĐÀI LOAN",
+      "desc": "Không ngừng nâng cao chất lượng và quy chuẩn chế biến khép kín, HAQ FOOD tự hào mang hương vị thực phẩm truyền thống Việt Nam chất lượng cao tiếp cận các thị trường tiêu chuẩn khắt khe tại khu vực châu Á.",
+      "cta": "TÌM HIỂU HỆ THỐNG PHÂN PHỐI"
+    },
+    "cta_banner": {
+      "badge": "HAQ FOOD · ĐỒNG HÀNH & PHÁT TRIỂN",
+      "title": "CÙNG KIẾN TẠO NHỮNG GIÁ TRỊ BỀN VỮNG",
+      "desc": "Đồng hành cùng HAQ FOOD trong hành trình mang sản phẩm thực phẩm Việt Nam an toàn, chất lượng cao đến đông đảo người tiêu dùng trong nước và quốc tế.",
+      "cta_contact": "LIÊN HỆ HỢP TÁC",
+      "cta_explore": "KHÁM PHÁ SẢN PHẨM"
+    },
+    "footer": {
+      "sub": "Vietnamese Food Manufacturer & Exporter",
+      "desc": "Nông sản sạch & Thực phẩm Việt Nam vươn tầm thế giới.",
+      "b2b_cta": "LIÊN HỆ HỢP TÁC B2B",
+      "col1_title": "VỀ HAQ FOOD",
+      "col1_link1": "Giới thiệu Tổng quan Công ty",
+      "col1_link2": "Năng lực sản xuất & Nhà máy",
+      "col1_link3": "Câu chuyện & Dấu mốc phát triển (2021 — 2026)",
+      "col1_link4": "Tin tức & Sự kiện Doanh nghiệp",
+      "col1_link5": "5 Giá trị văn hóa cốt lõi",
+      "col2_title": "SẢN PHẨM TIÊU BIỂU",
+      "col2_link1": "Tất cả sản phẩm (HAQ Catalog) →",
+      "col2_link2": "Bánh tráng sấy giòn & Bánh tráng trộn HOKI",
+      "col2_link3": "Bánh đậu xanh tươi & Các loại bánh truyền thống",
+      "col2_link4": "Bắp rang bơ sấy nổ công nghệ cao",
+      "col2_link5": "Thịt sấy khô & Đồ ăn vặt hảo hạng",
+      "col3_title": "LIÊN HỆ CHÍNH THỨC",
+      "address_label": "Địa chỉ:",
+      "hotline_label": "Hotline / Zalo:",
+      "email_label": "Email hợp tác:",
+      "tax_label": "Mã số thuế:",
+      "rights": "Bản quyền thuộc về Công ty Cổ phần HAQ Hà Nội. Bảo lưu mọi quyền.",
+      "legal_badge": "THÔNG TIN PHÁP LÝ DOANH NGHIỆP",
+      "legal_company": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI",
+      "legal_cert": "GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP",
+      "legal_authority": "Cơ quan cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội",
+      "legal_lookup": "Tra cứu thông tin doanh nghiệp",
+      "policy_label": "CHÍNH SÁCH & PHÁP LÝ:",
+      "policy_refund": "Chính sách đổi trả & hoàn tiền",
+      "policy_privacy": "Chính sách bảo mật",
+      "policy_terms": "Điều khoản sử dụng",
+      "copyright_line": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). BẢO LƯU MỌI QUYỀN."
+    }
+  },
+  "products_page": {
+    "breadcrumb_home": "Trang chủ",
+    "breadcrumb_products": "Sản phẩm",
+    "eyebrow": "HAQ FOOD · DANH MỤC SẢN PHẨM",
+    "all_products": "TẤT CẢ SẢN PHẨM",
+    "all_desc": "Toàn bộ danh mục thực phẩm chế biến và đặc sản nông sản đóng gói chất lượng cao của HAQ FOOD.",
+    "category_label": "DANH MỤC:",
+    "view_details": "Xem chi tiết",
+    "quote_cta": "Liên hệ báo giá sỉ",
+    "empty_title": "Không tìm thấy sản phẩm trong danh mục này",
+    "empty_desc": "Danh mục hiện đang được cập nhật sản phẩm mới.",
+    "all_tab": "Tất cả"
+  },
+  "product_detail": {
+    "breadcrumb_home": "Trang chủ",
+    "breadcrumb_products": "Sản phẩm",
+    "origin_label": "Nguồn gốc vùng nguyên liệu:",
+    "view_map": "Xem bản đồ →",
+    "highlights_title": "Điểm nổi bật",
+    "packaging_title": "Quy cách đóng gói",
+    "col_weight": "Trọng lượng",
+    "col_spec": "Quy cách",
+    "col_shelf_life": "HSD",
+    "spec_title": "Đặc tính sản phẩm",
+    "col_storage": "Bảo quản",
+    "col_cert": "Chứng chỉ",
+    "quote_btn": "Liên hệ đặt hàng / Báo giá xuất khẩu",
+    "similar_title": "Sản phẩm tương tự",
+    "not_found_title": "Sản phẩm không tồn tại",
+    "not_found_desc": "Có thể sản phẩm đã bị xóa hoặc đường dẫn không chính xác.",
+    "back_home": "Về trang chủ",
+    "no_image": "Chưa có hình ảnh"
+  },
+  "capabilities": {
+    "badge": "NĂNG LỰC SẢN XUẤT & NHÀ MÁY",
+    "title": "HỆ THỐNG SẢN XUẤT TIÊU CHUẨN QUỐC TẾ",
+    "subtitle": "Dây chuyền sấy sạch đối lưu, phòng sạch vô trùng, chứng nhận ISO 22000 & HACCP đáp ứng xuất khẩu.",
+    "process_title": "QUY TRÌNH 4 BƯỚC KIỂM SOÁT CHẤT LƯỢNG",
+    "cleanroom_title": "PHÒNG SẠCH & DÂY CHUYỀN SẤY ĐỐI LƯU",
+    "cleanroom_desc": "Nhà máy được trang bị hệ thống kiểm soát không khí, nhiệt độ và độ ẩm nghiêm ngặt, đảm bảo thực phẩm giữ trọn vẹn độ giòn tự nhiên và không nhiễm khuẩn chéo.",
+    "oem_title": "DỊCH VỤ GIA CÔNG OEM / ODM & NHÃN HÀNG RIÊNG",
+    "oem_desc": "HAQ FOOD cung cấp giải pháp gia công trọn gói từ R&D công thức, thiết kế bao bì đến sản xuất quy mô lớn cho chuỗi bán lẻ và đối tác quốc tế.",
+    "cta_contact": "ĐẶT LỊCH THĂM NHÀ MÁY / TƯ VẤN OEM",
+    "cert_badge": "TIÊU CHUẨN ĐẠT ĐƯỢC"
+  },
+  "history": {
+    "badge": "LỊCH SỬ & DẤU MỐC PHÁT TRIỂN",
+    "title": "HÀNH TRÌNH KIẾN TẠO VÀ NÂNG TẦM NÔNG SẢN VIỆT",
+    "subtitle": "Từ xưởng sấy đầu tiên năm 2021 đến chuỗi cung ứng thực phẩm xuất khẩu sang các thị trường châu Á.",
+    "timeline_title": "DẤU MỐC PHÁT TRIỂN (2021 — 2026)",
+    "stat_est": "NĂM THÀNH LẬP",
+    "stat_partners": "ĐỐI TÁC BÁN LẺ",
+    "stat_export": "THỊ TRƯỜNG XUẤT KHẨU",
+    "cta_partner": "ĐỒNG HÀNH CÙNG HAQ FOOD"
+  },
+  "contact_page": {
+    "badge": "LIÊN HỆ & HỢP TÁC DOANH NGHIỆP",
+    "title": "KẾT NỐI VỚI HAQ FOOD",
+    "subtitle": "Chúng tôi luôn sẵn sàng lắng nghe, tư vấn báo giá sỉ và đồng hành cùng các đối tác phân phối, đại lý và nhà nhập khẩu.",
+    "form_title": "Gửi yêu cầu báo giá & Tư vấn B2B",
+    "form_desc": "Điền thông tin bên dưới, chuyên viên HAQ FOOD sẽ phản hồi trong vòng 24 giờ.",
+    "name_label": "Họ và tên người liên hệ *",
+    "phone_label": "Số điện thoại *",
+    "email_label": "Email doanh nghiệp *",
+    "company_label": "Tên công ty / Cửa hàng / Đơn vị",
+    "need_label": "Nhu cầu hợp tác chính *",
+    "note_label": "Nội dung chi tiết / Số lượng dự kiến",
+    "submit_btn": "GỬI YÊU CẦU LIÊN HỆ",
+    "submitting": "Đang gửi...",
+    "success_title": "Gửi yêu cầu thành công!",
+    "success_desc": "Cảm ơn bạn đã quan tâm. Đội ngũ HAQ FOOD sẽ liên hệ tư vấn trong thời gian sớm nhất.",
+    "hq_title": "TRỤ SỞ CHÍNH",
+    "factory_title": "NHÀ MÁY SẢN XUẤT",
+    "hotline_title": "HOTLINE TƯ VẤN",
+    "email_title": "EMAIL HỢP TÁC"
+  }
+}

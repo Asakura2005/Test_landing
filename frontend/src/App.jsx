@@ -19,22 +19,29 @@ import ProductDetailPage from './pages/ProductDetailPage.jsx'
 import { initPostHog, recordSessionVisit } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import { FloatingLanguageSwitcher } from './components/LanguageSwitcher'
+import SeoHead from './components/SeoHead'
 
 // Scroll to top, track session visit, and sync language from URL prefix
 function RouteSync() {
   const { pathname } = useLocation()
-  const { setLanguage } = useLanguage()
+  const { language, setLanguage } = useLanguage()
 
   useEffect(() => {
     window.scrollTo(0, 0)
     recordSessionVisit()
 
     if (pathname.startsWith('/en')) {
-      setLanguage('en')
+      if (language !== 'en') setLanguage('en')
     } else if (pathname.startsWith('/ko')) {
-      setLanguage('ko')
+      if (language !== 'ko') setLanguage('ko')
+    } else if (!pathname.startsWith('/admin')) {
+      // If browsing root Vietnamese routes and not explicitly on en/ko route
+      const saved = localStorage.getItem('haq_language')
+      if (!saved) {
+        if (language !== 'vi') setLanguage('vi')
+      }
     }
-  }, [pathname, setLanguage])
+  }, [pathname, language, setLanguage])
 
   return null
 }
@@ -46,39 +53,67 @@ function AppRoutes() {
   return (
     <>
       <RouteSync />
+      <SeoHead />
       <div className="w-full overflow-x-hidden relative">
         {!isAdmin && <FloatingLanguageSwitcher />}
         <Routes>
+          {/* ================= VIETNAMESE (Default) ================= */}
           <Route path="/" element={<Home />} />
-          {/* VỀ CHÚNG TÔI Subpages */}
           <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
           <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
           <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
           <Route path="/lich-su" element={<HistoryPage />} />
           <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
-
-          {/* Multilingual Prefix Routes */}
-          <Route path="/en" element={<Home />} />
-          <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
-          <Route path="/en/san-pham" element={<ProductsPage />} />
-          <Route path="/en/lien-he" element={<ContactPage />} />
-
-          <Route path="/ko" element={<Home />} />
-          <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
-          <Route path="/ko/san-pham" element={<ProductsPage />} />
-          <Route path="/ko/lien-he" element={<ContactPage />} />
-
-          {/* Other Core Pages */}
           <Route path="/nang-luc" element={<CapabilitiesPage />} />
           <Route path="/san-pham" element={<ProductsPage />} />
           <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
           <Route path="/tin-tuc" element={<NewsPage />} />
           <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
-          
-          {/* Legal & Policy Pages */}
+
+          {/* ================= ENGLISH (B2B International) ================= */}
+          <Route path="/en" element={<Home />} />
+          <Route path="/en/about" element={<CompanyProfilePage />} />
+          <Route path="/en/history" element={<HistoryPage />} />
+          <Route path="/en/capabilities" element={<CapabilitiesPage />} />
+          <Route path="/en/products" element={<ProductsPage />} />
+          <Route path="/en/products/:slug" element={<ProductDetailPage />} />
+          <Route path="/en/news" element={<NewsPage />} />
+          <Route path="/en/news/:slug" element={<NewsDetailPage />} />
+          <Route path="/en/contact" element={<ContactPage />} />
+          <Route path="/en/policy" element={<PolicyPage />} />
+          <Route path="/en/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/en/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/en/refund-policy" element={<RefundPolicyPage />} />
+
+          {/* English Aliases for backward compatibility */}
+          <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
+          <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
+          <Route path="/en/san-pham" element={<ProductsPage />} />
+          <Route path="/en/lien-he" element={<ContactPage />} />
+
+          {/* ================= KOREAN (B2B Korea) ================= */}
+          <Route path="/ko" element={<Home />} />
+          <Route path="/ko/about" element={<CompanyProfilePage />} />
+          <Route path="/ko/history" element={<HistoryPage />} />
+          <Route path="/ko/capabilities" element={<CapabilitiesPage />} />
+          <Route path="/ko/products" element={<ProductsPage />} />
+          <Route path="/ko/products/:slug" element={<ProductDetailPage />} />
+          <Route path="/ko/news" element={<NewsPage />} />
+          <Route path="/ko/news/:slug" element={<NewsDetailPage />} />
+          <Route path="/ko/contact" element={<ContactPage />} />
+          <Route path="/ko/policy" element={<PolicyPage />} />
+          <Route path="/ko/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/ko/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/ko/refund-policy" element={<RefundPolicyPage />} />
+
+          {/* Korean Aliases for backward compatibility */}
+          <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
+          <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
+          <Route path="/ko/san-pham" element={<ProductsPage />} />
+          <Route path="/ko/lien-he" element={<ContactPage />} />
+
+          {/* Legal & Policy Pages (Vietnamese) */}
           <Route path="/chinh-sach" element={<PolicyPage />} />
           <Route path="/chinh-sach-doi-tra-hoan-tien" element={<RefundPolicyPage />} />
           <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicyPage />} />
@@ -95,12 +130,15 @@ function AppRoutes() {
 }
 
 export default function App() {
+  useEffect(() => {
+    initPostHog()
+  }, [])
+
   return (
-    <Router>
-      <LanguageProvider>
+    <LanguageProvider>
+      <Router>
         <AppRoutes />
-      </LanguageProvider>
-    </Router>
+      </Router>
+    </LanguageProvider>
   )
 }
-

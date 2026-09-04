@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { Check } from 'lucide-react'
 
@@ -80,7 +81,9 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
  * Positioned in bottom-right corner. When hovered, smoothly expands to reveal the list.
  */
 export function FloatingLanguageSwitcher() {
-  const { language, setLanguage, currentLangObj } = useLanguage()
+  const { language, switchLanguage, currentLangObj } = useLanguage()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef(null)
   const timerRef = useRef(null)
@@ -144,7 +147,7 @@ export function FloatingLanguageSwitcher() {
                   key={item.code}
                   type="button"
                   onClick={() => {
-                    setLanguage(item.code)
+                    switchLanguage(item.code, navigate, location.pathname)
                     setIsOpen(false)
                   }}
                   className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs font-heading font-medium transition-all text-left cursor-pointer ${
@@ -190,7 +193,9 @@ export function FloatingLanguageSwitcher() {
  * Header Language Switcher for StickyNav (topbar)
  */
 export function HeaderLanguageSwitcher() {
-  const { language, setLanguage, currentLangObj } = useLanguage()
+  const { language, switchLanguage, currentLangObj } = useLanguage()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const timerRef = useRef(null)
 
@@ -239,7 +244,7 @@ export function HeaderLanguageSwitcher() {
                   key={item.code}
                   type="button"
                   onClick={() => {
-                    setLanguage(item.code)
+                    switchLanguage(item.code, navigate, location.pathname)
                     setIsOpen(false)
                   }}
                   className={`w-full flex items-center justify-between gap-3 px-3 py-2 rounded-xl text-xs font-heading font-medium transition-all text-left cursor-pointer ${

@@ -29,6 +29,24 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Korean Typography & Auto-fitting Word Boundaries ─ */
+html[lang="ko"] body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans KR', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+html[lang="ko"] h1,
+html[lang="ko"] h2,
+html[lang="ko"] h3,
+html[lang="ko"] h4,
+html[lang="ko"] p,
+html[lang="ko"] button,
+html[lang="ko"] a,
+html[lang="ko"] .font-heading {
+  word-break: keep-all;
+}
+
 ::selection {
   background-color: #0F5132;
   color: #FFFFFF;

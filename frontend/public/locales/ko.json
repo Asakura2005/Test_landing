@@ -1,0 +1,361 @@
+{
+  "nav": {
+    "home": "홈",
+    "about": "회사 소개",
+    "overview": "기업 개요",
+    "history": "연혁 및 주요 성과",
+    "capabilities": "제조 역량 및 설비",
+    "products": "제품 소개",
+    "news": "뉴스 및 소식",
+    "contact": "문의하기",
+    "cta": "B2B 견적 문의"
+  },
+  "common": {
+    "read_more": "상세 보기",
+    "contact_now": "지금 문의하기",
+    "close": "닫기",
+    "view_all": "전체 보기",
+    "learn_more": "더 알아보기",
+    "explore": "제품 둘러보기",
+    "partner_b2b": "B2B 파트너십",
+    "spec": "기술 사양",
+    "switch_language": "언어 변경"
+  },
+  "profile": {
+    "hero_badge": "HAQ FOOD · 기업 소개",
+    "hero_location": "베트남 하노이",
+    "hero_title": "HAQ FOOD",
+    "hero_sub": "베트남 프리미엄 식품 제조 및 수출 전문 기업",
+    "hero_desc": "HAQ 하노이 주식회사는 베트남의 우수한 농산물과 위생적인 밀폐 대류 건조 기술을 결합하여 엄격한 안전 기준을 충족하고 베트남 식문화의 가치를 세계에 알리는 가공식품 전문 제조사입니다.",
+    "hero_cta": "HAQ FOOD 알아보기",
+    "pillars": [
+      {
+        "tag": "원재료",
+        "title": "100% 자연주의",
+        "desc": "엄선된 베트남 농산물"
+      },
+      {
+        "tag": "제조 공정",
+        "title": "원스톱 밀폐",
+        "desc": "현대식 열풍 건조 설비"
+      },
+      {
+        "tag": "품질 관리",
+        "title": "엄격한 검수",
+        "desc": "철저한 식품 안전 보장"
+      },
+      {
+        "tag": "글로벌 지향",
+        "title": "세계 시장 진출",
+        "desc": "베트남 전통 미식의 세계화"
+      }
+    ],
+    "sec1_badge": "01 — 기업 개요",
+    "sec1_title": "HAQ 하노이 주식회사 (HAQ FOOD HANOI JSC)",
+    "sec1_desc": "2021년 베트남 하노이에 설립된 HAQ FOOD는 프리미엄 포장 가공식품의 생산 및 유통을 선도하고 있습니다. 첨단 밀폐 대류 건조 기술을 바탕으로 크리스피 라이스페이퍼 스낵, 전통 구운 스낵, 건조 농산물을 생산하여 국내 주요 대형마트 및 해외(한국, 대만)로 수출하고 있습니다.",
+    "fact_header": "기업 등록 및 법인 정보",
+    "fact_est": "2021년 설립",
+    "fact_legal_name_label": "법인명",
+    "fact_legal_name": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI",
+    "fact_intl_name_label": "영문 상호명",
+    "fact_intl_name": "HAQ FOOD HANOI JOINT STOCK COMPANY",
+    "fact_tax_label": "사업자등록번호",
+    "fact_tax_val": "0109675204",
+    "fact_tax_sub": "— 하노이 기획투자국 발급",
+    "fact_hq_label": "본사 및 운영 센터",
+    "fact_hq_val": "베트남 하노이시",
+    "fact_scope_label": "주요 사업 영역",
+    "fact_scope_val": "포장 가공식품 제조 및 가공: 프리미엄 크리스피 라이스페이퍼 스낵(HOKI), 아몬드 구운 스낵, 코코넛 밀크 과자, 녹두떡 및 건조 농산물.",
+    "fact_dist_label": "유통 채널",
+    "fact_dist_val": "현대식 대형 유통망(WinMart, Circle K, GS25, Bach Hoa Xanh, K-Market 등), 전국 도매 유통 및 해외 정식 수출(한국, 대만).",
+    "fact_coop_label": "B2B 협력 방식",
+    "fact_coop_val": "대량 도매 공급, 주문형 맞춤 가공(OEM/ODM), 자체 상표(Private Label) 제조 지원.",
+    "photo_caption": "HAQ FOOD 하노이 제조 시설: 원재료 선별부터 대류 열풍 건조, 무균 알루미늄 파우치 포장까지 전 과정 철저 관리.",
+    "coop_box_title": "유통 파트너십 및 OEM/ODM 상담",
+    "coop_box_desc": "도매 단가 견적, 맞춤형 가공 계약 및 샘플 발송 문의를 환영합니다.",
+    "core_caps": [
+      {
+        "num": "01 · 첨단 가공 기술",
+        "title": "밀폐 순환 대류 건조",
+        "desc": "정밀한 온도 및 습도 제어를 통해 기름 잔여물 없이 원재료 고유의 바삭함과 영양을 완벽하게 보존합니다."
+      },
+      {
+        "num": "02 · 신선한 원재료",
+        "title": "베트남 청정 농산물 직수급",
+        "desc": "원산지 추적이 가능한 베트남 우수 농가와 직계약하여 미생물 및 농약 잔류 검사를 통과한 원료만을 사용합니다."
+      },
+      {
+        "num": "03 · B2B 맞춤 공급",
+        "title": "유연한 OEM / ODM 솔루션",
+        "desc": "레시피 R&D부터 시제품 제작, 패키지 디자인 및 품질 인증 서류 구비까지 원스톱으로 지원합니다."
+      }
+    ],
+    "sec2_badge": "02 ── 브랜드 스토리",
+    "sec2_title_1": "모든 제품은",
+    "sec2_title_2": "자연으로부터",
+    "sec2_title_3": "시작됩니다",
+    "sec2_desc_1": "좋은 식품은 올바른 원재료와 철저한 공정, 책임감 있는 사람의 손길에서 출발합니다. HAQ FOOD는 언제나 안심하고 즐길 수 있는 건강한 베트남 전통 스낵을 만듭니다.",
+    "sec2_desc_2": "주요 농업 지역에서 선별한 신선한 농산물을 바탕으로 무균 대류 건조 및 위생 포장에 이르는 원스톱 공급망을 구축하여 소비자와 글로벌 시장을 연결합니다.",
+    "sec2_photo_tag": "청정 원재료 & 제조 설비",
+    "sec2_photo_title": "베트남 청정 농산물과 첨단 건조 기술의 융합",
+    "sec2_values_tag": "경영 철학",
+    "sec2_values_title": "HAQ FOOD 3대 핵심 가치 (TÂM - TÍN - TINH)",
+    "sec3_badge": "03 — 제조 역량 및 공장 설비",
+    "sec3_title_1": "엄선된 원재료부터",
+    "sec3_title_2": "완벽한 표준 완제품까지.",
+    "sec3_desc": "전처리, 열가공, 크리스피 건조 및 수출 규격 포장까지 아우르는 종합 제조 설비 보유.",
+    "sec3_card_spec": "HAQ 표준 제조 규격",
+    "sec3_kcs_tag": "운영 및 품질 관리(QC) 기준",
+    "sec3_kcs_title_1": "표준화된 공정",
+    "sec3_kcs_title_2": "한결같은 완벽한 품질.",
+    "sec3_kcs_desc": "동기화된 열풍 건조 라인, 무균 배합실, 표준화된 원자재 및 완제품 보관 물류창고 완비.",
+    "sec3_kcs_points": [
+      {
+        "title": "철저한 식품 위생 및 안전",
+        "desc": "작업자 위생복 착용부터 무균 조리실까지 교차 오염을 원천 차단합니다."
+      },
+      {
+        "title": "균일한 제품 품질 보장",
+        "desc": "자동화 온도 제어 시스템을 통해 로트별 품질 편차 없는 일관된 맛과 바삭함을 유지합니다."
+      },
+      {
+        "title": "독립적인 KCS 품질 검수",
+        "desc": "출고 전 모든 로트에 대해 관능 평가 및 미생물 안전 검사를 엄격히 통과합니다."
+      }
+    ],
+    "sec4_badge": "04 — 7단계 원스톱 제조 공정",
+    "sec4_title": "엄격한 7단계 스마트 제조 파이프라인",
+    "sec4_desc": "원재료 입고부터 완제품 포장 및 출고까지 온습도와 위생을 엄격히 관리하는 연속 생산 공정입니다.",
+    "sec5_badge": "05 — 대표 제품 카테고리",
+    "sec5_title": "HAQ FOOD 대표 제품 라인업",
+    "sec5_all_btn": "전체 제품 보기",
+    "sec6_badge": "06 — 글로벌 수출 네트워크",
+    "sec6_title_1": "베트남을 넘어",
+    "sec6_title_2": "세계로 도약합니다.",
+    "sec6_desc": "베트남 특유의 풍부한 맛을 담은 고품질 농산물 가공식품으로 아시아 및 글로벌 시장의 신뢰를 얻고 있습니다.",
+    "sec6_markets": [
+      {
+        "region": "내수 시장",
+        "country": "베트남"
+      },
+      {
+        "region": "동북아시아",
+        "country": "대한민국"
+      },
+      {
+        "region": "동아시아",
+        "country": "대만"
+      }
+    ],
+    "sec7_badge": "07 — 기업의 사회적 책임",
+    "sec7_title": "지속 가능한 성장과 신뢰의 약속",
+    "sec7_desc": "소비자, B2B 파트너, 임직원 및 베트남 농가와 함께 상생 발전하는 지속 가능한 식품 생태계를 구축합니다.",
+    "cta_badge": "B2B 파트너십 및 제휴 문의",
+    "cta_title_1": "지속 가능한 성장을 위한",
+    "cta_title_2": "든든한 비즈니스 파트너",
+    "cta_desc": "HAQ FOOD는 유연한 협력 정책과 안정적인 공급 능력을 바탕으로 국내외 유통사 및 바이어와의 성공적인 파트너십을 환영합니다.",
+    "cta_btn": "제휴 및 상담 신청하기"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "eyebrow": "베트남 식품 제조 및 유통 전문 기업",
+          "title": "품질은 브랜드의 가장 핵심적인 가치입니다",
+          "subtext": "HAQ FOOD — ISO 22000 및 HACCP 인증 라인을 통해 검증된 프리미엄 베트남 식품을 제조 및 유통합니다."
+        },
+        {
+          "eyebrow": "안전 표준 및 폐쇄형 위생 공정",
+          "title": "현대 소비자를 위한 진정한 베트남의 맛",
+          "subtext": "전통 비법 양념과 엄격한 품질 관리가 결합된 자동 열풍 건조 스낵 생산 라인을 갖추고 있습니다."
+        },
+        {
+          "eyebrow": "전통 식문화의 글로벌 도약",
+          "title": "청정 농산물에서 완성도 높은 완제품까지",
+          "subtext": "베트남 주요 대형마트 공급은 물론 한국과 대만 등 글로벌 수출 시장으로 뻗어나갑니다."
+        }
+      ],
+      "cta_explore": "제품 살펴보기",
+      "cta_about": "HAQ FOOD 소개",
+      "slide_prev": "이전 슬라이드",
+      "slide_next": "다음 슬라이드",
+      "slide_to": "슬라이드 이동"
+    },
+    "specialty_map": {
+      "eyebrow": "HAQ FOOD 기획전",
+      "title": "HAQ FOOD 제품 생태계",
+      "subtitle": "베트남 특산물 발견 — 지역마다 전해지는 고유한 풍미 이야기",
+      "hint": "마우스 휠로 확대/축소 · 드래그하여 이동 · 성을 클릭하여 탐색",
+      "regions": {
+        "all": "베트남 전역",
+        "north": "북부 지역",
+        "central": "중부 지역",
+        "south": "남부 지역"
+      },
+      "card": {
+        "explore_product": "제품 살펴보기",
+        "view_all_products": "전체 제품 보기",
+        "in_development": "개발 진행 중",
+        "local_culture": "지역 음식 문화",
+        "close": "닫기"
+      }
+    },
+    "brand_statement": {
+      "est": "하노이 설립",
+      "badge": "HAQ FOOD 소개 · 기업 프로필",
+      "title": "국제 식품 안전 기준을 준수하는 제조 및 유통",
+      "desc": "2021년 설립된 HAQ Hanoi는 식품 가공 및 유통 분야 전문 기업으로, 베트남의 우수한 농산물과 전통 식문화를 국내외 소비자에게 널리 알리고 있습니다.",
+      "cta": "회사 자세히 알아보기"
+    },
+    "quick_stats": {
+      "badge": "표준 및 제조 역량",
+      "title": "견고하고 신뢰할 수 있는 제조 기반",
+      "view_detail": "제조 역량 자세히 보기",
+      "learn_more": "자세히 알아보기",
+      "pillars": [
+        {
+          "num": "01",
+          "label": "품질 보증",
+          "title": "일관된 최상급 품질",
+          "desc": "철저한 원료 검수부터 폐쇄형 위생 가공, 완제품 출고까지 전 과정을 꼼꼼히 관리합니다."
+        },
+        {
+          "num": "02",
+          "label": "국제 인증",
+          "title": "철저한 식품 안전",
+          "desc": "ISO 22000 및 HACCP 국제 인증 품질 관리 시스템으로 완벽한 안전성을 보장합니다."
+        },
+        {
+          "num": "03",
+          "label": "주문 제작 솔루션",
+          "title": "맞춤형 OEM / ODM",
+          "desc": "레시피 개발부터 맞춤 패키징 디자인, 인허가 서류까지 파트너 맞춤형 원스톱 생산을 지원합니다."
+        }
+      ]
+    },
+    "brand_visual": {
+      "badge": "글로벌 비전",
+      "title_1": "베트남 청정 농산물에서",
+      "title_2": "아시아 전역으로",
+      "markets": "베트남 · 대한민국 · 대만",
+      "desc": "엄격한 위생 건조 공정과 품질 기준을 바탕으로, HAQ FOOD는 정통 베트남 전통 스낵의 깊은 풍미를 까다로운 아시아 시장에 선보입니다.",
+      "cta": "유통 네트워크 알아보기"
+    },
+    "cta_banner": {
+      "badge": "HAQ FOOD · 협력 및 동반 성장",
+      "title": "지속 가능한 비즈니스 가치를 함께 창조합니다",
+      "desc": "안전하고 우수한 품질의 베트남 식품을 국내외 소비자에게 전하는 여정에 HAQ FOOD와 함께하십시오.",
+      "cta_contact": "제휴 및 협력 문의",
+      "cta_explore": "제품 살펴보기"
+    },
+    "footer": {
+      "sub": "베트남 식품 제조 및 수출 전문 기업",
+      "desc": "깨끗한 농산물과 베트남 식품의 글로벌 도약.",
+      "b2b_cta": "B2B 제휴 및 견적 문의",
+      "col1_title": "HAQ FOOD 소개",
+      "col1_link1": "기업 개요",
+      "col1_link2": "제조 역량 및 설비",
+      "col1_link3": "연혁 및 주요 성과 (2021 — 2026)",
+      "col1_link4": "기업 뉴스 및 행사",
+      "col1_link5": "5대 핵심 가치",
+      "col2_title": "주요 제품",
+      "col2_link1": "전체 제품 보기 (HAQ Catalog) →",
+      "col2_link2": "바삭 라이스페이퍼 스낵 & 비빔 라이스페이퍼",
+      "col2_link3": "신선 녹두 케이크 & 전통 과자",
+      "col2_link4": "열풍 팝콘 스낵",
+      "col2_link5": "프리미엄 육포 및 건어물 스낵",
+      "col3_title": "공식 문의",
+      "address_label": "주소:",
+      "hotline_label": "핫라인 / Zalo:",
+      "email_label": "협력 이메일:",
+      "tax_label": "사업자등록번호:",
+      "rights": "Copyright © HAQ Food Hanoi Joint Stock Company. All rights reserved.",
+      "legal_badge": "법적 기업 정보",
+      "legal_company": "HAQ 하노이 주식회사",
+      "legal_cert": "사업자등록증",
+      "legal_authority": "발급 기관: 하노이 기획투자국",
+      "legal_lookup": "기업 정보 조회",
+      "policy_label": "정책 및 법률:",
+      "policy_refund": "반품 및 환불 정책",
+      "policy_privacy": "개인정보 처리방침",
+      "policy_terms": "이용약관",
+      "copyright_line": "HAQ 하노이 주식회사 (HAQ FOOD). 모든 권리 보유."
+    }
+  },
+  "products_page": {
+    "breadcrumb_home": "홈",
+    "breadcrumb_products": "제품",
+    "eyebrow": "HAQ FOOD · 제품 카탈로그",
+    "all_products": "전체 제품",
+    "all_desc": "HAQ FOOD의 프리미엄 가공식품 및 베트남 특산 스낵 전체 카탈로그.",
+    "category_label": "카테고리:",
+    "view_details": "상세보기",
+    "quote_cta": "도매 견적 문의",
+    "empty_title": "해당 카테고리에 제품이 없습니다",
+    "empty_desc": "현재 신제품 업데이트 준비 중인 카테고리입니다.",
+    "all_tab": "전체"
+  },
+  "product_detail": {
+    "breadcrumb_home": "홈",
+    "breadcrumb_products": "제품",
+    "origin_label": "원자재 원산지:",
+    "view_map": "지도 보기 →",
+    "highlights_title": "주요 특징",
+    "packaging_title": "포장 규격",
+    "col_weight": "중량",
+    "col_spec": "포장 규격",
+    "col_shelf_life": "유통기한",
+    "spec_title": "제품 사양 및 인증",
+    "col_storage": "보관 방법",
+    "col_cert": "인증 표준",
+    "quote_btn": "주문 상담 / 수출 도매 견적 문의",
+    "similar_title": "관련 및 유사 제품",
+    "not_found_title": "제품을 찾을 수 없습니다",
+    "not_found_desc": "제품이 삭제되었거나 잘못된 링크입니다.",
+    "back_home": "홈으로 돌아가기",
+    "no_image": "등록된 이미지가 없습니다"
+  },
+  "capabilities": {
+    "badge": "제조 시설 및 생산 역량",
+    "title": "국제 표준 스마트 제조 시스템",
+    "subtitle": "밀폐형 대류 열풍 건조 설비, 무균 클린룸, 글로벌 수출 규격의 ISO 22000 및 HACCP 인증 완비.",
+    "process_title": "4단계 철저한 품질 관리 프로세스",
+    "cleanroom_title": "무균 클린룸 및 대류 건조 라인",
+    "cleanroom_desc": "공기 정화, 항온 항습 시스템을 갖춘 현대식 공장에서 교차 오염 없이 자연 본연의 바삭함과 풍미를 보존합니다.",
+    "oem_title": "OEM / ODM 및 자체 브랜드(PB) 제조 서비스",
+    "oem_desc": "레시피 R&D부터 패키지 디자인, 대량 생산까지 대형 유통망과 해외 파트너사를 위한 원스톱 제조 솔루션을 지원합니다.",
+    "cta_contact": "공장 견학 예약 / OEM 상담 신청",
+    "cert_badge": "보유 국제 인증"
+  },
+  "history": {
+    "badge": "연혁 및 발전 발자취",
+    "title": "베트남 농식품의 가치를 높여온 여정",
+    "subtitle": "2021년 첫 건조 설비 설립부터 아시아 주요 시장 수출 식품 공급망으로 도약하기까지.",
+    "timeline_title": "주요 성장 발자취 (2021 — 2026)",
+    "stat_est": "설립 연도",
+    "stat_partners": "국내외 유통망",
+    "stat_export": "수출 진출국",
+    "cta_partner": "HAQ FOOD와 함께하기"
+  },
+  "contact_page": {
+    "badge": "문의 및 B2B 협력",
+    "title": "HAQ FOOD와 연결하기",
+    "subtitle": "도매 견적 상담, 유통 대리점 및 해외 수입 파트너사와의 긴밀한 협력을 언제나 환영합니다.",
+    "form_title": "견적 문의 및 B2B 상담 신청",
+    "form_desc": "아래 양식을 작성해 주시면 24시간 이내에 담당자가 신속히 안내해 드리겠습니다.",
+    "name_label": "담당자 성함 *",
+    "phone_label": "연락처 전화번호 *",
+    "email_label": "회사 이메일 *",
+    "company_label": "회사 / 매장 / 기관명",
+    "need_label": "주요 협력 분야 *",
+    "note_label": "세부 문의 내용 / 예상 주문 수량",
+    "submit_btn": "문의 제출하기",
+    "submitting": "접수 중...",
+    "success_title": "문의가 성공적으로 접수되었습니다!",
+    "success_desc": "관심 가져주셔서 감사합니다. HAQ FOOD 전문 상담팀이 신속히 연락드리겠습니다.",
+    "hq_title": "본사 소재지",
+    "factory_title": "제조 공장",
+    "hotline_title": "상담 핫라인",
+    "email_title": "비즈니스 제휴 이메일"
+  }
+}

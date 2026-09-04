@@ -15,7 +15,7 @@ import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 
 export default function StickyNav() {
-  const { t, language, setLanguage } = useLanguage()
+  const { t, language, setLanguage, switchLanguage } = useLanguage()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
@@ -35,19 +35,19 @@ export default function StickyNav() {
         {
           title: 'CORPORATE OVERVIEW',
           desc: 'Brand declaration, strategic vision, mission & 5 core cultural values.',
-          path: '/gioi-thieu',
+          path: '/en/about',
           badge: 'OVERVIEW',
         },
         {
           title: 'HISTORY & MILESTONES',
           desc: 'Milestones 2021 — 2026, technology turning points & Asian export growth.',
-          path: '/lich-su',
+          path: '/en/history',
           badge: '2021 - 2026',
         },
         {
           title: 'MANUFACTURING & QUALITY',
           desc: 'Closed convective drying line, cleanroom, ISO 22000 & HACCP, OEM/ODM solutions.',
-          path: '/nang-luc',
+          path: '/en/capabilities',
           badge: 'ISO & HACCP',
         },
       ]
@@ -57,19 +57,19 @@ export default function StickyNav() {
         {
           title: '기업 개요',
           desc: '브랜드 선언, 전략적 비전, 사명 및 5대 핵심 문화 가치.',
-          path: '/gioi-thieu',
+          path: '/ko/about',
           badge: '개요',
         },
         {
           title: '연혁 및 주요 성과',
           desc: '2021 — 2026 성장 발자취, 기술 혁신 및 아시아 시장 수출 확대.',
-          path: '/lich-su',
+          path: '/ko/history',
           badge: '2021 - 2026',
         },
         {
           title: '제조 역량 및 설비',
           desc: '밀폐식 대류 건조 라인, 클린룸, ISO 22000 & HACCP 인증, OEM/ODM 맞춤 생산.',
-          path: '/nang-luc',
+          path: '/ko/capabilities',
           badge: 'ISO & HACCP',
         },
       ]
@@ -171,13 +171,28 @@ export default function StickyNav() {
 
   const isAboutActive =
     location.pathname === '/gioi-thieu' ||
+    location.pathname === '/en/about' ||
+    location.pathname === '/ko/about' ||
     location.pathname === '/ve-chung-toi' ||
     location.pathname === '/lich-su' ||
+    location.pathname === '/en/history' ||
+    location.pathname === '/ko/history' ||
     location.pathname === '/nang-luc' ||
+    location.pathname === '/en/capabilities' ||
+    location.pathname === '/ko/capabilities' ||
     location.pathname.startsWith('/ve-chung-toi/')
-  const isProductsActive = location.pathname.startsWith('/san-pham')
-  const isNewsActive = location.pathname.startsWith('/tin-tuc')
-  const isContactActive = location.pathname.startsWith('/lien-he')
+  const isProductsActive =
+    location.pathname.startsWith('/san-pham') ||
+    location.pathname.startsWith('/en/products') ||
+    location.pathname.startsWith('/ko/products')
+  const isNewsActive =
+    location.pathname.startsWith('/tin-tuc') ||
+    location.pathname.startsWith('/en/news') ||
+    location.pathname.startsWith('/ko/news')
+  const isContactActive =
+    location.pathname.startsWith('/lien-he') ||
+    location.pathname.startsWith('/en/contact') ||
+    location.pathname.startsWith('/ko/contact')
 
   const activePreviewCat = hoveredCategory || categoryTree[1] || categoryTree[0]
 
@@ -192,9 +207,9 @@ export default function StickyNav() {
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between w-full">
         {/* 1. Corporate Brand Logo */}
         <Link
-          to="/"
+          to={language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'}
           className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg"
-          title="HAQ FOOD - Trang chủ"
+          title="HAQ FOOD"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
             <img
@@ -300,7 +315,7 @@ export default function StickyNav() {
             onMouseEnter={() => handleMouseEnter('san-pham')}
           >
             <Link
-              to="/san-pham"
+              to={language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : '/san-pham'}
               aria-current={isProductsActive ? 'page' : undefined}
               className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
                 activeMenu === 'san-pham' || isProductsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
@@ -451,7 +466,7 @@ export default function StickyNav() {
 
           {/* TIN TỨC */}
           <Link
-            to="/tin-tuc"
+            to={language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'}
             aria-current={isNewsActive ? 'page' : undefined}
             className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
               isNewsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
@@ -465,7 +480,7 @@ export default function StickyNav() {
 
           {/* LIÊN HỆ */}
           <Link
-            to="/lien-he"
+            to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
             aria-current={isContactActive ? 'page' : undefined}
             className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
               isContactActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
@@ -478,10 +493,38 @@ export default function StickyNav() {
           </Link>
         </nav>
 
-        {/* 3. CTA */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* 3. CTA & Header B2B Language Switcher (Desktop) */}
+        <div className="hidden md:flex items-center gap-3.5">
+          {/* Minimal B2B Segmented Switcher */}
+          <div
+            className="inline-flex items-center p-0.5 rounded-full bg-haq-soft/80 border border-haq-border text-xs font-mono font-bold tracking-wider"
+            role="group"
+            aria-label="Language selection"
+          >
+            {LANGUAGES.map((lang, idx) => {
+              const isActive = language === lang.code
+              return (
+                <React.Fragment key={lang.code}>
+                  {idx > 0 && <span className="text-haq-border select-none text-[10px] px-0.5">|</span>}
+                  <button
+                    type="button"
+                    onClick={() => switchLanguage(lang.code, navigate, location.pathname)}
+                    className={`px-2 py-1 rounded-full text-[11px] transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-haq-green-dark text-white shadow-2xs font-bold'
+                        : 'text-haq-text-secondary hover:text-haq-ink'
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    {lang.label}
+                  </button>
+                </React.Fragment>
+              )
+            })}
+          </div>
+
           <Link
-            to="/lien-he"
+            to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
             className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
           >
             <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
@@ -489,8 +532,35 @@ export default function StickyNav() {
           </Link>
         </div>
 
-        {/* Mobile Menu Trigger */}
-        <div className="flex md:hidden items-center">
+        {/* Mobile Header: Compact Switcher + Menu Trigger */}
+        <div className="flex md:hidden items-center gap-2">
+          <div
+            className="inline-flex items-center p-0.5 rounded-full bg-haq-soft border border-haq-border text-[10px] font-mono font-bold tracking-wider"
+            role="group"
+            aria-label="Mobile Language selection"
+          >
+            {LANGUAGES.map((lang, idx) => {
+              const isActive = language === lang.code
+              return (
+                <React.Fragment key={lang.code}>
+                  {idx > 0 && <span className="text-haq-border select-none text-[9px] px-0.5">|</span>}
+                  <button
+                    type="button"
+                    onClick={() => switchLanguage(lang.code, navigate, location.pathname)}
+                    className={`px-1.5 py-0.5 rounded-full text-[10px] transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-haq-green-dark text-white font-bold'
+                        : 'text-haq-text-secondary'
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    {lang.label}
+                  </button>
+                </React.Fragment>
+              )
+            })}
+          </div>
+
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg"
@@ -605,32 +675,45 @@ export default function StickyNav() {
 
           {/* LIÊN HỆ & ĐỔI NGÔN NGỮ */}
           <div className="pt-4 space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-haq-cream/50 border border-haq-border">
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-[#EBF3EC]/60 border border-haq-border">
               <span className="text-xs font-heading font-bold text-haq-ink uppercase">
                 {t('common.switch_language', 'Ngôn ngữ')}:
               </span>
-              <div className="flex items-center gap-1.5">
-                {LANGUAGES.map((item) => (
-                  <button
-                    key={item.code}
-                    type="button"
-                    onClick={() => setLanguage(item.code)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold uppercase transition-all ${
-                      language === item.code
-                        ? 'bg-haq-red text-white shadow-2xs'
-                        : 'bg-white text-haq-ink border border-haq-border hover:bg-haq-cream'
-                    }`}
-                  >
-                    {item.code}
-                  </button>
-                ))}
+              <div
+                className="inline-flex items-center p-0.5 rounded-full bg-white border border-haq-border text-xs font-mono font-bold tracking-wider"
+                role="group"
+                aria-label="Mobile Drawer Language selection"
+              >
+                {LANGUAGES.map((item, idx) => {
+                  const isActive = language === item.code
+                  return (
+                    <React.Fragment key={item.code}>
+                      {idx > 0 && <span className="text-haq-border select-none text-[10px] px-0.5">|</span>}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          switchLanguage(item.code, navigate, location.pathname)
+                          setMobileOpen(false)
+                        }}
+                        className={`px-2.5 py-1 rounded-full text-xs font-heading font-bold uppercase transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-haq-green-dark text-white shadow-2xs font-bold'
+                            : 'text-haq-text-secondary hover:text-haq-ink'
+                        }`}
+                        aria-pressed={isActive}
+                      >
+                        {item.label}
+                      </button>
+                    </React.Fragment>
+                  )
+                })}
               </div>
             </div>
 
             <Link
-              to="/lien-he"
+              to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
               onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-center gap-3 bg-[#16A34A] text-white py-4 rounded-2xl text-[13px] font-heading font-bold uppercase tracking-wider shadow-md hover:bg-[#0F5132] active:scale-95 transition-all"
+              className="w-full flex items-center justify-center gap-3 bg-haq-green-dark text-white py-4 rounded-2xl text-[13px] font-heading font-bold uppercase tracking-wider shadow-md hover:bg-haq-green active:scale-95 transition-all"
             >
               <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
               <ArrowRight className="w-4 h-4" />
