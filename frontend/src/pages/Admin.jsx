@@ -14,7 +14,15 @@ import {
   ArrowRight,
   UserCheck
 } from 'lucide-react'
-import { getProducts, deleteProduct, createProduct, updateProduct, getLeads } from '../services/supabase'
+import { 
+  getProducts, 
+  deleteProduct, 
+  createProduct, 
+  updateProduct, 
+  getLeads, 
+  getOrders, 
+  subscribeToLeads 
+} from '../services/supabase'
 import { loginUser, getCurrentUser, logoutUser } from '../services/auth'
 import AdminLayout from '../components/admin/AdminLayout'
 import DashboardOverview from '../components/admin/DashboardOverview'
@@ -93,9 +101,10 @@ export default function Admin() {
   const [loginError, setLoginError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   
-  // Products & Leads Data State
+  // Products, Leads & Orders Data State
   const [products, setProducts] = useState([])
   const [leads, setLeads] = useState([])
+  const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -151,13 +160,14 @@ export default function Admin() {
     }
   }
 
-  // Fetch all products and leads
+  // Fetch all products, leads, and orders
   const fetchData = async () => {
     try {
       setIsLoading(true)
-      const [productsData, leadsData] = await Promise.allSettled([
+      const [productsData, leadsData, ordersData] = await Promise.allSettled([
         getProducts(),
-        getLeads()
+        getLeads(),
+        getOrders()
       ])
       
       if (productsData.status === 'fulfilled' && Array.isArray(productsData.value)) {
@@ -170,6 +180,11 @@ export default function Admin() {
       } else {
         setLeads([])
       }
+      if (ordersData.status === 'fulfilled' && Array.isArray(ordersData.value)) {
+        setOrders(ordersData.value)
+      } else {
+        setOrders([])
+      }
     } catch (err) {
       console.error(err)
     } finally {
@@ -180,6 +195,17 @@ export default function Admin() {
   useEffect(() => {
     if (isAuthenticated) {
       fetchData()
+
+      // Lắng nghe Realtime khi có Lead mới phát sinh
+      const unsub = subscribeToLeads((newLead) => {
+        if (newLead) {
+          setLeads(prev => [newLead, ...prev.filter(l => l.id !== newLead.id)])
+        }
+      })
+
+      return () => {
+        if (typeof unsub === 'function') unsub()
+      }
     }
   }, [isAuthenticated])
 
@@ -455,6 +481,7 @@ export default function Admin() {
       newLeadsCount={newLeadsCount}
       products={products}
       leads={leads}
+      orders={orders}
       onQuickAddProduct={openNewModal}
       onQuickAddNews={() => {
         setActiveTab('news')

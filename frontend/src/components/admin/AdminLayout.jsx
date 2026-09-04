@@ -22,9 +22,37 @@ import {
   CheckCircle2,
   Sparkles,
   FileSpreadsheet,
-  UserCheck
+  UserCheck,
+  ShoppingBag,
+  Phone,
+  Clock,
+  ArrowRight,
+  Copy,
+  Check,
+  CheckCheck
 } from 'lucide-react'
 import QuickSearchModal from './QuickSearchModal'
+
+// Format relative time helper
+function formatTimeAgo(isoString) {
+  if (!isoString) return 'Gần đây'
+  try {
+    const d = new Date(isoString)
+    if (isNaN(d.getTime())) return 'Gần đây'
+    const diffSec = Math.floor((Date.now() - d.getTime()) / 1000)
+    if (diffSec < 60) return 'Vừa xong'
+    const diffMin = Math.floor(diffSec / 60)
+    if (diffMin < 60) return `${diffMin} phút trước`
+    const diffHours = Math.floor(diffMin / 60)
+    if (diffHours < 24) return `${diffHours} giờ trước`
+    const diffDays = Math.floor(diffHours / 24)
+    if (diffDays === 1) return 'Hôm qua'
+    if (diffDays < 7) return `${diffDays} ngày trước`
+    return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
+  } catch {
+    return 'Gần đây'
+  }
+}
 
 export default function AdminLayout({
   activeTab = 'dashboard',
@@ -35,6 +63,7 @@ export default function AdminLayout({
   newLeadsCount = 0,
   products = [],
   leads = [],
+  orders = [],
   onQuickAddProduct,
   onQuickAddNews,
   onQuickAddProvince,
@@ -46,7 +75,14 @@ export default function AdminLayout({
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isLeadAlertsOpen, setIsLeadAlertsOpen] = useState(false)
-  const [hasUnreadAlerts, setHasUnreadAlerts] = useState(true)
+
+  // Tracking Leads unread badge with localStorage
+  const [leadsLastSeen, setLeadsLastSeen] = useState(() => localStorage.getItem('haq_admin_leads_last_seen'))
+  const [copiedPhone, setCopiedPhone] = useState(null)
+
+  // Tracking Notifications unread state with localStorage
+  const [notifsLastSeen, setNotifsLastSeen] = useState(() => localStorage.getItem('haq_admin_notifs_last_seen'))
+  const [notifTab, setNotifTab] = useState('all') // 'all' | 'activity' | 'system'
 
   const topbarControlsRef = useRef(null)
 
@@ -76,6 +112,111 @@ export default function AdminLayout({
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
+
+  // Sort leads (newest first)
+  const sortedLeads = useMemo(() => {
+    return [...leads].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+  }, [leads])
+
+  // Real unread leads count
+  const unreadLeadsCount = useMemo(() => {
+    if (!leads || leads.length === 0) return 0
+    if (!leadsLastSeen) return Math.min(newLeadsCount || leads.length, 99)
+    const seenTime = new Date(leadsLastSeen).getTime()
+    const count = leads.filter(l => {
+      const created = l.created_at ? new Date(l.created_at).getTime() : 0
+      return created > seenTime
+    }).length
+    return count
+  }, [leads, leadsLastSeen, newLeadsCount])
+
+  const handleMarkAllLeadsSeen = (e) => {
+    e.stopPropagation()
+    const now = new Date().toISOString()
+    localStorage.setItem('haq_admin_leads_last_seen', now)
+    setLeadsLastSeen(now)
+  }
+
+  const handleCopyPhone = (e, phone) => {
+    e.stopPropagation()
+    if (!phone) return
+    navigator.clipboard?.writeText(phone)
+    setCopiedPhone(phone)
+    setTimeout(() => setCopiedPhone(null), 2000)
+  }
+
+  // Build dynamic notifications feed from real orders, leads, and system events
+  const systemNotifications = useMemo(() => {
+    const list = []
+
+    // 1. Orders
+    ;(orders || []).slice(0, 5).forEach(order => {
+      list.push({
+        id: `order-${order.id}`,
+        type: 'order',
+        category: 'activity',
+        title: `Đơn hàng B2B mới #${order.order_code || (order.id ? String(order.id).slice(0, 8) : 'B2B')}`,
+        desc: `${order.customer_name || 'Khách hàng B2B'}${order.total_amount ? ` • ${Number(order.total_amount).toLocaleString('vi-VN')} đ` : ''}`,
+        timestamp: order.created_at,
+        targetTab: 'dashboard_sales'
+      })
+    })
+
+    // 2. Leads
+    ;(leads || []).slice(0, 5).forEach(lead => {
+      list.push({
+        id: `lead-${lead.id}`,
+        type: 'lead',
+        category: 'activity',
+        title: `Yêu cầu báo giá từ ${lead.full_name || 'Khách hàng B2B'}`,
+        desc: `${lead.company ? `${lead.company} • ` : ''}${lead.need || 'Báo giá đại lý'}${lead.phone ? ` • ${lead.phone}` : ''}`,
+        timestamp: lead.created_at,
+        targetTab: 'leads'
+      })
+    })
+
+    // Sort by timestamp descending
+    list.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))
+
+    // 3. System Cloud Status
+    list.push({
+      id: 'sys-cloud',
+      type: 'system',
+      category: 'system',
+      title: 'Đồng bộ Supabase Cloud',
+      desc: `${productsCount} sản phẩm, ${leads.length} leads và ${orders.length} đơn hàng đã lưu an toàn trên Cloud.`,
+      timestamp: null,
+      targetTab: 'products'
+    })
+
+    list.push({
+      id: 'sys-security',
+      type: 'system',
+      category: 'system',
+      title: 'Hạ tầng Bảo mật & Email SMTP',
+      desc: `Email SMTP thông báo và Zalo Doanh nghiệp sẵn sàng phản hồi khách sỉ.`,
+      timestamp: null,
+      targetTab: 'settings'
+    })
+
+    return list
+  }, [orders, leads, productsCount])
+
+  // Check if there are unread notifications
+  const hasUnreadNotifs = useMemo(() => {
+    if (!notifsLastSeen) return true
+    const seenTime = new Date(notifsLastSeen).getTime()
+    const latestOrderTime = orders?.[0]?.created_at ? new Date(orders[0].created_at).getTime() : 0
+    const latestLeadTime = leads?.[0]?.created_at ? new Date(leads[0].created_at).getTime() : 0
+    return latestOrderTime > seenTime || latestLeadTime > seenTime
+  }, [orders, leads, notifsLastSeen])
+
+  const handleMarkAllNotifsRead = (e) => {
+    e.stopPropagation()
+    const now = new Date().toISOString()
+    localStorage.setItem('haq_admin_notifs_last_seen', now)
+    setNotifsLastSeen(now)
+  }
 
   // Navigation Items according to User Role
   const navItems = useMemo(() => {
@@ -393,46 +534,95 @@ export default function AdminLayout({
                 title="Yêu cầu báo giá mới"
               >
                 <Users className="w-4 h-4" />
-                {newLeadsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">
-                    {newLeadsCount}
+                {unreadLeadsCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50 duration-150">
+                    {unreadLeadsCount > 99 ? '99+' : unreadLeadsCount}
                   </span>
                 )}
               </button>
 
               {isLeadAlertsOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-3.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div className="absolute right-0 mt-2 w-88 bg-white rounded-xl shadow-xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                   <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                      Yêu cầu báo giá ({newLeadsCount} mới)
-                    </h4>
-                    <button 
-                      onClick={() => { onTabChange('leads'); setIsLeadAlertsOpen(false); }}
-                      className="text-[11px] font-bold text-[#0F5132] hover:underline cursor-pointer"
-                    >
-                      Xem tất cả
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      {unreadLeadsCount > 0 && (
+                        <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                      )}
+                      <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800">
+                        Yêu cầu báo giá ({unreadLeadsCount > 0 ? `${unreadLeadsCount} mới` : `${leads.length} tổng`})
+                      </h4>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {unreadLeadsCount > 0 && (
+                        <button 
+                          onClick={handleMarkAllLeadsSeen}
+                          className="text-[10px] font-semibold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-0.5 rounded transition-colors cursor-pointer"
+                          title="Xóa dấu thông báo đỏ"
+                        >
+                          Đã xem
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => { onTabChange('leads'); setIsLeadAlertsOpen(false); }}
+                        className="text-[11px] font-bold text-[#0F5132] hover:underline cursor-pointer"
+                      >
+                        Xem CRM
+                      </button>
+                    </div>
                   </div>
-                  <div className="mt-2.5 space-y-2 max-h-64 overflow-y-auto pr-0.5">
-                    {leads && leads.length > 0 ? leads.slice(0, 4).map((lead) => (
+
+                  <div className="mt-2 space-y-1.5 max-h-72 overflow-y-auto pr-0.5">
+                    {sortedLeads && sortedLeads.length > 0 ? sortedLeads.slice(0, 5).map((lead) => (
                       <div 
                         key={lead.id} 
                         onClick={() => {
                           onTabChange('leads')
                           setIsLeadAlertsOpen(false)
                         }}
-                        className="p-2.5 rounded-lg bg-gray-50 hover:bg-emerald-50/50 border border-gray-200 hover:border-emerald-200 text-xs space-y-1 cursor-pointer transition-all"
+                        className="p-2.5 rounded-lg bg-gray-50/80 hover:bg-emerald-50/70 border border-gray-100 hover:border-emerald-200 text-xs transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-gray-900">{lead.full_name || 'Khách hàng B2B'}</span>
-                          <span className="text-[10px] text-gray-400 font-mono">
-                            {lead.created_at ? new Date(lead.created_at).toLocaleDateString('vi-VN') : 'Mới'}
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-6 h-6 rounded-full bg-[#0F5132]/10 text-[#0F5132] font-bold text-[11px] flex items-center justify-center shrink-0">
+                              {(lead.full_name || 'K').charAt(0).toUpperCase()}
+                            </div>
+                            <span className="font-bold text-gray-900 truncate">{lead.full_name || 'Khách hàng B2B'}</span>
+                          </div>
+                          <span className="text-[10px] text-gray-400 shrink-0 flex items-center gap-1 font-mono">
+                            <Clock className="w-2.5 h-2.5" />
+                            {formatTimeAgo(lead.created_at)}
                           </span>
                         </div>
-                        <div className="text-[11px] text-gray-500 truncate">{lead.company || lead.phone || lead.email}</div>
-                        <div className="text-[11px] text-[#0F5132] font-semibold truncate bg-white px-2 py-0.5 rounded border border-gray-200 inline-block">
-                          {lead.need || 'Tư vấn phân phối B2B'}
+
+                        <div className="mt-1 flex items-center justify-between gap-2 text-[11px] text-gray-500">
+                          <span className="truncate">{lead.company || lead.region || 'Đại lý B2B'}</span>
+                          {lead.phone && (
+                            <div className="flex items-center gap-1 shrink-0 font-mono text-gray-600 bg-white px-1.5 py-0.5 rounded border border-gray-200">
+                              <Phone className="w-2.5 h-2.5 text-emerald-600" />
+                              <span>{lead.phone}</span>
+                              <button
+                                type="button"
+                                onClick={(e) => handleCopyPhone(e, lead.phone)}
+                                className="text-gray-400 hover:text-gray-700 ml-0.5 cursor-pointer"
+                                title="Sao chép SĐT"
+                              >
+                                {copiedPhone === lead.phone ? (
+                                  <Check className="w-2.5 h-2.5 text-emerald-600" />
+                                ) : (
+                                  <Copy className="w-2.5 h-2.5" />
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="mt-1.5 flex items-center justify-between text-[11px]">
+                          <span className="bg-emerald-50 text-[#0F5132] font-medium px-2 py-0.5 rounded border border-emerald-100 truncate max-w-[200px]">
+                            {lead.need || 'Tư vấn phân phối B2B'}
+                          </span>
+                          <span className="text-[10px] text-gray-400 group-hover:text-[#0F5132] flex items-center gap-0.5 font-medium transition-colors">
+                            Mở CRM <ArrowRight className="w-3 h-3" />
+                          </span>
                         </div>
                       </div>
                     )) : (
@@ -441,14 +631,16 @@ export default function AdminLayout({
                       </div>
                     )}
                   </div>
+
                   <button
                     onClick={() => {
                       onTabChange('leads')
                       setIsLeadAlertsOpen(false)
                     }}
-                    className="w-full mt-3 py-2 text-center text-xs font-bold text-[#0F5132] bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors cursor-pointer"
+                    className="w-full mt-2.5 py-2 text-center text-xs font-bold text-[#0F5132] bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    Mở Pipeline CRM Quản lý Leads →
+                    <span>Mở Pipeline CRM Quản lý Leads</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               )}
@@ -470,43 +662,95 @@ export default function AdminLayout({
                 title="Thông báo hệ thống"
               >
                 <Bell className="w-4 h-4" />
-                {hasUnreadAlerts && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-600 ring-2 ring-white" />
+                {hasUnreadNotifs && (
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-600 ring-2 ring-white animate-pulse" />
                 )}
               </button>
 
               {isNotificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-3.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800">Thông Báo Hệ Thống</h4>
-                    {hasUnreadAlerts && (
+                <div className="absolute right-0 mt-2 w-88 bg-white rounded-xl shadow-xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
+                      <Bell className="w-3.5 h-3.5 text-[#0F5132]" />
+                      Thông Báo Hệ Thống
+                    </h4>
+                    {hasUnreadNotifs && (
                       <button
-                        onClick={() => setHasUnreadAlerts(false)}
-                        className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
+                        onClick={handleMarkAllNotifsRead}
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer flex items-center gap-1"
                       >
+                        <CheckCheck className="w-3 h-3 text-emerald-600" />
                         Đã đọc tất cả
                       </button>
                     )}
                   </div>
-                  <div className="mt-2.5 space-y-2">
-                    <div className="p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-xs">
-                      <div className="font-bold text-[#0F5132] flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        Đồng bộ Cơ sở dữ liệu Cloud
-                      </div>
-                      <div className="text-[11px] text-gray-600 mt-1">
-                        Dữ liệu {productsCount} sản phẩm và các danh mục B2B đã được lưu trữ an toàn trên Supabase.
-                      </div>
-                    </div>
-                    <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-xs">
-                      <div className="font-bold text-gray-900 flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#0F5132]" />
-                        Bảo mật Phân quyền & Mã hóa
-                      </div>
-                      <div className="text-[11px] text-gray-600 mt-1">
-                        Cơ chế phân quyền Admin/Sales và mã hóa mật khẩu SHA-256 đang hoạt động chuẩn xác.
-                      </div>
-                    </div>
+
+                  {/* Filter Tabs */}
+                  <div className="flex items-center gap-1 mt-2 p-0.5 bg-gray-100 rounded-lg text-[11px] font-medium text-gray-600">
+                    <button
+                      onClick={() => setNotifTab('all')}
+                      className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
+                        notifTab === 'all' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
+                      }`}
+                    >
+                      Tất cả
+                    </button>
+                    <button
+                      onClick={() => setNotifTab('activity')}
+                      className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
+                        notifTab === 'activity' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
+                      }`}
+                    >
+                      Đơn & Lead
+                    </button>
+                    <button
+                      onClick={() => setNotifTab('system')}
+                      className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
+                        notifTab === 'system' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
+                      }`}
+                    >
+                      Hệ thống
+                    </button>
+                  </div>
+
+                  {/* Notification Items */}
+                  <div className="mt-2 space-y-1.5 max-h-72 overflow-y-auto pr-0.5">
+                    {systemNotifications
+                      .filter(item => notifTab === 'all' || item.category === notifTab)
+                      .map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => {
+                            if (item.targetTab) onTabChange(item.targetTab)
+                            setIsNotificationsOpen(false)
+                          }}
+                          className="p-2.5 rounded-lg bg-gray-50/80 hover:bg-emerald-50/70 border border-gray-100 hover:border-emerald-200 text-xs transition-all cursor-pointer group"
+                        >
+                          <div className="flex items-start gap-2.5">
+                            <div className="p-1.5 rounded-lg bg-white border border-gray-200 shadow-2xs shrink-0 mt-0.5">
+                              {item.type === 'order' && <ShoppingBag className="w-3.5 h-3.5 text-emerald-600" />}
+                              {item.type === 'lead' && <Users className="w-3.5 h-3.5 text-blue-600" />}
+                              {item.type === 'system' && item.id === 'sys-cloud' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                              {item.type === 'system' && item.id === 'sys-security' && <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="font-bold text-gray-900 truncate group-hover:text-[#0F5132] transition-colors">
+                                  {item.title}
+                                </span>
+                                {item.timestamp && (
+                                  <span className="text-[10px] text-gray-400 shrink-0 font-mono">
+                                    {formatTimeAgo(item.timestamp)}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-2">
+                                {item.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
