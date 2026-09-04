@@ -17,8 +17,6 @@ import {
   Handshake,
   Heart,
   Leaf,
-  Building2,
-  BadgeCheck,
 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
@@ -44,37 +42,6 @@ const FACT_SHEET = [
   { label: 'LĨNH VỰC HOẠT ĐỘNG', value: 'FOOD MANUFACTURING & DISTRIBUTION', sub: 'Sản xuất & phân phối thực phẩm chế biến đóng gói' },
   { label: 'MÔ HÌNH HỢP TÁC', value: 'OEM / ODM SOLUTIONS', sub: 'Gia công & thiết kế sản phẩm theo yêu cầu' },
   { label: 'THỊ TRƯỜNG HIỆN DIỆN', value: 'VIETNAM · SOUTH KOREA · TAIWAN', sub: 'Phân phối nội địa & xuất khẩu chính ngạch' },
-]
-
-const OPERATIONAL_METRICS = [
-  {
-    value: '5,000+',
-    unit: 'M²',
-    label: 'QUY MÔ NHÀ XƯỞNG & KHO',
-    desc: 'Phân khu sản xuất, phòng sạch đóng gói tiệt trùng và kho bảo quản tiêu chuẩn.',
-    icon: Factory
-  },
-  {
-    value: '10+',
-    unit: 'TẤN / NGÀY',
-    label: 'CÔNG SUẤT SẤY & ĐÓNG GÓI',
-    desc: 'Dây chuyền sấy giòn đối lưu hiện đại, kiểm soát nhiệt độ và độ ẩm vi sinh nghiêm ngặt.',
-    icon: Package
-  },
-  {
-    value: '63',
-    unit: 'TỈNH THÀNH',
-    label: 'MẠNG LƯỚI PHÂN PHỐI B2B',
-    desc: 'Đối tác của các chuỗi bán lẻ WinMart, Bách Hóa Xanh, GO!, GS25, Circle K và đại lý toàn quốc.',
-    icon: Globe2
-  },
-  {
-    value: '100%',
-    unit: 'KIỂM ĐỊNH',
-    label: 'TIÊU CHUẨN AN TOÀN VỆ SINH',
-    desc: 'Đầy đủ chứng nhận ATTP, mã số vạch GS1 và kiểm nghiệm định kỳ từng lô xuất xưởng.',
-    icon: ShieldCheck
-  }
 ]
 
 const CORE_PILLARS = [
@@ -442,313 +409,172 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            01 — TỔNG QUAN DOANH NGHIỆP · WHO WE ARE (HỒ SƠ NĂNG LỰC & PHÁP NHÂN)
+            01 — TỔNG QUAN DOANH NGHIỆP (THÔNG TIN PHÁP NHÂN & HỒ SƠ DOANH NGHIỆP)
             ========================================================================= */}
-        <section id="tong-quan" className="py-20 sm:py-32 bg-haq-cream/40 border-b border-haq-border relative">
+        <section id="tong-quan" className="py-16 sm:py-24 bg-haq-cream/30 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             
-            {/* Section Header */}
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 sm:mb-16 pb-8 border-b border-haq-border gap-6">
-              <div className="max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-haq-red/10 border border-haq-red/20 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-haq-red animate-pulse" />
-                  <span className="font-heading text-[11px] font-bold text-haq-red uppercase tracking-wider">
-                    01 — TỔNG QUAN DOANH NGHIỆP · WHO WE ARE
-                  </span>
-                </div>
-                <h2 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-haq-ink uppercase tracking-tight leading-[1.05]">
-                  HỒ SƠ PHÁP NHÂN & NĂNG LỰC SẢN XUẤT
-                </h2>
-                <p className="mt-4 text-base sm:text-lg text-haq-text-secondary leading-relaxed font-normal">
-                  Công ty Cổ phần HAQ Hà Nội là doanh nghiệp sản xuất và chế biến thực phẩm đóng gói với định hướng công nghiệp hiện đại, làm chủ công nghệ sấy sạch đối lưu và phát triển chuỗi cung ứng thực phẩm an toàn chuẩn hóa cho thị trường trong nước và quốc tế.
-                </p>
-              </div>
-
-              {/* Legal Identification Tag */}
-              <div className="flex flex-col items-start lg:items-end gap-1.5 p-4 rounded-2xl bg-white border border-haq-border shadow-2xs shrink-0">
-                <div className="flex items-center gap-2 text-haq-red font-heading font-bold text-xs uppercase tracking-wider">
-                  <BadgeCheck className="w-4 h-4 text-haq-red" />
-                  <span>DOANH NGHIỆP CHÍNH QUY</span>
-                </div>
-                <div className="font-mono font-bold text-sm text-haq-ink">
-                  MST: 0109675204
-                </div>
-                <div className="text-[11px] text-haq-text-secondary">
-                  Sở KH & ĐT TP. Hà Nội cấp phép
-                </div>
-              </div>
+            {/* Header: Clean & Grounded Editorial */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
+                01 — TỔNG QUAN DOANH NGHIỆP
+              </span>
+              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight mt-2">
+                CÔNG TY CỔ PHẦN HAQ HÀ NỘI
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed font-normal">
+                Thành lập từ năm 2021 tại Thủ đô Hà Nội, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối thực phẩm chế biến đóng gói. Doanh nghiệp làm chủ công nghệ sấy sạch đối lưu, tập trung vào các dòng bánh tráng sấy giòn, bánh nướng truyền thống và nông sản sấy, phục vụ hệ thống siêu thị, đại lý trên toàn quốc và thị trường xuất khẩu.
+              </p>
             </div>
 
-            {/* Main Content: 2-Column Corporate Dossier */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+            {/* Layout: Bảng Thông Tin Doanh Nghiệp (7 cols) + Ảnh thực tế nhà xưởng (5 cols) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               
-              {/* Left Column (7 cols): Detailed Structured Dossier */}
-              <div className="lg:col-span-7 flex flex-col justify-between gap-6">
-                
-                {/* Dossier Card: Legal & Operations Table */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-haq-border shadow-2xs space-y-6">
-                  <div className="flex items-center justify-between pb-4 border-b border-haq-border">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-haq-cream flex items-center justify-center text-haq-red border border-haq-border">
-                        <Building2 className="w-4.5 h-4.5" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#C89B3C]">
-                          THÔNG TIN DOANH NGHIỆP
-                        </span>
-                        <h4 className="font-heading font-bold text-base text-haq-ink uppercase">
-                          HỒ SƠ PHÁP LÝ & ĐĂNG KÝ KINH DOANH
-                        </h4>
-                      </div>
-                    </div>
-                    <span className="hidden sm:inline-flex px-2.5 py-1 rounded-full text-[10px] font-heading font-bold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      ĐANG HOẠT ĐỘNG
-                    </span>
+              {/* Left Column: Bảng Thông Tin Doanh Nghiệp (Corporate Fact Table) */}
+              <div className="lg:col-span-7 bg-white rounded-2xl border border-haq-border p-6 sm:p-8 shadow-2xs">
+                <h3 className="font-heading font-bold text-base text-haq-ink uppercase pb-4 mb-2 border-b border-haq-border flex items-center justify-between">
+                  <span>HỒ SƠ ĐĂNG KÝ DOANH NGHIỆP</span>
+                  <span className="text-xs font-mono font-normal text-haq-text-secondary">EST. 2021</span>
+                </h3>
+
+                <dl className="divide-y divide-haq-border text-xs sm:text-sm">
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Tên pháp nhân
+                    </dt>
+                    <dd className="sm:col-span-2 font-semibold text-haq-ink">
+                      CÔNG TY CỔ PHẦN HAQ HÀ NỘI
+                    </dd>
                   </div>
 
-                  {/* Fact Details List */}
-                  <div className="space-y-4 text-xs sm:text-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2.5 border-b border-haq-border/60 gap-1">
-                      <span className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider sm:w-1/3">
-                        Tên doanh nghiệp:
-                      </span>
-                      <div className="sm:w-2/3">
-                        <div className="font-heading font-bold text-haq-ink text-sm sm:text-base uppercase">
-                          CÔNG TY CỔ PHẦN HAQ HÀ NỘI
-                        </div>
-                        <div className="text-xs text-haq-text-secondary font-mono">
-                          HAQ FOOD HANOI JOINT STOCK COMPANY
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2.5 border-b border-haq-border/60 gap-1">
-                      <span className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider sm:w-1/3">
-                        Mã số thuế / ĐKKD:
-                      </span>
-                      <div className="sm:w-2/3 flex items-center gap-2">
-                        <span className="font-mono font-bold text-haq-ink bg-haq-cream px-2.5 py-1 rounded border border-haq-border text-sm">
-                          0109675204
-                        </span>
-                        <span className="text-xs text-haq-text-secondary">
-                          Cấp ngày 18/06/2021
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2.5 border-b border-haq-border/60 gap-1">
-                      <span className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider sm:w-1/3">
-                        Trụ sở chính & Vận hành:
-                      </span>
-                      <div className="sm:w-2/3">
-                        <div className="font-medium text-haq-ink">
-                          Thành phố Hà Nội, Việt Nam
-                        </div>
-                        <div className="text-xs text-haq-text-secondary mt-0.5">
-                          Trung tâm R&D nghiên cứu sản phẩm, điều hành sản xuất và logistics.
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2.5 border-b border-haq-border/60 gap-1">
-                      <span className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider sm:w-1/3">
-                        Ngành nghề mũi nhọn:
-                      </span>
-                      <div className="sm:w-2/3">
-                        <div className="font-semibold text-haq-ink">
-                          Sản xuất, Chế biến & Đóng gói Thực phẩm Sạch
-                        </div>
-                        <div className="text-xs text-haq-text-secondary mt-0.5">
-                          Bánh tráng sấy giòn cao cấp, bánh nướng hạnh nhân, bánh sữa dừa, đồ ăn vặt đóng gói và nông sản sấy khô.
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2.5 gap-1">
-                      <span className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider sm:w-1/3">
-                        Mô hình hợp tác B2B:
-                      </span>
-                      <div className="sm:w-2/3">
-                        <div className="flex flex-wrap gap-1.5 mt-0.5">
-                          <span className="px-2.5 py-1 rounded-lg bg-haq-cream text-haq-ink font-heading font-bold text-xs border border-haq-border">
-                            OEM / ODM
-                          </span>
-                          <span className="px-2.5 py-1 rounded-lg bg-haq-cream text-haq-ink font-heading font-bold text-xs border border-haq-border">
-                            Private Label
-                          </span>
-                          <span className="px-2.5 py-1 rounded-lg bg-haq-cream text-haq-ink font-heading font-bold text-xs border border-haq-border">
-                            Phân Phối Sỉ Toàn Quốc
-                          </span>
-                          <span className="px-2.5 py-1 rounded-lg bg-haq-cream text-haq-ink font-heading font-bold text-xs border border-haq-border">
-                            Xuất Khẩu Chính Ngạch
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3 Value Commitments */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                  <div className="p-4 rounded-2xl bg-white border border-haq-border shadow-2xs flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-haq-cream text-haq-red flex items-center justify-center shrink-0 border border-haq-border">
-                      <Leaf className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h5 className="font-heading font-bold text-xs text-haq-ink uppercase">Nông Sản Sạch</h5>
-                      <p className="text-[11px] text-haq-text-secondary mt-0.5 leading-snug">
-                        100% nguyên liệu tự nhiên chọn lọc từ vùng nông nghiệp Việt Nam.
-                      </p>
-                    </div>
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Tên giao dịch quốc tế
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink font-mono text-xs">
+                      HAQ FOOD HANOI JOINT STOCK COMPANY
+                    </dd>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-white border border-haq-border shadow-2xs flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-haq-cream text-haq-red flex items-center justify-center shrink-0 border border-haq-border">
-                      <Factory className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h5 className="font-heading font-bold text-xs text-haq-ink uppercase">Sấy Khép Kín</h5>
-                      <p className="text-[11px] text-haq-text-secondary mt-0.5 leading-snug">
-                        Công nghệ sấy nhiệt đối lưu tiệt trùng, giữ nguyên độ giòn tự nhiên.
-                      </p>
-                    </div>
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Mã số thuế / ĐKKD
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink">
+                      <span className="font-mono font-bold">0109675204</span>
+                      <span className="text-xs text-haq-text-secondary ml-1.5">— Sở Kế hoạch & Đầu tư TP. Hà Nội cấp</span>
+                    </dd>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-white border border-haq-border shadow-2xs flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-haq-cream text-haq-red flex items-center justify-center shrink-0 border border-haq-border">
-                      <Globe2 className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h5 className="font-heading font-bold text-xs text-haq-ink uppercase">Xuất Khẩu Quốc Tế</h5>
-                      <p className="text-[11px] text-haq-text-secondary mt-0.5 leading-snug">
-                        Đáp ứng đầy đủ tiêu chuẩn kiểm định xuất khẩu Hàn Quốc, Đài Loan.
-                      </p>
-                    </div>
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Trụ sở & Vận hành
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink">
+                      Thành phố Hà Nội, Việt Nam
+                    </dd>
                   </div>
-                </div>
 
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Lĩnh vực sản xuất
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink leading-relaxed">
+                      Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh nướng hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.
+                    </dd>
+                  </div>
+
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Hệ thống phân phối
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink leading-relaxed">
+                      Chuỗi bán lẻ hiện đại (WinMart, Circle K, GS25, Bách Hóa Xanh, K-Market...), đại lý phân phối toàn quốc và xuất khẩu (Hàn Quốc, Đài Loan).
+                    </dd>
+                  </div>
+
+                  <div className="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                    <dt className="font-heading font-semibold text-haq-text-secondary uppercase text-xs">
+                      Mô hình hợp tác B2B
+                    </dt>
+                    <dd className="sm:col-span-2 text-haq-ink leading-relaxed">
+                      Cung ứng sỉ, Gia công sản phẩm theo đơn đặt hàng (OEM/ODM), Gia công nhãn hàng riêng (Private Label).
+                    </dd>
+                  </div>
+                </dl>
               </div>
 
-              {/* Right Column (5 cols): Visual Facility Showcase & Executive Statement */}
-              <div className="lg:col-span-5 flex flex-col justify-between gap-6">
-                
-                {/* Visual Card with Real Image */}
-                <div className="relative rounded-3xl overflow-hidden border border-haq-border shadow-md group min-h-[320px] flex-1">
+              {/* Right Column: Ảnh cơ sở sản xuất chân thực + Chú thích báo chí */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="overflow-hidden rounded-2xl border border-haq-border bg-white shadow-2xs">
                   <img
                     src={factoryHqImg}
-                    alt="HAQ FOOD Factory & Infrastructure"
-                    className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-103"
+                    alt="Cơ sở sản xuất và đóng gói của HAQ FOOD tại Hà Nội"
+                    className="w-full h-auto object-cover aspect-4/3"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-[#0C1E15]/40 to-transparent" />
-                  
-                  {/* Floating Live Badge */}
-                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs font-medium">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Hệ thống vận hành đạt chuẩn ATTP</span>
-                    </div>
-                    <span className="font-mono text-xs text-white/80 font-bold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full">
-                      EST. 2021
-                    </span>
-                  </div>
-
-                  {/* Bottom Image Content */}
-                  <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
-                    <div className="font-heading text-xs text-[#C89B3C] font-bold uppercase tracking-wider">
-                      CƠ SỞ VẬT CHẤT & DÂY CHUYỀN
-                    </div>
-                    <h3 className="font-heading font-extrabold text-xl sm:text-2xl uppercase leading-tight">
-                      Sản Xuất Hiện Đại · Nâng Tầm Nông Sản Việt
-                    </h3>
-                    <p className="text-xs text-white/80 line-clamp-2 font-normal">
-                      Quy trình kiểm soát chất lượng từ nông trại đến bàn ăn, đáp ứng trọn vẹn yêu cầu khắt khe của các chuỗi bán lẻ hàng đầu.
-                    </p>
+                  <div className="p-4 bg-haq-cream/50 border-t border-haq-border text-xs text-haq-text-secondary leading-relaxed">
+                    <span className="font-semibold text-haq-ink">Cơ sở sản xuất HAQ FOOD tại Hà Nội:</span> Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đối lưu đến đóng gói bao bì màng nhôm tiệt trùng.
                   </div>
                 </div>
 
-                {/* Executive Quote Card */}
-                <div className="p-6 sm:p-7 rounded-3xl bg-[#0C1E15] text-white border border-[#0C1E15] shadow-sm flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
-                        TRIẾT LÝ DOANH NGHIỆP
-                      </span>
-                      <ShieldCheck className="w-4 h-4 text-[#C89B3C]" />
+                <div className="p-5 rounded-2xl border border-haq-border bg-white shadow-2xs flex items-center justify-between gap-4">
+                  <div>
+                    <div className="font-heading font-bold text-xs uppercase text-haq-ink">
+                      Liên hệ hợp tác phân phối & OEM
                     </div>
-                    <blockquote className="text-sm sm:text-base font-serif italic text-white/90 leading-relaxed">
-                      "Chúng tôi không chỉ sản xuất món ăn vặt tiện lợi, mà kiến tạo giải pháp thực phẩm an toàn, chuẩn vị truyền thống và bền vững cho chuỗi cung ứng B2B."
-                    </blockquote>
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between">
-                    <div>
-                      <div className="font-heading font-bold text-xs uppercase tracking-wider text-white">
-                        BAN ĐIỀU HÀNH HAQ FOOD
-                      </div>
-                      <div className="text-[11px] text-white/60">
-                        HAQ FOOD HANOI JSC · VIETNAM
-                      </div>
+                    <div className="text-xs text-haq-text-secondary mt-0.5">
+                      Tiếp nhận yêu cầu báo giá sỉ, hợp đồng gia công và gửi mẫu thử.
                     </div>
-
-                    <Link
-                      to="/lien-he"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-haq-red hover:bg-haq-red/90 text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-xs"
-                    >
-                      <span>Hợp Tác B2B</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
                   </div>
+                  <Link
+                    to="/lien-he"
+                    className="px-4 py-2 bg-haq-red hover:bg-haq-red/90 text-white font-heading font-bold text-xs uppercase rounded-xl transition-colors shrink-0 cursor-pointer shadow-2xs"
+                  >
+                    Liên hệ
+                  </Link>
                 </div>
-
               </div>
 
             </div>
 
-            {/* Industrial Scale Metrics Bar (4 Big Impact Counters) */}
+            {/* 3 Trụ Cột Năng Lực Cốt Lõi (Thực tế, Ngôn ngữ Sản xuất) */}
             <div className="mt-12 sm:mt-16 pt-10 border-t border-haq-border">
-              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
-                  QUY MÔ & NĂNG LỰC CUNG ỨNG CÔNG NGHIỆP
-                </span>
-                <span className="text-xs text-haq-text-secondary font-mono">
-                  DỮ LIỆU VẬN HÀNH DOANH NGHIỆP THỰC TẾ
-                </span>
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <div className="p-6 rounded-2xl bg-white border border-haq-border shadow-2xs space-y-2">
+                  <div className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                    01 · CÔNG NGHỆ SẢN XUẤT
+                  </div>
+                  <h4 className="font-heading font-bold text-base text-haq-ink uppercase">
+                    Sấy Sạch Đối Lưu Khép Kín
+                  </h4>
+                  <p className="text-xs text-haq-text-secondary leading-relaxed">
+                    Ứng dụng công nghệ sấy tuần hoàn nhiệt kín, kiểm soát chính xác nhiệt độ và độ ẩm, giữ trọn độ giòn xốp tự nhiên mà không tồn dư dầu chiên.
+                  </p>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                {OPERATIONAL_METRICS.map((metric, i) => {
-                  const Icon = metric.icon
-                  return (
-                    <div
-                      key={i}
-                      className="p-6 rounded-2xl bg-white border border-haq-border shadow-2xs hover:border-haq-red/50 hover:shadow-md transition-all group flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="font-heading text-[10px] sm:text-[11px] font-bold text-haq-text-secondary uppercase tracking-wider">
-                            {metric.label}
-                          </span>
-                          <div className="w-8 h-8 rounded-lg bg-haq-cream text-haq-red flex items-center justify-center border border-haq-border group-hover:border-haq-red/40 transition-colors">
-                            <Icon className="w-4 h-4" />
-                          </div>
-                        </div>
+                <div className="p-6 rounded-2xl bg-white border border-haq-border shadow-2xs space-y-2">
+                  <div className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                    02 · NGUỒN NGUYÊN LIỆU
+                  </div>
+                  <h4 className="font-heading font-bold text-base text-haq-ink uppercase">
+                    Liên Kết Nông Sản Bản Địa
+                  </h4>
+                  <p className="text-xs text-haq-text-secondary leading-relaxed">
+                    Ưu tiên kết nối và thu mua nguồn nông sản Việt Nam sạch, rõ ràng nguồn gốc xuất xứ, kiểm nghiệm định kỳ các chỉ tiêu vi sinh và an toàn thực phẩm.
+                  </p>
+                </div>
 
-                        <div className="flex items-baseline gap-1.5 mt-1">
-                          <span className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink group-hover:text-haq-red transition-colors tracking-tight">
-                            {metric.value}
-                          </span>
-                          <span className="font-heading font-bold text-xs sm:text-sm text-[#C89B3C] uppercase">
-                            {metric.unit}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 pt-3 border-t border-haq-border/60 text-xs text-haq-text-secondary leading-relaxed font-normal">
-                        {metric.desc}
-                      </div>
-                    </div>
-                  )
-                })}
+                <div className="p-6 rounded-2xl bg-white border border-haq-border shadow-2xs space-y-2">
+                  <div className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                    03 · NĂNG LỰC CUNG ỨNG B2B
+                  </div>
+                  <h4 className="font-heading font-bold text-base text-haq-ink uppercase">
+                    Gia Công OEM / ODM Linh Hoạt
+                  </h4>
+                  <p className="text-xs text-haq-text-secondary leading-relaxed">
+                    Hỗ trợ đối tác chuỗi bán lẻ và xuất khẩu từ khâu R&D phát triển hương vị, gửi mẫu thử, thiết kế quy cách đóng gói đến hoàn tất hồ sơ tự công bố.
+                  </p>
+                </div>
               </div>
             </div>
 
