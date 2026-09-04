@@ -12,28 +12,7 @@ import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterPr
 import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
-
-const ABOUT_SUBPAGES = [
-  {
-    title: 'GIỚI THIỆU TỔNG QUAN',
-    desc: 'Tuyên ngôn thương hiệu, Tầm nhìn chiến lược, Sứ mệnh & 5 Giá trị văn hóa cốt lõi.',
-    path: '/gioi-thieu',
-    badge: 'TỔNG QUAN',
-  },
-  {
-    title: 'LỊCH SỬ & DẤU MỐC',
-    desc: 'Dấu mốc phát triển 2021 — 2026, các bước ngoặt công nghệ & xuất khẩu châu Á.',
-    path: '/lich-su',
-    badge: '2021 - 2026',
-  },
-  {
-    title: 'CƠ SỞ SẢN XUẤT & CHẤT LƯỢNG',
-    desc: 'Dây chuyền sấy giòn khép kín, phòng sạch, tiêu chuẩn ISO 22000 & HACCP, giải pháp OEM/ODM.',
-    path: '/nang-luc',
-    badge: 'ISO & HACCP',
-  },
-]
-
+import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 
 export default function StickyNav() {
   const { t, language, setLanguage } = useLanguage()
@@ -49,6 +28,73 @@ export default function StickyNav() {
   const timeoutRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
+
+  const aboutSubpages = useMemo(() => {
+    if (language === 'en') {
+      return [
+        {
+          title: 'CORPORATE OVERVIEW',
+          desc: 'Brand declaration, strategic vision, mission & 5 core cultural values.',
+          path: '/gioi-thieu',
+          badge: 'OVERVIEW',
+        },
+        {
+          title: 'HISTORY & MILESTONES',
+          desc: 'Milestones 2021 — 2026, technology turning points & Asian export growth.',
+          path: '/lich-su',
+          badge: '2021 - 2026',
+        },
+        {
+          title: 'MANUFACTURING & QUALITY',
+          desc: 'Closed convective drying line, cleanroom, ISO 22000 & HACCP, OEM/ODM solutions.',
+          path: '/nang-luc',
+          badge: 'ISO & HACCP',
+        },
+      ]
+    }
+    if (language === 'ko') {
+      return [
+        {
+          title: '기업 개요',
+          desc: '브랜드 선언, 전략적 비전, 사명 및 5대 핵심 문화 가치.',
+          path: '/gioi-thieu',
+          badge: '개요',
+        },
+        {
+          title: '연혁 및 주요 성과',
+          desc: '2021 — 2026 성장 발자취, 기술 혁신 및 아시아 시장 수출 확대.',
+          path: '/lich-su',
+          badge: '2021 - 2026',
+        },
+        {
+          title: '제조 역량 및 설비',
+          desc: '밀폐식 대류 건조 라인, 클린룸, ISO 22000 & HACCP 인증, OEM/ODM 맞춤 생산.',
+          path: '/nang-luc',
+          badge: 'ISO & HACCP',
+        },
+      ]
+    }
+    return [
+      {
+        title: 'GIỚI THIỆU TỔNG QUAN',
+        desc: 'Tuyên ngôn thương hiệu, Tầm nhìn chiến lược, Sứ mệnh & 5 Giá trị văn hóa cốt lõi.',
+        path: '/gioi-thieu',
+        badge: 'TỔNG QUAN',
+      },
+      {
+        title: 'LỊCH SỬ & DẤU MỐC',
+        desc: 'Dấu mốc phát triển 2021 — 2026, các bước ngoặt công nghệ & xuất khẩu châu Á.',
+        path: '/lich-su',
+        badge: '2021 - 2026',
+      },
+      {
+        title: 'CƠ SỞ SẢN XUẤT & CHẤT LƯỢNG',
+        desc: 'Dây chuyền sấy giòn khép kín, phòng sạch, tiêu chuẩn ISO 22000 & HACCP, giải pháp OEM/ODM.',
+        path: '/nang-luc',
+        badge: 'ISO & HACCP',
+      },
+    ]
+  }, [language])
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -67,8 +113,15 @@ export default function StickyNav() {
   }, [])
 
   const categoryTree = useMemo(() => {
-    return buildCategoryTree(dbCategories)
-  }, [dbCategories])
+    const raw = buildCategoryTree(dbCategories)
+    return raw.map(root => {
+      const locRoot = getLocalizedCategory(root, language)
+      if (locRoot.children && locRoot.children.length > 0) {
+        locRoot.children = locRoot.children.map(c => getLocalizedCategory(c, language))
+      }
+      return locRoot
+    })
+  }, [dbCategories, language])
 
   useEffect(() => {
     if (categoryTree && categoryTree.length > 1 && !hoveredCategory) {
@@ -193,12 +246,12 @@ export default function StickyNav() {
                 className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-xl border border-haq-border p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
-                  <span>HỒ SƠ DOANH NGHIỆP HAQ FOOD</span>
-                  <span className="text-haq-text-secondary font-normal text-[11px]">3 CHUYÊN MỤC</span>
+                  <span>{language === 'en' ? 'HAQ FOOD CORPORATE PROFILE' : language === 'ko' ? 'HAQ FOOD 기업 프로필' : 'HỒ SƠ DOANH NGHIỆP HAQ FOOD'}</span>
+                  <span className="text-haq-text-secondary font-normal text-[11px]">{language === 'en' ? '3 SECTIONS' : language === 'ko' ? '3개 항목' : '3 CHUYÊN MỤC'}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 pt-1">
-                  {ABOUT_SUBPAGES.map((sub, idx) => {
+                  {aboutSubpages.map((sub, idx) => {
                     const isSubActive = location.pathname === sub.path
                     return (
                       <Link
@@ -271,7 +324,7 @@ export default function StickyNav() {
                     <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-haq-green" />
-                        <span>DANH MỤC SẢN PHẨM</span>
+                        <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
                       </div>
                       <span className="text-[10px] text-haq-text-secondary font-normal">HAQ FOOD CATALOG</span>
                     </div>
@@ -338,7 +391,7 @@ export default function StickyNav() {
                         onClick={() => setActiveMenu(null)}
                         className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors"
                       >
-                        <span>Xem tất cả sản phẩm →</span>
+                        <span>{language === 'en' ? 'View all products →' : language === 'ko' ? '전체 제품 보기 →' : 'Xem tất cả sản phẩm →'}</span>
                       </Link>
                     </div>
                   </div>
@@ -346,9 +399,9 @@ export default function StickyNav() {
                   {/* Right Column: Dynamic Product Grid */}
                   <div className="col-span-5 bg-haq-sage rounded-2xl p-5 border border-haq-border flex flex-col">
                     <div className="text-[11px] font-heading font-bold tracking-wide text-haq-text-secondary uppercase mb-4 flex items-center justify-between">
-                      <span>{hoveredCategory?.name || 'SẢN PHẨM'}</span>
+                      <span>{hoveredCategory?.name || (language === 'en' ? 'PRODUCTS' : language === 'ko' ? '제품' : 'SẢN PHẨM')}</span>
                       <span className="text-[10px] font-normal text-haq-text-secondary/70">
-                        {filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree).length} sản phẩm
+                        {filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree).length} {language === 'en' ? 'products' : language === 'ko' ? '개 제품' : 'sản phẩm'}
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] scrollbar-thin">
@@ -357,11 +410,12 @@ export default function StickyNav() {
                         if (filtered.length === 0) {
                           return (
                             <div className="col-span-2 py-8 text-center text-xs text-haq-text-secondary">
-                              Đang cập nhật sản phẩm...
+                              {language === 'en' ? 'Updating products...' : language === 'ko' ? '제품 업데이트 중...' : 'Đang cập nhật sản phẩm...'}
                             </div>
                           )
                         }
                         return filtered.slice(0, 8).map((p) => {
+                          const localizedProd = getLocalizedProduct(p, language)
                           const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
                           return (
                             <Link
@@ -373,7 +427,7 @@ export default function StickyNav() {
                               <div className="w-16 h-16 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
                                 <img
                                   src={imgSrc}
-                                  alt={p.name}
+                                  alt={localizedProd.name}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                   onError={(e) => {
                                     e.currentTarget.onerror = null
@@ -382,7 +436,7 @@ export default function StickyNav() {
                                 />
                               </div>
                               <span className="text-[11px] font-heading font-medium text-haq-ink text-center line-clamp-2">
-                                {p.name}
+                                {localizedProd.name}
                               </span>
                             </Link>
                           )
@@ -462,7 +516,7 @@ export default function StickyNav() {
               onClick={() => toggleMobileAccordion('ve-chung-toi')}
               className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-bold text-[#16A34A] uppercase tracking-tight"
             >
-              <span>VỀ CHÚNG TÔI</span>
+              <span>{t('nav.about', 'VỀ CHÚNG TÔI')}</span>
               <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 've-chung-toi' ? 'rotate-180' : ''}`} />
             </button>
             <div
@@ -471,7 +525,7 @@ export default function StickyNav() {
               }`}
             >
               <div className="pl-4 space-y-3 py-1 text-xs text-haq-text-secondary">
-                {ABOUT_SUBPAGES.map((sub, idx) => (
+                {aboutSubpages.map((sub, idx) => (
                   <Link
                     key={idx}
                     to={sub.path}
@@ -492,7 +546,7 @@ export default function StickyNav() {
               onClick={() => toggleMobileAccordion('san-pham')}
               className="w-full flex items-center justify-between py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight"
             >
-              <span>DANH MỤC SẢN PHẨM</span>
+              <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
               <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180 text-[#16A34A]' : ''}`} />
             </button>
             <div
@@ -531,7 +585,7 @@ export default function StickyNav() {
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-2 py-2 font-bold text-[#16A34A] pt-3 border-t border-haq-border w-full uppercase tracking-wider text-[11px]"
                 >
-                  <span>XEM TẤT CẢ SẢN PHẨM</span>
+                  <span>{language === 'en' ? 'VIEW ALL PRODUCTS' : language === 'ko' ? '전체 제품 보기' : 'XEM TẤT CẢ SẢN PHẨM'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
@@ -545,7 +599,7 @@ export default function StickyNav() {
               onClick={() => setMobileOpen(false)}
               className="block py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight"
             >
-              TIN TỨC & SỰ KIỆN
+              {language === 'en' ? 'NEWS & EVENTS' : language === 'ko' ? '뉴스 및 이벤트' : 'TIN TỨC & SỰ KIỆN'}
             </Link>
           </div>
 

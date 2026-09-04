@@ -196,18 +196,18 @@ export default function Footer() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase">
                 <Building2 className="w-4 h-4 text-[#16A34A]" />
-                <span>THÔNG TIN PHÁP LÝ DOANH NGHIỆP</span>
+                <span>{t('home.footer.legal_badge', 'THÔNG TIN PHÁP LÝ DOANH NGHIỆP')}</span>
               </div>
               <h3 className="font-heading font-bold text-lg sm:text-xl text-white tracking-wide">
-                CÔNG TY CỔ PHẦN HAQ HÀ NỘI
+                {t('home.footer.legal_company', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
               </h3>
               <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#9BB3A3]">
                 <div className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#16A34A] shrink-0" />
-                  <span>GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP</span>
+                  <span>{t('home.footer.legal_cert', 'GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP')}</span>
                 </div>
                 <span className="text-white/30 hidden sm:inline">•</span>
-                <span>Cơ quan cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội</span>
+                <span>{t('home.footer.legal_authority', 'Cơ quan cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội')}</span>
               </div>
             </div>
 
@@ -219,7 +219,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all border border-white/15 hover:border-[#16A34A] shadow-xs"
               >
-                <span>Tra cứu thông tin doanh nghiệp</span>
+                <span>{t('home.footer.legal_lookup', 'Tra cứu thông tin doanh nghiệp')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -233,7 +233,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase flex items-center gap-2">
               <FileCheck className="w-4 h-4 text-[#16A34A]" />
-              <span>CHÍNH SÁCH & PHÁP LÝ:</span>
+              <span>{t('home.footer.policy_label', 'CHÍNH SÁCH & PHÁP LÝ:')}</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-xs sm:text-sm font-heading font-medium text-white/80">
@@ -242,7 +242,7 @@ export default function Footer() {
                 className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">01</span>
-                <span>Chính sách đổi trả & hoàn tiền</span>
+                <span>{t('home.footer.policy_refund', 'Chính sách đổi trả & hoàn tiền')}</span>
                 <span className="text-white/40">→</span>
               </Link>
               <span className="text-white/20 hidden md:inline">|</span>
@@ -251,7 +251,7 @@ export default function Footer() {
                 className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">02</span>
-                <span>Chính sách bảo mật</span>
+                <span>{t('home.footer.policy_privacy', 'Chính sách bảo mật')}</span>
                 <span className="text-white/40">→</span>
               </Link>
               <span className="text-white/20 hidden md:inline">|</span>
@@ -260,7 +260,7 @@ export default function Footer() {
                 className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">03</span>
-                <span>Điều khoản sử dụng</span>
+                <span>{t('home.footer.policy_terms', 'Điều khoản sử dụng')}</span>
                 <span className="text-white/40">→</span>
               </Link>
             </div>
@@ -272,7 +272,7 @@ export default function Footer() {
         ========================================================================= */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9BB3A3]">
           <div>
-            © {currentYear} CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.
+            © {currentYear} {t('home.footer.copyright_line', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.')}
           </div>
 
           <div className="flex items-center gap-4 text-xs font-heading font-medium">

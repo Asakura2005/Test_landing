@@ -8,6 +8,8 @@ import {
 } from "./provinceCodes";
 import { SpecialtyData, ProvinceSpecialty, Product, RegionName } from "./types";
 import { provinceCentroids } from "./mapData";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedProvince, getLocalizedProduct } from "../../utils/i18nData";
 
 export interface HaqSpecialtyMapDataResult {
   specialties: SpecialtyData;
@@ -20,6 +22,7 @@ export interface HaqSpecialtyMapDataResult {
 export function useHaqSpecialtyMapData(
   initialProducts?: any[]
 ): HaqSpecialtyMapDataResult {
+  const { language } = useLanguage();
   const [rawProducts, setRawProducts] = useState<any[]>(initialProducts || []);
   const [rawProvinces, setRawProvinces] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,7 +55,7 @@ export function useHaqSpecialtyMapData(
     fetchData();
   }, [fetchData]);
 
-  // Transform and group products by Canonical Province Code
+  // Transform and group products by Canonical Province Code with localization
   const { specialties, hasSpecialtiesMap } = useMemo(() => {
     const specialtyMap: SpecialtyData = {};
     const hasMap: Record<string, boolean> = {};
@@ -62,17 +65,27 @@ export function useHaqSpecialtyMapData(
       const dbProv = rawProvinces.find((p) => p.code === code);
       const fallbackMeta = CANONICAL_PROVINCE_MAP[code] || provinceCentroids[code];
 
-      const provinceName = dbProv?.name || fallbackMeta?.name || code;
-      const regionName = (dbProv?.region || fallbackMeta?.region || "Miền Nam") as RegionName;
+      const rawProvObj = {
+        code,
+        name: dbProv?.name || fallbackMeta?.name || code,
+        region: dbProv?.region || fallbackMeta?.region || "Miền Nam",
+        short_description: dbProv?.short_description,
+        description: dbProv?.description,
+        image: dbProv?.image,
+      };
+      const locProv = getLocalizedProvince(rawProvObj, language);
+
+      const provinceName = locProv.name;
+      const regionName = (locProv.region || "Miền Nam") as RegionName;
 
       specialtyMap[code] = {
         province: code,
         provinceLabel: provinceName,
         region: regionName,
-        tag: `Đặc sản ${provinceName}`,
-        shortDescription: dbProv?.short_description || undefined,
-        description: dbProv?.description || undefined,
-        image: dbProv?.image || undefined,
+        tag: language === 'en' ? `Specialty of ${provinceName}` : language === 'ko' ? `${provinceName} 특산품` : `Đặc sản ${provinceName}`,
+        shortDescription: locProv.short_description || undefined,
+        description: locProv.description || undefined,
+        image: locProv.image || undefined,
         products: [],
       };
       hasMap[code] = false;
@@ -82,14 +95,18 @@ export function useHaqSpecialtyMapData(
     for (const dbProv of rawProvinces) {
       const code = dbProv.code;
       if (!specialtyMap[code]) {
+        const locProv = getLocalizedProvince(dbProv, language);
+        const provinceName = locProv.name;
+        const regionName = (locProv.region || "Miền Nam") as RegionName;
+
         specialtyMap[code] = {
           province: code,
-          provinceLabel: dbProv.name,
-          region: (dbProv.region || "Miền Nam") as RegionName,
-          tag: `Đặc sản ${dbProv.name}`,
-          shortDescription: dbProv.short_description || undefined,
-          description: dbProv.description || undefined,
-          image: dbProv.image || undefined,
+          provinceLabel: provinceName,
+          region: regionName,
+          tag: language === 'en' ? `Specialty of ${provinceName}` : language === 'ko' ? `${provinceName} 특산품` : `Đặc sản ${provinceName}`,
+          shortDescription: locProv.short_description || undefined,
+          description: locProv.description || undefined,
+          image: locProv.image || undefined,
           products: [],
         };
         hasMap[code] = false;
@@ -107,31 +124,38 @@ export function useHaqSpecialtyMapData(
         }
 
         const currentProv = specialtyMap[provinceCode];
+        const locItem = getLocalizedProduct(item, language);
 
         // Resolve product image from Supabase
-        let imgUrl = item.image_url || "";
-        if (!imgUrl && item.images && Array.isArray(item.images) && item.images.length > 0) {
-          imgUrl = item.images[0];
-        } else if (!imgUrl && item.variants && Array.isArray(item.variants) && item.variants.length > 0 && item.variants[0].img) {
-          imgUrl = item.variants[0].img;
+        let imgUrl = locItem.image_url || "";
+        if (!imgUrl && locItem.images && Array.isArray(locItem.images) && locItem.images.length > 0) {
+          imgUrl = locItem.images[0];
+        } else if (!imgUrl && locItem.variants && Array.isArray(locItem.variants) && locItem.variants.length > 0 && locItem.variants[0].img) {
+          imgUrl = locItem.variants[0].img;
         }
 
+        const fallbackDesc = language === 'en'
+          ? "Premium specialty products carefully selected by HAQ FOOD from fresh local ingredients."
+          : language === 'ko'
+          ? "신선한 현지 원료로 HAQ FOOD가 엄선한 프리미엄 특산품입니다."
+          : "Sản phẩm đặc sản cao cấp được HAQ FOOD tuyển chọn kỹ lưỡng từ nguồn nguyên liệu tươi ngon tại địa phương.";
+
         const productModel: Product = {
-          name: item.name || "Sản phẩm HAQ FOOD",
-          category: item.categories?.name || item.category_name || item.category || "ĐẶC SẢN NGUYÊN BẢN",
+          name: locItem.name || "HAQ FOOD",
+          category: locItem.categories?.name || locItem.category_name || locItem.category || (language === 'en' ? 'AUTHENTIC SPECIALTY' : language === 'ko' ? '정통 특산품' : 'ĐẶC SẢN NGUYÊN BẢN'),
           description:
-            item.description ||
-            item.short_description ||
-            "Sản phẩm đặc sản cao cấp được HAQ FOOD tuyển chọn kỹ lưỡng từ nguồn nguyên liệu tươi ngon tại địa phương.",
+            locItem.description ||
+            locItem.short_description ||
+            fallbackDesc,
           image: imgUrl,
-          imageAlt: item.name || currentProv.provinceLabel,
+          imageAlt: locItem.name || currentProv.provinceLabel,
           region: currentProv.region,
-          productId: item.id || item.slug,
-          href: `/san-pham/${item.slug || item.id}`,
+          productId: locItem.id || locItem.slug,
+          href: `/san-pham/${locItem.slug || locItem.id}`,
         };
 
         // If pinned, unshift to first position; else push
-        if (item.is_pinned) {
+        if (locItem.is_pinned) {
           currentProv.products.unshift(productModel);
         } else {
           currentProv.products.push(productModel);
@@ -141,7 +165,7 @@ export function useHaqSpecialtyMapData(
     }
 
     return { specialties: specialtyMap, hasSpecialtiesMap: hasMap };
-  }, [rawProducts, rawProvinces]);
+  }, [rawProducts, rawProvinces, language]);
 
   return {
     specialties,

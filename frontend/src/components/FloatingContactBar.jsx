@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Phone, MessageCircle, Mail, Globe, Sparkles, X, Plus, Share2 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 export default function FloatingContactBar() {
+  const { language } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -12,14 +14,14 @@ export default function FloatingContactBar() {
       icon: Phone,
       label: 'Hotline: 024 23 23 56 56',
       color: 'bg-haq-green-dark',
-      title: 'Gọi Hotline (024 23 23 56 56)',
+      title: language === 'en' ? 'Call Hotline (024 23 23 56 56)' : language === 'ko' ? '핫라인 전화 (024 23 23 56 56)' : 'Gọi Hotline (024 23 23 56 56)',
     },
     {
       href: 'https://zalo.me/1361851474644984696',
       icon: null,
-      label: 'Zalo OA: HAQ Hà Nội',
+      label: language === 'en' ? 'Zalo OA: HAQ Hanoi' : language === 'ko' ? 'Zalo OA: HAQ 하노이' : 'Zalo OA: HAQ Hà Nội',
       color: 'bg-[#0068FF]',
-      title: 'Chat Zalo Doanh Nghiệp (HAQ Hà Nội)',
+      title: language === 'en' ? 'Chat Zalo Business (HAQ Hanoi)' : language === 'ko' ? 'Zalo 비즈니스 채팅 (HAQ 하노이)' : 'Chat Zalo Doanh Nghiệp (HAQ Hà Nội)',
       text: 'Zalo',
     },
     {
@@ -35,21 +37,21 @@ export default function FloatingContactBar() {
       icon: Mail,
       label: 'info@haq.com.vn',
       color: 'bg-[#16A34A]',
-      title: 'Gửi Email hợp tác',
+      title: language === 'en' ? 'Email inquiry' : language === 'ko' ? '제휴 이메일 발송' : 'Gửi Email hợp tác',
     },
     {
       href: '/lien-he?type=oem',
       icon: Sparkles,
-      label: 'Hợp tác B2B / OEM',
+      label: language === 'en' ? 'B2B / OEM Partnership' : language === 'ko' ? 'B2B / OEM 제휴 문의' : 'Hợp tác B2B / OEM',
       color: 'bg-[#0C1E15]',
-      title: 'Hợp tác B2B & OEM/ODM',
+      title: language === 'en' ? 'B2B & OEM/ODM Inquiries' : language === 'ko' ? 'B2B 및 OEM/ODM 상담' : 'Hợp tác B2B & OEM/ODM',
       extraClass: 'border border-white/20 text-[#C89B3C]',
     },
   ]
 
   return (
     <aside
-      aria-label="Liên hệ nhanh"
+      aria-label={language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : 'Liên hệ nhanh'}
       className="fixed right-3 sm:right-4 top-1/2 -translate-y-1/2 md:top-1/2 z-50 flex flex-col items-center gap-2.5"
     >
       {/* Desktop View (Always Visible) */}

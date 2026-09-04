@@ -4,6 +4,7 @@ import { Calendar, User, ArrowRight, Newspaper, Search, Hash, X, Globe, ChevronR
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { getNews } from '../services/supabase'
+import { useLanguage } from '../context/LanguageContext'
 
 const CATEGORIES = [
   'Tất cả',
@@ -15,7 +16,18 @@ const CATEGORIES = [
   'Sản phẩm mới'
 ]
 
+const CATEGORY_MAP = {
+  'Tất cả': { vi: 'Tất cả', en: 'All News', ko: '전체 소식' },
+  'Thông cáo báo chí': { vi: 'Thông cáo báo chí', en: 'Press Release', ko: '보도자료' },
+  'Thị trường & Xuất khẩu': { vi: 'Thị trường & Xuất khẩu', en: 'Market & Export', ko: '시장 및 수출' },
+  'Sự kiện & Hoạt động': { vi: 'Sự kiện & Hoạt động', en: 'Events & Activities', ko: '이벤트 및 활동' },
+  'Chứng nhận & Tiêu chuẩn': { vi: 'Chứng nhận & Tiêu chuẩn', en: 'Certifications & Standards', ko: '인증 및 표준' },
+  'Chính sách Đại lý': { vi: 'Chính sách Đại lý', en: 'Dealer Policy', ko: '대리점 정책' },
+  'Sản phẩm mới': { vi: 'Sản phẩm mới', en: 'New Products', ko: '신제품' },
+}
+
 export default function NewsPage() {
+  const { language } = useLanguage()
   const [news, setNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('Tất cả')
@@ -86,10 +98,14 @@ export default function NewsPage() {
           {/* Header Title */}
           <div className="mb-8 md:mb-10 text-left">
             <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl tracking-tight uppercase text-white">
-              Tin Tức & Truyền Thông
+              {language === 'en' ? 'News & Media' : language === 'ko' ? '뉴스 및 미디어' : 'Tin Tức & Truyền Thông'}
             </h1>
             <p className="mt-2 text-sm sm:text-base text-white/70 max-w-2xl font-normal">
-              Cập nhật tin tức thị trường, hoạt động doanh nghiệp và câu chuyện nông sản HAQ FOOD.
+              {language === 'en'
+                ? 'Market updates, corporate insights, and HAQ FOOD agricultural stories.'
+                : language === 'ko'
+                ? '시장 동향, 기업 소식 및 HAQ FOOD 농식품 이야기를 전해드립니다.'
+                : 'Cập nhật tin tức thị trường, hoạt động doanh nghiệp và câu chuyện nông sản HAQ FOOD.'}
             </p>
           </div>
 
@@ -115,14 +131,17 @@ export default function NewsPage() {
                   <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end text-left">
                     <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-white/80 uppercase mb-2">
                       <span className="bg-haq-red text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
-                        {heroMain.category}
+                        {CATEGORY_MAP[heroMain.category]?.[language] || heroMain.category}
                       </span>
                       <span>•</span>
-                      <span>{new Date(heroMain.published_at).toLocaleDateString('vi-VN')}</span>
+                      <span>{new Date(heroMain.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}</span>
                       {heroMain.source_name && (
                         <>
                           <span>•</span>
-                          <span className="text-amber-400 font-semibold">Nguồn: {heroMain.source_name}</span>
+                          <span className="text-amber-400 font-semibold">
+                            {language === 'en' ? 'Source: ' : language === 'ko' ? '출처: ' : 'Nguồn: '}
+                            {heroMain.source_name}
+                          </span>
                         </>
                       )}
                     </div>
@@ -132,7 +151,7 @@ export default function NewsPage() {
                     </h2>
 
                     <div className="inline-flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider group-hover:text-haq-red group-hover:translate-x-1 transition-all">
-                      <span>Xem thêm</span>
+                      <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
                       <ChevronRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -160,13 +179,13 @@ export default function NewsPage() {
                       {/* Thông tin bên phải */}
                       <div className="min-w-0 flex-1 text-left flex flex-col justify-center">
                         <div className="text-[10px] text-white/60 font-mono uppercase mb-1">
-                          {new Date(item.published_at).toLocaleDateString('vi-VN')} • {item.category}
+                          {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')} • {CATEGORY_MAP[item.category]?.[language] || item.category}
                         </div>
                         <h3 className="font-heading font-bold text-xs sm:text-sm text-white line-clamp-2 leading-snug group-hover:text-haq-red transition-colors">
                           {item.title}
                         </h3>
                         <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-haq-red uppercase tracking-wider group-hover:underline">
-                          <span>Xem thêm</span>
+                          <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
                           <ChevronRight className="w-3 h-3" />
                         </div>
                       </div>
@@ -195,6 +214,7 @@ export default function NewsPage() {
             <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 md:gap-4 max-w-5xl mx-auto">
               {CATEGORIES.map(cat => {
                 const isActive = activeCategory === cat
+                const label = CATEGORY_MAP[cat]?.[language] || cat
                 return (
                   <button
                     key={cat}
@@ -208,7 +228,7 @@ export default function NewsPage() {
                         : 'bg-white text-haq-red border border-haq-red/40 hover:bg-haq-red/5 hover:border-haq-red'
                     }`}
                   >
-                    {cat}
+                    {label}
                   </button>
                 )
               })}
@@ -221,7 +241,13 @@ export default function NewsPage() {
                   type="text" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm bài viết theo từ khóa..."
+                  placeholder={
+                    language === 'en'
+                      ? 'Search articles by keywords...'
+                      : language === 'ko'
+                      ? '키워드로 기사 검색...'
+                      : 'Tìm kiếm bài viết theo từ khóa...'
+                  }
                   className="w-full pl-10 pr-9 py-2.5 bg-white border border-haq-border rounded-full text-xs sm:text-sm focus:outline-none focus:border-haq-red shadow-xs transition-colors placeholder:text-gray-400"
                 />
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -241,19 +267,27 @@ export default function NewsPage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 text-haq-text-secondary">
               <div className="w-10 h-10 border-4 border-haq-red/20 border-t-haq-red rounded-full animate-spin mb-4" />
-              <p className="font-mono text-xs uppercase tracking-widest">Đang tải tin tức...</p>
+              <p className="font-mono text-xs uppercase tracking-widest">
+                {language === 'en' ? 'Loading news...' : language === 'ko' ? '뉴스 불러오는 중...' : 'Đang tải tin tức...'}
+              </p>
             </div>
           ) : news.length === 0 ? (
             <div className="bg-white border border-haq-border rounded-3xl p-12 md:p-16 text-center shadow-xs max-w-2xl mx-auto">
               <div className="w-16 h-16 bg-haq-cream rounded-full flex items-center justify-center mx-auto mb-6">
                 <Newspaper className="w-8 h-8 text-haq-text-secondary" />
               </div>
-              <h2 className="text-xl md:text-2xl font-heading font-black text-haq-ink mb-3 uppercase">Chưa có bài viết</h2>
+              <h2 className="text-xl md:text-2xl font-heading font-black text-haq-ink mb-3 uppercase">
+                {language === 'en' ? 'No Articles Yet' : language === 'ko' ? '등록된 기사가 없습니다' : 'Chưa có bài viết'}
+              </h2>
               <p className="text-haq-text-secondary text-sm leading-relaxed max-w-md mx-auto mb-6">
-                Hệ thống đang được cập nhật các nội dung tin tức mới nhất. Quý khách vui lòng quay lại sau.
+                {language === 'en'
+                  ? 'Our news content is currently being updated. Please check back soon.'
+                  : language === 'ko'
+                  ? '최신 뉴스 및 소식이 업데이트 중입니다. 잠시 후 다시 확인해 주십시오.'
+                  : 'Hệ thống đang được cập nhật các nội dung tin tức mới nhất. Quý khách vui lòng quay lại sau.'}
               </p>
               <Link to="/" className="inline-flex items-center gap-2 text-haq-red text-xs font-bold uppercase tracking-wider hover:underline">
-                <span>Về trang chủ</span>
+                <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : 'Về trang chủ'}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -278,7 +312,7 @@ export default function NewsPage() {
                         />
                         <div className="absolute top-3 left-3">
                           <span className="bg-white/95 backdrop-blur-xs text-haq-ink text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border border-haq-border shadow-xs">
-                            {item.category}
+                            {CATEGORY_MAP[item.category]?.[language] || item.category}
                           </span>
                         </div>
                       </div>
@@ -289,7 +323,7 @@ export default function NewsPage() {
                         <div className="flex flex-wrap items-center gap-2 text-[10px] text-haq-text-secondary font-mono uppercase mb-2.5">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3 text-haq-red" /> 
-                            {new Date(item.published_at).toLocaleDateString('vi-VN')}
+                            {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}
                           </span>
                           {item.source_name ? (
                             <>
@@ -320,7 +354,7 @@ export default function NewsPage() {
 
                         {/* Nút Xem thêm */}
                         <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-haq-red group-hover:translate-x-0.5 transition-transform">
-                          <span>Xem thêm</span>
+                          <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
                           <ChevronRight className="w-4 h-4" />
                         </div>
                       </div>
@@ -332,7 +366,11 @@ export default function NewsPage() {
                 <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-haq-border max-w-md mx-auto">
                   <Hash className="w-8 h-8 text-haq-text-secondary mx-auto mb-2.5" />
                   <p className="text-haq-text-secondary text-xs sm:text-sm mb-4">
-                    Không tìm thấy bài viết nào trong chuyên mục "{activeCategory}".
+                    {language === 'en'
+                      ? `No articles found in "${CATEGORY_MAP[activeCategory]?.[language] || activeCategory}".`
+                      : language === 'ko'
+                      ? `"${CATEGORY_MAP[activeCategory]?.[language] || activeCategory}" 카테고리에 등록된 기사가 없습니다.`
+                      : `Không tìm thấy bài viết nào trong chuyên mục "${activeCategory}".`}
                   </p>
                   <button
                     onClick={() => {
@@ -341,7 +379,7 @@ export default function NewsPage() {
                     }}
                     className="px-4 py-2 rounded-full bg-haq-dark text-white text-xs font-bold uppercase tracking-wider hover:bg-haq-red transition-colors"
                   >
-                    Xem tất cả bài viết
+                    {language === 'en' ? 'View all articles' : language === 'ko' ? '모든 기사 보기' : 'Xem tất cả bài viết'}
                   </button>
                 </div>
               )}

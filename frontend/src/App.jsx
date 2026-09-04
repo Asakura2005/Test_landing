@@ -40,11 +40,14 @@ function RouteSync() {
 }
 
 function AppRoutes() {
+  const { pathname } = useLocation()
+  const isAdmin = pathname.startsWith('/admin')
+
   return (
     <>
       <RouteSync />
       <div className="w-full overflow-x-hidden relative">
-        <FloatingLanguageSwitcher />
+        {!isAdmin && <FloatingLanguageSwitcher />}
         <Routes>
           <Route path="/" element={<Home />} />
           {/* VỀ CHÚNG TÔI Subpages */}

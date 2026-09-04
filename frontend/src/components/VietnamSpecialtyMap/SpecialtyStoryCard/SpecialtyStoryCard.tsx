@@ -30,7 +30,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
   onClose,
   cardRef,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const provinceLabel = specialty?.provinceLabel || provinceInfo?.name || "Tỉnh / Thành";
   const regionName = specialty?.region || provinceInfo?.region || "Việt Nam";
   const hasProducts = !isEmpty && specialty && specialty.products && specialty.products.length > 0;
@@ -184,9 +184,19 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
           {/* Province Story from Database or Fallback */}
           <p className={styles.cardStoryDescription}>
             {specialty?.description || specialty?.shortDescription || (
-              <>
-                HAQ FOOD đang mở rộng hệ sinh thái đặc sản tại <strong>{provinceLabel}</strong>. Chúng tôi liên tục tìm kiếm và phát triển các sản phẩm nông sản, ẩm thực truyền thống giữ trọn hương vị nguyên bản và an toàn vệ sinh thực phẩm.
-              </>
+              language === 'en' ? (
+                <>
+                  HAQ FOOD is expanding its specialty ecosystem in <strong>{provinceLabel}</strong>. We continually source and develop authentic agricultural delicacies preserving original local flavors with verified food safety.
+                </>
+              ) : language === 'ko' ? (
+                <>
+                  HAQ FOOD는 <strong>{provinceLabel}</strong> 지역의 특산품 네트워크를 지속적으로 확장하고 있습니다. 철저한 위생 기준 아래 전통의 원초적 풍미를 간직한 농식품을 발굴하고 있습니다.
+                </>
+              ) : (
+                <>
+                  HAQ FOOD đang mở rộng hệ sinh thái đặc sản tại <strong>{provinceLabel}</strong>. Chúng tôi liên tục tìm kiếm và phát triển các sản phẩm nông sản, ẩm thực truyền thống giữ trọn hương vị nguyên bản và an toàn vệ sinh thực phẩm.
+                </>
+              )
             )}
           </p>
 

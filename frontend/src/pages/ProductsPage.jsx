@@ -11,6 +11,8 @@ import {
   DEFAULT_DB_CATEGORIES,
 } from '../data/productCategories'
 import { getProducts, getCategories } from '../services/supabase'
+import { useLanguage } from '../context/LanguageContext'
+import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 
 import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
 import banhTrangSayTomImg from '../assets/products/banh_trang_say_tom_50g.jpg'
@@ -47,6 +49,7 @@ const PRODUCT_IMAGE_MAP = {
 }
 
 export default function ProductsPage() {
+  const { t, language } = useLanguage()
   const [searchParams, setSearchParams] = useSearchParams()
   const currentCategorySlug = searchParams.get('category') || 'all'
   const currentSubCategorySlug = searchParams.get('sub') || null
@@ -81,14 +84,20 @@ export default function ProductsPage() {
     loadData()
   }, [])
 
-  // Build hierarchical category tree
+  // Build hierarchical category tree with localization
   const categoryTree = useMemo(() => {
-    return buildCategoryTree(dbCategories)
-  }, [dbCategories])
+    const rawTree = buildCategoryTree(dbCategories)
+    return rawTree.map((root) => {
+      const locRoot = getLocalizedCategory(root, language)
+      if (locRoot.children && locRoot.children.length > 0) {
+        locRoot.children = locRoot.children.map((c) => getLocalizedCategory(c, language))
+      }
+      return locRoot
+    })
+  }, [dbCategories, language])
 
   // Active root category node
   const activeRootCategory = useMemo(() => {
-    // Check if the currentCategorySlug is a child, find its parent
     for (const root of categoryTree) {
       if (root.slug === currentCategorySlug) return root
       if (root.children && root.children.some((c) => c.slug === currentCategorySlug)) {
@@ -122,15 +131,16 @@ export default function ProductsPage() {
     }
   }
 
-  // Filter products based on selected category & subcategory
+  // Filter products based on selected category & subcategory and localize each product
   const filteredProducts = useMemo(() => {
-    return filterProductsByDbCategory(
+    const rawList = filterProductsByDbCategory(
       dbProducts,
       currentCategorySlug,
       currentSubCategorySlug,
       categoryTree
     )
-  }, [dbProducts, currentCategorySlug, currentSubCategorySlug, categoryTree])
+    return rawList.map((p) => getLocalizedProduct(p, language))
+  }, [dbProducts, currentCategorySlug, currentSubCategorySlug, categoryTree, language])
 
   return (
     <div className="min-h-screen bg-haq-cream text-haq-ink font-sans flex flex-col relative selection:bg-haq-green selection:text-white">
@@ -149,7 +159,7 @@ export default function ProductsPage() {
               className="hover:text-haq-green-dark flex items-center gap-1 transition-colors"
             >
               <Home className="w-3.5 h-3.5" />
-              <span>Trang chủ</span>
+              <span>{t('products_page.breadcrumb_home', 'Trang chủ')}</span>
             </Link>
             <ChevronRight className="w-3 h-3 text-haq-border" />
             <Link
@@ -159,7 +169,7 @@ export default function ProductsPage() {
                 currentCategorySlug === 'all' ? 'text-haq-green-dark font-bold' : ''
               }`}
             >
-              Sản phẩm
+              {t('products_page.breadcrumb_products', 'Sản phẩm')}
             </Link>
 
             {activeRootCategory.slug !== 'all' && (
@@ -195,13 +205,13 @@ export default function ProductsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
-                    HAQ FOOD · PRODUCTS CATALOG
+                    {t('products_page.eyebrow', 'HAQ FOOD · PRODUCTS CATALOG')}
                   </span>
                   <span className="h-px w-10 bg-[#16A34A]" />
                 </div>
                 <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-tight">
                   {activeCategoryNode.slug === 'all'
-                    ? 'TẤT CẢ SẢN PHẨM'
+                    ? t('products_page.all_products', 'TẤT CẢ SẢN PHẨM')
                     : activeCategoryNode.name}
                 </h1>
                 <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary max-w-xl leading-relaxed font-normal">
@@ -215,7 +225,7 @@ export default function ProductsPage() {
               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
                 <span className="text-xs font-heading font-bold text-haq-text-secondary uppercase mr-2 flex items-center gap-1 shrink-0">
                   <Filter className="w-3.5 h-3.5 text-[#16A34A]" />
-                  <span>DANH MỤC:</span>
+                  <span>{t('products_page.category_label', 'DANH MỤC:')}</span>
                 </span>
 
                 {categoryTree.map((cat) => {
@@ -243,12 +253,18 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            {/* 4. Level 2: Sub-Category Pills (e.g. Bánh tráng -> Bánh tráng sấy & Bánh tráng trộn) */}
+            {/* 4. Level 2: Sub-Category Pills */}
             {activeRootCategory.children && activeRootCategory.children.length > 0 && (
               <div className="mt-4 pt-3 border-t border-dashed border-haq-border flex items-center gap-2 overflow-x-auto pb-1 animate-in fade-in slide-in-from-top-1 duration-200">
                 <span className="text-[11px] font-heading font-bold text-haq-green-dark uppercase mr-2 flex items-center gap-1 shrink-0">
                   <Layers className="w-3 h-3 text-[#16A34A]" />
-                  <span>PHÂN LOẠI {activeRootCategory.name}:</span>
+                  <span>
+                    {language === 'en'
+                      ? `FILTER ${activeRootCategory.name}:`
+                      : language === 'ko'
+                      ? `${activeRootCategory.name} 분류:`
+                      : `PHÂN LOẠI ${activeRootCategory.name}:`}
+                  </span>
                 </span>
 
                 {/* Sub-tab: Tất cả trong danh mục cha */}
@@ -261,7 +277,11 @@ export default function ProductsPage() {
                       : 'bg-white text-haq-text-secondary hover:bg-haq-sage hover:text-haq-green-dark border border-haq-border'
                   }`}
                 >
-                  Tất cả {activeRootCategory.name}
+                  {language === 'en'
+                    ? `All ${activeRootCategory.name}`
+                    : language === 'ko'
+                    ? `${activeRootCategory.name} 전체`
+                    : `Tất cả ${activeRootCategory.name}`}
                 </button>
 
                 {/* Các danh mục con cụ thể */}
@@ -291,7 +311,9 @@ export default function ProductsPage() {
         <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-10 sm:py-14">
           <div className="flex items-center justify-between mb-8 text-xs font-heading text-haq-text-secondary">
             <span>
-              HIỂN THỊ <strong className="text-haq-ink">{filteredProducts.length}</strong> SẢN PHẨM
+              {language === 'en' ? 'SHOWING' : language === 'ko' ? '총' : 'HIỂN THỊ'}{' '}
+              <strong className="text-haq-ink">{filteredProducts.length}</strong>{' '}
+              {language === 'en' ? 'PRODUCTS' : language === 'ko' ? '개 제품' : 'SẢN PHẨM'}
               {currentSubCategorySlug ? ` (${activeCategoryNode.name})` : ''}
             </span>
             <span className="font-semibold text-haq-green-dark">HAQ FOOD HANOI JSC</span>
@@ -301,17 +323,17 @@ export default function ProductsPage() {
             <div className="bg-white rounded-3xl p-12 text-center border border-haq-border shadow-2xs">
               <Package className="w-12 h-12 text-haq-text-secondary/40 mx-auto mb-4" />
               <h3 className="font-heading font-bold text-lg text-haq-ink uppercase">
-                Chưa có sản phẩm nào trong danh mục này
+                {t('products_page.empty_title', 'Chưa có sản phẩm nào trong danh mục này')}
               </h3>
               <p className="text-xs text-haq-text-secondary mt-1">
-                Vui lòng chọn danh mục khác hoặc liên hệ hotline để nhận catalog chi tiết.
+                {t('products_page.empty_desc', 'Vui lòng chọn danh mục khác hoặc liên hệ hotline để nhận catalog chi tiết.')}
               </p>
               <button
                 type="button"
                 onClick={() => handleRootCategoryChange('all')}
-                className="mt-6 px-6 py-2.5 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs font-heading font-bold uppercase rounded-full transition-colors"
+                className="mt-6 px-6 py-2.5 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs font-heading font-bold uppercase rounded-full transition-colors cursor-pointer"
               >
-                Xem tất cả sản phẩm
+                {t('products_page.all_tab', 'Xem tất cả sản phẩm')}
               </button>
             </div>
           ) : (
@@ -340,7 +362,7 @@ export default function ProductsPage() {
                         />
                         {prod.is_pinned && (
                           <div className="absolute top-3.5 left-3.5 bg-[#C89B3C] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-2xs">
-                            CHỦ LỰC
+                            {language === 'en' ? 'FLAGSHIP' : language === 'ko' ? '대표 상품' : 'CHỦ LỰC'}
                           </div>
                         )}
                       </div>
@@ -357,7 +379,7 @@ export default function ProductsPage() {
                             </span>
                             {prod.provinces && (
                               <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
-                                <MapPin className="w-2.5 h-2.5 text-emerald-600" /> {prod.provinces.name}
+                                <MapPin className="w-2.5 h-2.5 text-emerald-600" /> {getLocalizedProvince(prod.provinces, language).name}
                               </span>
                             )}
                           </div>
@@ -372,7 +394,11 @@ export default function ProductsPage() {
                           {/* Slot 3: Description (Fixed 2-Line Height) */}
                           <p className="mt-2 text-xs text-haq-text-secondary leading-relaxed line-clamp-2 h-9 flex items-start font-normal">
                             {prod.description ||
-                              'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.'}
+                              (language === 'en'
+                                ? 'Safely packaged, certified for food safety & hygiene.'
+                                : language === 'ko'
+                                ? '안전 포장 및 식품 안전 위생 기준 인증 완료.'
+                                : 'Sản phẩm đóng gói an toàn, đạt chuẩn kiểm định an toàn vệ sinh thực phẩm.')}
                           </p>
                         </div>
                       </div>
@@ -384,7 +410,7 @@ export default function ProductsPage() {
                         to={`/san-pham/${detailSlug}`}
                         className="w-full inline-flex items-center justify-center gap-2 bg-haq-sage hover:bg-[#16A34A] text-haq-green-dark hover:text-white border border-haq-border text-xs font-heading font-bold uppercase tracking-wider py-3 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md"
                       >
-                        <span>CHI TIẾT SẢN PHẨM</span>
+                        <span>{t('products_page.view_details', 'CHI TIẾT SẢN PHẨM')}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>

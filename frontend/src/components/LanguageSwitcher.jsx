@@ -81,35 +81,61 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
  */
 export function FloatingLanguageSwitcher() {
   const { language, setLanguage, currentLangObj } = useLanguage()
-  const [isHovered, setIsHovered] = useState(false)
-  const hoverTimeoutRef = useRef(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef(null)
+  const timerRef = useRef(null)
 
+  // Debounced hover handling so accidental sweeps across screen corner don't flash the menu
   const handleMouseEnter = () => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
-    setIsHovered(true)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      setIsOpen(true)
+    }, 100)
   }
 
   const handleMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsHovered(false)
-    }, 250)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      setIsOpen(false)
+    }, 220)
   }
+
+  // Support click/touch toggle
+  const handleToggle = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    setIsOpen((prev) => !prev)
+  }
+
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
 
   return (
     <div
+      ref={containerRef}
       className="fixed bottom-6 right-6 z-[9990] select-none font-sans"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Dropdown list appearing above the switcher on hover */}
+      {/* Dropdown list: absolutely positioned above the trigger pill with smooth slide-up ('kéo ra') transition */}
       <div
-        className={`transition-all duration-200 ease-out origin-bottom-right ${
-          isHovered
-            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
+        className={`absolute bottom-full right-0 pb-2.5 transition-all duration-300 ease-out origin-bottom-right ${
+          isOpen
+            ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto visible'
+            : 'opacity-0 scale-90 translate-y-4 pointer-events-none invisible'
         }`}
       >
-        <div className="bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.18)] border border-gray-200/90 p-2.5 min-w-[170px] mb-2.5 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.18)] border border-gray-200/90 p-2.5 min-w-[175px] overflow-hidden">
           <div className="space-y-1">
             {LANGUAGES.map((item) => {
               const isActive = item.code === language
@@ -119,7 +145,7 @@ export function FloatingLanguageSwitcher() {
                   type="button"
                   onClick={() => {
                     setLanguage(item.code)
-                    setIsHovered(false)
+                    setIsOpen(false)
                   }}
                   className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs font-heading font-medium transition-all text-left cursor-pointer ${
                     isActive
@@ -139,11 +165,15 @@ export function FloatingLanguageSwitcher() {
         </div>
       </div>
 
-      {/* Floating Trigger Pill - Solid White */}
-      <div
-        className={`flex items-center gap-2.5 px-4 py-2.5 bg-white rounded-full shadow-md border transition-all cursor-pointer ${
-          isHovered
-            ? 'border-[#0F5132] shadow-lg scale-105'
+      {/* Floating Trigger Pill */}
+      <button
+        type="button"
+        onClick={handleToggle}
+        aria-expanded={isOpen}
+        aria-label="Chọn ngôn ngữ"
+        className={`flex items-center gap-2.5 px-4 py-2.5 bg-white rounded-full shadow-md border transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] ${
+          isOpen
+            ? 'border-[#0F5132] shadow-lg scale-105 ring-2 ring-[#0F5132]/20'
             : 'border-gray-300 hover:border-[#0F5132]'
         }`}
       >
@@ -151,7 +181,7 @@ export function FloatingLanguageSwitcher() {
         <span className="text-xs font-heading font-bold text-[#0C1E15] uppercase tracking-wider">
           {currentLangObj.code.toUpperCase()}
         </span>
-      </div>
+      </button>
     </div>
   )
 }
