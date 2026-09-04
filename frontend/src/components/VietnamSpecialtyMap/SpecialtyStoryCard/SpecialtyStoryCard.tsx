@@ -4,6 +4,7 @@ import { ProvinceSpecialty, ProvinceInfo } from "../types";
 import { ProductImage } from "./ProductImage";
 import { ProductNavigator } from "./ProductNavigator";
 import { cardAnimation, productContentAnimation } from "../animations";
+import { useLanguage } from "../../../context/LanguageContext";
 import styles from "../styles.module.css";
 
 interface SpecialtyStoryCardProps {
@@ -29,6 +30,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
   onClose,
   cardRef,
 }) => {
+  const { t } = useLanguage();
   const provinceLabel = specialty?.provinceLabel || provinceInfo?.name || "Tỉnh / Thành";
   const regionName = specialty?.region || provinceInfo?.region || "Việt Nam";
   const hasProducts = !isEmpty && specialty && specialty.products && specialty.products.length > 0;
@@ -66,8 +68,8 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
             type="button"
             className={styles.cardCloseBtn}
             onClick={onClose}
-            aria-label="Đóng thẻ thông tin"
-            title="Đóng"
+            aria-label={t('home.specialty_map.card.close', 'Đóng')}
+            title={t('home.specialty_map.card.close', 'Đóng')}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -136,7 +138,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
                 }
               }}
             >
-              <span>KHÁM PHÁ SẢN PHẨM</span>
+              <span>{t('home.specialty_map.card.explore_product', 'KHÁM PHÁ SẢN PHẨM')}</span>
               <span className={styles.ctaArrow} aria-hidden="true">→</span>
             </a>
 
@@ -168,11 +170,11 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span className={styles.emptyBadgeText}>ĐANG PHÁT TRIỂN</span>
+            <span className={styles.emptyBadgeText}>{t('home.specialty_map.card.in_development', 'ĐANG PHÁT TRIỂN')}</span>
           </div>
 
           <div className={styles.cardCategory}>
-            VĂN HÓA ẨM THỰC ĐỊA PHƯƠNG
+            {t('home.specialty_map.card.local_culture', 'VĂN HÓA ẨM THỰC ĐỊA PHƯƠNG')}
           </div>
 
           <h3 className={styles.cardProductTitle}>
@@ -190,7 +192,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
 
           <div className={styles.cardFooter}>
             <a href="/san-pham" className={styles.cardCta}>
-              <span>XEM TẤT CẢ SẢN PHẨM</span>
+              <span>{t('home.specialty_map.card.view_all_products', 'XEM TẤT CẢ SẢN PHẨM')}</span>
               <span className={styles.ctaArrow} aria-hidden="true">→</span>
             </a>
           </div>

@@ -9,6 +9,7 @@ import { useMapTransform } from "./InteractiveMap/useMapTransform";
 import { worldToContainerPoint } from "./coordinateSystem";
 import { useHaqSpecialtyMapData } from "./useHaqSpecialtyMapData";
 import { SpecialtyData } from "./types";
+import { useLanguage } from "../../context/LanguageContext";
 import styles from "./styles.module.css";
 
 interface VietnamSpecialtyMapProps {
@@ -22,6 +23,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   specialtyDataOverride,
   className = "",
 }) => {
+  const { t } = useLanguage();
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
   const [activeProductIndex, setActiveProductIndex] = useState<number>(0);
   const [hoveredProvince, setHoveredProvince] = useState<{
@@ -191,26 +193,26 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     <section className={`${styles.container} ${className}`}>
       {/* Editorial Header */}
       <header className={styles.header}>
-        <span className={styles.eyebrow}>HAQ FOOD PRESENTS</span>
-        <h2 className={styles.title}>HỆ SINH THÁI SẢN PHẨM HAQ FOOD</h2>
+        <span className={styles.eyebrow}>{t('home.specialty_map.eyebrow', 'BẢN ĐỒ NÔNG SẢN VIỆT NAM')}</span>
+        <h2 className={styles.title}>{t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}</h2>
         <p className={styles.subtitle}>
-          KHÁM PHÁ ĐẶC SẢN VIỆT NAM — Mỗi vùng đất, một câu chuyện hương vị nguyên bản
+          {t('home.specialty_map.subtitle', 'KHÁM PHÁ ĐẶC SẢN VIỆT NAM — Mỗi vùng đất, một câu chuyện hương vị nguyên bản')}
         </p>
 
         {/* Compact Interactive Header Toolbar */}
         <div className={styles.headerToolbar}>
           <div className={styles.hint}>
             <span className={styles.hintDot} />
-            <span>Cuộn chuột để thu phóng · Kéo để xoay chuyển · Nhấp tỉnh để khám phá</span>
+            <span>{t('home.specialty_map.hint', 'Cuộn chuột để thu phóng · Kéo để xoay chuyển · Nhấp tỉnh để khám phá')}</span>
           </div>
 
           {/* Quick Region Selector Bar */}
           <div className={styles.regionFilterBar} role="tablist" aria-label="Bộ lọc vùng miền">
             {[
-              { id: "ALL", label: "TOÀN QUỐC" },
-              { id: "Miền Bắc", label: "MIỀN BẮC" },
-              { id: "Miền Trung", label: "MIỀN TRUNG" },
-              { id: "Miền Nam", label: "MIỀN NAM" },
+              { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
+              { id: "Miền Bắc", label: t('home.specialty_map.regions.north', 'MIỀN BẮC') },
+              { id: "Miền Trung", label: t('home.specialty_map.regions.central', 'MIỀN TRUNG') },
+              { id: "Miền Nam", label: t('home.specialty_map.regions.south', 'MIỀN NAM') },
             ].map((r) => (
               <button
                 key={r.id}

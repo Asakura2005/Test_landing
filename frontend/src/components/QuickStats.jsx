@@ -1,32 +1,45 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ShieldCheck, Factory, Sparkles } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
-const PILLARS = [
+const PILLAR_ICONS = [Sparkles, ShieldCheck, Factory]
+
+const DEFAULT_PILLARS = [
   {
     num: '01',
-    label: 'QUALITY',
+    label: 'CHẤT LƯỢNG',
     title: 'Chất Lượng Đồng Nhất',
     desc: 'Kiểm soát chặt chẽ từ nguyên liệu đầu vào, quy trình chế biến khép kín đến từng lô sản phẩm xuất xưởng.',
-    icon: Sparkles,
   },
   {
     num: '02',
-    label: 'ISO / HACCP',
+    label: 'TIÊU CHUẨN QUỐC TẾ',
     title: 'An Toàn Thực Phẩm',
     desc: 'Hệ thống quản lý chất lượng đạt chuẩn quốc tế ISO 22000 và HACCP, đảm bảo độ an toàn tuyệt đối.',
-    icon: ShieldCheck,
   },
   {
     num: '03',
-    label: 'OEM / ODM',
+    label: 'GIA CÔNG THEO YÊU CẦU',
     title: 'Giải Pháp Gia Công',
     desc: 'Năng lực sản xuất linh hoạt theo yêu cầu đối tác, hỗ trợ trọn gói từ công thức, bao bì đến hồ sơ công bố.',
-    icon: Factory,
   },
 ]
 
 export default function QuickStats() {
+  const { t } = useLanguage()
+
+  const rawPillars = t('home.quick_stats.pillars', null)
+  const pillars = (Array.isArray(rawPillars) && rawPillars.length > 0)
+    ? rawPillars.map((p, idx) => ({
+        ...p,
+        icon: PILLAR_ICONS[idx] || Sparkles,
+      }))
+    : DEFAULT_PILLARS.map((p, idx) => ({
+        ...p,
+        icon: PILLAR_ICONS[idx] || Sparkles,
+      }))
+
   return (
     <section id="nang-luc" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-white border-b border-haq-border flex items-center justify-center py-14 sm:py-18 lg:py-0">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full">
@@ -35,12 +48,12 @@ export default function QuickStats() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
-                TIÊU CHUẨN & NĂNG LỰC · CAPABILITY
+                {t('home.quick_stats.badge', 'TIÊU CHUẨN & NĂNG LỰC')}
               </span>
               <span className="h-px w-10 bg-[#16A34A]" />
             </div>
             <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink tracking-tight uppercase leading-tight">
-              NỀN TẢNG SẢN XUẤT VỮNG CHẮC
+              {t('home.quick_stats.title', 'NỀN TẢNG SẢN XUẤT VỮNG CHẮC')}
             </h2>
           </div>
 
@@ -48,14 +61,14 @@ export default function QuickStats() {
             to="/nang-luc"
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-bold text-[#16A34A] hover:text-[#0F5132] uppercase tracking-wider transition-colors group"
           >
-            <span>XEM CHI TIẾT NĂNG LỰC</span>
+            <span>{t('home.quick_stats.view_detail', 'XEM CHI TIẾT NĂNG LỰC')}</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
         {/* 3 Core Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-          {PILLARS.map((pillar) => {
+          {pillars.map((pillar) => {
             const Icon = pillar.icon
             return (
               <div
@@ -88,7 +101,7 @@ export default function QuickStats() {
                     to="/nang-luc"
                     className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-wider text-[#16A34A] group-hover:text-[#0F5132] transition-colors"
                   >
-                    <span>TÌM HIỂU THÊM</span>
+                    <span>{t('home.quick_stats.learn_more', 'TÌM HIỂU THÊM')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>

@@ -1,8 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 export default function BrandStatement() {
+  const { t } = useLanguage()
+
   return (
     <section id="gioi-thieu" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-sage/60 border-b border-haq-border relative overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-0">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full relative z-10">
@@ -13,7 +16,7 @@ export default function BrandStatement() {
               2021
             </div>
             <div className="font-heading text-xs font-bold uppercase tracking-widest text-[#16A34A] mt-2">
-              ESTABLISHED IN HANOI
+              {t('home.brand_statement.est', 'THÀNH LẬP TẠI HÀ NỘI')}
             </div>
           </div>
 
@@ -21,17 +24,17 @@ export default function BrandStatement() {
           <div className="lg:col-span-8 space-y-6">
             <div className="flex items-center gap-2">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
-                VỀ HAQ FOOD · GIỚI THIỆU DOANH NGHIỆP
+                {t('home.brand_statement.badge', 'VỀ HAQ FOOD · GIỚI THIỆU DOANH NGHIỆP')}
               </span>
               <span className="h-px w-10 bg-[#16A34A]" />
             </div>
 
             <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink leading-snug uppercase tracking-tight">
-              Sản xuất & Phân phối Thực phẩm Đạt Chuẩn An Toàn Quốc Tế
+              {t('home.brand_statement.title', 'Sản xuất & Phân phối Thực phẩm Đạt Chuẩn An Toàn Quốc Tế')}
             </h2>
 
             <p className="text-base sm:text-lg text-haq-text-secondary leading-relaxed max-w-2xl font-normal">
-              Thành lập năm 2021, HAQ Hà Nội hoạt động trong lĩnh vực sản xuất và phân phối thực phẩm, hướng đến việc đưa các sản phẩm nông sản và ẩm thực Việt Nam chất lượng cao đến người tiêu dùng trong nước và nhiều thị trường quốc tế.
+              {t('home.brand_statement.desc', 'Thành lập năm 2021, HAQ Hà Nội hoạt động trong lĩnh vực sản xuất và phân phối thực phẩm, hướng đến việc đưa các sản phẩm nông sản và ẩm thực Việt Nam chất lượng cao đến người tiêu dùng trong nước và nhiều thị trường quốc tế.')}
             </p>
 
             <div className="pt-2">
@@ -39,7 +42,7 @@ export default function BrandStatement() {
                 to="/gioi-thieu"
                 className="inline-flex items-center gap-2.5 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-md"
               >
-                <span>TÌM HIỂU THÊM VỀ CHÚNG TÔI</span>
+                <span>{t('home.brand_statement.cta', 'TÌM HIỂU THÊM VỀ CHÚNG TÔI')}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

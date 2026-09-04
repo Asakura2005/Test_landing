@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Globe2, ArrowRight } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 import exportVisualImg from '../assets/distribution/distribution_export.jpg'
 
 export default function BrandVisualSection() {
+  const { t } = useLanguage()
+
   return (
     <section className="relative w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-0">
       {/* Background Cinematic Visual */}
@@ -24,31 +27,31 @@ export default function BrandVisualSection() {
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 mb-4 sm:mb-5">
             <Globe2 className="w-4 h-4 text-[#C89B3C]" />
             <span className="font-heading text-xs font-bold tracking-wider uppercase text-white/95">
-              TẦM NHÌN QUỐC TẾ · INTERNATIONAL REACH
+              {t('home.brand_visual.badge', 'TẦM NHÌN QUỐC TẾ')}
             </span>
           </div>
 
           {/* Headline */}
           <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight uppercase leading-[1.15] mb-3 sm:mb-4">
-            TỪ NÔNG SẢN VIỆT <br className="hidden sm:block" />
-            <span className="text-[#C89B3C]">VƯƠN TẦM CHÂU Á</span>
+            {t('home.brand_visual.title_1', 'TỪ NÔNG SẢN VIỆT')} <br className="hidden sm:block" />
+            <span className="text-[#C89B3C]">{t('home.brand_visual.title_2', 'VƯƠN TẦM CHÂU Á')}</span>
           </h2>
 
           {/* Markets Line */}
           <div className="font-heading text-xs sm:text-sm font-bold uppercase tracking-wider text-[#16A34A] mb-4 sm:mb-5">
-            VIỆT NAM · HÀN QUỐC · ĐÀI LOAN
+            {t('home.brand_visual.markets', 'VIỆT NAM · HÀN QUỐC · ĐÀI LOAN')}
           </div>
 
           {/* Editorial Description */}
           <p className="text-xs sm:text-sm lg:text-base text-white/85 leading-relaxed max-w-2xl mb-7 sm:mb-8 font-normal">
-            Không ngừng nâng cao chất lượng và quy chuẩn chế biến khép kín, HAQ FOOD tự hào mang hương vị thực phẩm truyền thống Việt Nam chất lượng cao tiếp cận các thị trường tiêu chuẩn khắt khe tại khu vực châu Á.
+            {t('home.brand_visual.desc', 'Không ngừng nâng cao chất lượng và quy chuẩn chế biến khép kín, HAQ FOOD tự hào mang hương vị thực phẩm truyền thống Việt Nam chất lượng cao tiếp cận các thị trường tiêu chuẩn khắt khe tại khu vực châu Á.')}
           </p>
 
           <Link
             to="/gioi-thieu#phan-phoi"
             className="inline-flex items-center gap-2.5 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
           >
-            <span>TÌM HIỂU HỆ THỐNG PHÂN PHỐI</span>
+            <span>{t('home.brand_visual.cta', 'TÌM HIỂU HỆ THỐNG PHÂN PHỐI')}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
