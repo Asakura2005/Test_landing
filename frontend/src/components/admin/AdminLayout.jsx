@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { 
   LayoutDashboard, 
   Package, 
@@ -29,7 +30,10 @@ import {
   ArrowRight,
   Copy,
   Check,
-  CheckCheck
+  CheckCheck,
+  Eye,
+  MessageCircle,
+  Mail
 } from 'lucide-react'
 import QuickSearchModal from './QuickSearchModal'
 
@@ -75,6 +79,10 @@ export default function AdminLayout({
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isLeadAlertsOpen, setIsLeadAlertsOpen] = useState(false)
+
+  // State for direct detail viewing modal/drawer
+  const [viewingLead, setViewingLead] = useState(null)
+  const [viewingOrder, setViewingOrder] = useState(null)
 
   // Tracking Leads unread badge with localStorage
   const [leadsLastSeen, setLeadsLastSeen] = useState(() => localStorage.getItem('haq_admin_leads_last_seen'))
@@ -145,6 +153,26 @@ export default function AdminLayout({
     setTimeout(() => setCopiedPhone(null), 2000)
   }
 
+  // Handle opening lead details
+  const handleLeadClick = (lead) => {
+    setViewingLead(lead)
+    setIsLeadAlertsOpen(false)
+  }
+
+  // Handle opening notification details
+  const handleNotificationClick = (item) => {
+    if (item.type === 'lead' && item.data) {
+      setViewingLead(item.data)
+      setIsNotificationsOpen(false)
+    } else if (item.type === 'order' && item.data) {
+      setViewingOrder(item.data)
+      setIsNotificationsOpen(false)
+    } else if (item.targetTab) {
+      onTabChange(item.targetTab)
+      setIsNotificationsOpen(false)
+    }
+  }
+
   // Build dynamic notifications feed from real orders, leads, and system events
   const systemNotifications = useMemo(() => {
     const list = []
@@ -158,6 +186,7 @@ export default function AdminLayout({
         title: `Đơn hàng B2B mới #${order.order_code || (order.id ? String(order.id).slice(0, 8) : 'B2B')}`,
         desc: `${order.customer_name || 'Khách hàng B2B'}${order.total_amount ? ` • ${Number(order.total_amount).toLocaleString('vi-VN')} đ` : ''}`,
         timestamp: order.created_at,
+        data: order,
         targetTab: 'dashboard_sales'
       })
     })
@@ -171,6 +200,7 @@ export default function AdminLayout({
         title: `Yêu cầu báo giá từ ${lead.full_name || 'Khách hàng B2B'}`,
         desc: `${lead.company ? `${lead.company} • ` : ''}${lead.need || 'Báo giá đại lý'}${lead.phone ? ` • ${lead.phone}` : ''}`,
         timestamp: lead.created_at,
+        data: lead,
         targetTab: 'leads'
       })
     })
@@ -521,6 +551,7 @@ export default function AdminLayout({
             {/* Lead Inquiries Dropdown */}
             <div className="relative">
               <button
+                type="button"
                 onClick={() => {
                   setIsLeadAlertsOpen(!isLeadAlertsOpen)
                   setIsNotificationsOpen(false)
@@ -533,16 +564,16 @@ export default function AdminLayout({
                 }`}
                 title="Yêu cầu báo giá mới"
               >
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 pointer-events-none" />
                 {unreadLeadsCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50 duration-150">
+                  <span className="pointer-events-none absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center shadow-xs animate-in zoom-in-50 duration-150">
                     {unreadLeadsCount > 99 ? '99+' : unreadLeadsCount}
                   </span>
                 )}
               </button>
 
               {isLeadAlertsOpen && (
-                <div className="absolute right-0 mt-2 w-88 bg-white rounded-xl shadow-xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                   <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
                     <div className="flex items-center gap-1.5">
                       {unreadLeadsCount > 0 && (
@@ -555,18 +586,21 @@ export default function AdminLayout({
                     <div className="flex items-center gap-2">
                       {unreadLeadsCount > 0 && (
                         <button 
+                          type="button"
                           onClick={handleMarkAllLeadsSeen}
-                          className="text-[10px] font-semibold text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-0.5 rounded transition-colors cursor-pointer"
-                          title="Xóa dấu thông báo đỏ"
+                          className="text-[10px] font-semibold text-gray-600 hover:text-emerald-700 bg-gray-100 hover:bg-emerald-50 px-2 py-0.5 rounded transition-colors cursor-pointer flex items-center gap-1"
+                          title="Đánh dấu đã đọc tất cả"
                         >
-                          Đã xem
+                          <CheckCheck className="w-3 h-3 text-emerald-600" />
+                          <span>Đã đọc</span>
                         </button>
                       )}
                       <button 
+                        type="button"
                         onClick={() => { onTabChange('leads'); setIsLeadAlertsOpen(false); }}
                         className="text-[11px] font-bold text-[#0F5132] hover:underline cursor-pointer"
                       >
-                        Xem CRM
+                        Xem CRM →
                       </button>
                     </div>
                   </div>
@@ -575,10 +609,7 @@ export default function AdminLayout({
                     {sortedLeads && sortedLeads.length > 0 ? sortedLeads.slice(0, 5).map((lead) => (
                       <div 
                         key={lead.id} 
-                        onClick={() => {
-                          onTabChange('leads')
-                          setIsLeadAlertsOpen(false)
-                        }}
+                        onClick={() => handleLeadClick(lead)}
                         className="p-2.5 rounded-lg bg-gray-50/80 hover:bg-emerald-50/70 border border-gray-100 hover:border-emerald-200 text-xs transition-all cursor-pointer group"
                       >
                         <div className="flex items-center justify-between">
@@ -616,13 +647,21 @@ export default function AdminLayout({
                           )}
                         </div>
 
-                        <div className="mt-1.5 flex items-center justify-between text-[11px]">
-                          <span className="bg-emerald-50 text-[#0F5132] font-medium px-2 py-0.5 rounded border border-emerald-100 truncate max-w-[200px]">
+                        <div className="mt-2 flex items-center justify-between gap-2 pt-1 border-t border-gray-100/80">
+                          <span className="bg-emerald-50 text-[#0F5132] font-medium px-2 py-0.5 rounded border border-emerald-100 truncate max-w-[190px]">
                             {lead.need || 'Tư vấn phân phối B2B'}
                           </span>
-                          <span className="text-[10px] text-gray-400 group-hover:text-[#0F5132] flex items-center gap-0.5 font-medium transition-colors">
-                            Mở CRM <ArrowRight className="w-3 h-3" />
-                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleLeadClick(lead)
+                            }}
+                            className="px-2 py-0.5 rounded bg-[#0F5132] text-white hover:bg-[#0c4128] text-[10px] font-semibold flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+                          >
+                            <Eye className="w-3 h-3" />
+                            <span>Xem chi tiết</span>
+                          </button>
                         </div>
                       </div>
                     )) : (
@@ -633,6 +672,7 @@ export default function AdminLayout({
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       onTabChange('leads')
                       setIsLeadAlertsOpen(false)
@@ -649,6 +689,7 @@ export default function AdminLayout({
             {/* Notification Bell */}
             <div className="relative">
               <button
+                type="button"
                 onClick={() => {
                   setIsNotificationsOpen(!isNotificationsOpen)
                   setIsLeadAlertsOpen(false)
@@ -661,14 +702,14 @@ export default function AdminLayout({
                 }`}
                 title="Thông báo hệ thống"
               >
-                <Bell className="w-4 h-4" />
+                <Bell className="w-4 h-4 pointer-events-none" />
                 {hasUnreadNotifs && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-600 ring-2 ring-white animate-pulse" />
+                  <span className="pointer-events-none absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-600 ring-2 ring-white animate-pulse" />
                 )}
               </button>
 
               {isNotificationsOpen && (
-                <div className="absolute right-0 mt-2 w-88 bg-white rounded-xl shadow-xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                     <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
                       <Bell className="w-3.5 h-3.5 text-[#0F5132]" />
@@ -676,11 +717,13 @@ export default function AdminLayout({
                     </h4>
                     {hasUnreadNotifs && (
                       <button
+                        type="button"
                         onClick={handleMarkAllNotifsRead}
                         className="text-[10px] font-semibold px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer flex items-center gap-1"
+                        title="Đánh dấu tất cả thông báo đã đọc"
                       >
                         <CheckCheck className="w-3 h-3 text-emerald-600" />
-                        Đã đọc tất cả
+                        <span>Đã đọc tất cả</span>
                       </button>
                     )}
                   </div>
@@ -688,6 +731,7 @@ export default function AdminLayout({
                   {/* Filter Tabs */}
                   <div className="flex items-center gap-1 mt-2 p-0.5 bg-gray-100 rounded-lg text-[11px] font-medium text-gray-600">
                     <button
+                      type="button"
                       onClick={() => setNotifTab('all')}
                       className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
                         notifTab === 'all' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
@@ -696,6 +740,7 @@ export default function AdminLayout({
                       Tất cả
                     </button>
                     <button
+                      type="button"
                       onClick={() => setNotifTab('activity')}
                       className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
                         notifTab === 'activity' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
@@ -704,6 +749,7 @@ export default function AdminLayout({
                       Đơn & Lead
                     </button>
                     <button
+                      type="button"
                       onClick={() => setNotifTab('system')}
                       className={`flex-1 py-1 text-center rounded transition-colors cursor-pointer ${
                         notifTab === 'system' ? 'bg-white text-gray-900 font-bold shadow-2xs' : 'hover:text-gray-900'
@@ -720,16 +766,13 @@ export default function AdminLayout({
                       .map((item) => (
                         <div
                           key={item.id}
-                          onClick={() => {
-                            if (item.targetTab) onTabChange(item.targetTab)
-                            setIsNotificationsOpen(false)
-                          }}
+                          onClick={() => handleNotificationClick(item)}
                           className="p-2.5 rounded-lg bg-gray-50/80 hover:bg-emerald-50/70 border border-gray-100 hover:border-emerald-200 text-xs transition-all cursor-pointer group"
                         >
                           <div className="flex items-start gap-2.5">
                             <div className="p-1.5 rounded-lg bg-white border border-gray-200 shadow-2xs shrink-0 mt-0.5">
-                              {item.type === 'order' && <ShoppingBag className="w-3.5 h-3.5 text-emerald-600" />}
-                              {item.type === 'lead' && <Users className="w-3.5 h-3.5 text-blue-600" />}
+                              {item.type === 'order' && <ShoppingBag className="w-3.5 h-3.5 text-blue-600" />}
+                              {item.type === 'lead' && <Users className="w-3.5 h-3.5 text-emerald-600" />}
                               {item.type === 'system' && item.id === 'sys-cloud' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
                               {item.type === 'system' && item.id === 'sys-security' && <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />}
                             </div>
@@ -747,6 +790,15 @@ export default function AdminLayout({
                               <p className="text-[11px] text-gray-600 mt-0.5 line-clamp-2">
                                 {item.desc}
                               </p>
+                              <div className="mt-1.5 flex items-center justify-between text-[10px] text-gray-400 pt-1 border-t border-gray-100/60">
+                                <span className="uppercase tracking-wider">
+                                  {item.type === 'order' ? 'Đơn hàng B2B' : item.type === 'lead' ? 'Khách hàng mới' : 'Hệ thống'}
+                                </span>
+                                <span className="font-semibold text-[#0F5132] flex items-center gap-0.5 group-hover:underline">
+                                  <Eye className="w-3 h-3" />
+                                  <span>Xem chi tiết</span>
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -826,6 +878,272 @@ export default function AdminLayout({
           {children}
         </main>
       </div>
+
+      {/* QUICK VIEW LEAD MODAL */}
+      {viewingLead && createPortal(
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150"
+          onClick={() => setViewingLead(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-150"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 bg-gradient-to-r from-emerald-950 via-[#0F5132] to-emerald-900 text-white flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white">
+                    Hồ sơ Yêu cầu Báo giá B2B
+                  </span>
+                  <span className="text-xs text-white/80 font-mono">
+                    #{viewingLead.id ? String(viewingLead.id).slice(0, 8) : 'LEAD'}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white mt-1">
+                  {viewingLead.full_name || 'Khách hàng B2B'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setViewingLead(null)}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4 overflow-y-auto flex-1">
+              {/* Quick Communication Actions */}
+              <div className="grid grid-cols-3 gap-2">
+                {viewingLead.phone ? (
+                  <a
+                    href={`tel:${viewingLead.phone}`}
+                    className="py-2.5 px-3 rounded-xl bg-emerald-50 text-[#0F5132] hover:bg-[#0F5132] hover:text-white font-semibold text-xs border border-emerald-200 transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    Gọi Điện
+                  </a>
+                ) : (
+                  <button disabled className="py-2.5 px-3 rounded-xl bg-gray-100 text-gray-400 font-semibold text-xs border border-gray-200 flex items-center justify-center gap-1.5 cursor-not-allowed">
+                    <Phone className="w-3.5 h-3.5" /> Gọi Điện
+                  </button>
+                )}
+
+                {viewingLead.phone ? (
+                  <a
+                    href={`https://zalo.me/${String(viewingLead.phone).replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="py-2.5 px-3 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white font-semibold text-xs border border-blue-200 transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    Chat Zalo
+                  </a>
+                ) : (
+                  <button disabled className="py-2.5 px-3 rounded-xl bg-gray-100 text-gray-400 font-semibold text-xs border border-gray-200 flex items-center justify-center gap-1.5 cursor-not-allowed">
+                    <MessageCircle className="w-3.5 h-3.5" /> Chat Zalo
+                  </button>
+                )}
+
+                {viewingLead.email ? (
+                  <a
+                    href={`mailto:${viewingLead.email}?subject=${encodeURIComponent('HAQ FOOD - Báo Giá Sỉ & Chính Sách Phân Phối')}`}
+                    className="py-2.5 px-3 rounded-xl bg-gray-100 text-gray-800 hover:bg-gray-800 hover:text-white font-semibold text-xs border border-gray-200 transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    Gửi Mail
+                  </a>
+                ) : (
+                  <button disabled className="py-2.5 px-3 rounded-xl bg-gray-100 text-gray-400 font-semibold text-xs border border-gray-200 flex items-center justify-center gap-1.5 cursor-not-allowed">
+                    <Mail className="w-3.5 h-3.5" /> Gửi Mail
+                  </button>
+                )}
+              </div>
+
+              {/* Detailed Lead Attributes */}
+              <div className="bg-gray-50/90 rounded-xl p-4 border border-gray-200 space-y-3 text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Số điện thoại:</span>
+                  <div className="flex items-center gap-1.5 font-mono font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">
+                    <span>{viewingLead.phone || 'Chưa cung cấp'}</span>
+                    {viewingLead.phone && (
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopyPhone(e, viewingLead.phone)}
+                        className="text-gray-400 hover:text-gray-700 ml-1 cursor-pointer"
+                        title="Sao chép"
+                      >
+                        {copiedPhone === viewingLead.phone ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Email:</span>
+                  <span className="font-medium text-gray-900">{viewingLead.email || 'Chưa cung cấp'}</span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Công ty / Đại lý:</span>
+                  <span className="font-bold text-gray-900">{viewingLead.company || 'Cá nhân / Chưa nhập'}</span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Khu vực phân phối:</span>
+                  <span className="font-medium text-gray-900">{viewingLead.region || 'Toàn quốc'}</span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Nhu cầu / Sản phẩm:</span>
+                  <span className="font-semibold text-[#0F5132] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    {viewingLead.need || viewingLead.last_product_name || 'Báo giá sỉ B2B'}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Thời gian gửi:</span>
+                  <span className="font-mono text-gray-600">
+                    {viewingLead.created_at ? new Date(viewingLead.created_at).toLocaleString('vi-VN') : 'Gần đây'}
+                  </span>
+                </div>
+
+                {viewingLead.note && (
+                  <div className="pt-1">
+                    <span className="block text-gray-500 font-medium mb-1">Ghi chú từ khách:</span>
+                    <p className="p-2.5 rounded-lg bg-white border border-gray-200 text-gray-800 text-xs leading-relaxed whitespace-pre-line">
+                      {viewingLead.note}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  onTabChange('leads')
+                  setViewingLead(null)
+                }}
+                className="text-xs font-bold text-[#0F5132] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>Mở trong Pipeline CRM Quản lý Leads</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewingLead(null)}
+                className="px-4 py-1.5 text-xs font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* QUICK VIEW ORDER MODAL */}
+      {viewingOrder && createPortal(
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150"
+          onClick={() => setViewingOrder(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-150"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 text-white flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white">
+                    Chi tiết Đơn Hàng B2B
+                  </span>
+                  <span className="text-xs text-white/80 font-mono">
+                    #{viewingOrder.order_code || (viewingOrder.id ? String(viewingOrder.id).slice(0, 8) : 'B2B')}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white mt-1">
+                  {viewingOrder.customer_name || 'Khách mua sỉ B2B'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setViewingOrder(null)}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
+              <div className="bg-gray-50/90 rounded-xl p-4 border border-gray-200 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Khách hàng / Đại lý:</span>
+                  <span className="font-bold text-gray-900">{viewingOrder.customer_name || 'Khách sỉ'}</span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Số điện thoại:</span>
+                  <span className="font-mono font-medium text-gray-900">{viewingOrder.phone || 'Chưa có'}</span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Địa chỉ giao hàng:</span>
+                  <span className="font-medium text-gray-900 text-right">{viewingOrder.delivery_address || 'Theo hợp đồng B2B'}</span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Tổng giá trị đơn:</span>
+                  <span className="font-mono font-bold text-base text-emerald-700">
+                    {viewingOrder.total_amount ? `${Number(viewingOrder.total_amount).toLocaleString('vi-VN')} đ` : '0 đ'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                  <span className="text-gray-500 font-medium">Trạng thái:</span>
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 font-semibold rounded border border-blue-200">
+                    {viewingOrder.status || 'Đã chốt'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Thời gian tạo đơn:</span>
+                  <span className="font-mono text-gray-600">
+                    {viewingOrder.created_at ? new Date(viewingOrder.created_at).toLocaleString('vi-VN') : 'Gần đây'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  onTabChange('dashboard_sales')
+                  setViewingOrder(null)
+                }}
+                className="text-xs font-bold text-blue-700 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>Mở Danh sách đơn hàng B2B</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewingOrder(null)}
+                className="px-4 py-1.5 text-xs font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg transition-colors cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   )
 }

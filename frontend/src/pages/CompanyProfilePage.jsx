@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Award,
   ChevronRight,
+  ChevronLeft,
   Package,
   Layers,
   Users,
@@ -26,6 +27,8 @@ import FloatingContactBar from '../components/FloatingContactBar'
 import factoryImg from '../assets/factory/factory_production.jpg'
 import exportImg from '../assets/distribution/distribution_export.jpg'
 import catBanhImg from '../assets/categories/category_banh.jpg'
+import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
+import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
 
 import factoryHqImg from '../assets/about/factory_hq.jpg'
@@ -121,13 +124,13 @@ const MANUFACTURING_CAPABILITIES = [
 ]
 
 const PRODUCTION_PROCESS = [
-  { step: '01', name: 'SOURCE', vn: 'Tuyển chọn nông sản', desc: 'Lựa chọn nguyên liệu nông sản Việt Nam đạt chuẩn chất lượng.' },
-  { step: '02', name: 'PREPARE', vn: 'Sơ chế & làm sạch', desc: 'Quy trình rửa sạch, gọt cắt và khử trùng trong môi trường kiểm soát.' },
-  { step: '03', name: 'PROCESS', vn: 'Chế biến & tẩm ướp', desc: 'Phối trộn gia vị công thức độc quyền, giữ nguyên hương vị truyền thống.' },
-  { step: '04', name: 'DRY', vn: 'Sấy giòn khép kín', desc: 'Ứng dụng công nghệ sấy đối lưu tiên tiến, giữ màu sắc và độ giòn tự nhiên.' },
-  { step: '05', name: 'QUALITY CONTROL', vn: 'Kiểm tra KCS', desc: 'Sàng lọc tạp chất, kiểm tra độ ẩm, độ giòn và cảm quan vi sinh.' },
-  { step: '06', name: 'PACK', vn: 'Đóng gói hút chân không', desc: 'Đóng gói màng nhôm bảo quản kín khí, in hạn sử dụng và mã vạch.' },
-  { step: '07', name: 'EXPORT', vn: 'Lưu kho & Phân phối', desc: 'Bảo quản kho tiêu chuẩn xuất xưởng nội địa và xuất khẩu quốc tế.' },
+  { step: '01', title: 'Tuyển chọn nông sản', desc: 'Lựa chọn nguyên liệu nông sản Việt Nam đạt chuẩn chất lượng.' },
+  { step: '02', title: 'Sơ chế & làm sạch', desc: 'Quy trình rửa sạch, gọt cắt và khử trùng trong môi trường kiểm soát.' },
+  { step: '03', title: 'Chế biến & tẩm ướp', desc: 'Phối trộn gia vị công thức độc quyền, giữ nguyên hương vị truyền thống.' },
+  { step: '04', title: 'Sấy giòn khép kín', desc: 'Ứng dụng công nghệ sấy đối lưu tiên tiến, giữ màu sắc và độ giòn tự nhiên.' },
+  { step: '05', title: 'Kiểm tra KCS', desc: 'Sàng lọc tạp chất, kiểm tra độ ẩm, độ giòn và cảm quan vi sinh.' },
+  { step: '06', title: 'Đóng gói hút chân không', desc: 'Đóng gói màng nhôm bảo quản kín khí, in hạn sử dụng và mã vạch.' },
+  { step: '07', title: 'Lưu kho & Phân phối', desc: 'Bảo quản kho tiêu chuẩn xuất xưởng nội địa và xuất khẩu quốc tế.' },
 ]
 
 const PRODUCT_CATEGORIES = [
@@ -135,7 +138,7 @@ const PRODUCT_CATEGORIES = [
     title: 'HOKI',
     subtitle: 'Vietnamese Rice Paper Snacks',
     desc: 'Dòng sản phẩm bánh tráng sấy giòn cao cấp, hương vị đậm đà nguyên bản Việt Nam.',
-    img: catBanhImg,
+    img: catBanhTrangImg,
     badge: 'SIGNATURE SNACK',
   },
   {
@@ -149,7 +152,7 @@ const PRODUCT_CATEGORIES = [
     title: 'DRIED FOOD',
     subtitle: 'Vietnamese Agricultural Ingredients',
     desc: 'Nông sản sấy khô giữ nguyên dưỡng chất, phục vụ tiêu dùng trong nước và công nghiệp thực phẩm.',
-    img: factoryImg,
+    img: catDoAnKhoImg,
     badge: 'RAW & PROCESSED',
   },
 ]
@@ -203,12 +206,12 @@ export default function CompanyProfilePage() {
         <div className="relative bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row max-h-[90vh]">
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-haq-sage rounded-full hover:bg-haq-border transition-colors"
+            className="absolute top-4 right-4 z-10 p-2 bg-haq-cream rounded-full hover:bg-haq-border transition-colors cursor-pointer"
           >
             <ChevronRight className="w-6 h-6 rotate-90 text-haq-ink" />
           </button>
           
-          <div className="lg:w-1/2 relative bg-haq-pine aspect-square lg:aspect-auto">
+          <div className="lg:w-1/2 relative bg-[#0C1E15] aspect-square lg:aspect-auto">
             <img 
               src={factoryImg} 
               alt={capability.vn} 
@@ -222,8 +225,8 @@ export default function CompanyProfilePage() {
           </div>
 
           <div className="lg:w-1/2 p-8 sm:p-12 overflow-y-auto">
-            <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">{capability.title}</span>
-            <div className="h-1 w-12 bg-[#16A34A] mt-2 mb-6" />
+            <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">{capability.title}</span>
+            <div className="h-1 w-12 bg-haq-red mt-2 mb-6" />
             
             <div className="space-y-6 text-haq-text-secondary leading-relaxed font-normal">
               <p className="text-lg font-medium text-haq-ink">{capability.desc}</p>
@@ -235,16 +238,16 @@ export default function CompanyProfilePage() {
                 <h4 className="font-heading font-bold uppercase text-haq-ink mb-3 text-xs tracking-wider">Thông số kỹ thuật tiêu chuẩn:</h4>
                 <ul className="grid grid-cols-2 gap-4 text-xs font-heading uppercase font-medium text-haq-ink">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#16A34A]" /> ISO 22000:2018
+                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> ISO 22000:2018
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#16A34A]" /> HACCP CODEX
+                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> HACCP CODEX
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#16A34A]" /> OEM/ODM READY
+                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> OEM/ODM READY
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#16A34A]" /> KCS INDEPENDENT
+                    <CheckCircle2 className="w-4 h-4 text-haq-red" /> KCS INDEPENDENT
                   </li>
                 </ul>
               </div>
@@ -256,7 +259,7 @@ export default function CompanyProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col relative selection:bg-[#16A34A]/20 selection:text-haq-green-dark">
+    <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col relative selection:bg-haq-red/20 selection:text-haq-red">
       {/* Interactive Modal */}
       {selectedCapability && (
         <CapabilityModal 
@@ -268,16 +271,16 @@ export default function CompanyProfilePage() {
       {/* Sticky Header */}
       <StickyNav />
 
-      {/* Floating Quick Contact Widget */}
+      {/* Floating Quick Contact Bar */}
       <FloatingContactBar />
 
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
         {/* =========================================================================
-            01 — HERO: WARM SAGE ENTERPRISE WITH BENTO COLLAGE
+            HERO: BENTO PHOTO COLLAGE & HEADLINE
             ========================================================================= */}
         <section className="bg-white text-haq-ink pt-6 sm:pt-10 pb-12 sm:pb-16 border-b border-haq-border relative overflow-hidden">
-          {/* Subtle botanical shadow ambient glow */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-900/5 via-green-700/5 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
+          {/* Subtle ambient glow */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-haq-red/5 via-[#C89B3C]/5 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3 -translate-y-1/3" />
           
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
@@ -300,7 +303,7 @@ export default function CompanyProfilePage() {
                 </h1>
                 
                 {/* Subtitle / Tagline */}
-                <p className="mt-4 font-heading text-sm sm:text-base font-bold tracking-wider text-[#16A34A] uppercase">
+                <p className="mt-4 font-heading text-sm sm:text-base font-bold tracking-wider text-haq-red uppercase">
                   VIETNAMESE FOOD MANUFACTURER & EXPORTER
                 </p>
 
@@ -312,8 +315,8 @@ export default function CompanyProfilePage() {
                 {/* CTA Button */}
                 <div className="mt-7 sm:mt-8">
                   <a
-                    href="#story"
-                    className="inline-flex items-center gap-3 bg-[#16A34A] hover:bg-[#13863d] text-white px-7 py-3.5 rounded-full font-heading font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    href="#tong-quan"
+                    className="inline-flex items-center gap-3 bg-haq-red hover:bg-haq-red/90 text-white px-7 py-3.5 rounded-full font-heading font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
                   >
                     <span>TÌM HIỂU VỀ HAQ FOOD</span>
                     <ArrowRight className="w-4 h-4" />
@@ -373,7 +376,7 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            02 — CORE PILLARS BAR (4 VALUE CARDS)
+            CORE PILLARS BAR (4 VALUE CARDS)
             ========================================================================= */}
         <section className="py-8 sm:py-10 bg-white border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
@@ -383,13 +386,13 @@ export default function CompanyProfilePage() {
                 return (
                   <div 
                     key={i} 
-                    className="bg-haq-sage/40 rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-haq-border flex items-center gap-4 hover:bg-white hover:shadow-md transition-all duration-300 group"
+                    className="bg-haq-cream/50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-haq-border flex items-center gap-4 hover:bg-white hover:shadow-md transition-all duration-300 group"
                   >
-                    <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full border border-haq-border bg-white flex items-center justify-center text-[#16A34A] shrink-0 group-hover:border-[#16A34A] transition-colors shadow-2xs">
-                      <Icon className="w-6 h-6 text-[#16A34A]" strokeWidth={1.75} />
+                    <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full border border-haq-border bg-white flex items-center justify-center text-haq-red shrink-0 group-hover:border-haq-red transition-colors shadow-2xs">
+                      <Icon className="w-6 h-6 text-haq-red" strokeWidth={1.75} />
                     </div>
                     <div>
-                      <span className="block text-[10px] sm:text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider">
+                      <span className="block text-[10px] sm:text-[11px] font-heading font-bold text-[#C89B3C] uppercase tracking-wider">
                         {pillar.tag}
                       </span>
                       <h3 className="font-heading font-bold text-lg sm:text-xl text-haq-ink uppercase leading-tight mt-0.5">
@@ -407,7 +410,50 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            03 — BRAND STORY SECTION
+            01 — COMPANY FACT SHEET / WHO WE ARE (ĐẶT LÊN TRƯỚC THEO CHUẨN B2B)
+            ========================================================================= */}
+        <section id="tong-quan" className="py-20 sm:py-28 bg-haq-cream/40 border-b border-haq-border">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 pb-6 border-b border-haq-border gap-4">
+              <div>
+                <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
+                  01 — TỔNG QUAN DOANH NGHIỆP · WHO WE ARE
+                </span>
+                <h2 className="font-heading font-extrabold text-3xl sm:text-5xl text-haq-ink uppercase mt-2">
+                  Doanh Nghiệp Sản Xuất Thực Phẩm Chuyên Nghiệp
+                </h2>
+              </div>
+              <div className="font-heading text-xs text-haq-text-secondary uppercase font-medium">
+                HAQ FOOD HANOI JSC · CORPORATE PROFILE
+              </div>
+            </div>
+
+            {/* Editorial Fact Sheet Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {FACT_SHEET.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white p-7 sm:p-8 rounded-2xl border border-haq-border flex flex-col justify-between hover:border-haq-red/50 hover:shadow-md transition-all shadow-2xs group"
+                >
+                  <div>
+                    <div className="font-heading text-[11px] font-bold text-[#C89B3C] uppercase tracking-wider mb-3">
+                      {item.label}
+                    </div>
+                    <div className="font-heading font-bold text-lg text-haq-ink uppercase tracking-tight leading-snug group-hover:text-haq-red transition-colors">
+                      {item.value}
+                    </div>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-haq-border text-xs text-haq-text-secondary font-normal">
+                    {item.sub}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            02 — BRAND STORY & CORE VALUES (CÂU CHUYỆN & GIÁ TRỊ CỐT LÕI)
             ========================================================================= */}
         <section id="story" className="py-20 sm:py-32 bg-white border-b border-haq-border relative overflow-hidden">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
@@ -415,15 +461,15 @@ export default function CompanyProfilePage() {
               {/* Left Column: Eyebrow + Huge Headline */}
               <div className="lg:col-span-5 space-y-4">
                 <div className="flex items-center gap-3">
-                  <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                    01 ── CÂU CHUYỆN THƯƠNG HIỆU
+                  <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
+                    02 ── CÂU CHUYỆN THƯƠNG HIỆU
                   </span>
                 </div>
 
                 <h2 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-[1.1]">
                   MỖI SẢN PHẨM <br />
                   ĐỀU BẮT ĐẦU <br />
-                  <span className="text-[#16A34A]">TỪ TỰ NHIÊN</span>
+                  <span className="text-haq-red">TỪ TỰ NHIÊN</span>
                 </h2>
               </div>
 
@@ -445,68 +491,66 @@ export default function CompanyProfilePage() {
                 alt="HAQ FOOD Production & Ingredients"
                 className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-102"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/75 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/80 via-[#0C1E15]/20 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
                 <div>
                   <div className="font-heading text-xs text-[#C89B3C] uppercase tracking-wider font-bold">
                     NGUỒN NGUYÊN LIỆU & SẢN XUẤT
                   </div>
-                  <div className="font-heading font-extrabold text-lg sm:text-xl uppercase mt-1">
+                  <div className="font-heading font-extrabold text-lg sm:text-2xl uppercase mt-1">
                     Kết Hợp Nông Sản Bản Địa & Công Nghệ Sấy Sạch
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* =========================================================================
-            03 — COMPANY / BUSINESS INTRODUCTION (WHO WE ARE)
-            ========================================================================= */}
-        <section className="py-24 sm:py-32 bg-haq-sage/30 border-b border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 pb-6 border-b border-haq-border gap-4">
-              <div>
-                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                  TỔNG QUAN DOANH NGHIỆP · WHO WE ARE
+            {/* Core Values: TÂM - TÍN - TINH */}
+            <div className="mt-16 pt-12 border-t border-haq-border">
+              <div className="mb-8">
+                <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                  TRIẾT LÝ VẬN HÀNH
                 </span>
-                <h2 className="font-heading font-extrabold text-3xl sm:text-5xl text-haq-ink uppercase mt-2">
-                  Doanh Nghiệp Sản Xuất Thực Phẩm Chuyên Nghiệp
-                </h2>
+                <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-1">
+                  Giá Trị Cốt Lõi HAQ FOOD
+                </h3>
               </div>
-              <div className="font-heading text-xs text-haq-text-secondary uppercase font-medium">
-                HAQ FOOD HANOI JSC · CORPORATE PROFILE
-              </div>
-            </div>
 
-            {/* Editorial Fact Sheet Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {FACT_SHEET.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white p-8 rounded-2xl border border-haq-border flex flex-col justify-between hover:border-[#16A34A]/50 transition-colors shadow-2xs"
-                >
-                  <div>
-                    <div className="font-heading text-[11px] font-bold text-[#16A34A] uppercase tracking-wider mb-3">
-                      {item.label}
-                    </div>
-                    <div className="font-heading font-bold text-lg text-haq-ink uppercase tracking-tight leading-snug">
-                      {item.value}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                {CORE_VALUES.map((val) => (
+                  <div 
+                    key={val.key}
+                    className="p-7 rounded-2xl bg-haq-cream/40 border border-haq-border flex flex-col justify-between shadow-2xs hover:border-haq-red/40 hover:shadow-md transition-all"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="font-heading font-extrabold text-3xl text-haq-red">
+                          {val.key}
+                        </span>
+                        <span className="font-heading text-xs font-bold text-[#C89B3C]">
+                          {val.number}
+                        </span>
+                      </div>
+                      <h4 className="font-heading font-bold text-base text-haq-ink uppercase mb-2">
+                        {val.title}
+                      </h4>
+                      <div className="text-xs font-heading font-semibold text-haq-red mb-3">
+                        {val.tagline}
+                      </div>
+                      <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
+                        {val.desc}
+                      </p>
                     </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-haq-border text-xs text-haq-text-secondary font-normal">
-                    {item.sub}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* =========================================================================
-            04 — MANUFACTURING CAPABILITY (DEEP PINE #0C1E15)
+            03 — MANUFACTURING CAPABILITY & FACTORY STANDARDS (GỘP LIỀN MẠCH NỀN TỐI)
             ========================================================================= */}
-        <section className="py-24 sm:py-36 bg-[#0C1E15] text-white border-b border-white/10 relative overflow-hidden">
+        <section className="py-24 sm:py-32 bg-[#0C1E15] text-white border-b border-white/10 relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
             style={{
@@ -516,26 +560,27 @@ export default function CompanyProfilePage() {
           />
 
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
-            <div className="max-w-3xl mb-16">
+            {/* Phân đoạn A: Năng lực sản xuất */}
+            <div className="max-w-3xl mb-14">
               <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
-                02 — NĂNG LỰC SẢN XUẤT · OUR CAPABILITY
+                03 — NĂNG LỰC SẢN XUẤT & NHÀ MÁY · OUR CAPABILITY
               </span>
               <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white uppercase mt-2 leading-tight">
                 TỪ NGUYÊN LIỆU <br />
-                <span className="text-[#16A34A]">ĐẾN THÀNH PHẨM CHUẨN MỰC.</span>
+                <span className="text-[#C89B3C]">ĐẾN THÀNH PHẨM CHUẨN MỰC.</span>
               </h2>
               <p className="mt-4 text-sm sm:text-base text-white/75 font-normal">
                 Năng lực sản xuất toàn diện từ khâu sơ chế, chế biến nhiệt, sấy giòn đến đóng gói tiêu chuẩn xuất khẩu.
               </p>
             </div>
 
-            {/* 4 Capabilities Grid */}
+            {/* 4 Capabilities Grid (Click to open modal) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {MANUFACTURING_CAPABILITIES.map((cap) => (
                 <div
                   key={cap.num}
                   onClick={() => setSelectedCapability(cap)}
-                  className="bg-white/5 p-8 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-[#16A34A] transition-all group cursor-pointer"
+                  className="bg-white/5 p-8 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-haq-red hover:bg-white/10 transition-all group cursor-pointer shadow-lg"
                 >
                   <div>
                     <div className="font-heading font-extrabold text-5xl text-[#C89B3C] mb-6 group-hover:scale-105 transition-transform">
@@ -551,84 +596,26 @@ export default function CompanyProfilePage() {
                       {cap.desc}
                     </p>
                   </div>
-                  <div className="mt-8 pt-4 border-t border-white/10 font-heading text-[10px] text-[#C89B3C] uppercase font-semibold">
-                    HAQ INDUSTRIAL SPEC
+                  <div className="mt-8 pt-4 border-t border-white/10 font-heading text-[10px] text-[#C89B3C] uppercase font-semibold flex items-center justify-between">
+                    <span>HAQ INDUSTRIAL SPEC</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-haq-red group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* =========================================================================
-            05 — PRODUCTION PROCESS (#FFFFFF)
-            ========================================================================= */}
-        {/* =========================================================================
-            05 — PRODUCTION PROCESS (#FFFFFF)
-            ========================================================================= */}
-        <section className="py-24 sm:py-32 bg-white border-b border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="max-w-3xl mb-16">
-              <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                03 — TIẾN TRÌNH SẢN XUẤT · MANUFACTURING TIMELINE
-              </span>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-5xl text-haq-ink uppercase mt-2">
-                Quy Trình Sản Xuất Khép Kín
-              </h2>
-              <p className="mt-2 text-sm text-haq-text-secondary font-normal">
-                Hành trình từ nông sản tươi sạch đến sản phẩm đóng gói đạt chuẩn xuất khẩu.
-              </p>
-            </div>
-
-            {/* Premium Manufacturing Timeline Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {PRODUCTION_PROCESS.map((proc) => (
-                <div
-                  key={proc.step}
-                  className="bg-haq-sage/30 p-8 rounded-2xl border border-haq-border flex flex-col justify-between relative shadow-2xs hover:border-[#16A34A] transition-colors"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider bg-white px-3 py-1 rounded shadow-2xs">
-                        BƯỚC {proc.step}
-                      </span>
-                      <span className="font-heading text-xs text-haq-text-secondary font-bold">
-                        07 / {proc.step}
-                      </span>
-                    </div>
-
-                    <div className="font-heading text-[10px] font-bold text-haq-text-secondary uppercase tracking-wider mb-1">
-                      {proc.name}
-                    </div>
-                    <h3 className="font-heading font-bold text-lg text-haq-ink uppercase mb-3">
-                      {proc.vn}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
-                      {proc.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-            06 — FACTORY / QUALITY (DEEP PINE #0C1E15)
-            ========================================================================= */}
-        <section className="py-24 sm:py-36 bg-[#0C1E15] text-white border-b border-white/10 relative overflow-hidden">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Phân đoạn B: Tiêu chuẩn kiểm soát chất lượng & Hình ảnh nhà máy */}
+            <div className="mt-20 pt-16 border-t border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div className="lg:col-span-6 space-y-6">
                 <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
-                  04 — NHÀ MÁY & CHẤT LƯỢNG · FACTORY & QUALITY
+                  TIÊU CHUẨN VẬN HÀNH & KCS
                 </span>
 
-                <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white uppercase leading-tight">
+                <h3 className="font-heading font-extrabold text-3xl sm:text-4xl text-white uppercase leading-tight">
                   CHUẨN HÓA <br />
-                  <span className="text-[#16A34A]">CHẤT LƯỢNG ĐỒNG NHẤT.</span>
-                </h2>
+                  <span className="text-[#C89B3C]">CHẤT LƯỢNG ĐỒNG NHẤT.</span>
+                </h3>
 
                 <p className="text-sm sm:text-base text-white/80 leading-relaxed font-normal">
                   Nhà máy sản xuất HAQ FOOD được đầu tư đồng bộ với hệ thống máy móc sấy đối lưu, phòng pha chế nguyên liệu vô trùng và kho lưu trữ tiêu chuẩn.
@@ -636,25 +623,25 @@ export default function CompanyProfilePage() {
 
                 <div className="space-y-4 pt-4 border-t border-white/10">
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89B3C] shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-heading font-bold uppercase text-white text-sm">Vệ Sinh An Toàn Thực Phẩm Tuyệt Đối</h3>
+                      <h4 className="font-heading font-bold uppercase text-white text-sm">Vệ Sinh An Toàn Thực Phẩm Tuyệt Đối</h4>
                       <p className="text-xs text-white/60 mt-0.5 font-normal">Quy trình kiểm soát nghiêm ngặt từ trang phục công nhân đến khu vực chế biến.</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89B3C] shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-heading font-bold uppercase text-white text-sm">Độ Đồng Đều Sản Phẩm Cao</h3>
+                      <h4 className="font-heading font-bold uppercase text-white text-sm">Độ Đồng Đều Sản Phẩm Cao</h4>
                       <p className="text-xs text-white/60 mt-0.5 font-normal">Công nghệ tự động hóa kiểm soát nhiệt độ sấy, đảm bảo chất lượng đồng nhất giữa các lô.</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89B3C] shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-heading font-bold uppercase text-white text-sm">Kiểm Tra KCS Độc Lập</h3>
+                      <h4 className="font-heading font-bold uppercase text-white text-sm">Kiểm Tra KCS Độc Lập</h4>
                       <p className="text-xs text-white/60 mt-0.5 font-normal">Mọi lô hàng trước khi xuất kho đều phải vượt qua bài kiểm tra cảm quan và vi sinh.</p>
                     </div>
                   </div>
@@ -665,11 +652,11 @@ export default function CompanyProfilePage() {
               <div className="lg:col-span-6">
                 <div className="relative aspect-4/3 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
                   <img
-                    src={factoryImg}
+                    src={factoryHqImg}
                     alt="Nhà máy và kiểm soát chất lượng HAQ"
                     className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-102"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/85 via-transparent to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="font-heading text-xs text-[#C89B3C] uppercase tracking-wider font-bold">
                       TIÊU CHUẨN CÔNG NGHIỆP
@@ -685,13 +672,82 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            07 — PRODUCTS SHOWCASE (#FFFFFF)
+            04 — PRODUCTION PROCESS: 7-STAGE ENTERPRISE PIPELINE
             ========================================================================= */}
-        <section className="py-24 sm:py-32 bg-white border-b border-haq-border">
+        <section className="py-16 sm:py-20 bg-white border-b border-haq-border">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            {/* Clean Corporate Header */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider block mb-2">
+                04 — TIÊU CHUẨN SẢN XUẤT KHÉP KÍN
+              </span>
+              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight">
+                Quy Trình Sản Xuất 7 Công Đoạn
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-haq-text-secondary leading-relaxed font-normal">
+                Hệ thống vận hành liên hoàn kiểm soát nhiệt ẩm và an toàn vệ sinh thực phẩm nghiêm ngặt từ khâu nguyên liệu đầu vào đến thành phẩm đóng gói xuất xưởng.
+              </p>
+            </div>
+
+            {/* Desktop: Continuous 7-Stage Process Streamline */}
+            <div className="hidden lg:block relative">
+              {/* Process Track Line connecting all 7 stages */}
+              <div className="absolute top-5 left-8 right-8 h-[2px] bg-haq-border z-0" />
+
+              <div className="grid grid-cols-7 gap-4 relative z-10">
+                {PRODUCTION_PROCESS.map((proc) => (
+                  <div key={proc.step} className="group flex flex-col">
+                    {/* Stage Number Node */}
+                    <div className="w-10 h-10 rounded-full border-2 border-haq-border bg-white text-haq-ink group-hover:border-haq-red group-hover:bg-haq-red group-hover:text-white font-heading font-extrabold text-sm flex items-center justify-center mb-6 transition-all shadow-2xs">
+                      {proc.step}
+                    </div>
+
+                    {/* Step Card */}
+                    <div className="bg-haq-cream/30 group-hover:bg-white p-5 rounded-2xl border border-haq-border group-hover:border-haq-red/40 group-hover:shadow-md transition-all flex flex-col flex-1">
+                      <h3 className="font-heading font-bold text-sm text-haq-ink uppercase mb-2 leading-snug group-hover:text-haq-red transition-colors">
+                        {proc.title}
+                      </h3>
+                      <p className="text-xs text-haq-text-secondary leading-relaxed font-normal">
+                        {proc.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile & Tablet: Connected Vertical Timeline */}
+            <div className="lg:hidden relative border-l-2 border-haq-red/30 ml-4 pl-6 space-y-6">
+              {PRODUCTION_PROCESS.map((proc) => (
+                <div key={proc.step} className="relative">
+                  {/* Step Marker Node */}
+                  <div className="absolute -left-[35px] top-0 w-8 h-8 rounded-full border-2 border-haq-red bg-white text-haq-red font-heading font-bold text-xs flex items-center justify-center shadow-xs">
+                    {proc.step}
+                  </div>
+
+                  {/* Step Card */}
+                  <div className="bg-haq-cream/30 p-4 rounded-xl border border-haq-border">
+                    <h3 className="font-heading font-bold text-sm text-haq-ink uppercase mb-1">
+                      {proc.title}
+                    </h3>
+                    <p className="text-xs text-haq-text-secondary leading-relaxed font-normal">
+                      {proc.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            05 — PRODUCTS SHOWCASE (3 NHÓM SẢN PHẨM VỚI ẢNH CHUẨN)
+            ========================================================================= */}
+        <section className="py-24 sm:py-32 bg-haq-cream/30 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 pb-6 border-b border-haq-border gap-4">
               <div>
-                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
                   05 — DANH MỤC SẢN PHẨM · PRODUCT GROUPS
                 </span>
                 <h2 className="font-heading font-extrabold text-3xl sm:text-5xl text-haq-ink uppercase mt-2">
@@ -700,7 +756,7 @@ export default function CompanyProfilePage() {
               </div>
               <Link
                 to="/san-pham"
-                className="inline-flex items-center gap-2 text-xs font-heading font-bold uppercase text-[#16A34A] hover:text-[#0F5132]"
+                className="inline-flex items-center gap-2 text-xs font-heading font-bold uppercase text-haq-red hover:text-haq-red/80 font-semibold cursor-pointer"
               >
                 <span>XEM TẤT CẢ SẢN PHẨM</span>
                 <ArrowRight className="w-4 h-4" />
@@ -711,23 +767,23 @@ export default function CompanyProfilePage() {
               {PRODUCT_CATEGORIES.map((prod, idx) => (
                 <div
                   key={idx}
-                  className="bg-haq-sage/30 p-8 rounded-2xl border border-haq-border flex flex-col justify-between hover:shadow-lg hover:border-[#16A34A] transition-all group"
+                  className="bg-white p-7 sm:p-8 rounded-2xl border border-haq-border flex flex-col justify-between hover:shadow-xl hover:border-haq-red/50 transition-all group"
                 >
                   <div>
-                    <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-6 border border-haq-border bg-white">
+                    <div className="relative aspect-16/10 rounded-xl overflow-hidden mb-6 border border-haq-border bg-haq-cream/20">
                       <img
                         src={prod.img}
                         alt={prod.title}
-                        className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-102"
+                        className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute top-3 left-3">
-                        <span className="font-heading text-[10px] font-bold uppercase tracking-wider bg-haq-green-dark text-white px-2.5 py-1 rounded">
+                        <span className="font-heading text-[10px] font-bold uppercase tracking-wider bg-haq-red text-white px-2.5 py-1 rounded shadow-xs">
                           {prod.badge}
                         </span>
                       </div>
                     </div>
 
-                    <div className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider mb-1">
+                    <div className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider mb-1">
                       {prod.subtitle}
                     </div>
                     <h3 className="font-heading font-bold text-2xl text-haq-ink uppercase mb-3">
@@ -741,7 +797,7 @@ export default function CompanyProfilePage() {
                   <div className="mt-8 pt-4 border-t border-haq-border flex items-center justify-between">
                     <Link
                       to="/san-pham"
-                      className="inline-flex items-center gap-2 text-xs font-heading font-bold uppercase text-haq-ink group-hover:text-[#16A34A] transition-colors"
+                      className="inline-flex items-center gap-2 text-xs font-heading font-bold uppercase text-haq-ink group-hover:text-haq-red transition-colors"
                     >
                       <span>KHÁM PHÁ CHI TIẾT</span>
                       <ArrowRight className="w-4 h-4" />
@@ -754,19 +810,19 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            08 — EXPORT / GLOBAL PRESENCE
+            06 — EXPORT / GLOBAL PRESENCE
             ========================================================================= */}
-        <section className="py-24 sm:py-32 bg-haq-sage/30 border-b border-haq-border">
+        <section className="py-24 sm:py-32 bg-white border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
               <div className="lg:col-span-6 space-y-6">
-                <span className="font-heading text-xs font-bold text-white uppercase tracking-wider bg-haq-green-dark px-3 py-1 rounded">
+                <span className="font-heading text-xs font-bold text-white uppercase tracking-wider bg-haq-red px-3 py-1 rounded">
                   06 — XUẤT KHẨU QUỐC TẾ · GLOBAL EXPORT
                 </span>
 
                 <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-haq-ink uppercase leading-tight">
                   TỪ VIỆT NAM <br />
-                  <span className="text-[#16A34A]">VƯƠN RA THẾ GIỚI.</span>
+                  <span className="text-haq-red">VƯƠN RA THẾ GIỚI.</span>
                 </h2>
 
                 <p className="text-sm sm:text-base text-haq-text-secondary leading-relaxed font-normal">
@@ -774,15 +830,15 @@ export default function CompanyProfilePage() {
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-haq-border">
-                  <div className="bg-white p-4 rounded-xl border border-haq-border shadow-2xs">
+                  <div className="bg-haq-cream/50 p-4 rounded-xl border border-haq-border shadow-2xs text-center">
                     <div className="font-heading text-[10px] text-haq-text-secondary uppercase font-medium">NỘI ĐỊA</div>
                     <div className="font-heading font-bold text-base text-haq-ink mt-0.5">VIỆT NAM</div>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-haq-border shadow-2xs">
+                  <div className="bg-haq-cream/50 p-4 rounded-xl border border-haq-border shadow-2xs text-center">
                     <div className="font-heading text-[10px] text-haq-text-secondary uppercase font-medium">ĐÔNG BẮC Á</div>
-                    <div className="font-heading font-bold text-base text-[#16A34A] mt-0.5">HÀN QUỐC</div>
+                    <div className="font-heading font-bold text-base text-haq-red mt-0.5">HÀN QUỐC</div>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-haq-border shadow-2xs">
+                  <div className="bg-haq-cream/50 p-4 rounded-xl border border-haq-border shadow-2xs text-center">
                     <div className="font-heading text-[10px] text-haq-text-secondary uppercase font-medium">ĐÔNG Á</div>
                     <div className="font-heading font-bold text-base text-[#C89B3C] mt-0.5">ĐÀI LOAN</div>
                   </div>
@@ -796,7 +852,7 @@ export default function CompanyProfilePage() {
                     alt="Xuất khẩu thực phẩm toàn cầu"
                     className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-102"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/75 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/80 via-transparent to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6 text-white">
                     <div className="font-heading text-xs text-[#C89B3C] uppercase tracking-wider font-bold">
                       PHÂN PHỐI QUỐC TẾ
@@ -812,12 +868,12 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            09 — RESPONSIBILITY (#FFFFFF)
+            07 — RESPONSIBILITY (CAM KẾT TRÁCH NHIỆM DOANH NGHIỆP)
             ========================================================================= */}
-        <section className="py-24 sm:py-32 bg-white border-b border-haq-border">
+        <section className="py-24 sm:py-32 bg-haq-cream/30 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="max-w-3xl mb-16">
-              <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+              <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
                 07 — TRÁCH NHIỆM DOANH NGHIỆP · RESPONSIBILITY
               </span>
               <h2 className="font-heading font-extrabold text-3xl sm:text-5xl text-haq-ink uppercase mt-2">
@@ -834,14 +890,14 @@ export default function CompanyProfilePage() {
                 return (
                   <div
                     key={comm.num}
-                    className="p-8 sm:p-10 rounded-2xl bg-haq-sage/30 border border-haq-border flex flex-col justify-between shadow-2xs hover:border-[#16A34A]/50 transition-colors"
+                    className="p-8 sm:p-10 rounded-2xl bg-white border border-haq-border flex flex-col justify-between shadow-2xs hover:border-haq-red/50 hover:shadow-md transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-6">
-                        <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider bg-white px-3 py-1 rounded shadow-2xs">
+                        <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider bg-haq-cream px-3 py-1 rounded shadow-2xs border border-haq-border">
                           {comm.num} · {comm.category}
                         </span>
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#16A34A] shadow-2xs">
+                        <div className="w-10 h-10 rounded-xl bg-haq-cream flex items-center justify-center text-haq-red shadow-2xs">
                           <Icon className="w-5 h-5" />
                         </div>
                       </div>
@@ -850,7 +906,7 @@ export default function CompanyProfilePage() {
                         {comm.title}
                       </h3>
 
-                      <div className="font-heading text-xs font-bold text-[#16A34A] mb-4 border-l-2 border-[#16A34A] pl-3">
+                      <div className="font-heading text-xs font-bold text-haq-red mb-4 border-l-2 border-haq-red pl-3">
                         {comm.focus}
                       </div>
 
@@ -866,7 +922,7 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* =========================================================================
-            10 — FINAL CTA SECTION (DEEP PINE #0C1E15)
+            FINAL CTA SECTION (HỢP TÁC & ĐỒNG HÀNH)
             ========================================================================= */}
         <section className="py-24 sm:py-36 bg-[#0C1E15] text-white relative overflow-hidden">
           <div
@@ -885,7 +941,7 @@ export default function CompanyProfilePage() {
 
               <h2 className="font-heading font-extrabold text-4xl sm:text-6xl lg:text-7xl text-white uppercase leading-[1.0] tracking-tight">
                 CÙNG KIẾN TẠO <br />
-                <span className="text-[#16A34A]">GIÁ TRỊ NÔNG SẢN VIỆT</span> <br />
+                <span className="text-[#C89B3C]">GIÁ TRỊ NÔNG SẢN VIỆT</span> <br />
                 VƯƠN TẦM.
               </h2>
 
@@ -896,7 +952,7 @@ export default function CompanyProfilePage() {
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   to="/lien-he"
-                  className="w-full sm:w-auto px-8 py-4 bg-[#16A34A] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider rounded-full shadow-lg hover:bg-[#13863d] transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-4 bg-haq-red text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider rounded-full shadow-lg hover:bg-haq-red/90 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>LIÊN HỆ VỚI HAQ FOOD</span>
                   <ArrowRight className="w-4 h-4" />
@@ -904,7 +960,7 @@ export default function CompanyProfilePage() {
 
                 <Link
                   to="/san-pham"
-                  className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider rounded-full border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider rounded-full border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>KHÁM PHÁ SẢN PHẨM</span>
                   <ArrowRight className="w-4 h-4" />
@@ -920,4 +976,3 @@ export default function CompanyProfilePage() {
     </div>
   )
 }
-
