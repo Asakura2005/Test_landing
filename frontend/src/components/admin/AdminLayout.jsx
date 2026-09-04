@@ -46,7 +46,6 @@ export default function AdminLayout({
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isLeadAlertsOpen, setIsLeadAlertsOpen] = useState(false)
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [hasUnreadAlerts, setHasUnreadAlerts] = useState(true)
 
   const topbarControlsRef = useRef(null)
@@ -60,7 +59,6 @@ export default function AdminLayout({
         setIsQuickAddOpen(false)
         setIsNotificationsOpen(false)
         setIsLeadAlertsOpen(false)
-        setIsUserMenuOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -379,66 +377,6 @@ export default function AdminLayout({
           {/* Right section: Role Badge + Lead Alerts + Notifications + CTAs */}
           <div ref={topbarControlsRef} className="flex items-center gap-2 sm:gap-2.5 relative">
 
-            {/* User Role & Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => {
-                  setIsUserMenuOpen(!isUserMenuOpen)
-                  setIsLeadAlertsOpen(false)
-                  setIsNotificationsOpen(false)
-                  setIsQuickAddOpen(false)
-                }}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-xs font-medium text-gray-700 transition-colors cursor-pointer shadow-2xs"
-                title="Tài khoản cá nhân"
-              >
-                <div className="w-5 h-5 rounded-full bg-[#0F5132]/10 text-[#0F5132] font-bold text-[10px] flex items-center justify-center">
-                  {(currentUser?.email || 'A').charAt(0).toUpperCase()}
-                </div>
-                <span className="hidden md:inline truncate max-w-[120px]">{currentUser?.email}</span>
-                <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${
-                  isSales ? 'bg-amber-100 text-amber-900 border border-amber-200' : 'bg-emerald-100 text-[#0F5132] border border-emerald-200'
-                }`}>
-                  {isSales ? 'Sales' : 'Admin'}
-                </span>
-                <ChevronDown className="w-3 h-3 text-gray-400" />
-              </button>
-
-              {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="p-3 bg-gray-50 rounded-lg mb-1 border border-gray-100">
-                    <div className="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Đang đăng nhập</div>
-                    <div className="font-bold text-xs text-gray-900 truncate mt-0.5">{currentUser?.email}</div>
-                    <div className="text-[11px] text-[#0F5132] font-medium mt-1 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      {isSales ? 'Chuyên viên Kinh doanh B2B' : 'Quản trị viên Hệ thống Cấp cao'}
-                    </div>
-                  </div>
-                  {!isSales && (
-                    <button
-                      onClick={() => {
-                        onTabChange('settings')
-                        setIsUserMenuOpen(false)
-                      }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors cursor-pointer text-left"
-                    >
-                      <Settings className="w-4 h-4 text-gray-400" />
-                      Cài đặt & Phân quyền
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      setIsUserMenuOpen(false)
-                      onLogout()
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-left mt-0.5"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Đăng xuất khỏi hệ thống
-                  </button>
-                </div>
-              )}
-            </div>
-
             {/* Lead Inquiries Dropdown */}
             <div className="relative">
               <button
@@ -446,7 +384,6 @@ export default function AdminLayout({
                   setIsLeadAlertsOpen(!isLeadAlertsOpen)
                   setIsNotificationsOpen(false)
                   setIsQuickAddOpen(false)
-                  setIsUserMenuOpen(false)
                 }}
                 className={`p-1.5 rounded-lg border transition-colors relative cursor-pointer ${
                   isLeadAlertsOpen 
@@ -524,7 +461,6 @@ export default function AdminLayout({
                   setIsNotificationsOpen(!isNotificationsOpen)
                   setIsLeadAlertsOpen(false)
                   setIsQuickAddOpen(false)
-                  setIsUserMenuOpen(false)
                 }}
                 className={`p-1.5 rounded-lg border transition-colors relative cursor-pointer ${
                   isNotificationsOpen 
@@ -584,7 +520,6 @@ export default function AdminLayout({
                     setIsQuickAddOpen(!isQuickAddOpen)
                     setIsNotificationsOpen(false)
                     setIsLeadAlertsOpen(false)
-                    setIsUserMenuOpen(false)
                   }}
                   className="h-8 px-3 rounded-lg bg-[#0F5132] text-white font-medium text-xs hover:bg-[#14532D] transition-colors flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer active:scale-95"
                 >
