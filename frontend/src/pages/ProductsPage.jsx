@@ -12,7 +12,7 @@ import {
 } from '../data/productCategories'
 import { getProducts, getCategories } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
-import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
+import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '../utils/i18nData'
 
 import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
 import banhTrangSayTomImg from '../assets/products/banh_trang_say_tom_50g.jpg'

@@ -129,6 +129,14 @@ function AppRoutes() {
           <Route path="/heritage" element={<HeritagePage />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/company-profile" element={<Navigate to="/gioi-thieu" replace />} />
+
+          {/* User convenience aliases (without hyphens) */}
+          <Route path="/sanpham" element={<Navigate to="/san-pham" replace />} />
+          <Route path="/gioithieu" element={<Navigate to="/gioi-thieu" replace />} />
+          <Route path="/lienhe" element={<Navigate to="/lien-he" replace />} />
+          <Route path="/tintuc" element={<Navigate to="/tin-tuc" replace />} />
+          <Route path="/nangluc" element={<Navigate to="/nang-luc" replace />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
