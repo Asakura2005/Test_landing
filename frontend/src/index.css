@@ -18,14 +18,14 @@
 
 /* ── Base ─────────────────────────────────────────────── */
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
+  background-color: #0C1E15;
 }
 
 body {
   font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   color: var(--color-text);
-  background-color: var(--color-primary-bg);
+  background-color: #0C1E15;
   overflow-x: hidden;
 }
 

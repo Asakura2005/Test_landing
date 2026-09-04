@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import CompanyProfilePage from './pages/CompanyProfilePage.jsx'
@@ -21,27 +21,34 @@ import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import { FloatingLanguageSwitcher } from './components/LanguageSwitcher'
 import SeoHead from './components/SeoHead'
 
-// Scroll to top, track session visit, and sync language from URL prefix
+// Scroll to top and track session visit ONLY on genuine page navigations
 function RouteSync() {
   const { pathname } = useLocation()
   const { language, setLanguage } = useLanguage()
+  const prevPathRef = useRef(pathname)
 
+  // 1. Only scroll to top when user actually navigates to a new route
   useEffect(() => {
-    window.scrollTo(0, 0)
-    recordSessionVisit()
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname
+      window.scrollTo(0, 0)
+      recordSessionVisit()
+    }
+  }, [pathname])
 
+  // 2. Sync language from URL prefix on direct page load or external URL change
+  useEffect(() => {
     if (pathname.startsWith('/en')) {
       if (language !== 'en') setLanguage('en')
     } else if (pathname.startsWith('/ko')) {
       if (language !== 'ko') setLanguage('ko')
     } else if (!pathname.startsWith('/admin')) {
-      // If browsing root Vietnamese routes and not explicitly on en/ko route
       const saved = localStorage.getItem('haq_language')
-      if (!saved) {
-        if (language !== 'vi') setLanguage('vi')
+      if (!saved && language !== 'vi') {
+        setLanguage('vi')
       }
     }
-  }, [pathname, language, setLanguage])
+  }, [pathname]) // Intentionally omit 'language' so language switching never causes re-triggering
 
   return null
 }
@@ -54,7 +61,7 @@ function AppRoutes() {
     <>
       <RouteSync />
       <SeoHead />
-      <div className="w-full overflow-x-hidden relative">
+      <div className="w-full overflow-x-hidden relative min-h-screen bg-[#0C1E15]">
         {!isAdmin && <FloatingLanguageSwitcher />}
         <Routes>
           {/* ================= VIETNAMESE (Default) ================= */}

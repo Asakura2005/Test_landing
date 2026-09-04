@@ -49,6 +49,23 @@ export function LanguageProvider({ children }) {
     }
   }, [language])
 
+  // Synchronize language if user uses browser Back / Forward buttons
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const handlePopState = () => {
+      const path = window.location.pathname
+      if (path.startsWith('/en')) {
+        setLanguageState('en')
+      } else if (path.startsWith('/ko')) {
+        setLanguageState('ko')
+      } else if (!path.startsWith('/admin')) {
+        setLanguageState('vi')
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
   const setLanguage = useCallback((code) => {
     if (!['vi', 'en', 'ko'].includes(code)) return
     setLanguageState(code)
@@ -60,17 +77,21 @@ export function LanguageProvider({ children }) {
   }, [])
 
   /**
-   * Seamless client-side language switcher that updates both language state and route
-   * without triggering a full page reload.
+   * Seamless client-side language switcher:
+   * 1. Updates language state instantly in React (all t() text transforms in-place)
+   * 2. Updates address bar URL via window.history.replaceState (no unmounting, no white flash, no scroll jump)
+   * 3. Dispatches custom event for any SEO or external listeners
    */
   const switchLanguage = useCallback((targetCode, navigate, currentPath) => {
     if (!['vi', 'en', 'ko'].includes(targetCode)) return
     setLanguage(targetCode)
 
-    if (navigate && currentPath) {
-      const newPath = getEquivalentRoute(currentPath, targetCode)
-      if (newPath !== currentPath) {
-        navigate(newPath, { replace: true })
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname || '/'
+      const newPath = getEquivalentRoute(path, targetCode)
+      if (newPath !== path) {
+        window.history.replaceState(null, '', newPath)
+        window.dispatchEvent(new CustomEvent('haq_lang_changed', { detail: { lang: targetCode, path: newPath } }))
       }
     }
   }, [setLanguage])

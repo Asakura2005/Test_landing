@@ -74,7 +74,8 @@ export default function Hero() {
             src={slide.image}
             alt={slide.title}
             className="w-full h-full object-cover object-center transform transition-all duration-1000 ease-out"
-            loading={idx === 0 ? 'eager' : 'lazy'}
+            loading="eager"
+            decoding="async"
           />
           {/* Subtle Editorial Gradient Overlay for High Contrast */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#0C1E15]/90 via-[#0C1E15]/65 to-[#0C1E15]/40" />

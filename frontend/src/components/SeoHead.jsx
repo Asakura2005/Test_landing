@@ -84,54 +84,63 @@ export default function SeoHead() {
   useEffect(() => {
     if (typeof document === 'undefined') return
 
-    // 1. Update <html> lang attribute
-    document.documentElement.lang = language
+    const updateSeo = () => {
+      const activePath = typeof window !== 'undefined' ? window.location.pathname : pathname
 
-    // 2. Resolve section & update title
-    const sectionKey = resolveSectionKey(pathname)
-    const titleObj = SEO_TITLES[sectionKey] || SEO_TITLES.home
-    document.title = titleObj[language] || titleObj.vi
+      // 1. Update <html> lang attribute
+      document.documentElement.lang = language
 
-    // 3. Update meta description
-    const descObj = SEO_DESCRIPTIONS[sectionKey] || SEO_DESCRIPTIONS.home
-    const metaDesc = descObj[language] || descObj.vi
-    let descTag = document.querySelector('meta[name="description"]')
-    if (!descTag) {
-      descTag = document.createElement('meta')
-      descTag.setAttribute('name', 'description')
-      document.head.appendChild(descTag)
-    }
-    descTag.setAttribute('content', metaDesc)
+      // 2. Resolve section & update title
+      const sectionKey = resolveSectionKey(activePath)
+      const titleObj = SEO_TITLES[sectionKey] || SEO_TITLES.home
+      document.title = titleObj[language] || titleObj.vi
 
-    // 4. Update Canonical URL
-    const canonicalHref = `${SITE_ORIGIN}${pathname}`
-    let canonicalLink = document.querySelector('link[rel="canonical"]')
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link')
-      canonicalLink.setAttribute('rel', 'canonical')
-      document.head.appendChild(canonicalLink)
-    }
-    canonicalLink.setAttribute('href', canonicalHref)
-
-    // 5. Update hreflang alternate tags (vi, en, ko, x-default)
-    const alternates = getAlternateHreflangUrls(pathname, SITE_ORIGIN)
-    const hreflangConfigs = [
-      { lang: 'vi', href: alternates.vi },
-      { lang: 'en', href: alternates.en },
-      { lang: 'ko', href: alternates.ko },
-      { lang: 'x-default', href: alternates.xDefault },
-    ]
-
-    hreflangConfigs.forEach(({ lang, href }) => {
-      let tag = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`)
-      if (!tag) {
-        tag = document.createElement('link')
-        tag.setAttribute('rel', 'alternate')
-        tag.setAttribute('hreflang', lang)
-        document.head.appendChild(tag)
+      // 3. Update meta description
+      const descObj = SEO_DESCRIPTIONS[sectionKey] || SEO_DESCRIPTIONS.home
+      const metaDesc = descObj[language] || descObj.vi
+      let descTag = document.querySelector('meta[name="description"]')
+      if (!descTag) {
+        descTag = document.createElement('meta')
+        descTag.setAttribute('name', 'description')
+        document.head.appendChild(descTag)
       }
-      tag.setAttribute('href', href)
-    })
+      descTag.setAttribute('content', metaDesc)
+
+      // 4. Update Canonical URL
+      const canonicalHref = `${SITE_ORIGIN}${activePath}`
+      let canonicalLink = document.querySelector('link[rel="canonical"]')
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link')
+        canonicalLink.setAttribute('rel', 'canonical')
+        document.head.appendChild(canonicalLink)
+      }
+      canonicalLink.setAttribute('href', canonicalHref)
+
+      // 5. Update hreflang alternate tags (vi, en, ko, x-default)
+      const alternates = getAlternateHreflangUrls(activePath, SITE_ORIGIN)
+      const hreflangConfigs = [
+        { lang: 'vi', href: alternates.vi },
+        { lang: 'en', href: alternates.en },
+        { lang: 'ko', href: alternates.ko },
+        { lang: 'x-default', href: alternates.xDefault },
+      ]
+
+      hreflangConfigs.forEach(({ lang, href }) => {
+        let tag = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`)
+        if (!tag) {
+          tag = document.createElement('link')
+          tag.setAttribute('rel', 'alternate')
+          tag.setAttribute('hreflang', lang)
+          document.head.appendChild(tag)
+        }
+        tag.setAttribute('href', href)
+      })
+    }
+
+    updateSeo()
+
+    window.addEventListener('haq_lang_changed', updateSeo)
+    return () => window.removeEventListener('haq_lang_changed', updateSeo)
   }, [pathname, language])
 
   return null
