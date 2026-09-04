@@ -17,22 +17,34 @@ import Admin from './pages/Admin.jsx'
 import ProductDetailPage from './pages/ProductDetailPage.jsx'
 
 import { initPostHog, recordSessionVisit } from './services/posthog'
+import { LanguageProvider, useLanguage } from './context/LanguageContext'
+import { FloatingLanguageSwitcher } from './components/LanguageSwitcher'
 
-// Scroll to top and track session visit on route change
-function ScrollToTopAndTrack() {
+// Scroll to top, track session visit, and sync language from URL prefix
+function RouteSync() {
   const { pathname } = useLocation()
+  const { setLanguage } = useLanguage()
+
   useEffect(() => {
     window.scrollTo(0, 0)
     recordSessionVisit()
-  }, [pathname])
+
+    if (pathname.startsWith('/en')) {
+      setLanguage('en')
+    } else if (pathname.startsWith('/ko')) {
+      setLanguage('ko')
+    }
+  }, [pathname, setLanguage])
+
   return null
 }
 
-export default function App() {
+function AppRoutes() {
   return (
-    <Router>
-      <ScrollToTopAndTrack />
-      <div className="w-full overflow-x-hidden">
+    <>
+      <RouteSync />
+      <div className="w-full overflow-x-hidden relative">
+        <FloatingLanguageSwitcher />
         <Routes>
           <Route path="/" element={<Home />} />
           {/* VỀ CHÚNG TÔI Subpages */}
@@ -41,6 +53,19 @@ export default function App() {
           <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
           <Route path="/lich-su" element={<HistoryPage />} />
           <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
+
+          {/* Multilingual Prefix Routes */}
+          <Route path="/en" element={<Home />} />
+          <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
+          <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
+          <Route path="/en/san-pham" element={<ProductsPage />} />
+          <Route path="/en/lien-he" element={<ContactPage />} />
+
+          <Route path="/ko" element={<Home />} />
+          <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
+          <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
+          <Route path="/ko/san-pham" element={<ProductsPage />} />
+          <Route path="/ko/lien-he" element={<ContactPage />} />
 
           {/* Other Core Pages */}
           <Route path="/nang-luc" element={<CapabilitiesPage />} />
@@ -62,6 +87,17 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <Router>
+      <LanguageProvider>
+        <AppRoutes />
+      </LanguageProvider>
     </Router>
   )
 }
+

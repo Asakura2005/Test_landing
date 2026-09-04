@@ -336,17 +336,6 @@ export default function AdminLayout({
     ]
   }, [isSales, productsCount, newLeadsCount])
 
-  // Close dropdowns on outside click
-  useEffect(() => {
-    const closeDropdowns = () => {
-      setIsQuickAddOpen(false)
-      setIsNotificationsOpen(false)
-      setIsLeadAlertsOpen(false)
-    }
-    window.addEventListener('click', closeDropdowns)
-    return () => window.removeEventListener('click', closeDropdowns)
-  }, [])
-
   const handleNavClick = (tabId) => {
     if (onTabChange) onTabChange(tabId)
     setIsMobileSidebarOpen(false)
@@ -512,7 +501,7 @@ export default function AdminLayout({
       <div className="flex-1 min-w-0 h-full flex flex-col overflow-hidden">
         
         {/* STICKY TOP HEADER */}
-        <header className="h-14 bg-white border-b border-gray-200 shrink-0 px-4 lg:px-6 flex items-center justify-between gap-4 z-30">
+        <header className="relative h-14 bg-white border-b border-gray-200 shrink-0 px-4 lg:px-6 flex items-center justify-between gap-4 z-30">
           
           {/* Left section: Hamburger (Mobile) + Breadcrumb + Global Search */}
           <div className="flex items-center gap-3 flex-1 max-w-xl">
@@ -552,7 +541,8 @@ export default function AdminLayout({
             <div className="relative">
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   setIsLeadAlertsOpen(!isLeadAlertsOpen)
                   setIsNotificationsOpen(false)
                   setIsQuickAddOpen(false)
@@ -573,7 +563,10 @@ export default function AdminLayout({
               </button>
 
               {isLeadAlertsOpen && (
-                <div className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div 
+                  onClick={(e) => e.stopPropagation()} 
+                  className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+                >
                   <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
                     <div className="flex items-center gap-1.5">
                       {unreadLeadsCount > 0 && (
@@ -690,7 +683,8 @@ export default function AdminLayout({
             <div className="relative">
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   setIsNotificationsOpen(!isNotificationsOpen)
                   setIsLeadAlertsOpen(false)
                   setIsQuickAddOpen(false)
@@ -709,7 +703,10 @@ export default function AdminLayout({
               </button>
 
               {isNotificationsOpen && (
-                <div className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div 
+                  onClick={(e) => e.stopPropagation()} 
+                  className="absolute right-0 mt-2 w-[350px] sm:w-[400px] max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+                >
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                     <h4 className="font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
                       <Bell className="w-3.5 h-3.5 text-[#0F5132]" />
@@ -812,7 +809,8 @@ export default function AdminLayout({
             {!isSales && (
               <div className="relative">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setIsQuickAddOpen(!isQuickAddOpen)
                     setIsNotificationsOpen(false)
                     setIsLeadAlertsOpen(false)
@@ -825,7 +823,10 @@ export default function AdminLayout({
                 </button>
 
                 {isQuickAddOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 p-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 p-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+                  >
                     <button
                       onClick={() => {
                         setIsQuickAddOpen(false)

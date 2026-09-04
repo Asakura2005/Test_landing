@@ -11,6 +11,8 @@ import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
 import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
+import { useLanguage, LANGUAGES } from '../context/LanguageContext'
+import { HeaderLanguageSwitcher } from './LanguageSwitcher'
 
 const ABOUT_SUBPAGES = [
   {
@@ -35,6 +37,7 @@ const ABOUT_SUBPAGES = [
 
 
 export default function StickyNav() {
+  const { t, language, setLanguage } = useLanguage()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
@@ -178,7 +181,7 @@ export default function StickyNav() {
                   : 'text-haq-ink hover:text-haq-green-dark'
               }`}
             >
-              <span>Về chúng tôi</span>
+              <span>{t('nav.about', 'Về chúng tôi')}</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 've-chung-toi' || isAboutActive ? 'w-full' : 'w-0'
@@ -251,7 +254,7 @@ export default function StickyNav() {
                 activeMenu === 'san-pham' || isProductsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
               }`}
             >
-              <span>Sản phẩm</span>
+              <span>{t('nav.products', 'Sản phẩm')}</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 'san-pham' || isProductsActive ? 'w-full' : 'w-0'
@@ -401,7 +404,7 @@ export default function StickyNav() {
               isNewsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
             }`}
           >
-            <span>Tin tức</span>
+            <span>{t('nav.news', 'Tin tức')}</span>
             <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
               isNewsActive ? 'w-full' : 'w-0 group-hover:w-full'
             }`} />
@@ -415,20 +418,21 @@ export default function StickyNav() {
               isContactActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
             }`}
           >
-            <span>Liên hệ</span>
+            <span>{t('nav.contact', 'Liên hệ')}</span>
             <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
               isContactActive ? 'w-full' : 'w-0 group-hover:w-full'
             }`} />
           </Link>
         </nav>
 
-        {/* 3. CTA: LIÊN HỆ → */}
-        <div className="hidden md:flex items-center">
+        {/* 3. Language Switcher & CTA */}
+        <div className="hidden md:flex items-center gap-3">
+          <HeaderLanguageSwitcher />
           <Link
             to="/lien-he"
-            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-6 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
+            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
           >
-            <span>LIÊN HỆ BÁO GIÁ</span>
+            <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -547,14 +551,36 @@ export default function StickyNav() {
             </Link>
           </div>
 
-          {/* LIÊN HỆ */}
-          <div className="pt-6">
+          {/* LIÊN HỆ & ĐỔI NGÔN NGỮ */}
+          <div className="pt-4 space-y-4">
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-haq-cream/50 border border-haq-border">
+              <span className="text-xs font-heading font-bold text-haq-ink uppercase">
+                {t('common.switch_language', 'Ngôn ngữ')}:
+              </span>
+              <div className="flex items-center gap-1.5">
+                {LANGUAGES.map((item) => (
+                  <button
+                    key={item.code}
+                    type="button"
+                    onClick={() => setLanguage(item.code)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold uppercase transition-all ${
+                      language === item.code
+                        ? 'bg-haq-red text-white shadow-2xs'
+                        : 'bg-white text-haq-ink border border-haq-border hover:bg-haq-cream'
+                    }`}
+                  >
+                    {item.code}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Link
               to="/lien-he"
               onClick={() => setMobileOpen(false)}
               className="w-full flex items-center justify-center gap-3 bg-[#16A34A] text-white py-4 rounded-2xl text-[13px] font-heading font-bold uppercase tracking-wider shadow-md hover:bg-[#0F5132] active:scale-95 transition-all"
             >
-              <span>LIÊN HỆ HỢP TÁC</span>
+              <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
