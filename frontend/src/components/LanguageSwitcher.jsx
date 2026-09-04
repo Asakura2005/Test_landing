@@ -101,15 +101,15 @@ export function FloatingLanguageSwitcher() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Dropdown list appearing above / around the switcher on hover */}
+      {/* Dropdown list appearing above the switcher on hover */}
       <div
-        className={`transition-all duration-300 ease-out origin-bottom-right ${
+        className={`transition-all duration-200 ease-out origin-bottom-right ${
           isHovered
             ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
         }`}
       >
-        <div className="bg-white/98 backdrop-blur-md rounded-2xl shadow-2xl border border-haq-red/30 p-2 min-w-[150px] mb-2.5 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.18)] border border-gray-200/90 p-2.5 min-w-[170px] mb-2.5 overflow-hidden">
           <div className="space-y-1">
             {LANGUAGES.map((item) => {
               const isActive = item.code === language
@@ -123,15 +123,15 @@ export function FloatingLanguageSwitcher() {
                   }}
                   className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs font-heading font-medium transition-all text-left cursor-pointer ${
                     isActive
-                      ? 'bg-haq-red/10 text-haq-red font-bold'
-                      : 'text-haq-ink hover:bg-haq-cream hover:text-haq-red'
+                      ? 'bg-[#E8F3EE] text-[#0F5132] font-bold'
+                      : 'text-[#0C1E15] hover:bg-gray-50 hover:text-[#0F5132]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <FlagIcon code={item.code} className="w-5 h-3.5 shrink-0" />
                     <span>{item.name}</span>
                   </div>
-                  {isActive && <Check className="w-3.5 h-3.5 text-haq-red shrink-0" />}
+                  {isActive && <Check className="w-4 h-4 text-[#0F5132] shrink-0" />}
                 </button>
               )
             })}
@@ -139,16 +139,16 @@ export function FloatingLanguageSwitcher() {
         </div>
       </div>
 
-      {/* Floating Trigger Pill */}
+      {/* Floating Trigger Pill - Solid White */}
       <div
-        className={`flex items-center gap-2 px-3.5 py-2.5 bg-white/95 backdrop-blur-md rounded-full shadow-lg border transition-all cursor-pointer ${
+        className={`flex items-center gap-2.5 px-4 py-2.5 bg-white rounded-full shadow-md border transition-all cursor-pointer ${
           isHovered
-            ? 'border-haq-red shadow-haq-red/20 scale-105'
-            : 'border-haq-border hover:border-haq-red/50'
+            ? 'border-[#0F5132] shadow-lg scale-105'
+            : 'border-gray-300 hover:border-[#0F5132]'
         }`}
       >
         <FlagIcon code={currentLangObj.code} className="w-5 h-3.5 shrink-0" />
-        <span className="text-xs font-heading font-bold text-haq-ink uppercase tracking-wider">
+        <span className="text-xs font-heading font-bold text-[#0C1E15] uppercase tracking-wider">
           {currentLangObj.code.toUpperCase()}
         </span>
       </div>
@@ -214,15 +214,15 @@ export function HeaderLanguageSwitcher() {
                   }}
                   className={`w-full flex items-center justify-between gap-3 px-3 py-2 rounded-xl text-xs font-heading font-medium transition-all text-left cursor-pointer ${
                     isActive
-                      ? 'bg-haq-red/10 text-haq-red font-bold'
-                      : 'text-haq-ink hover:bg-haq-cream hover:text-haq-red'
+                      ? 'bg-[#E8F3EE] text-[#0F5132] font-bold'
+                      : 'text-[#0C1E15] hover:bg-gray-50 hover:text-[#0F5132]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <FlagIcon code={item.code} className="w-4 h-3 shrink-0" />
                     <span>{item.name}</span>
                   </div>
-                  {isActive && <Check className="w-3.5 h-3.5 text-haq-red shrink-0" />}
+                  {isActive && <Check className="w-3.5 h-3.5 text-[#0F5132] shrink-0" />}
                 </button>
               )
             })}
