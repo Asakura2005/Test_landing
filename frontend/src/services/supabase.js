@@ -818,6 +818,8 @@ export async function createNews(newsData) {
       content: newsData.content || '',
       image_url: newsData.image_url || '',
       author: newsData.author || (newsData.source_name ? `Theo ${newsData.source_name}` : 'HAQ FOOD'),
+      source_name: newsData.source_name || null,
+      source_url: newsData.source_url || null,
       published_at: newsData.published_at || new Date().toISOString()
     }
     const { data, error } = await supabase
@@ -863,6 +865,8 @@ export async function updateNews(id, newsData) {
       content: newsData.content || '',
       image_url: newsData.image_url || '',
       author: newsData.author || (newsData.source_name ? `Theo ${newsData.source_name}` : 'HAQ FOOD'),
+      source_name: newsData.source_name || null,
+      source_url: newsData.source_url || null,
       published_at: newsData.published_at || new Date().toISOString()
     }
     const { data, error } = await supabase

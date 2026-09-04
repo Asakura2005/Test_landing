@@ -184,6 +184,8 @@ export default function NewsModal({ news, onClose, onSave }) {
         content: finalContent,
         image_url: formData.image_url,
         author: formData.author,
+        source_name: formData.source_name ? formData.source_name.trim() : null,
+        source_url: formData.source_url ? formData.source_url.trim() : null,
         is_pinned: formData.is_pinned,
         meta_title: formData.meta_title || formData.title,
         meta_description: formData.meta_description || formData.summary,

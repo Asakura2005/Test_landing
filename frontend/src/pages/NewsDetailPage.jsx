@@ -103,6 +103,27 @@ export default function NewsDetailPage() {
             dangerouslySetInnerHTML={{ __html: news.content }}
           />
 
+          {(news.source_name || news.source_url) && (
+            <div className="mt-4 px-6 py-3.5 rounded-2xl bg-white border border-haq-border flex flex-wrap items-center justify-between gap-3 text-xs text-haq-text-secondary">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-haq-red shrink-0" />
+                <span>
+                  Nguồn bài viết & trích dẫn: <strong className="text-haq-ink font-semibold">{news.source_name || 'Báo chí & Truyền thông'}</strong>
+                </span>
+              </div>
+              {news.source_url && (
+                <a
+                  href={news.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-haq-red hover:underline font-semibold inline-flex items-center gap-1"
+                >
+                  Xem bài viết gốc <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+            </div>
+          )}
+
 
 
           <div className="mt-8 pt-8 border-t border-haq-border flex items-center justify-between">
