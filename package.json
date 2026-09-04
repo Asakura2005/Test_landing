@@ -1,4 +1,10 @@
 {
+  "name": "haq-food-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "deploy": "npm --prefix frontend run build"
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "pg": "^8.23.0",
