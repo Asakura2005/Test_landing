@@ -277,14 +277,14 @@ export default function StickyNav() {
             {activeMenu === 've-chung-toi' && (
               <div
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
-                className="absolute top-full left-0 mt-2 w-[480px] bg-white rounded-3xl shadow-xl border border-haq-border p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-3xl shadow-xl border border-haq-border p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
                   <span>{language === 'en' ? 'HAQ FOOD CORPORATE PROFILE' : language === 'ko' ? 'HAQ FOOD 기업 프로필' : 'HỒ SƠ DOANH NGHIỆP HAQ FOOD'}</span>
                   <span className="text-haq-text-secondary font-normal text-[11px]">{language === 'en' ? '3 SECTIONS' : language === 'ko' ? '3개 항목' : '3 CHUYÊN MỤC'}</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-2 pt-1">
+                <div className="grid grid-cols-1 gap-1 pt-1">
                   {aboutSubpages.map((sub, idx) => {
                     const isSubActive = location.pathname === sub.path
                     return (
@@ -295,14 +295,14 @@ export default function StickyNav() {
                           setActiveMenu(null)
                           window.scrollTo(0, 0)
                         }}
-                        className={`group block p-3 rounded-2xl transition-all ${
+                        className={`group block px-3.5 py-3 rounded-2xl transition-all ${
                           isSubActive
                             ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
                             : 'hover:bg-haq-sage/20'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className={`text-xs font-heading font-bold uppercase ${
+                          <span className={`text-xs font-heading font-bold uppercase tracking-tight ${
                             isSubActive ? 'text-[#16A34A]' : 'text-haq-ink group-hover:text-[#16A34A]'
                           }`}>
                             {sub.title}
@@ -316,9 +316,6 @@ export default function StickyNav() {
                             }`} />
                           </div>
                         </div>
-                        <p className="text-[11px] text-haq-text-secondary mt-1 line-clamp-1 font-normal">
-                          {sub.desc}
-                        </p>
                       </Link>
                     )
                   })}
