@@ -5,7 +5,7 @@
  * Service gọi API Backend để gửi email cảnh báo Lead B2B mới về cho Admin/Sales.
  */
 
-const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_BACKEND_API_URL || import.meta.env.VITE_API_URL)) || 'http://localhost:3001/api'
+const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_BACKEND_API_URL || import.meta.env.VITE_API_URL)) || 'https://test-landing-l1xv.onrender.com/api'
 
 /**
  * Gửi email thông báo khi có khách hàng điền form tư vấn / báo giá
