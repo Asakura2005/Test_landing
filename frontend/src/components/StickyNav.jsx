@@ -277,11 +277,10 @@ export default function StickyNav() {
             {activeMenu === 've-chung-toi' && (
               <div
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
-                className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-3xl shadow-xl border border-haq-border p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[340px] bg-white rounded-3xl shadow-xl border border-haq-border p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
-                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
+                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 border-b border-haq-border">
                   <span>{language === 'en' ? 'HAQ FOOD CORPORATE PROFILE' : language === 'ko' ? 'HAQ FOOD 기업 프로필' : 'HỒ SƠ DOANH NGHIỆP HAQ FOOD'}</span>
-                  <span className="text-haq-text-secondary font-normal text-[11px]">{language === 'en' ? '3 SECTIONS' : language === 'ko' ? '3개 항목' : '3 CHUYÊN MỤC'}</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 pt-1">
@@ -295,7 +294,7 @@ export default function StickyNav() {
                           setActiveMenu(null)
                           window.scrollTo(0, 0)
                         }}
-                        className={`group block px-3.5 py-3 rounded-2xl transition-all ${
+                        className={`group block px-3.5 py-2.5 rounded-2xl transition-all ${
                           isSubActive
                             ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
                             : 'hover:bg-haq-sage/20'
@@ -307,14 +306,9 @@ export default function StickyNav() {
                           }`}>
                             {sub.title}
                           </span>
-                          <div className="flex items-center gap-2">
-                            <span className="font-heading text-[9px] font-bold text-[#16A34A] uppercase px-2 py-0.5 bg-[#16A34A]/10 rounded-md">
-                              {sub.badge}
-                            </span>
-                            <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
-                              isSubActive ? 'text-[#16A34A]' : 'text-haq-text-secondary group-hover:text-[#16A34A]'
-                            }`} />
-                          </div>
+                          <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 ${
+                            isSubActive ? 'text-[#16A34A]' : 'text-haq-text-secondary group-hover:text-[#16A34A]'
+                          }`} />
                         </div>
                       </Link>
                     )
@@ -516,20 +510,20 @@ export default function StickyNav() {
             {activeMenu === 'tin-tuc-tuyen-dung' && (
               <div
                 onMouseEnter={() => handleMouseEnter('tin-tuc-tuyen-dung')}
-                className="absolute top-full left-0 mt-2 w-[300px] bg-white rounded-3xl shadow-xl border border-haq-border p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[240px] bg-white rounded-3xl shadow-xl border border-haq-border p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
-                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
+                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 border-b border-haq-border">
                   <span>{language === 'en' ? 'UPDATES & CAREERS' : language === 'ko' ? '소식 및 채용' : 'THÔNG TIN & TUYỂN DỤNG'}</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-1.5 pt-1">
+                <div className="grid grid-cols-1 gap-1 pt-1">
                   <Link
                     to={language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'}
                     onClick={() => {
                       setActiveMenu(null)
                       window.scrollTo(0, 0)
                     }}
-                    className={`group block p-3 rounded-2xl transition-all ${
+                    className={`group block px-3.5 py-2.5 rounded-2xl transition-all ${
                       (location.pathname.startsWith('/tin-tuc') && !location.pathname.startsWith('/tuyen-dung')) || location.pathname.startsWith('/en/news') || location.pathname.startsWith('/ko/news')
                         ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
                         : 'hover:bg-haq-sage/20'
@@ -541,9 +535,6 @@ export default function StickyNav() {
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 text-haq-text-secondary group-hover:text-[#16A34A] transition-transform group-hover:translate-x-0.5" />
                     </div>
-                    <p className="text-[11px] text-haq-text-secondary mt-1 font-normal">
-                      {language === 'en' ? 'Corporate updates & market insights' : language === 'ko' ? '기업 소식 및 농식품 시장 정보' : 'Hoạt động doanh nghiệp & thông tin thị trường'}
-                    </p>
                   </Link>
 
                   <Link
@@ -552,7 +543,7 @@ export default function StickyNav() {
                       setActiveMenu(null)
                       window.scrollTo(0, 0)
                     }}
-                    className={`group block p-3 rounded-2xl transition-all ${
+                    className={`group block px-3.5 py-2.5 rounded-2xl transition-all ${
                       location.pathname.startsWith('/tuyen-dung') || location.pathname.startsWith('/en/careers') || location.pathname.startsWith('/ko/careers')
                         ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
                         : 'hover:bg-haq-sage/20'
@@ -564,9 +555,6 @@ export default function StickyNav() {
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 text-haq-text-secondary group-hover:text-[#16A34A] transition-transform group-hover:translate-x-0.5" />
                     </div>
-                    <p className="text-[11px] text-haq-text-secondary mt-1 font-normal">
-                      {language === 'en' ? 'Career opportunities & job openings' : language === 'ko' ? 'HAQ FOOD 채용 공고 및 지원 안내' : 'Cơ hội nghề nghiệp & gia nhập HAQ FOOD'}
-                    </p>
                   </Link>
                 </div>
               </div>
