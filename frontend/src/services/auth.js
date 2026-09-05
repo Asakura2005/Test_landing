@@ -19,6 +19,40 @@ export const ACCOUNT_SENSITIVE_FIELDS = ['email', 'full_name', 'phone']
 // Re-export cryptographic helpers for components
 export { generateSalt, hashPassword, hashBlindIndex, encryptData, decryptData }
 
+// Bảng mẫu phân quyền chuẩn theo vai trò
+export const DEFAULT_ROLE_PERMISSIONS = {
+  ADMIN: {
+    dashboard_view: true,
+    products_view: true,
+    products_create: true,
+    products_edit: true,
+    products_delete: true,
+    leads_view: true,
+    leads_handle: true,
+    leads_edit_status: true,
+    leads_delete: true,
+    provinces_view: true,
+    provinces_manage: true,
+    news_view: true,
+    news_manage: true
+  },
+  SALES: {
+    dashboard_view: true,
+    products_view: true,
+    products_create: false,
+    products_edit: false,
+    products_delete: false,
+    leads_view: true,
+    leads_handle: true,
+    leads_edit_status: true,
+    leads_delete: false,
+    provinces_view: true,
+    provinces_manage: false,
+    news_view: false,
+    news_manage: false
+  }
+}
+
 // Khởi tạo tài khoản mặc định (email/full_name/phone lưu plaintext trong bộ nhớ,
 // sẽ được mã hoá khi push lên Supabase hoặc localStorage)
 const DEFAULT_INITIAL_ACCOUNTS = [
@@ -64,18 +98,24 @@ async function decryptAccount(account) {
   const rawPhone    = account.phone_encrypted  || account.phone   || ''
   
   let parsedPermissions = null
-  if (account.avatar_url && account.avatar_url.startsWith('{')) {
+  if (account.avatar_url && typeof account.avatar_url === 'string' && account.avatar_url.startsWith('{')) {
     try {
       parsedPermissions = JSON.parse(account.avatar_url)
     } catch (e) {}
   }
 
+  const role = account.role === 'ADMIN' ? 'ADMIN' : 'SALES'
+  const finalPermissions = role === 'ADMIN'
+    ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(parsedPermissions || {}) }
+    : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(parsedPermissions || {}) }
+
   return {
     ...account,
+    role,
     email:     await decryptData(rawEmail),
     full_name: await decryptData(rawName),
     phone:     await decryptData(rawPhone),
-    permissions: parsedPermissions
+    permissions: finalPermissions
   }
 }
 
@@ -172,12 +212,15 @@ export async function loginUser(email, password, rememberMe = true) {
         assignedRole = cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'
       }
 
+      const resolvedPermissions = matched?.permissions || (assignedRole === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES)
       const sessionUser = {
         id: authData.user.id,
         email: authData.user.email,
         full_name: resolvedName,
         phone: resolvedPhone,
         role: assignedRole,
+        permissions: resolvedPermissions,
+        avatar_url: matched?.avatar_url || '',
         logged_in_at: new Date().toISOString(),
         auth_provider: 'supabase',
       }
@@ -186,6 +229,8 @@ export async function loginUser(email, password, rememberMe = true) {
       // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
       encryptedSession.id = sessionUser.id
       encryptedSession.role = sessionUser.role
+      encryptedSession.permissions = sessionUser.permissions
+      encryptedSession.avatar_url = sessionUser.avatar_url
       encryptedSession.logged_in_at = sessionUser.logged_in_at
 
       const storage = rememberMe ? localStorage : sessionStorage
@@ -236,6 +281,7 @@ export async function loginUser(email, password, rememberMe = true) {
     phone: account.phone || '',
     role: account.role || (cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'),
     avatar_url: account.avatar_url || '',
+    permissions: account.permissions || (account.role === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES),
     last_login: account.last_login,
     logged_in_at: new Date().toISOString()
   }
@@ -245,6 +291,8 @@ export async function loginUser(email, password, rememberMe = true) {
   // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
   encryptedSession.id = sessionUser.id
   encryptedSession.role = sessionUser.role
+  encryptedSession.permissions = sessionUser.permissions
+  encryptedSession.avatar_url = sessionUser.avatar_url
   encryptedSession.logged_in_at = sessionUser.logged_in_at
 
   const storage = rememberMe ? localStorage : sessionStorage
@@ -270,10 +318,34 @@ export async function getCurrentUser() {
     if (!parsed || !parsed.id || !parsed.role) return null
     // 🔓 Giải mã PII khỏi session
     const decrypted = await decryptObject(parsed, ACCOUNT_SENSITIVE_FIELDS)
+
+    let permissions = parsed.permissions || decrypted.permissions || null
+    const avatarVal = parsed.avatar_url || decrypted.avatar_url || ''
+    if (!permissions && avatarVal && typeof avatarVal === 'string' && avatarVal.startsWith('{')) {
+      try { permissions = JSON.parse(avatarVal) } catch (e) {}
+    }
+
+    // Tra cứu danh sách tài khoản để đồng bộ quyền mới nhất nếu admin vừa cập nhật
+    try {
+      const fromLocal = await loadAccountsFromLocal()
+      if (fromLocal && Array.isArray(fromLocal)) {
+        const found = fromLocal.find(a => a.id === (parsed.id || decrypted.id))
+        if (found && found.permissions) {
+          permissions = found.permissions
+        }
+      }
+    } catch (e) {}
+
+    const role = parsed.role || decrypted.role || 'SALES'
+    const finalPermissions = role === 'ADMIN'
+      ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(permissions || {}) }
+      : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(permissions || {}) }
+
     return {
       ...decrypted,
-      role: parsed.role || decrypted.role || 'SALES',
+      role,
       id: parsed.id || decrypted.id,
+      permissions: finalPermissions
     }
   } catch (e) {
     return null
@@ -290,10 +362,20 @@ export function getCurrentUserSync() {
   try {
     const parsed = JSON.parse(raw)
     if (!parsed || !parsed.id || !parsed.role) return null
+    let permissions = parsed.permissions || null
+    if (!permissions && parsed.avatar_url && typeof parsed.avatar_url === 'string' && parsed.avatar_url.startsWith('{')) {
+      try { permissions = JSON.parse(parsed.avatar_url) } catch (e) {}
+    }
+    const role = parsed.role || 'SALES'
+    const finalPermissions = role === 'ADMIN'
+      ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(permissions || {}) }
+      : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(permissions || {}) }
+
     return {
       ...parsed,
       id: parsed.id,
-      role: parsed.role,
+      role,
+      permissions: finalPermissions,
       full_name: parsed.full_name && !String(parsed.full_name).startsWith('enc_v1:') 
         ? parsed.full_name 
         : (parsed.role === 'SALES' ? 'Nhân Viên Sales' : 'Quản Trị Viên')
@@ -575,13 +657,16 @@ export async function updateAccountPermissions(accountId, { role, permissions, i
   if (currentUser && currentUser.id === accountId) {
     currentUser.role = account.role
     currentUser.permissions = account.permissions
-    const storage = localStorage.getItem('haq_auth_session') ? localStorage : sessionStorage
-    const raw = storage.getItem('haq_auth_session')
+    currentUser.avatar_url = account.avatar_url
+    const storage = localStorage.getItem(SESSION_KEY) ? localStorage : sessionStorage
+    const raw = storage.getItem(SESSION_KEY)
     if (raw) {
       try {
         const parsed = JSON.parse(raw)
         parsed.role = account.role
-        storage.setItem('haq_auth_session', JSON.stringify(parsed))
+        parsed.permissions = account.permissions
+        parsed.avatar_url = account.avatar_url
+        storage.setItem(SESSION_KEY, JSON.stringify(parsed))
       } catch (e) {}
     }
   }

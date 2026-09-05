@@ -43,6 +43,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     is_pinned: false,
     is_active: true,
     storage_guide: 'Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp',
+    ingredients: '',
     shelf_life: '6-12 tháng kể từ ngày sản xuất',
     certifications: 'ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP',
     box_spec: 'Thùng carton 5 lớp (50 gói/thùng), bọc màng co',
@@ -92,6 +93,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         is_pinned: product.is_pinned || false,
         is_active: product.is_active !== undefined ? product.is_active : true,
         storage_guide: product.storage_guide || 'Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp',
+        ingredients: product.ingredients || '',
         shelf_life: product.shelf_life || '6-12 tháng kể từ ngày sản xuất',
         certifications: product.certifications || 'ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP',
         box_spec: product.box_spec || 'Thùng carton 5 lớp (50 gói/thùng), bọc màng co',
@@ -597,6 +599,18 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
                   />
                 </div>
+              </div>
+
+              {/* Thành phần nguyên liệu */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Thành phần nguyên liệu</label>
+                <textarea 
+                  rows={3} 
+                  value={formData.ingredients} 
+                  onChange={e => setFormData({ ...formData, ingredients: e.target.value })} 
+                  className="w-full p-4 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
+                  placeholder="VD: Cốm nếp khô (65%), đường kính, đậu xanh, nước sạch, dầu thực vật, dừa sợi, nước hoa bưởi thiên nhiên..."
+                />
               </div>
 
               {/* USP Highlights List */}

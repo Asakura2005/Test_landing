@@ -32,7 +32,8 @@ import {
   createSalesAccount, 
   updateSalesAccount, 
   deleteSalesAccount,
-  updateAccountPermissions
+  updateAccountPermissions,
+  DEFAULT_ROLE_PERMISSIONS
 } from '../../services/auth'
 import { testEmailApiConnection } from '../../services/email'
 
@@ -329,38 +330,7 @@ export default function SettingsManager() {
   }
 
   // Default Permission Templates by Role
-  const DEFAULT_MODULE_PERMISSIONS = {
-    ADMIN: {
-      dashboard_view: true,
-      products_view: true,
-      products_create: true,
-      products_edit: true,
-      products_delete: true,
-      leads_view: true,
-      leads_handle: true,
-      leads_edit_status: true,
-      leads_delete: true,
-      provinces_view: true,
-      provinces_manage: true,
-      news_view: true,
-      news_manage: true
-    },
-    SALES: {
-      dashboard_view: true,
-      products_view: true,
-      products_create: false,
-      products_edit: false,
-      products_delete: false,
-      leads_view: true,
-      leads_handle: true,
-      leads_edit_status: true,
-      leads_delete: false,
-      provinces_view: true,
-      provinces_manage: false,
-      news_view: true,
-      news_manage: false
-    }
-  }
+  const DEFAULT_MODULE_PERMISSIONS = DEFAULT_ROLE_PERMISSIONS
 
   // Open Permission Drawer for Account
   const handleOpenPermissionDrawer = (acc) => {

@@ -601,7 +601,12 @@ const VALID_PRODUCT_COLUMNS = [
   'category',
   'category_id',
   'images',
-  'province_id'
+  'province_id',
+  'ingredients',
+  'shelf_life',
+  'storage_guide',
+  'certifications',
+  'box_spec'
 ]
 
 /**

@@ -51,7 +51,7 @@ const getInitialFormData = (item) => ({
   meta_keywords: item?.meta_keywords || 'nông sản sạch, bánh tráng xuất khẩu, báo giá sỉ haq food'
 })
 
-export default function NewsModal({ news, onClose, onSave }) {
+export default function NewsModal({ news, onClose, onSave, isReadOnly = false }) {
   const [formData, setFormData] = useState(() => getInitialFormData(news))
   const [isHtmlMode, setIsHtmlMode] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -234,39 +234,51 @@ export default function NewsModal({ news, onClose, onSave }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3 py-1.5 rounded text-xs font-medium text-gray-600 hover:bg-gray-200/70 transition-colors cursor-pointer"
-            >
-              Hủy
-            </button>
-            <button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() => handleSave('draft')}
-              className="px-3 py-1.5 rounded border border-gray-300 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              Lưu bản nháp
-            </button>
-            <button
-              type="button"
-              disabled={isSubmitting}
-              onClick={() => handleSave('published')}
-              className="px-4 py-1.5 rounded bg-[#0F5132] hover:bg-[#14532D] text-white text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Đang lưu...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-3.5 h-3.5" />
-                  <span>{news ? 'Cập nhật bài viết' : 'Xuất bản'}</span>
-                </>
-              )}
-            </button>
+            {isReadOnly ? (
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-1.5 rounded bg-gray-200 hover:bg-gray-300 text-xs font-semibold text-gray-700 transition-colors cursor-pointer"
+              >
+                Đóng
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-3 py-1.5 rounded text-xs font-medium text-gray-600 hover:bg-gray-200/70 transition-colors cursor-pointer"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => handleSave('draft')}
+                  className="px-3 py-1.5 rounded border border-gray-300 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  Lưu bản nháp
+                </button>
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => handleSave('published')}
+                  className="px-4 py-1.5 rounded bg-[#0F5132] hover:bg-[#14532D] text-white text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Đang lưu...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-3.5 h-3.5" />
+                      <span>{news ? 'Cập nhật bài viết' : 'Xuất bản'}</span>
+                    </>
+                  )}
+                </button>
+              </>
+            )}
             <button 
               onClick={onClose}
               className="p-1 text-gray-400 hover:text-gray-700 rounded transition-colors ml-1"

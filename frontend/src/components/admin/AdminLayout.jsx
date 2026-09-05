@@ -94,7 +94,22 @@ export default function AdminLayout({
 
   const topbarControlsRef = useRef(null)
 
+  const isAdmin = currentUser?.role === 'ADMIN'
   const isSales = currentUser?.role === 'SALES'
+  const permissions = currentUser?.permissions || {}
+
+  const canViewDashboard = isAdmin || Boolean(permissions.dashboard_view ?? true)
+  const canViewProducts = isAdmin || Boolean(permissions.products_view ?? true)
+  const canCreateProduct = isAdmin || Boolean(permissions.products_create)
+  const canViewLeads = isAdmin || Boolean(permissions.leads_view ?? true)
+  const canViewProvinces = isAdmin || Boolean(permissions.provinces_view ?? true)
+  const canManageProvinces = isAdmin || Boolean(permissions.provinces_manage)
+  const canViewNews = isAdmin || Boolean(permissions.news_view)
+  const canManageNews = isAdmin || Boolean(permissions.news_manage)
+  const canViewCategories = isAdmin
+  const canViewSettings = isAdmin
+
+  const hasAnyQuickAdd = canCreateProduct || canManageNews || canManageProvinces
 
   // Auto close dropdowns when clicking outside
   useEffect(() => {
@@ -248,93 +263,93 @@ export default function AdminLayout({
     setNotifsLastSeen(now)
   }
 
-  // Navigation Items according to User Role
+  // Navigation Items according to User Role & Granular Permissions
   const navItems = useMemo(() => {
-    if (isSales) {
-      return [
-        {
-          id: 'dashboard',
-          label: 'Tổng quan hệ thống',
-          icon: LayoutDashboard,
-          badge: null,
-          badgeColor: null
-        },
-        {
-          id: 'leads',
-          label: 'Lead & Khách hàng',
-          icon: Users,
-          badge: newLeadsCount > 0 ? `${newLeadsCount} Mới` : null,
-          badgeColor: 'bg-[#C89B3C] text-white shadow-xs'
-        },
-        {
-          id: 'products',
-          label: 'Tra cứu Sản phẩm & Giá',
-          icon: Package,
-          badge: productsCount > 0 ? `${productsCount}` : null,
-          badgeColor: 'bg-emerald-100 text-[#0F5132]'
-        },
-        {
-          id: 'provinces',
-          label: 'Bản đồ đặc sản',
-          icon: MapPin,
-          badge: '34 Vùng',
-          badgeColor: 'bg-emerald-50 text-[#0F5132] border border-emerald-200'
-        }
-      ]
-    }
+    const items = []
 
-    return [
-      {
+    if (canViewDashboard) {
+      items.push({
         id: 'dashboard',
         label: 'Tổng quan hệ thống',
         icon: LayoutDashboard,
         badge: null,
         badgeColor: null
-      },
-      {
-        id: 'products',
-        label: 'Sản phẩm & Biến thể',
-        icon: Package,
-        badge: productsCount > 0 ? `${productsCount}` : null,
-        badgeColor: 'bg-emerald-100 text-[#0F5132]'
-      },
-      {
+      })
+    }
+
+    if (canViewLeads) {
+      items.push({
         id: 'leads',
         label: 'Lead & Khách hàng',
         icon: Users,
         badge: newLeadsCount > 0 ? `${newLeadsCount} Mới` : null,
         badgeColor: 'bg-[#C89B3C] text-white shadow-xs'
-      },
-      {
+      })
+    }
+
+    if (canViewProducts) {
+      items.push({
+        id: 'products',
+        label: isAdmin ? 'Sản phẩm & Biến thể' : 'Tra cứu Sản phẩm & Giá',
+        icon: Package,
+        badge: productsCount > 0 ? `${productsCount}` : null,
+        badgeColor: 'bg-emerald-100 text-[#0F5132]'
+      })
+    }
+
+    if (canViewProvinces) {
+      items.push({
         id: 'provinces',
         label: 'Bản đồ đặc sản',
         icon: MapPin,
         badge: '34 Vùng',
         badgeColor: 'bg-emerald-50 text-[#0F5132] border border-emerald-200'
-      },
-      {
-        id: 'categories',
-        label: 'Danh mục & Vùng miền',
-        icon: FolderTree,
-        badge: null,
-        badgeColor: null
-      },
-      {
+      })
+    }
+
+    if (canViewNews) {
+      items.push({
         id: 'news',
         label: 'Tin tức & Truyền thông',
         icon: Newspaper,
         badge: null,
         badgeColor: null
-      },
-      {
+      })
+    }
+
+    if (canViewCategories) {
+      items.push({
+        id: 'categories',
+        label: 'Danh mục & Vùng miền',
+        icon: FolderTree,
+        badge: null,
+        badgeColor: null
+      })
+    }
+
+    if (canViewSettings) {
+      items.push({
         id: 'settings',
         label: 'Cài đặt hệ thống',
         icon: Settings,
         badge: null,
         badgeColor: null
-      }
-    ]
-  }, [isSales, productsCount, newLeadsCount])
+      })
+    }
+
+    return items
+  }, [
+    isAdmin,
+    canViewDashboard,
+    canViewLeads,
+    canViewProducts,
+    canViewProvinces,
+    canViewNews,
+    canViewCategories,
+    canViewSettings,
+    productsCount,
+    newLeadsCount
+  ])
 
   const handleNavClick = (tabId) => {
     if (onTabChange) onTabChange(tabId)
@@ -354,9 +369,9 @@ export default function AdminLayout({
         leads={leads}
         onNavigateTab={onTabChange}
         onQuickAction={(action) => {
-          if (action === 'add-product' && onQuickAddProduct && !isSales) onQuickAddProduct()
-          if (action === 'add-news' && onQuickAddNews && !isSales) onQuickAddNews()
-          if (action === 'add-province' && onQuickAddProvince && !isSales) onQuickAddProvince()
+          if (action === 'add-product' && onQuickAddProduct && canCreateProduct) onQuickAddProduct()
+          if (action === 'add-news' && onQuickAddNews && canManageNews) onQuickAddNews()
+          if (action === 'add-province' && onQuickAddProvince && canManageProvinces) onQuickAddProvince()
         }}
       />
 
@@ -806,7 +821,7 @@ export default function AdminLayout({
             </div>
 
             {/* Quick Add Button */}
-            {!isSales && (
+            {hasAnyQuickAdd && (
               <div className="relative">
                 <button
                   onClick={(e) => {
@@ -827,36 +842,42 @@ export default function AdminLayout({
                     onClick={(e) => e.stopPropagation()} 
                     className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 p-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
                   >
-                    <button
-                      onClick={() => {
-                        setIsQuickAddOpen(false)
-                        if (onQuickAddProduct) onQuickAddProduct()
-                      }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
-                    >
-                      <Package className="w-4 h-4 text-[#0F5132]" />
-                      <span>Thêm Sản Phẩm Mới</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsQuickAddOpen(false)
-                        if (onQuickAddNews) onQuickAddNews()
-                      }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
-                    >
-                      <Newspaper className="w-4 h-4 text-gray-600" />
-                      <span>Đăng Tin Tức B2B Mới</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsQuickAddOpen(false)
-                        if (onQuickAddProvince) onQuickAddProvince()
-                      }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
-                    >
-                      <MapPin className="w-4 h-4 text-gray-600" />
-                      <span>Gán Đặc Sản Tỉnh Thành</span>
-                    </button>
+                    {canCreateProduct && onQuickAddProduct && (
+                      <button
+                        onClick={() => {
+                          setIsQuickAddOpen(false)
+                          onQuickAddProduct()
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
+                      >
+                        <Package className="w-4 h-4 text-[#0F5132]" />
+                        <span>Thêm Sản Phẩm Mới</span>
+                      </button>
+                    )}
+                    {canManageNews && onQuickAddNews && (
+                      <button
+                        onClick={() => {
+                          setIsQuickAddOpen(false)
+                          onQuickAddNews()
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
+                      >
+                        <Newspaper className="w-4 h-4 text-gray-600" />
+                        <span>Đăng Tin Tức B2B Mới</span>
+                      </button>
+                    )}
+                    {canManageProvinces && onQuickAddProvince && (
+                      <button
+                        onClick={() => {
+                          setIsQuickAddOpen(false)
+                          onQuickAddProvince()
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-gray-800 hover:bg-emerald-50 hover:text-[#0F5132] rounded-lg transition-colors text-left cursor-pointer"
+                      >
+                        <MapPin className="w-4 h-4 text-gray-600" />
+                        <span>Gán Đặc Sản Tỉnh Thành</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

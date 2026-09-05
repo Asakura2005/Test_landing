@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProductBySlug, getProducts } from '../services/supabase'
 import { useAnalytics } from '../hooks/useAnalytics'
-import { CheckCircle, Package, Calendar, Truck, ArrowRight, Home, ChevronRight, MapPin } from 'lucide-react'
+import { CheckCircle, Package, Calendar, Truck, ArrowRight, Home, ChevronRight, MapPin, Plus, Minus } from 'lucide-react'
 import Footer from '../components/Footer'
 import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
@@ -22,6 +22,7 @@ export default function ProductDetailPage() {
   const [backgroundPosition, setBackgroundPosition] = useState('0% 0%')
   const [isZooming, setIsZooming] = useState(false)
   const imageRef = useRef(null)
+  const [openAccordion, setOpenAccordion] = useState(null) // null | 'info' | 'ingredients' | 'storage'
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -338,6 +339,114 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             </div>
+
+            {/* === ACCORDION: Thông tin chi tiết sản phẩm === */}
+            {(localizedProduct.shelf_life || localizedProduct.certifications || localizedProduct.ingredients || localizedProduct.storage_guide) && (
+              <div className="mb-10 space-y-3">
+
+                {/* Accordion 1: Thông tin sản phẩm */}
+                {(localizedProduct.shelf_life || localizedProduct.certifications) && (
+                  <div className="border border-haq-border rounded-2xl overflow-hidden bg-white">
+                    <button
+                      type="button"
+                      onClick={() => setOpenAccordion(openAccordion === 'info' ? null : 'info')}
+                      className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer hover:bg-haq-sage/30 transition-colors"
+                    >
+                      <span className="font-heading font-bold text-sm text-haq-ink">
+                        {t('product_detail.accordion_info', 'Thông tin sản phẩm')}
+                      </span>
+                      {openAccordion === 'info' ? (
+                        <Minus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      ) : (
+                        <Plus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      )}
+                    </button>
+                    {openAccordion === 'info' && (
+                      <div className="px-5 pb-5 border-t border-haq-border">
+                        <div className="pt-4 space-y-3 text-sm text-haq-text-secondary">
+                          <div>
+                            <span className="font-bold text-haq-ink">{t('product_detail.manufacturing_date', 'Ngày sản xuất:')}</span>{' '}
+                            {t('product_detail.manufacturing_date_value', 'In trên bao bì sản phẩm.')}
+                          </div>
+                          {localizedProduct.shelf_life && (
+                            <div>
+                              <span className="font-bold text-haq-ink">{t('product_detail.shelf_life_label', 'Hạn sử dụng:')}</span>{' '}
+                              {localizedProduct.shelf_life}
+                            </div>
+                          )}
+                          {localizedProduct.certifications && (
+                            <div>
+                              <span className="font-bold text-haq-ink">{t('product_detail.certifications_label', 'Chứng nhận:')}</span>{' '}
+                              {localizedProduct.certifications}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Accordion 2: Thành phần của sản phẩm */}
+                {localizedProduct.ingredients && (
+                  <div className="border border-haq-border rounded-2xl overflow-hidden bg-white">
+                    <button
+                      type="button"
+                      onClick={() => setOpenAccordion(openAccordion === 'ingredients' ? null : 'ingredients')}
+                      className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer hover:bg-haq-sage/30 transition-colors"
+                    >
+                      <span className="font-heading font-bold text-sm text-haq-ink">
+                        {t('product_detail.accordion_ingredients', 'Thành phần của sản phẩm')}
+                      </span>
+                      {openAccordion === 'ingredients' ? (
+                        <Minus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      ) : (
+                        <Plus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      )}
+                    </button>
+                    {openAccordion === 'ingredients' && (
+                      <div className="px-5 pb-5 border-t border-haq-border">
+                        <p className="pt-4 text-sm text-haq-text-secondary leading-relaxed whitespace-pre-line">
+                          {localizedProduct.ingredients}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Accordion 3: Hướng dẫn sử dụng & Bảo quản */}
+                {localizedProduct.storage_guide && (
+                  <div className="border border-haq-border rounded-2xl overflow-hidden bg-white">
+                    <button
+                      type="button"
+                      onClick={() => setOpenAccordion(openAccordion === 'storage' ? null : 'storage')}
+                      className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer hover:bg-haq-sage/30 transition-colors"
+                    >
+                      <span className="font-heading font-bold text-sm text-haq-ink">
+                        {t('product_detail.accordion_storage', 'Hướng dẫn sử dụng & Bảo quản')}
+                      </span>
+                      {openAccordion === 'storage' ? (
+                        <Minus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      ) : (
+                        <Plus className="w-5 h-5 text-haq-text-secondary shrink-0" />
+                      )}
+                    </button>
+                    {openAccordion === 'storage' && (
+                      <div className="px-5 pb-5 border-t border-haq-border">
+                        <div className="pt-4 text-sm text-haq-text-secondary leading-relaxed">
+                          {localizedProduct.storage_guide.split('\n').map((line, idx) => (
+                            <div key={idx} className="flex items-start gap-2 mb-2 last:mb-0">
+                              <span className="text-[#16A34A] mt-0.5 shrink-0">◆</span>
+                              <span>{line}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            )}
 
             <div className="mt-auto">
               <Link 

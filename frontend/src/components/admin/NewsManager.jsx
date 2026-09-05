@@ -35,7 +35,12 @@ const STATUS_OPTIONS = [
   { value: 'hidden', label: 'Đã ẩn' }
 ]
 
-export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = null }) {
+export default function NewsManager({ 
+  autoOpenCreate = false, 
+  onResetAutoOpen = null,
+  canManage = true,
+  isReadOnly = false 
+}) {
   const [news, setNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,12 +48,12 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
   
   // Tự động mở modal khi có trigger từ Topbar
   useEffect(() => {
-    if (autoOpenCreate) {
+    if (autoOpenCreate && canManage) {
       setEditingNews(null)
       setIsModalOpen(true)
       if (onResetAutoOpen) onResetAutoOpen()
     }
-  }, [autoOpenCreate, onResetAutoOpen])
+  }, [autoOpenCreate, onResetAutoOpen, canManage])
   
   // Filters
   const [searchQuery, setSearchQuery] = useState('')
@@ -78,6 +83,7 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
   }, [])
 
   const handleDelete = async (id, title) => {
+    if (!canManage) return
     if (!window.confirm(`Bạn có chắc chắn muốn xóa bài viết "${title}"?`)) return
     try {
       await deleteNews(id)
@@ -88,6 +94,7 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
   }
 
   const togglePin = async (item) => {
+    if (!canManage) return
     try {
       await updateNews(item.id, { is_pinned: !item.is_pinned })
       await fetchNewsData()
@@ -97,6 +104,7 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
   }
 
   const openNewModal = () => {
+    if (!canManage) return
     setEditingNews(null)
     setIsModalOpen(true)
   }
@@ -183,13 +191,15 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-[#0F5132]' : ''}`} />
           </button>
 
-          <button 
-            onClick={openNewModal}
-            className="px-3.5 py-2 rounded-md bg-[#0F5132] hover:bg-[#14532D] text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
-          >
-            <Plus className="w-4 h-4" /> 
-            <span>+ Viết bài mới</span>
-          </button>
+          {canManage && (
+            <button 
+              onClick={openNewModal}
+              className="px-3.5 py-2 rounded-md bg-[#0F5132] hover:bg-[#14532D] text-white font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <Plus className="w-4 h-4" /> 
+              <span>+ Viết bài mới</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -371,17 +381,19 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
                         <button 
                           onClick={() => openEditModal(item)}
                           className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
-                          title="Chỉnh sửa bài viết"
+                          title={canManage ? "Chỉnh sửa bài viết" : "Xem chi tiết bài viết"}
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
-                        <button 
-                          onClick={() => handleDelete(item.id, item.title)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
-                          title="Xóa bài viết"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        {canManage && (
+                          <button 
+                            onClick={() => handleDelete(item.id, item.title)}
+                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                            title="Xóa bài viết"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -426,27 +438,31 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
                   </div>
 
                   <div className="flex items-center gap-1">
-                    <button 
-                      onClick={() => togglePin(item)}
-                      className={`p-1.5 rounded hover:bg-gray-100 ${
-                        item.is_pinned ? 'text-amber-600' : 'text-gray-300'
-                      }`}
-                      title={item.is_pinned ? "Bỏ ghim" : "Ghim"}
-                    >
-                      <Pin className={`w-3.5 h-3.5 ${item.is_pinned ? 'fill-amber-500' : ''}`} />
-                    </button>
+                    {canManage && (
+                      <button 
+                        onClick={() => togglePin(item)}
+                        className={`p-1.5 rounded hover:bg-gray-100 ${
+                          item.is_pinned ? 'text-amber-600' : 'text-gray-300'
+                        }`}
+                        title={item.is_pinned ? "Bỏ ghim" : "Ghim"}
+                      >
+                        <Pin className={`w-3.5 h-3.5 ${item.is_pinned ? 'fill-amber-500' : ''}`} />
+                      </button>
+                    )}
                     <button 
                       onClick={() => openEditModal(item)}
                       className="p-1.5 text-gray-600 hover:text-blue-600 rounded"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
-                    <button 
-                      onClick={() => handleDelete(item.id, item.title)}
-                      className="p-1.5 text-gray-400 hover:text-red-600 rounded"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {canManage && (
+                      <button 
+                        onClick={() => handleDelete(item.id, item.title)}
+                        className="p-1.5 text-gray-400 hover:text-red-600 rounded"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -460,6 +476,7 @@ export default function NewsManager({ autoOpenCreate = false, onResetAutoOpen = 
       {isModalOpen && (
         <NewsModal 
           news={editingNews}
+          isReadOnly={!canManage}
           onClose={() => setIsModalOpen(false)}
           onSave={() => {
             setIsModalOpen(false)

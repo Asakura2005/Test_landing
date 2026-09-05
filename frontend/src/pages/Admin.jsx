@@ -105,6 +105,30 @@ export default function Admin() {
   const [autoOpenNewsCreate, setAutoOpenNewsCreate] = useState(false)
 
   const isSales = currentUser?.role === 'SALES'
+  const isAdmin = currentUser?.role === 'ADMIN'
+  const permissions = currentUser?.permissions || {}
+
+  // Phân quyền chi tiết:
+  const canViewDashboard = isAdmin || Boolean(permissions.dashboard_view ?? true)
+  const canViewProducts = isAdmin || Boolean(permissions.products_view ?? true)
+  const canCreateProduct = isAdmin || Boolean(permissions.products_create)
+  const canEditProduct = isAdmin || Boolean(permissions.products_edit)
+  const canDeleteProduct = isAdmin || Boolean(permissions.products_delete)
+
+  const canViewLeads = isAdmin || Boolean(permissions.leads_view ?? true)
+  const canHandleLeads = isAdmin || Boolean(permissions.leads_handle ?? true)
+  const canEditLeadStatus = isAdmin || Boolean(permissions.leads_edit_status ?? true)
+  const canDeleteLead = isAdmin || Boolean(permissions.leads_delete)
+
+  const canViewProvinces = isAdmin || Boolean(permissions.provinces_view ?? true)
+  const canManageProvinces = isAdmin || Boolean(permissions.provinces_manage)
+
+  const canViewNews = isAdmin || Boolean(permissions.news_view)
+  const canManageNews = isAdmin || Boolean(permissions.news_manage)
+
+  const canViewCategories = isAdmin
+  const canViewSettings = isAdmin
+
   const currentPinnedCount = (products || []).filter(p => p && p.is_pinned).length
   const newLeadsCount = (leads || []).filter(l => l && (l.status === 'NEW' || l.status === 'new' || !l.status)).length
 
@@ -134,12 +158,26 @@ export default function Admin() {
     return () => { isMounted = false }
   }, [])
 
-  // Đảm bảo tài khoản Sales không thể truy cập các tab đặc quyền Admin
+  // Đảm bảo tài khoản không truy cập các tab chưa được phân quyền
   useEffect(() => {
-    if (isSales && ['categories', 'news', 'settings', 'dashboard_marketing', 'dashboard_management'].includes(activeTab)) {
+    if (!currentUser) return
+    const isTabPermitted = (tab) => {
+      if (isAdmin) return true
+      if (tab === 'dashboard') return canViewDashboard
+      if (tab === 'products') return canViewProducts
+      if (tab === 'leads') return canViewLeads
+      if (tab === 'provinces') return canViewProvinces
+      if (tab === 'news') return canViewNews
+      if (tab === 'categories') return canViewCategories
+      if (tab === 'settings') return canViewSettings
+      if (['dashboard_marketing', 'dashboard_sales', 'dashboard_management'].includes(tab)) return false
+      return true
+    }
+
+    if (!isTabPermitted(activeTab)) {
       setActiveTab('dashboard')
     }
-  }, [isSales, activeTab])
+  }, [currentUser, activeTab, isAdmin, canViewDashboard, canViewProducts, canViewLeads, canViewProvinces, canViewNews, canViewCategories, canViewSettings])
 
   // Login handler
   const handleLogin = async (e) => {
@@ -224,9 +262,9 @@ export default function Admin() {
     }
   }, [isAuthenticated])
 
-  // Product CRUD Handlers (Only for Admin)
+  // Product CRUD Handlers (Protected by Granular Permissions)
   const handleDelete = async (id, name) => {
-    if (isSales) return
+    if (!canDeleteProduct) return
     if (!window.confirm(`Bạn có chắc chắn muốn xóa "${name}"? Thao tác này không thể hoàn tác.`)) return
     try {
       await deleteProduct(id)
@@ -237,7 +275,7 @@ export default function Admin() {
   }
 
   const handleDuplicate = async (product) => {
-    if (isSales) return
+    if (!canEditProduct && !canCreateProduct) return
     try {
       const duplicateData = {
         name: `${product.name} (Bản sao)`,
@@ -269,11 +307,13 @@ export default function Admin() {
   }
 
   const handleSave = async (productData, variantsData) => {
-    if (isSales) return
+    if (!canCreateProduct && !canEditProduct) return
     try {
       if (editingProduct) {
+        if (!canEditProduct) return
         await updateProduct(editingProduct.id, productData, variantsData)
       } else {
+        if (!canCreateProduct) return
         await createProduct(productData, variantsData)
       }
       setIsModalOpen(false)
@@ -284,19 +324,19 @@ export default function Admin() {
   }
 
   const openNewModal = () => {
-    if (isSales) return
+    if (!canCreateProduct) return
     setEditingProduct(null)
     setIsModalOpen(true)
   }
 
   const openEditModal = (product) => {
-    if (isSales) return
+    if (!canEditProduct) return
     setEditingProduct(product)
     setIsModalOpen(true)
   }
 
   const togglePin = async (product) => {
-    if (isSales) return
+    if (!canEditProduct) return
     if (!product.is_pinned && currentPinnedCount >= 6) {
       alert("Đã đạt tối đa 6 sản phẩm ghim TOP trang chủ. Vui lòng bỏ ghim sản phẩm khác trước.")
       return
@@ -310,7 +350,7 @@ export default function Admin() {
   }
 
   const toggleActive = async (product) => {
-    if (isSales) return
+    if (!canEditProduct) return
     try {
       const nextStatus = product.is_active === false ? true : false
       await updateProduct(product.id, { is_active: nextStatus }, product.variants)
@@ -433,81 +473,83 @@ export default function Admin() {
       products={products}
       leads={leads}
       orders={orders}
-      onQuickAddProduct={openNewModal}
-      onQuickAddNews={() => {
+      onQuickAddProduct={canCreateProduct ? openNewModal : undefined}
+      onQuickAddNews={canManageNews ? () => {
         setActiveTab('news')
         setAutoOpenNewsCreate(true)
-      }}
-      onQuickAddProvince={() => setActiveTab('provinces')}
+      } : undefined}
+      onQuickAddProvince={canManageProvinces ? () => setActiveTab('provinces') : undefined}
     >
       <AdminErrorBoundary onResetTab={() => setActiveTab('dashboard')}>
         
-        {/* 📊 Frame 02: Master Dashboard Overview (Cả Admin và Sales đều xem được) */}
-        {activeTab === 'dashboard' && (
+        {/* 📊 Frame 02: Master Dashboard Overview */}
+        {activeTab === 'dashboard' && canViewDashboard && (
           <DashboardOverview 
             products={products}
             leads={leads}
             onNavigateTab={setActiveTab}
-            onOpenProductModal={!isSales ? openNewModal : undefined}
-            isSales={isSales}
+            onOpenProductModal={canCreateProduct ? openNewModal : undefined}
+            isSales={!isAdmin}
           />
         )}
 
-        {/* 📦 Frame 03: Quản lý Sản phẩm & Biến thể SKU (Admin full, Sales read-only) */}
-        {activeTab === 'products' && (
+        {/* 📦 Frame 03: Quản lý Sản phẩm & Biến thể SKU */}
+        {activeTab === 'products' && canViewProducts && (
           <ProductsManager
             products={products}
             isLoading={isLoading}
             onRefresh={fetchData}
-            onOpenCreateModal={openNewModal}
-            onOpenEditModal={openEditModal}
-            onDuplicateProduct={handleDuplicate}
-            onDeleteProduct={handleDelete}
-            onTogglePin={togglePin}
-            onToggleActive={toggleActive}
+            onOpenCreateModal={canCreateProduct ? openNewModal : undefined}
+            onOpenEditModal={canEditProduct ? openEditModal : undefined}
+            onDuplicateProduct={(canEditProduct || canCreateProduct) ? handleDuplicate : undefined}
+            onDeleteProduct={canDeleteProduct ? handleDelete : undefined}
+            onTogglePin={canEditProduct ? togglePin : undefined}
+            onToggleActive={canEditProduct ? toggleActive : undefined}
             currentPinnedCount={currentPinnedCount}
-            isReadOnly={isSales}
+            isReadOnly={!canCreateProduct && !canEditProduct}
           />
         )}
 
         {/* 👥 Frame 05: Quản lý Leads CRM & Pipeline */}
-        {activeTab === 'leads' && <LeadsManager />}
+        {activeTab === 'leads' && canViewLeads && <LeadsManager />}
 
-        {/* 🗺️ Frame 06: Quản lý Đặc sản Vùng miền & Bản đồ 34 Vùng (Sales chỉ xem tra cứu) */}
-        {activeTab === 'provinces' && (
+        {/* 🗺️ Frame 06: Quản lý Đặc sản Vùng miền & Bản đồ 34 Vùng */}
+        {activeTab === 'provinces' && canViewProvinces && (
           <ProvinceManager 
             products={products} 
             onProductsChange={fetchData} 
-            isReadOnly={isSales}
+            isReadOnly={!canManageProvinces}
           />
         )}
 
         {/* 🗂️ Module Danh mục (Chỉ Admin mới có quyền truy cập & chỉnh sửa) */}
-        {activeTab === 'categories' && !isSales && (
+        {activeTab === 'categories' && canViewCategories && (
           <CategoryManager 
             products={products} 
           />
         )}
 
-        {/* 📰 Frame 07: Quản lý Tin tức & Bài viết B2B (Admin only) */}
-        {activeTab === 'news' && !isSales && (
+        {/* 📰 Frame 07: Quản lý Tin tức & Bài viết B2B */}
+        {activeTab === 'news' && canViewNews && (
           <NewsManager 
-            autoOpenCreate={autoOpenNewsCreate}
+            autoOpenCreate={autoOpenNewsCreate && canManageNews}
             onResetAutoOpen={() => setAutoOpenNewsCreate(false)}
+            canManage={canManageNews}
+            isReadOnly={!canManageNews}
           />
         )}
 
         {/* ⚙️ Module Cài đặt & Phân quyền (Admin only) */}
-        {activeTab === 'settings' && !isSales && <SettingsManager />}
+        {activeTab === 'settings' && canViewSettings && <SettingsManager />}
 
         {/* 📈 Advanced Sub-Dashboards (Admin only) */}
-        {activeTab === 'dashboard_marketing' && !isSales && <MarketingDashboard />}
-        {activeTab === 'dashboard_sales' && <SalesDashboard />}
-        {activeTab === 'dashboard_management' && !isSales && <ManagementDashboard />}
+        {activeTab === 'dashboard_marketing' && isAdmin && <MarketingDashboard />}
+        {activeTab === 'dashboard_sales' && (isAdmin || isSales) && <SalesDashboard />}
+        {activeTab === 'dashboard_management' && isAdmin && <ManagementDashboard />}
       </AdminErrorBoundary>
 
       {/* Frame 04: Drawer / Modal Thêm/Sửa Sản phẩm (Multi-tab) */}
-      {isModalOpen && !isSales && (
+      {isModalOpen && (canCreateProduct || canEditProduct) && (
         <ProductModal 
           product={editingProduct}
           onClose={() => setIsModalOpen(false)}
