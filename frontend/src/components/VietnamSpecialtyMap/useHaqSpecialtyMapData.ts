@@ -151,6 +151,9 @@ export function useHaqSpecialtyMapData(
           imageAlt: locItem.name || currentProv.provinceLabel,
           region: currentProv.region,
           productId: locItem.id || locItem.slug,
+          slug: locItem.slug,
+          is_pinned: Boolean(locItem.is_pinned),
+          views: Number(locItem.views || locItem.view_count || 0),
           href: `/san-pham/${locItem.slug || locItem.id}`,
         };
 

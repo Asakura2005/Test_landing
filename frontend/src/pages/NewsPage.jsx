@@ -1,44 +1,60 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import { Calendar, User, ArrowRight, Newspaper, Search, Hash, X, Globe, ChevronRight } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { 
+  Calendar, 
+  Newspaper, 
+  Briefcase, 
+  ChevronRight, 
+  Clock, 
+  Bookmark,
+  Mail,
+  ArrowRight
+} from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 
-const CATEGORIES = [
-  'Tất cả',
-  'Thông cáo báo chí',
-  'Thị trường & Xuất khẩu',
-  'Sự kiện & Hoạt động',
-  'Chứng nhận & Tiêu chuẩn',
-  'Chính sách Đại lý',
-  'Sản phẩm mới'
-]
-
-const CATEGORY_MAP = {
-  'Tất cả': { vi: 'Tất cả', en: 'All News', ko: '전체 소식' },
-  'Thông cáo báo chí': { vi: 'Thông cáo báo chí', en: 'Press Release', ko: '보도자료' },
-  'Thị trường & Xuất khẩu': { vi: 'Thị trường & Xuất khẩu', en: 'Market & Export', ko: '시장 및 수출' },
-  'Sự kiện & Hoạt động': { vi: 'Sự kiện & Hoạt động', en: 'Events & Activities', ko: '이벤트 및 활동' },
-  'Chứng nhận & Tiêu chuẩn': { vi: 'Chứng nhận & Tiêu chuẩn', en: 'Certifications & Standards', ko: '인증 및 표준' },
-  'Chính sách Đại lý': { vi: 'Chính sách Đại lý', en: 'Dealer Policy', ko: '대리점 정책' },
-  'Sản phẩm mới': { vi: 'Sản phẩm mới', en: 'New Products', ko: '신제품' },
+// Ước tính thời gian đọc bài viết
+function getReadTime(item, language) {
+  const text = `${item.title || ''} ${item.summary || ''} ${item.content || ''}`
+  const wordCount = text.trim().split(/\s+/).length
+  const minutes = Math.max(1, Math.ceil(wordCount / 220))
+  if (language === 'en') return `${minutes} min read`
+  if (language === 'ko') return `${minutes}분 읽기`
+  return `${minutes} phút đọc`
 }
 
-export default function NewsPage() {
+export default function NewsPage({ defaultTab }) {
   const { language } = useLanguage()
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [news, setNews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState('Tất cả')
-  const [searchQuery, setSearchQuery] = useState('')
+
+  // Xác định tab hiện tại: 'tin-tuc' hoặc 'tuyen-dung'
+  const isCareersUrl = defaultTab === 'tuyen-dung' || 
+    location.pathname.includes('tuyen-dung') || 
+    location.pathname.includes('careers')
+
+  const [activeTab, setActiveTab] = useState(isCareersUrl ? 'tuyen-dung' : 'tin-tuc')
+
+  useEffect(() => {
+    if (isCareersUrl) {
+      setActiveTab('tuyen-dung')
+    } else {
+      setActiveTab('tin-tuc')
+    }
+  }, [isCareersUrl, location.pathname])
+
+
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         setIsLoading(true)
         const data = await getNews()
-        // Chỉ lấy các bài viết đã xuất bản
         const publishedData = (data || []).filter(item => !item.status || item.status === 'published')
         setNews(publishedData)
       } catch (err) {
@@ -51,339 +67,191 @@ export default function NewsPage() {
     fetchNews()
   }, [])
 
-  // Danh sách bài viết sau khi lọc theo chuyên mục & từ khóa tìm kiếm
-  const filteredNews = useMemo(() => {
-    return news.filter(item => {
-      const matchCategory = activeCategory === 'Tất cả' || item.category === activeCategory
-      const matchSearch = !searchQuery.trim() || 
-        item.title?.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        item.summary?.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        item.author?.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
-        item.source_name?.toLowerCase().includes(searchQuery.toLowerCase().trim())
-      return matchCategory && matchSearch
-    })
-  }, [news, activeCategory, searchQuery])
+  // Phân loại: Tin tức & Tuyển dụng, sắp xếp theo thời gian mới nhất
+  const newsArticles = useMemo(() => {
+    return news
+      .filter(item => item.category !== 'Tuyển dụng')
+      .sort((a, b) => {
+        if (b.is_pinned !== a.is_pinned) return (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0)
+        return new Date(b.published_at || 0) - new Date(a.published_at || 0)
+      })
+  }, [news])
 
-  // Bài viết tiêu điểm lớn bên trái Hero (Bài ghim hoặc bài mới nhất)
-  const heroMain = useMemo(() => {
-    if (activeCategory !== 'Tất cả' || searchQuery.trim()) return null
-    return news.find(n => n.is_pinned) || news[0] || null
-  }, [news, activeCategory, searchQuery])
+  const recruitmentArticles = useMemo(() => {
+    return news
+      .filter(item => item.category === 'Tuyển dụng')
+      .sort((a, b) => {
+        if (b.is_pinned !== a.is_pinned) return (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0)
+        return new Date(b.published_at || 0) - new Date(a.published_at || 0)
+      })
+  }, [news])
 
-  // 3 Bài viết phụ hiển thị cột dọc bên phải Hero
-  const heroSides = useMemo(() => {
-    if (!heroMain || activeCategory !== 'Tất cả' || searchQuery.trim()) return []
-    return news.filter(n => n.id !== heroMain.id).slice(0, 3)
-  }, [news, heroMain, activeCategory, searchQuery])
+  const fallbackImage = 'https://images.unsplash.com/photo-1542222024-c39e2281f121?auto=format&fit=crop&q=80'
+  const fallbackCareerImage = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80'
 
-  // Danh sách bài viết hiển thị ở lưới 3 cột bên dưới
-  const gridArticles = useMemo(() => {
-    return filteredNews
-  }, [filteredNews])
+  const currentList = activeTab === 'tuyen-dung' ? recruitmentArticles : newsArticles
 
   return (
-    <main className="bg-haq-cream min-h-screen flex flex-col font-sans text-haq-ink">
+    <main className="bg-[#FAF9F6] min-h-screen flex flex-col font-sans text-[#11261B]">
       <StickyNav />
 
       {/* ============================================================ */}
-      {/* 1. HERO BANNER & TOP FEATURED SECTION (BỐ CỤC NỔI BẬT) */}
+      {/* 1. TIÊU ĐỀ TRANG TỐI GIẢN (THEO MẪU BÁNH BẢO MINH) */}
       {/* ============================================================ */}
-      <section className="pt-32 pb-12 md:pt-36 md:pb-16 bg-haq-dark text-white relative overflow-hidden">
-        {/* Subtle decorative background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-haq-dark pointer-events-none" />
-        <div className="absolute -top-40 right-0 w-96 h-96 bg-haq-red/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="mx-auto max-w-site px-4 sm:px-6 md:px-12 relative z-10">
+      <section className="pt-28 sm:pt-32 pb-8 sm:pb-10">
+        <div className="mx-auto max-w-site px-4 sm:px-6 md:px-12 text-center">
           
-          {/* Header Title */}
-          <div className="mb-8 md:mb-10 text-left">
-            <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl tracking-tight uppercase text-white">
-              {language === 'en' ? 'News & Media' : language === 'ko' ? '뉴스 및 미디어' : 'Tin Tức & Truyền Thông'}
-            </h1>
-            <p className="mt-2 text-sm sm:text-base text-white/70 max-w-2xl font-normal">
-              {language === 'en'
-                ? 'Market updates, corporate insights, and HAQ FOOD agricultural stories.'
-                : language === 'ko'
-                ? '시장 동향, 기업 소식 및 HAQ FOOD 농식품 이야기를 전해드립니다.'
-                : 'Cập nhật tin tức thị trường, hoạt động doanh nghiệp và câu chuyện nông sản HAQ FOOD.'}
-            </p>
-          </div>
-
-          {/* Featured Split Layout: 1 Bài lớn trái (60%) + 3 Bài nhỏ phải (40%) */}
-          {heroMain && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              
-              {/* CỘT TRÁI: 1 Bài viết tiêu điểm lớn */}
-              <div className={`${heroSides.length > 0 ? 'lg:col-span-7' : 'lg:col-span-12'}`}>
-                <Link
-                  to={`/tin-tuc/${heroMain.slug}`}
-                  className="group relative block w-full h-[360px] sm:h-[420px] md:h-[460px] rounded-2xl overflow-hidden shadow-xl border border-white/10"
-                >
-                  <img
-                    src={heroMain.image_url || 'https://images.unsplash.com/photo-1542222024-c39e2281f121?auto=format&fit=crop&q=80'}
-                    alt={heroMain.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
-
-                  {/* Text Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-white/80 uppercase mb-2">
-                      <span className="bg-haq-red text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
-                        {CATEGORY_MAP[heroMain.category]?.[language] || heroMain.category}
-                      </span>
-                      <span>•</span>
-                      <span>{new Date(heroMain.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}</span>
-                      {heroMain.source_name && (
-                        <>
-                          <span>•</span>
-                          <span className="text-amber-400 font-semibold">
-                            {language === 'en' ? 'Source: ' : language === 'ko' ? '출처: ' : 'Nguồn: '}
-                            {heroMain.source_name}
-                          </span>
-                        </>
-                      )}
-                    </div>
-
-                    <h2 className="font-heading font-black text-xl sm:text-2xl md:text-3xl text-white uppercase leading-snug group-hover:text-haq-red transition-colors line-clamp-2 mb-3">
-                      {heroMain.title}
-                    </h2>
-
-                    <div className="inline-flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider group-hover:text-haq-red group-hover:translate-x-1 transition-all">
-                      <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </div>
-                  </div>
-                </Link>
-              </div>
-
-              {/* CỘT PHẢI: 3 Bài viết phụ xếp dọc */}
-              {heroSides.length > 0 && (
-                <div className="lg:col-span-5 flex flex-col justify-between gap-3 sm:gap-4">
-                  {heroSides.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={`/tin-tuc/${item.slug}`}
-                      className="group flex items-center gap-3 sm:gap-4 p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 flex-1"
-                    >
-                      {/* Thumbnail nhỏ bên trái */}
-                      <div className="w-28 sm:w-36 h-20 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-black/30">
-                        <img
-                          src={item.image_url || 'https://images.unsplash.com/photo-1542222024-c39e2281f121?auto=format&fit=crop&q=80'}
-                          alt={item.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </div>
-
-                      {/* Thông tin bên phải */}
-                      <div className="min-w-0 flex-1 text-left flex flex-col justify-center">
-                        <div className="text-[10px] text-white/60 font-mono uppercase mb-1">
-                          {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')} • {CATEGORY_MAP[item.category]?.[language] || item.category}
-                        </div>
-                        <h3 className="font-heading font-bold text-xs sm:text-sm text-white line-clamp-2 leading-snug group-hover:text-haq-red transition-colors">
-                          {item.title}
-                        </h3>
-                        <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-haq-red uppercase tracking-wider group-hover:underline">
-                          <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
-                          <ChevronRight className="w-3 h-3" />
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-            </div>
-          )}
-
+          {/* Tiêu đề căn giữa lớn, rõ ràng */}
+          <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-[#0F5132] tracking-tight uppercase">
+            {activeTab === 'tuyen-dung' 
+              ? (language === 'en' ? 'CAREERS' : language === 'ko' ? '채용' : 'TUYỂN DỤNG')
+              : (language === 'en' ? 'NEWS' : language === 'ko' ? '뉴스' : 'TIN TỨC')
+            }
+          </h1>
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/* 2. BODY CONTENT SECTION (BỘ LỌC DẠNG PILL & LƯỚI 3 CỘT) */}
+      {/* 2. LƯỚI BÀI VIẾT 3 CỘT (ĐƠN GIẢN, GỌN GÀNG) */}
       {/* ============================================================ */}
-      <section className="flex-1 py-10 md:py-16">
+      <section className="pb-16 sm:pb-24 flex-1">
         <div className="mx-auto max-w-site px-4 sm:px-6 md:px-12">
-
-          {/* ============================================================ */}
-          {/* CATEGORY FILTER PILLS (CĂN GIỮA CÂN ĐỐI CHUẨN MẪU) */}
-          {/* ============================================================ */}
-          <div className="mb-12">
-            {/* Thanh Pills căn giữa */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 md:gap-4 max-w-5xl mx-auto">
-              {CATEGORIES.map(cat => {
-                const isActive = activeCategory === cat
-                const label = CATEGORY_MAP[cat]?.[language] || cat
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setActiveCategory(cat)
-                      setSearchQuery('')
-                    }}
-                    className={`px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer shadow-xs ${
-                      isActive 
-                        ? 'bg-haq-red text-white border border-haq-red shadow-md scale-102' 
-                        : 'bg-white text-haq-red border border-haq-red/40 hover:bg-haq-red/5 hover:border-haq-red'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                )
-              })}
+          
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 text-[#52665A]">
+              <div className="w-8 h-8 border-3 border-[#0F5132]/20 border-t-[#0F5132] rounded-full animate-spin mb-3" />
+              <p className="font-mono text-xs uppercase tracking-widest">
+                {language === 'en' ? 'Loading...' : language === 'ko' ? '불러오는 중...' : 'Đang tải...'}
+              </p>
             </div>
-
-            {/* Thanh Tìm kiếm tinh gọn phía dưới các nút phân loại */}
-            <div className="mt-6 flex justify-center">
-              <div className="relative w-full max-w-md">
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={
-                    language === 'en'
-                      ? 'Search articles by keywords...'
-                      : language === 'ko'
-                      ? '키워드로 기사 검색...'
-                      : 'Tìm kiếm bài viết theo từ khóa...'
-                  }
-                  className="w-full pl-10 pr-9 py-2.5 bg-white border border-haq-border rounded-full text-xs sm:text-sm focus:outline-none focus:border-haq-red shadow-xs transition-colors placeholder:text-gray-400"
-                />
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                {searchQuery && (
-                  <button 
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+          ) : currentList.length === 0 ? (
+            /* Khi chưa có bài viết */
+            <div className="bg-white border border-[#E2E8E4] rounded-2xl p-10 md:p-14 text-center shadow-2xs max-w-xl mx-auto">
+              <div className="w-14 h-14 bg-[#FAF9F6] border border-[#E2E8E4] rounded-full flex items-center justify-center mx-auto mb-4">
+                {activeTab === 'tuyen-dung' ? (
+                  <Briefcase className="w-7 h-7 text-gray-400" />
+                ) : (
+                  <Newspaper className="w-7 h-7 text-gray-400" />
                 )}
               </div>
-            </div>
-          </div>
-
-          {/* Content Loading State */}
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20 text-haq-text-secondary">
-              <div className="w-10 h-10 border-4 border-haq-red/20 border-t-haq-red rounded-full animate-spin mb-4" />
-              <p className="font-mono text-xs uppercase tracking-widest">
-                {language === 'en' ? 'Loading news...' : language === 'ko' ? '뉴스 불러오는 중...' : 'Đang tải tin tức...'}
-              </p>
-            </div>
-          ) : news.length === 0 ? (
-            <div className="bg-white border border-haq-border rounded-3xl p-12 md:p-16 text-center shadow-xs max-w-2xl mx-auto">
-              <div className="w-16 h-16 bg-haq-cream rounded-full flex items-center justify-center mx-auto mb-6">
-                <Newspaper className="w-8 h-8 text-haq-text-secondary" />
-              </div>
-              <h2 className="text-xl md:text-2xl font-heading font-black text-haq-ink mb-3 uppercase">
-                {language === 'en' ? 'No Articles Yet' : language === 'ko' ? '등록된 기사가 없습니다' : 'Chưa có bài viết'}
+              <h2 className="text-lg md:text-xl font-heading font-bold text-[#11261B] mb-2 uppercase">
+                {activeTab === 'tuyen-dung'
+                  ? (language === 'en' ? 'No Current Openings' : language === 'ko' ? '현재 채용 공고가 없습니다' : 'Chưa có thông báo tuyển dụng mới')
+                  : (language === 'en' ? 'No Articles Yet' : language === 'ko' ? '등록된 기사가 없습니다' : 'Chưa có bài viết mới')}
               </h2>
-              <p className="text-haq-text-secondary text-sm leading-relaxed max-w-md mx-auto mb-6">
-                {language === 'en'
-                  ? 'Our news content is currently being updated. Please check back soon.'
-                  : language === 'ko'
-                  ? '최신 뉴스 및 소식이 업데이트 중입니다. 잠시 후 다시 확인해 주십시오.'
-                  : 'Hệ thống đang được cập nhật các nội dung tin tức mới nhất. Quý khách vui lòng quay lại sau.'}
+              <p className="text-[#52665A] text-xs leading-relaxed max-w-md mx-auto mb-6 font-light">
+                {activeTab === 'tuyen-dung'
+                  ? (language === 'en'
+                    ? 'HAQ FOOD currently has no active recruitment postings. Interested candidates are welcome to send CV to hr@haqfood.com.'
+                    : language === 'ko'
+                    ? '현재 채용 중인 직무가 없습니다. 입사를 희망하시는 분은 hr@haqfood.com으로 이력서를 보내주시기 바랍니다.'
+                    : 'Hiện tại HAQ FOOD chưa có đợt tuyển dụng mới. Quý ứng viên quan tâm có thể gửi CV về email phòng Nhân sự để được lưu hồ sơ ưu tiên.')
+                  : (language === 'en'
+                    ? 'Content is currently being updated. Please check back soon.'
+                    : language === 'ko'
+                    ? '소식이 업데이트 중입니다. 잠시 후 다시 확인해 주십시오.'
+                    : 'Hệ thống đang cập nhật các nội dung mới nhất. Quý khách vui lòng quay lại sau.')}
               </p>
-              <Link to="/" className="inline-flex items-center gap-2 text-haq-red text-xs font-bold uppercase tracking-wider hover:underline">
-                <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : 'Về trang chủ'}</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              {activeTab === 'tuyen-dung' ? (
+                <a 
+                  href="mailto:hr@haqfood.com?subject=Hồ sơ ứng tuyển nhân sự HAQ FOOD"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F5132] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#14532D] transition-colors shadow-2xs"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span>{language === 'en' ? 'Email CV to hr@haqfood.com' : language === 'ko' ? '이메일로 이력서 보내기' : 'Gửi CV về: hr@haqfood.com'}</span>
+                </a>
+              ) : (
+                <Link to="/" className="inline-flex items-center gap-1.5 text-[#0F5132] text-xs font-bold uppercase tracking-wider hover:underline">
+                  <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : 'Về trang chủ'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              )}
             </div>
           ) : (
-            <>
-              {/* LƯỚI BÀI VIẾT 3 CỘT (CLEAN 3-COLUMN GRID) */}
-              {gridArticles.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                  {gridArticles.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={`/tin-tuc/${item.slug}`}
-                      className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-haq-border hover:border-haq-red/40 hover:shadow-lg transition-all duration-300"
-                    >
-                      {/* Ảnh đại diện tỷ lệ đẹp 16:10 */}
-                      <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
-                        <img
-                          src={item.image_url || 'https://images.unsplash.com/photo-1542222024-c39e2281f121?auto=format&fit=crop&q=80'}
-                          alt={item.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                        <div className="absolute top-3 left-3">
-                          <span className="bg-white/95 backdrop-blur-xs text-haq-ink text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border border-haq-border shadow-xs">
-                            {CATEGORY_MAP[item.category]?.[language] || item.category}
-                          </span>
-                        </div>
+            /* Lưới 3 cột bài viết chuẩn theo mẫu */
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+              {currentList.map((item) => (
+                <Link
+                  key={item.id}
+                  to={`/tin-tuc/${item.slug}`}
+                  className="group flex flex-col bg-white rounded-xl overflow-hidden border border-[#E2E8E4] hover:border-[#0F5132]/40 hover:shadow-md transition-all duration-300 text-left"
+                >
+                  {/* Ảnh bài viết */}
+                  <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 border-b border-[#E2E8E4]/60">
+                    <img
+                      src={item.image_url || (activeTab === 'tuyen-dung' ? fallbackCareerImage : fallbackImage)}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-104"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-2.5 left-2.5">
+                      <span className="bg-[#0F5132] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs">
+                        {activeTab === 'tuyen-dung' 
+                          ? (language === 'en' ? 'Careers' : language === 'ko' ? '채용' : 'Tuyển dụng')
+                          : (item.category || 'Tin tức')}
+                      </span>
+                    </div>
+                    {item.is_pinned && (
+                      <div className="absolute top-2.5 right-2.5">
+                        <span className="bg-[#C89B3C] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs flex items-center gap-1">
+                          <Bookmark className="w-2.5 h-2.5 fill-current" />
+                          {activeTab === 'tuyen-dung' ? 'Gấp' : 'Tiêu điểm'}
+                        </span>
                       </div>
+                    )}
+                  </div>
 
-                      {/* Nội dung thẻ */}
-                      <div className="p-5 sm:p-6 flex flex-col flex-1 text-left">
-                        {/* Meta: Ngày đăng + Nguồn */}
-                        <div className="flex flex-wrap items-center gap-2 text-[10px] text-haq-text-secondary font-mono uppercase mb-2.5">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-haq-red" /> 
-                            {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}
+                  {/* Nội dung bài viết */}
+                  <div className="p-4 sm:p-5 flex flex-col flex-1">
+                    {/* Ngày đăng */}
+                    <div className="flex items-center gap-2 text-[10px] text-[#52665A] font-mono uppercase mb-2">
+                      <span className="flex items-center gap-1 text-[#0F5132] font-semibold">
+                        <Calendar className="w-3 h-3" /> 
+                        {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}
+                      </span>
+                      {activeTab === 'tin-tuc' && (
+                        <>
+                          <span>•</span>
+                          <span className="flex items-center gap-1 text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            {getReadTime(item, language)}
                           </span>
-                          {item.source_name ? (
-                            <>
-                              <span>•</span>
-                              <span className="flex items-center gap-1 text-haq-red font-semibold">
-                                <Globe className="w-3 h-3" /> {item.source_name}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span>•</span>
-                              <span>{item.author || 'HAQ FOOD'}</span>
-                            </>
-                          )}
-                        </div>
+                        </>
+                      )}
+                      {activeTab === 'tuyen-dung' && item.author && (
+                        <>
+                          <span>•</span>
+                          <span className="text-gray-400">{item.author}</span>
+                        </>
+                      )}
+                    </div>
 
-                        {/* Tiêu đề bài viết */}
-                        <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase leading-snug group-hover:text-haq-red transition-colors line-clamp-2 mb-2.5">
-                          {item.title}
-                        </h3>
+                    {/* Tiêu đề bài viết */}
+                    <h3 className="font-heading font-bold text-sm sm:text-base text-[#11261B] uppercase leading-snug group-hover:text-[#0F5132] transition-colors line-clamp-2 mb-2">
+                      {item.title}
+                    </h3>
 
-                        {/* Tóm tắt ngắn */}
-                        {item.summary && (
-                          <p className="text-haq-text-secondary text-xs sm:text-sm leading-relaxed line-clamp-2 mb-4">
-                            {item.summary}
-                          </p>
-                        )}
+                    {/* Tóm tắt ngắn */}
+                    {item.summary && (
+                      <p className="text-[#52665A] text-xs leading-relaxed font-light line-clamp-2 mb-4">
+                        {item.summary}
+                      </p>
+                    )}
 
-                        {/* Nút Xem thêm */}
-                        <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-haq-red group-hover:translate-x-0.5 transition-transform">
-                          <span>{language === 'en' ? 'Read more' : language === 'ko' ? '자세히 보기' : 'Xem thêm'}</span>
-                          <ChevronRight className="w-4 h-4" />
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                /* Empty state when filtering / searching */
-                <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-haq-border max-w-md mx-auto">
-                  <Hash className="w-8 h-8 text-haq-text-secondary mx-auto mb-2.5" />
-                  <p className="text-haq-text-secondary text-xs sm:text-sm mb-4">
-                    {language === 'en'
-                      ? `No articles found in "${CATEGORY_MAP[activeCategory]?.[language] || activeCategory}".`
-                      : language === 'ko'
-                      ? `"${CATEGORY_MAP[activeCategory]?.[language] || activeCategory}" 카테고리에 등록된 기사가 없습니다.`
-                      : `Không tìm thấy bài viết nào trong chuyên mục "${activeCategory}".`}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setActiveCategory('Tất cả')
-                      setSearchQuery('')
-                    }}
-                    className="px-4 py-2 rounded-full bg-haq-dark text-white text-xs font-bold uppercase tracking-wider hover:bg-haq-red transition-colors"
-                  >
-                    {language === 'en' ? 'View all articles' : language === 'ko' ? '모든 기사 보기' : 'Xem tất cả bài viết'}
-                  </button>
-                </div>
-              )}
-            </>
+                    {/* Nút Xem chi tiết */}
+                    <div className="mt-auto pt-3 border-t border-[#E2E8E4]/60 flex items-center justify-between text-xs font-semibold text-[#0F5132] group-hover:translate-x-0.5 transition-transform">
+                      <span>
+                        {activeTab === 'tuyen-dung' 
+                          ? (language === 'en' ? 'View Details & Apply' : language === 'ko' ? '상세보기 및 지원' : 'Xem chi tiết & Ứng tuyển')
+                          : (language === 'en' ? 'Read story' : language === 'ko' ? '기사 읽기' : 'Đọc bài viết')
+                        }
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           )}
 
         </div>
@@ -393,4 +261,3 @@ export default function NewsPage() {
     </main>
   )
 }
-

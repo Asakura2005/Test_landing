@@ -13,7 +13,7 @@ import {
   getOrders, 
   subscribeToLeads 
 } from '../services/supabase'
-import { loginUser, getCurrentUser, getCurrentUserSync, logoutUser } from '../services/auth'
+import { loginUser, getCurrentUser, getCurrentUserSync, logoutUser, getLoginLockoutRemaining } from '../services/auth'
 import AdminLayout from '../components/admin/AdminLayout'
 import DashboardOverview from '../components/admin/DashboardOverview'
 import ProductsManager from '../components/admin/ProductsManager'
@@ -90,6 +90,21 @@ export default function Admin() {
   const [rememberMe, setRememberMe] = useState(true)
   const [loginError, setLoginError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [lockoutSeconds, setLockoutSeconds] = useState(() => getLoginLockoutRemaining())
+
+  // Countdown timer khi bị khoá login
+  useEffect(() => {
+    if (lockoutSeconds <= 0) return
+    const timer = setInterval(() => {
+      const remaining = getLoginLockoutRemaining()
+      setLockoutSeconds(remaining)
+      if (remaining <= 0) {
+        clearInterval(timer)
+        setLoginError('')
+      }
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [lockoutSeconds])
   
   // Products, Leads & Orders Data State
   const [products, setProducts] = useState([])
@@ -197,6 +212,8 @@ export default function Admin() {
       setActiveTab('dashboard')
     } catch (err) {
       setLoginError(err.message || 'Email hoặc Mật khẩu không chính xác! Vui lòng thử lại.')
+      // Cập nhật countdown nếu bị khoá
+      setLockoutSeconds(getLoginLockoutRemaining())
     } finally {
       setIsSubmitting(false)
     }
@@ -337,10 +354,6 @@ export default function Admin() {
 
   const togglePin = async (product) => {
     if (!canEditProduct) return
-    if (!product.is_pinned && currentPinnedCount >= 6) {
-      alert("Đã đạt tối đa 6 sản phẩm ghim TOP trang chủ. Vui lòng bỏ ghim sản phẩm khác trước.")
-      return
-    }
     try {
       await updateProduct(product.id, { is_pinned: !product.is_pinned }, product.variants)
       await fetchData()
@@ -360,60 +373,75 @@ export default function Admin() {
     }
   }
 
-  // --- FRAME 01: ENTERPRISE B2B LOGIN SCREEN ---
+  // --- FRAME 01: LOGIN SCREEN ---
   if (!isAuthenticated) {
+    const isLockedOut = lockoutSeconds > 0
+
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-[#0F5132] selection:text-white font-body">
-        <div className="bg-white p-8 sm:p-10 border border-slate-200 rounded-xl shadow-lg w-full max-w-md space-y-6">
+      <div className="min-h-screen bg-[#F4F8F4] flex items-center justify-center p-4 selection:bg-[#0F5132] selection:text-white font-body">
+        <div className="bg-white p-8 sm:p-10 border border-[#D8E5DA] rounded-2xl shadow-sm w-full max-w-[400px] space-y-6">
           
-          {/* Header & Corporate Identity */}
-          <div className="text-center space-y-2 pb-2 border-b border-slate-100">
-            <div className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase bg-emerald-50 text-[#0F5132] border border-emerald-200">
-              B2B Enterprise Portal
+          {/* Brand Header */}
+          <div className="text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-[#0F5132] flex items-center justify-center text-white font-bold text-xl mx-auto">
+              H
             </div>
-            <h1 className="font-heading font-black text-2xl sm:text-3xl text-slate-900 tracking-tight">
-              HAQ FOOD
-            </h1>
-            <p className="text-xs text-slate-500 font-medium">
-              Cổng Quản Trị & Vận Hành Doanh Nghiệp
-            </p>
+            <div>
+              <h1 className="font-heading font-bold text-xl text-[#11261B] tracking-tight">
+                HAQ FOOD
+              </h1>
+              <p className="text-xs text-[#52665A] mt-0.5">
+                Đăng nhập quản trị
+              </p>
+            </div>
           </div>
 
-          {/* Login Error Notification */}
-          {loginError && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-medium text-left leading-relaxed">
+          {/* Lockout Warning */}
+          {isLockedOut && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
+              <p className="text-xs font-bold text-amber-800">
+                Tạm khoá đăng nhập
+              </p>
+              <p className="text-[11px] text-amber-700 mt-1">
+                Vui lòng thử lại sau <span className="font-bold font-mono">{lockoutSeconds}</span> giây
+              </p>
+            </div>
+          )}
+
+          {/* Login Error */}
+          {loginError && !isLockedOut && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-medium leading-relaxed">
               {loginError}
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4 text-left">
-            {/* Email Field */}
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Email doanh nghiệp
+              <label className="block text-xs font-bold text-[#11261B] uppercase tracking-wider">
+                Email
               </label>
               <input
                 type="email"
-                placeholder="name@company.com"
+                placeholder="email@company.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-[#0F5132] focus:ring-1 focus:ring-[#0F5132] bg-white transition"
+                disabled={isLockedOut}
+                className="w-full border border-[#D8E5DA] px-4 py-2.5 rounded-xl text-sm text-[#11261B] font-medium placeholder:text-[#52665A]/50 focus:outline-none focus:border-[#0F5132] bg-[#F4F8F4]/40 disabled:opacity-50 transition"
                 autoFocus
                 required
               />
             </div>
 
-            {/* Password Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-[#11261B] uppercase tracking-wider">
                   Mật khẩu
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-xs text-slate-500 hover:text-slate-800 font-medium transition select-none"
+                  className="text-xs text-[#52665A] hover:text-[#11261B] font-medium transition select-none cursor-pointer"
                 >
                   {showPassword ? "Ẩn" : "Hiện"}
                 </button>
@@ -423,38 +451,42 @@ export default function Admin() {
                 placeholder="Nhập mật khẩu"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-[#0F5132] focus:ring-1 focus:ring-[#0F5132] bg-white transition"
+                disabled={isLockedOut}
+                className="w-full border border-[#D8E5DA] px-4 py-2.5 rounded-xl text-sm text-[#11261B] font-medium placeholder:text-[#52665A]/50 focus:outline-none focus:border-[#0F5132] bg-[#F4F8F4]/40 disabled:opacity-50 transition"
                 required
               />
             </div>
 
-            {/* Session Persistence */}
-            <div className="flex items-center justify-between text-xs text-slate-600 pt-1">
+            <div className="flex items-center text-xs text-[#52665A] pt-1">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={e => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-[#0F5132] rounded border-slate-300 focus:ring-[#0F5132] cursor-pointer"
+                  className="w-4 h-4 text-[#0F5132] rounded border-[#D8E5DA] focus:ring-[#0F5132] cursor-pointer"
                 />
-                <span>Ghi nhớ đăng nhập trên thiết bị này</span>
+                <span>Ghi nhớ đăng nhập</span>
               </label>
             </div>
 
-            {/* Submit Button */}
             <button 
               type="submit" 
-              disabled={isSubmitting}
-              className="w-full bg-[#0F5132] hover:bg-[#145E3C] disabled:bg-slate-300 disabled:text-slate-500 text-white py-3 px-4 font-bold rounded-lg text-sm transition duration-150 shadow-sm disabled:cursor-not-allowed text-center"
+              disabled={isSubmitting || isLockedOut}
+              className="w-full bg-[#0F5132] hover:bg-[#145E3C] disabled:bg-[#D8E5DA] disabled:text-[#52665A] text-white py-3 px-4 font-bold rounded-xl text-sm transition-colors disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Đang xác thực...' : 'Đăng nhập hệ thống'}
+              {isLockedOut 
+                ? `Thử lại sau ${lockoutSeconds}s` 
+                : isSubmitting 
+                  ? 'Đang xác thực...' 
+                  : 'Đăng nhập'}
             </button>
           </form>
 
-          {/* Footer Notice */}
-          <div className="pt-4 border-t border-slate-100 text-center space-y-1 text-[11px] text-slate-400 font-medium">
-            <p>Hệ thống quản lý nội bộ HAQ FOOD</p>
-            <p>Truy cập chỉ dành cho nhân sự được phân quyền</p>
+          {/* Footer */}
+          <div className="pt-4 border-t border-[#D8E5DA] text-center">
+            <p className="text-[11px] text-[#52665A]">
+              © {new Date().getFullYear()} HAQ FOOD · Truy cập nội bộ
+            </p>
           </div>
         </div>
       </div>

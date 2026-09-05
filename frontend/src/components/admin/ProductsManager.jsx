@@ -179,7 +179,7 @@ export default function ProductsManager({
           <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 font-medium">
             <span>{products.length} sản phẩm</span>
             <span>•</span>
-            <span className="text-emerald-700 font-semibold">{currentPinnedCount}/6 sản phẩm ghim trang chủ</span>
+            <span className="text-emerald-700 font-semibold">{currentPinnedCount} sản phẩm ghim nổi bật tỉnh</span>
             <span>•</span>
             <span>{products.reduce((acc, p) => acc + (p.variants?.length || 1), 0)} SKUs</span>
           </div>
@@ -260,7 +260,7 @@ export default function ProductsManager({
               <option value="all">Tất cả trạng thái</option>
               <option value="in_stock">Còn hàng</option>
               <option value="out_of_stock">Hết hàng / Ẩn</option>
-              <option value="pinned">Đã ghim trang chủ ({currentPinnedCount})</option>
+              <option value="pinned">Đã ghim nổi bật tỉnh ({currentPinnedCount})</option>
               <option value="most_viewed">Xem nhiều nhất</option>
             </select>
           </div>
@@ -453,7 +453,7 @@ export default function ProductsManager({
                                 ? 'text-amber-600 hover:bg-amber-50' 
                                 : 'text-gray-300 hover:text-amber-600 hover:bg-gray-100'
                             }`}
-                            title={p.is_pinned ? "Bỏ ghim khỏi trang chủ" : "Ghim lên trang chủ"}
+                            title={p.is_pinned ? "Bỏ ghim nổi bật tỉnh" : "Ghim sản phẩm nổi bật của tỉnh"}
                           >
                             <Pin className={`w-3.5 h-3.5 ${p.is_pinned ? 'fill-amber-600' : ''}`} />
                           </button>

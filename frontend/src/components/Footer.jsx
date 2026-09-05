@@ -86,6 +86,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/tuyen-dung" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link_careers', 'Cơ hội nghề nghiệp & Tuyển dụng')}
+                </Link>
+              </li>
+              <li>
                 <Link to="/gioi-thieu#van-hoa" className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link5', '5 Giá trị văn hóa cốt lõi')}
                 </Link>

@@ -25,18 +25,14 @@ import {
 import { createNews, updateNews, uploadNewsImage } from '../../services/supabase'
 
 const CATEGORY_OPTIONS = [
-  'Thị trường & Xuất khẩu',
-  'Sự kiện & Hoạt động',
-  'Chứng nhận & Tiêu chuẩn',
-  'Chính sách Đại lý',
-  'Sản phẩm mới',
-  'Thông cáo báo chí'
+  'Tin tức',
+  'Tuyển dụng'
 ]
 
 const getInitialFormData = (item) => ({
   title: item?.title || item?.name || '',
   slug: item?.slug || '',
-  category: item?.category || 'Thị trường & Xuất khẩu',
+  category: item?.category === 'Tuyển dụng' ? 'Tuyển dụng' : (item?.category || 'Tin tức'),
   status: item?.status || 'published', // 'published' | 'draft' | 'hidden'
   summary: item?.summary || item?.excerpt || item?.description || '',
   content: item?.content || item?.body || item?.details || '',

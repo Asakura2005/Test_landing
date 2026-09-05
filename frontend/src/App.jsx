@@ -18,7 +18,6 @@ import ProductDetailPage from './pages/ProductDetailPage.jsx'
 
 import { initPostHog, recordSessionVisit } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
-import { FloatingLanguageSwitcher } from './components/LanguageSwitcher'
 import SeoHead from './components/SeoHead'
 
 // Scroll to top and track session visit ONLY on genuine page navigations
@@ -62,7 +61,6 @@ function AppRoutes() {
       <RouteSync />
       <SeoHead />
       <div className={`w-full overflow-x-hidden relative min-h-screen ${isAdmin ? 'bg-[#F4F8F4]' : 'bg-[#0C1E15]'}`}>
-        {!isAdmin && <FloatingLanguageSwitcher />}
         <Routes>
           {/* ================= VIETNAMESE (Default) ================= */}
           <Route path="/" element={<Home />} />
@@ -76,6 +74,8 @@ function AppRoutes() {
           <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
           <Route path="/tin-tuc" element={<NewsPage />} />
           <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
+          <Route path="/tuyen-dung" element={<NewsPage defaultTab="tuyen-dung" />} />
+          <Route path="/tuyen-dung/:slug" element={<NewsDetailPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
 
           {/* ================= ENGLISH (B2B International) ================= */}
@@ -87,6 +87,8 @@ function AppRoutes() {
           <Route path="/en/products/:slug" element={<ProductDetailPage />} />
           <Route path="/en/news" element={<NewsPage />} />
           <Route path="/en/news/:slug" element={<NewsDetailPage />} />
+          <Route path="/en/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
+          <Route path="/en/careers/:slug" element={<NewsDetailPage />} />
           <Route path="/en/contact" element={<ContactPage />} />
           <Route path="/en/policy" element={<PolicyPage />} />
           <Route path="/en/privacy-policy" element={<PrivacyPolicyPage />} />
@@ -108,6 +110,8 @@ function AppRoutes() {
           <Route path="/ko/products/:slug" element={<ProductDetailPage />} />
           <Route path="/ko/news" element={<NewsPage />} />
           <Route path="/ko/news/:slug" element={<NewsDetailPage />} />
+          <Route path="/ko/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
+          <Route path="/ko/careers/:slug" element={<NewsDetailPage />} />
           <Route path="/ko/contact" element={<ContactPage />} />
           <Route path="/ko/policy" element={<PolicyPage />} />
           <Route path="/ko/privacy-policy" element={<PrivacyPolicyPage />} />

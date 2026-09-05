@@ -20,12 +20,8 @@ import NewsModal from './NewsModal'
 
 const CATEGORY_OPTIONS = [
   'Tất cả chuyên mục',
-  'Thị trường & Xuất khẩu',
-  'Sự kiện & Hoạt động',
-  'Chứng nhận & Tiêu chuẩn',
-  'Chính sách Đại lý',
-  'Sản phẩm mới',
-  'Thông cáo báo chí'
+  'Tin tức',
+  'Tuyển dụng'
 ]
 
 const STATUS_OPTIONS = [
@@ -124,7 +120,11 @@ export default function NewsManager({
         item.author?.toLowerCase().includes(searchQuery.toLowerCase())
 
       // Category
-      const matchesCategory = selectedCategory === 'Tất cả chuyên mục' || item.category === selectedCategory
+      const matchesCategory = 
+        selectedCategory === 'Tất cả chuyên mục' ||
+        (selectedCategory === 'Tuyển dụng' 
+          ? item.category === 'Tuyển dụng' 
+          : (item.category === 'Tin tức' || item.category !== 'Tuyển dụng'))
 
       // Status (default to published if status column not set)
       const itemStatus = item.status || 'published'
@@ -360,8 +360,12 @@ export default function NewsManager({
 
                     {/* CHUYÊN MỤC */}
                     <td className="py-3 px-3 align-middle">
-                      <span className="inline-block bg-emerald-50 text-[#0F5132] border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-medium whitespace-nowrap">
-                        {item.category || 'Tin tức'}
+                      <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-medium whitespace-nowrap ${
+                        item.category === 'Tuyển dụng'
+                          ? 'bg-blue-50 text-blue-700 border border-blue-200 font-semibold'
+                          : 'bg-emerald-50 text-[#0F5132] border border-emerald-200'
+                      }`}>
+                        {item.category === 'Tuyển dụng' ? 'Tuyển dụng' : 'Tin tức'}
                       </span>
                     </td>
 

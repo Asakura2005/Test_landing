@@ -36,10 +36,60 @@ const TOPIC_TEMPLATES = [
   { id: 'general', aliases: ['support', 'contact', 'other', 'cham-soc'], icon: Headphones, hotline: '024 23 23 56 56' },
 ]
 
+/* ───────────────────────────────────────────────────────────────────
+   Reveal — scroll-triggered fade + slide animation
+   ─────────────────────────────────────────────────────────────────── */
+function Reveal({ children, delay = 0, className = '', direction = 'up' }) {
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true)
+          obs.unobserve(el)
+        }
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  const hidden = {
+    up: 'opacity-0 translate-y-8',
+    down: 'opacity-0 -translate-y-8',
+    left: 'opacity-0 -translate-x-8',
+    right: 'opacity-0 translate-x-8',
+    none: 'opacity-0',
+  }[direction] || 'opacity-0 translate-y-8'
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-[800ms] ease-out ${
+        visible ? 'opacity-100 translate-x-0 translate-y-0' : hidden
+      } ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function ContactPage() {
   const { t, language } = useLanguage()
   const [searchParams, setSearchParams] = useSearchParams()
   const formRef = useRef(null)
+  const [heroReady, setHeroReady] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHeroReady(true), 50)
+    return () => clearTimeout(timer)
+  }, [])
 
   const topics = useMemo(() => [
     {
@@ -304,7 +354,9 @@ export default function ContactPage() {
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 relative z-10">
             <div className="max-w-4xl">
               {/* Eyebrow */}
-              <div className="flex items-center gap-3 mb-4 sm:mb-5">
+              <div className={`flex items-center gap-3 mb-4 sm:mb-5 transition-all duration-700 ease-out ${
+                heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
                 <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
                   {t('contact_page.badge', 'HAQ FOOD · KẾT NỐI & HỢP TÁC DOANH NGHIỆP')}
                 </span>
@@ -315,7 +367,9 @@ export default function ContactPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight uppercase leading-[1.08]">
+              <h1 className={`font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight uppercase leading-[1.08] transition-all duration-700 delay-100 ease-out ${
+                heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}>
                 {language === 'en' ? (
                   <>PARTNER FOR DEVELOPMENT WITH <br /><span className="text-[#16A34A]">VIETNAMESE AGRI-FOODS.</span></>
                 ) : language === 'ko' ? (
@@ -326,15 +380,19 @@ export default function ContactPage() {
               </h1>
 
               {/* Subtext */}
-              <p className="mt-5 text-sm sm:text-base lg:text-lg text-haq-text-secondary max-w-3xl leading-relaxed font-normal">
+              <p className={`mt-5 text-sm sm:text-base lg:text-lg text-haq-text-secondary max-w-3xl leading-relaxed font-normal transition-all duration-700 delay-200 ease-out ${
+                heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}>
                 {t('contact_page.subtitle', 'Chúng tôi luôn trân trọng mọi cơ hội hợp tác từ quý đối tác phân phối, đại lý, chuỗi bán lẻ, khách hàng xuất khẩu và doanh nghiệp gia công OEM. Đội ngũ HAQ FOOD sẵn sàng lắng nghe và đồng hành xây dựng mối quan hệ hợp tác bền vững.')}
               </p>
 
               {/* Quick direct contact pills */}
-              <div className="mt-8 flex items-center gap-3 sm:gap-4 flex-wrap">
+              <div className={`mt-8 flex items-center gap-3 sm:gap-4 flex-wrap transition-all duration-700 delay-300 ease-out ${
+                heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}>
                 <a
                   href="tel:02423235656"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#16A34A] hover:text-[#16A34A] transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#16A34A] hover:text-[#16A34A] hover:-translate-y-0.5 hover:shadow-xs transition-all text-xs sm:text-sm font-semibold cursor-pointer"
                 >
                   <Phone className="w-4 h-4 text-[#16A34A]" />
                   <span>Hotline: 024 23 23 56 56</span>
@@ -344,7 +402,7 @@ export default function ContactPage() {
                   href="https://zalo.me/1361851474644984696"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#0068FF] hover:text-[#0068FF] transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#0068FF] hover:text-[#0068FF] hover:-translate-y-0.5 hover:shadow-xs transition-all text-xs sm:text-sm font-semibold cursor-pointer"
                 >
                   <div className="w-4 h-4 rounded bg-[#0068FF] text-white flex items-center justify-center text-[10px] font-black">
                     Z
@@ -354,7 +412,7 @@ export default function ContactPage() {
 
                 <a
                   href="mailto:info@haq.com.vn"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#C89B3C] hover:text-[#C89B3C] transition-all text-xs sm:text-sm font-semibold"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#C89B3C] hover:text-[#C89B3C] hover:-translate-y-0.5 hover:shadow-xs transition-all text-xs sm:text-sm font-semibold cursor-pointer"
                 >
                   <Mail className="w-4 h-4 text-[#C89B3C]" />
                   <span>info@haq.com.vn</span>
@@ -371,128 +429,134 @@ export default function ContactPage() {
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             
             {/* Section Header */}
-            <div className="max-w-3xl mb-10 sm:mb-14">
-              <div className="flex items-center gap-2.5 mb-3">
-                <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
-                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                  {language === 'en' ? 'B2B COOPERATION · BUSINESS SOLUTIONS' : language === 'ko' ? '기업 비즈니스 솔루션' : 'HỢP TÁC DOANH NGHIỆP · BUSINESS SOLUTIONS'}
-                </span>
+            <Reveal direction="up">
+              <div className="max-w-3xl mb-10 sm:mb-14">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                  <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                    {language === 'en' ? 'B2B COOPERATION · BUSINESS SOLUTIONS' : language === 'ko' ? '기업 비즈니스 솔루션' : 'HỢP TÁC DOANH NGHIỆP · BUSINESS SOLUTIONS'}
+                  </span>
+                </div>
+                <h2 className="font-heading font-extrabold text-2xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+                  {language === 'en' ? 'TAILORED SOLUTIONS FOR EVERY BUSINESS MODEL' : language === 'ko' ? '협력 모델별 맞춤형 솔루션 제공' : 'HAQ CÓ GIẢI PHÁP CHO TỪNG MÔ HÌNH HỢP TÁC'}
+                </h2>
+                <p className="text-sm sm:text-base text-haq-text-secondary mt-3 font-normal leading-relaxed">
+                  {language === 'en'
+                    ? 'Choose your collaboration model to receive wholesale pricing, dealer discount policies, and comprehensive capability dossiers.'
+                    : language === 'ko'
+                    ? '협력 방식을 선택하시면 전담팀에서 최적의 공급 단가표, 대리점 할인율 및 기업 소개서를 안내해 드립니다.'
+                    : 'Lựa chọn mô hình phù hợp để nhận chính sách chiết khấu, bảng giá sỉ và hồ sơ năng lực tối ưu nhất từ đội ngũ chuyên trách HAQ FOOD.'}
+                </p>
               </div>
-              <h2 className="font-heading font-extrabold text-2xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
-                {language === 'en' ? 'TAILORED SOLUTIONS FOR EVERY BUSINESS MODEL' : language === 'ko' ? '협력 모델별 맞춤형 솔루션 제공' : 'HAQ CÓ GIẢI PHÁP CHO TỪNG MÔ HÌNH HỢP TÁC'}
-              </h2>
-              <p className="text-sm sm:text-base text-haq-text-secondary mt-3 font-normal leading-relaxed">
-                {language === 'en'
-                  ? 'Choose your collaboration model to receive wholesale pricing, dealer discount policies, and comprehensive capability dossiers.'
-                  : language === 'ko'
-                  ? '협력 방식을 선택하시면 전담팀에서 최적의 공급 단가표, 대리점 할인율 및 기업 소개서를 안내해 드립니다.'
-                  : 'Lựa chọn mô hình phù hợp để nhận chính sách chiết khấu, bảng giá sỉ và hồ sơ năng lực tối ưu nhất từ đội ngũ chuyên trách HAQ FOOD.'}
-              </p>
-            </div>
+            </Reveal>
 
             {/* Main 2-Column Balanced Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
               
               {/* Left Column: 5 B2B Business Solution Cards with Smooth Accordion UI */}
               <div className="lg:col-span-5 space-y-2.5">
-                {topics.map((topic) => {
+                {topics.map((topic, idx) => {
                   const isExpanded = activeTopicId === topic.id
                   const Icon = topic.icon
 
                   return (
-                    <div
-                      key={topic.id}
-                      onClick={() => handleSelectTopic(topic.id)}
-                      className={`rounded-2xl border transition-all duration-250 cursor-pointer relative overflow-hidden select-none group ${
-                        isExpanded
-                          ? 'bg-[#16A34A]/[0.04] border-[#16A34A] shadow-sm ring-1 ring-[#16A34A]/25'
-                          : 'bg-white hover:bg-haq-sage/20 border-haq-border shadow-2xs hover:border-[#16A34A]/40'
-                      }`}
-                    >
-                      {/* Active Indicator Strip */}
-                      {isExpanded && (
-                        <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-[#16A34A]" />
-                      )}
-
-                      {/* Header Row: Always visible */}
-                      <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3.5 min-w-0">
-                          <div
-                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                              isExpanded
-                                ? 'bg-[#16A34A] text-white shadow-xs'
-                                : 'bg-haq-sage text-[#0F5132] group-hover:bg-haq-sage/80'
-                            }`}
-                          >
-                            <Icon className="w-4.5 h-4.5 sm:w-5 sm:h-5" strokeWidth={1.9} />
-                          </div>
-                          <h3 className="font-heading font-extrabold text-sm sm:text-base text-haq-ink uppercase tracking-tight truncate">
-                            {topic.title}
-                          </h3>
-                        </div>
-
-                        {/* Chevron Icon with smooth rotation */}
-                        <div
-                          className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-250 ${
-                            isExpanded
-                              ? 'bg-[#16A34A]/10 text-[#16A34A] rotate-180'
-                              : 'bg-haq-sage/60 text-haq-text-secondary group-hover:text-haq-ink group-hover:bg-white'
-                          }`}
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </div>
-                      </div>
-
-                      {/* Smooth Expandable Description Body */}
+                    <Reveal key={topic.id} delay={idx * 70} direction="up">
                       <div
-                        className={`grid transition-all duration-250 ease-in-out ${
+                        onClick={() => handleSelectTopic(topic.id)}
+                        className={`rounded-2xl border transition-all duration-250 cursor-pointer relative overflow-hidden select-none group hover:-translate-y-0.5 ${
                           isExpanded
-                            ? 'grid-rows-[1fr] opacity-100'
-                            : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                            ? 'bg-[#16A34A]/[0.04] border-[#16A34A] shadow-sm ring-1 ring-[#16A34A]/25'
+                            : 'bg-white hover:bg-haq-sage/20 border-haq-border shadow-2xs hover:border-[#16A34A]/40'
                         }`}
                       >
-                        <div className="overflow-hidden">
-                          <div className="px-4 sm:px-4.5 pb-4 sm:pb-4.5 pt-0">
-                            <div className="pt-3 border-t border-[#16A34A]/15">
-                              <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
-                                {topic.desc}
-                              </p>
+                        {/* Active Indicator Strip */}
+                        {isExpanded && (
+                          <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-[#16A34A]" />
+                        )}
+
+                        {/* Header Row: Always visible */}
+                        <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3.5 min-w-0">
+                            <div
+                              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                                isExpanded
+                                  ? 'bg-[#16A34A] text-white shadow-xs'
+                                  : 'bg-haq-sage text-[#0F5132] group-hover:bg-haq-sage/80'
+                              }`}
+                            >
+                              <Icon className="w-4.5 h-4.5 sm:w-5 sm:h-5" strokeWidth={1.9} />
+                            </div>
+                            <h3 className="font-heading font-extrabold text-sm sm:text-base text-haq-ink uppercase tracking-tight truncate">
+                              {topic.title}
+                            </h3>
+                          </div>
+
+                          {/* Chevron Icon with smooth rotation */}
+                          <div
+                            className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-250 ${
+                              isExpanded
+                                ? 'bg-[#16A34A]/10 text-[#16A34A] rotate-180'
+                                : 'bg-haq-sage/60 text-haq-text-secondary group-hover:text-haq-ink group-hover:bg-white'
+                            }`}
+                          >
+                            <ChevronDown className="w-4 h-4" />
+                          </div>
+                        </div>
+
+                        {/* Smooth Expandable Description Body */}
+                        <div
+                          className={`grid transition-all duration-250 ease-in-out ${
+                            isExpanded
+                              ? 'grid-rows-[1fr] opacity-100'
+                              : 'grid-rows-[0fr] opacity-0 pointer-events-none'
+                          }`}
+                        >
+                          <div className="overflow-hidden">
+                            <div className="px-4 sm:px-4.5 pb-4 sm:pb-4.5 pt-0">
+                              <div className="pt-3 border-t border-[#16A34A]/15">
+                                <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
+                                  {topic.desc}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Reveal>
                   )
                 })}
 
                 {/* Direct Assistance Box */}
-                <div className="p-4 sm:p-4.5 rounded-2xl bg-haq-sage/20 border border-haq-border/80 text-haq-ink flex items-center justify-between gap-4 flex-wrap mt-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white text-[#16A34A] flex items-center justify-center shadow-2xs border border-haq-border shrink-0">
-                      <Clock className="w-4 h-4 text-[#16A34A]" />
+                <Reveal delay={380} direction="up">
+                  <div className="p-4 sm:p-4.5 rounded-2xl bg-haq-sage/20 border border-haq-border/80 text-haq-ink flex items-center justify-between gap-4 flex-wrap mt-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white text-[#16A34A] flex items-center justify-center shadow-2xs border border-haq-border shrink-0">
+                        <Clock className="w-4 h-4 text-[#16A34A]" />
+                      </div>
+                      <div>
+                        <span className="font-heading text-xs font-bold uppercase text-haq-ink block">
+                          {language === 'en' ? 'Need instant consultation?' : language === 'ko' ? '즉시 전문가 상담이 필요하신가요?' : 'Cần kết nối chuyên viên ngay?'}
+                        </span>
+                        <span className="text-xs text-haq-text-secondary">
+                          Hotline: <strong className="text-haq-ink font-mono font-bold">024 23 23 56 56</strong>
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="font-heading text-xs font-bold uppercase text-haq-ink block">
-                        {language === 'en' ? 'Need instant consultation?' : language === 'ko' ? '즉시 전문가 상담이 필요하신가요?' : 'Cần kết nối chuyên viên ngay?'}
-                      </span>
-                      <span className="text-xs text-haq-text-secondary">
-                        Hotline: <strong className="text-haq-ink font-mono font-bold">024 23 23 56 56</strong>
-                      </span>
-                    </div>
+                    <a
+                      href="tel:02423235656"
+                      className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
+                    >
+                      <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : 'Gọi trực tiếp'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
                   </div>
-                  <a
-                    href="tel:02423235656"
-                    className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
-                  >
-                    <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : 'Gọi trực tiếp'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
+                </Reveal>
               </div>
 
               {/* Right Column: Streamlined & Frictionless Business Inquiry Form */}
               <div ref={formRef} className="lg:col-span-7">
-                <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
+                <Reveal direction="up" delay={150}>
+                  <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
                   
                   {/* Form Header */}
                   <div className="border-b border-haq-border pb-6 mb-6">
@@ -719,7 +783,8 @@ export default function ContactPage() {
                     </form>
                   )}
                 </div>
-              </div>
+              </Reveal>
+            </div>
             </div>
           </div>
         </section>
@@ -729,60 +794,63 @@ export default function ContactPage() {
             ========================================================================= */}
         <section className="py-16 sm:py-20 bg-haq-sage/20 border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <div>
-                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                  {language === 'en' ? 'DEDICATED TEAMS' : language === 'ko' ? '전담 사업부' : 'ĐỘI NGŨ CHUYÊN TRÁCH'}
-                </span>
-                <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
-                  {language === 'en' ? 'SPECIALIZED BUSINESS DEPARTMENTS' : language === 'ko' ? '비즈니스 전담 사업부 안내' : 'CÁC BỘ PHẬN PHỤ TRÁCH KINH DOANH'}
-                </h2>
+            <Reveal direction="up">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                  <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                    {language === 'en' ? 'DEDICATED TEAMS' : language === 'ko' ? '전담 사업부' : 'ĐỘI NGŨ CHUYÊN TRÁCH'}
+                  </span>
+                  <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-haq-ink uppercase tracking-tight mt-1.5">
+                    {language === 'en' ? 'SPECIALIZED BUSINESS DEPARTMENTS' : language === 'ko' ? '비즈니스 전담 사업부 안내' : 'CÁC BỘ PHẬN PHỤ TRÁCH KINH DOANH'}
+                  </h2>
+                </div>
+                <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md leading-relaxed font-normal">
+                  {language === 'en'
+                    ? 'Each department at HAQ FOOD is specialized by market segment to guarantee accurate, timely responses and hands-on partnership.'
+                    : language === 'ko'
+                    ? 'HAQ FOOD의 각 부서는 사업 영역별로 전문화되어 있어 신속하고 정확한 상담과 밀착 지원을 제공합니다.'
+                    : 'Mỗi bộ phận tại HAQ FOOD được tổ chức chuyên sâu theo từng phân khúc kinh doanh, đảm bảo phản hồi chính xác và đồng hành sát sao cùng quý khách.'}
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-haq-text-secondary max-w-md leading-relaxed font-normal">
-                {language === 'en'
-                  ? 'Each department at HAQ FOOD is specialized by market segment to guarantee accurate, timely responses and hands-on partnership.'
-                  : language === 'ko'
-                  ? 'HAQ FOOD의 각 부서는 사업 영역별로 전문화되어 있어 신속하고 정확한 상담과 밀착 지원을 제공합니다.'
-                  : 'Mỗi bộ phận tại HAQ FOOD được tổ chức chuyên sâu theo từng phân khúc kinh doanh, đảm bảo phản hồi chính xác và đồng hành sát sao cùng quý khách.'}
-              </p>
-            </div>
+            </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {departments.map((dept, idx) => {
                 const DeptIcon = dept.icon
                 return (
-                  <div
-                    key={idx}
-                    className="bg-white rounded-3xl p-6 border border-haq-border hover:shadow-lg hover:border-[#16A34A]/40 transition-all duration-300 flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-xl bg-haq-sage text-[#0F5132] flex items-center justify-center mb-4 border border-haq-border">
-                        <DeptIcon className="w-5 h-5" />
+                  <Reveal key={idx} delay={idx * 100} direction="up" className="h-full">
+                    <div
+                      className="bg-white rounded-3xl p-6 border border-haq-border hover:shadow-xl hover:border-[#16A34A]/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-full"
+                    >
+                      <div>
+                        <div className="w-10 h-10 rounded-xl bg-haq-sage text-[#0F5132] flex items-center justify-center mb-4 border border-haq-border">
+                          <DeptIcon className="w-5 h-5" />
+                        </div>
+                        <span className="font-heading text-[11px] font-bold text-[#16A34A] uppercase tracking-wider block">
+                          {dept.role}
+                        </span>
+                        <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase mt-1 leading-snug">
+                          {dept.title}
+                        </h3>
+                        <p className="text-xs text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
+                          {dept.desc}
+                        </p>
                       </div>
-                      <span className="font-heading text-[11px] font-bold text-[#16A34A] uppercase tracking-wider block">
-                        {dept.role}
-                      </span>
-                      <h3 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase mt-1 leading-snug">
-                        {dept.title}
-                      </h3>
-                      <p className="text-xs text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
-                        {dept.desc}
-                      </p>
-                    </div>
 
-                    <div className="mt-6 pt-4 border-t border-haq-border/80 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-heading text-haq-text-secondary text-[11px]">Hotline / Ext:</span>
-                        <span className="font-sans font-bold text-haq-ink">{dept.phone} ({dept.ext})</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-heading text-haq-text-secondary text-[11px]">Email:</span>
-                        <a href={`mailto:${dept.email}`} className="font-sans font-medium text-[#16A34A] hover:underline text-[11px]">
-                          {dept.email}
-                        </a>
+                      <div className="mt-6 pt-4 border-t border-haq-border/80 space-y-1.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-heading text-haq-text-secondary text-[11px]">Hotline / Ext:</span>
+                          <span className="font-sans font-bold text-haq-ink">{dept.phone} ({dept.ext})</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-heading text-haq-text-secondary text-[11px]">Email:</span>
+                          <a href={`mailto:${dept.email}`} className="font-sans font-medium text-[#16A34A] hover:underline text-[11px]">
+                            {dept.email}
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Reveal>
                 )
               })}
             </div>
@@ -797,125 +865,133 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
               
               {/* Left Column: Direct Channels */}
-              <div className="lg:col-span-5 flex flex-col justify-between bg-haq-sage/20 rounded-3xl p-6 sm:p-8 border border-haq-border shadow-2xs">
-                <div>
-                  <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                    {language === 'en' ? 'DIRECT CHANNELS' : language === 'ko' ? '직접 문의' : 'KÊNH TRỰC TIẾP'}
-                  </span>
-                  <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
-                    {language === 'en' ? 'CONTACT OUR HEAD OFFICE' : language === 'ko' ? '본사 및 대표 연락처' : 'LIÊN HỆ VĂN PHÒNG CHÍNH'}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
-                    {language === 'en'
-                      ? 'You are welcome to visit our headquarters in Hanoi or reach out directly through our official channels below.'
-                      : language === 'ko'
-                      ? '하노이 본사 사무실을 직접 방문하시거나 아래 공식 채널을 통해 언제든 문의하실 수 있습니다.'
-                      : 'Quý khách có thể ghé thăm trực tiếp văn phòng làm việc hoặc liên hệ qua các kênh thông tin chính thức dưới đây.'}
-                  </p>
-
-                  <div className="mt-8 space-y-4">
-                    {/* Hotline bàn */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
-                      <div className="w-10 h-10 rounded-xl bg-[#16A34A] text-white flex items-center justify-center shrink-0">
-                        <Phone className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                          {language === 'en' ? 'Landline Phone' : language === 'ko' ? '유선 전화' : 'Điện thoại cố định'}
-                        </span>
-                        <a href="tel:02423235656" className="font-heading font-bold text-lg text-haq-ink hover:text-[#16A34A] transition-colors">
-                          024 23 23 56 56
-                        </a>
-                        <p className="text-[11px] text-haq-text-secondary">
-                          {language === 'en' ? 'Mon – Sat: 8:00 AM – 5:30 PM (GMT+7)' : language === 'ko' ? '월 – 토: 08:00 – 17:30' : 'Thứ 2 – Thứ 7: 8h00 – 17h30'}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Zalo Doanh Nghiệp */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
-                      <div className="w-10 h-10 rounded-xl bg-[#0068FF] text-white flex items-center justify-center font-bold text-base shrink-0">
-                        Z
-                      </div>
-                      <div>
-                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                          {language === 'en' ? 'Corporate Instant Messaging' : language === 'ko' ? '실시간 비즈니스 채팅' : 'Zalo Tư Vấn Doanh Nghiệp'}
-                        </span>
-                        <a
-                          href="https://zalo.me/1361851474644984696"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-heading font-bold text-lg text-haq-ink hover:text-[#0068FF] transition-colors"
-                        >
-                          HAQ Hà Nội
-                        </a>
-                        <p className="text-[11px] text-haq-text-secondary">
-                          {language === 'en' ? 'Official OA – 24/7 Assistance' : language === 'ko' ? '공식 채널 – 24/7 지원' : 'Zalo OA chính thức – Hỗ trợ 24/7'}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Email */}
-                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs">
-                      <div className="w-10 h-10 rounded-xl bg-[#0C1E15] text-white flex items-center justify-center shrink-0">
-                        <Mail className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                          {language === 'en' ? 'Partnership & Quotes Inbox' : language === 'ko' ? '제휴 및 견적 공식 메일' : 'Hòm thư Hợp tác & Báo giá'}
-                        </span>
-                        <a href="mailto:info@haq.com.vn" className="font-sans font-bold text-sm text-haq-ink hover:text-[#16A34A] transition-colors">
-                          info@haq.com.vn
-                        </a>
-                        <p className="text-[11px] text-haq-text-secondary">
-                          {language === 'en' ? 'Receiving capability dossiers & RFQs' : language === 'ko' ? '기업 소개서 및 견적 요청 접수' : 'Tiếp nhận hồ sơ năng lực & chào giá'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-haq-border">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
+              <div className="lg:col-span-5 h-full">
+                <Reveal direction="up" className="h-full">
+                  <div className="flex flex-col justify-between bg-haq-sage/20 rounded-3xl p-6 sm:p-8 border border-haq-border shadow-2xs h-full">
                     <div>
-                      <span className="block font-heading text-xs font-bold text-haq-ink uppercase">
-                        {language === 'en' ? 'HAQ FOOD Headquarters' : language === 'ko' ? 'HAQ FOOD 본사 주소' : 'Trụ sở chính HAQ FOOD'}
+                      <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                        {language === 'en' ? 'DIRECT CHANNELS' : language === 'ko' ? '직접 문의' : 'KÊNH TRỰC TIẾP'}
                       </span>
-                      <p className="text-xs text-haq-text-secondary mt-0.5">
+                      <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
+                        {language === 'en' ? 'CONTACT OUR HEAD OFFICE' : language === 'ko' ? '본사 및 대표 연락처' : 'LIÊN HỆ VĂN PHÒNG CHÍNH'}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
                         {language === 'en'
-                          ? 'No. 30, Alley 1 Pham Tuan Tai St, Nghia Do Ward, Cau Giay Dist, Hanoi, Vietnam.'
+                          ? 'You are welcome to visit our headquarters in Hanoi or reach out directly through our official channels below.'
                           : language === 'ko'
-                          ? '베트남 하노이시 꺼우저이구 응이어도동 팜뚜언따이 1골목 30호.'
-                          : 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.'}
+                          ? '하노이 본사 사무실을 직접 방문하시거나 아래 공식 채널을 통해 언제든 문의하실 수 있습니다.'
+                          : 'Quý khách có thể ghé thăm trực tiếp văn phòng làm việc hoặc liên hệ qua các kênh thông tin chính thức dưới đây.'}
                       </p>
-                      <a
-                        href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-[#16A34A] font-bold mt-2 hover:underline"
-                      >
-                        <span>{language === 'en' ? 'Open on Google Maps' : language === 'ko' ? 'Google 지도에서 위치 보기' : 'Mở vị trí trên Google Maps'}</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+
+                      <div className="mt-8 space-y-4">
+                        {/* Hotline bàn */}
+                        <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs hover:border-[#16A34A]/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-300">
+                          <div className="w-10 h-10 rounded-xl bg-[#16A34A] text-white flex items-center justify-center shrink-0">
+                            <Phone className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
+                              {language === 'en' ? 'Landline Phone' : language === 'ko' ? '유선 전화' : 'Điện thoại cố định'}
+                            </span>
+                            <a href="tel:02423235656" className="font-heading font-bold text-lg text-haq-ink hover:text-[#16A34A] transition-colors">
+                              024 23 23 56 56
+                            </a>
+                            <p className="text-[11px] text-haq-text-secondary">
+                              {language === 'en' ? 'Mon – Sat: 8:00 AM – 5:30 PM (GMT+7)' : language === 'ko' ? '월 – 토: 08:00 – 17:30' : 'Thứ 2 – Thứ 7: 8h00 – 17h30'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Zalo Doanh Nghiệp */}
+                        <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs hover:border-[#0068FF]/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-300">
+                          <div className="w-10 h-10 rounded-xl bg-[#0068FF] text-white flex items-center justify-center font-bold text-base shrink-0">
+                            Z
+                          </div>
+                          <div>
+                            <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
+                              {language === 'en' ? 'Corporate Instant Messaging' : language === 'ko' ? '실시간 비즈니스 채팅' : 'Zalo Tư Vấn Doanh Nghiệp'}
+                            </span>
+                            <a
+                              href="https://zalo.me/1361851474644984696"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-heading font-bold text-lg text-haq-ink hover:text-[#0068FF] transition-colors"
+                            >
+                              HAQ Hà Nội
+                            </a>
+                            <p className="text-[11px] text-haq-text-secondary">
+                              {language === 'en' ? 'Official OA – 24/7 Assistance' : language === 'ko' ? '공식 채널 – 24/7 지원' : 'Zalo OA chính thức – Hỗ trợ 24/7'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Email */}
+                        <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs hover:border-[#16A34A]/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-300">
+                          <div className="w-10 h-10 rounded-xl bg-[#0C1E15] text-white flex items-center justify-center shrink-0">
+                            <Mail className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
+                              {language === 'en' ? 'Partnership & Quotes Inbox' : language === 'ko' ? '제휴 및 견적 공식 메일' : 'Hòm thư Hợp tác & Báo giá'}
+                            </span>
+                            <a href="mailto:info@haq.com.vn" className="font-sans font-bold text-sm text-haq-ink hover:text-[#16A34A] transition-colors">
+                              info@haq.com.vn
+                            </a>
+                            <p className="text-[11px] text-haq-text-secondary">
+                              {language === 'en' ? 'Receiving capability dossiers & RFQs' : language === 'ko' ? '기업 소개서 및 견적 요청 접수' : 'Tiếp nhận hồ sơ năng lực & chào giá'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t border-haq-border">
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
+                        <div>
+                          <span className="block font-heading text-xs font-bold text-haq-ink uppercase">
+                            {language === 'en' ? 'HAQ FOOD Headquarters' : language === 'ko' ? 'HAQ FOOD 본사 주소' : 'Trụ sở chính HAQ FOOD'}
+                          </span>
+                          <p className="text-xs text-haq-text-secondary mt-0.5">
+                            {language === 'en'
+                              ? 'No. 30, Alley 1 Pham Tuan Tai St, Nghia Do Ward, Cau Giay Dist, Hanoi, Vietnam.'
+                              : language === 'ko'
+                              ? '베트남 하노이시 꺼우저이구 응이어도동 팜뚜언따이 1골목 30호.'
+                              : 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.'}
+                          </p>
+                          <a
+                            href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs text-[#16A34A] font-bold mt-2 hover:underline"
+                          >
+                            <span>{language === 'en' ? 'Open on Google Maps' : language === 'ko' ? 'Google 지도에서 위치 보기' : 'Mở vị trí trên Google Maps'}</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Reveal>
               </div>
 
               {/* Right Column: Interactive Google Map */}
-              <div className="lg:col-span-7 rounded-3xl overflow-hidden border border-haq-border shadow-2xs min-h-[400px] bg-white relative">
-                <iframe
-                  title="HAQ FOOD Location Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.746825853712!2d105.7827073!3d21.0428138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab338121cba7%3A0x2cf17614ecef8583!2zMzAgTmcuIDEgUGjhuqFtIFR14bqlbiBUw6BpLCBOZ2jEqWEgxJDDtCwgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, minHeight: '420px' }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full grayscale-[20%] contrast-105 opacity-95 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-                />
+              <div className="lg:col-span-7 h-full min-h-[420px]">
+                <Reveal direction="up" delay={150} className="h-full">
+                  <div className="rounded-3xl overflow-hidden border border-haq-border shadow-2xs min-h-[420px] h-full bg-white relative hover:shadow-lg transition-all duration-300">
+                    <iframe
+                      title="HAQ FOOD Location Map"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.746825853712!2d105.7827073!3d21.0428138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab338121cba7%3A0x2cf17614ecef8583!2zMzAgTmcuIDEgUGjhuqFtIFR14bqlbiBUw6BpLCBOZ2jEqWEgxJDDtCwgQ-G6p3UgR2nhuqV5LCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1710000000000!5m2!1svi!2s"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, minHeight: '420px' }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="w-full h-full grayscale-[20%] contrast-105 opacity-95 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                    />
+                  </div>
+                </Reveal>
               </div>
             </div>
           </div>

@@ -6,7 +6,9 @@
     "history": "History & Milestones",
     "capabilities": "Manufacturing & Facilities",
     "products": "Products",
-    "news": "News",
+    "news": "News & Careers",
+    "news_only": "News",
+    "careers": "Careers",
     "contact": "Contact",
     "cta": "REQUEST A QUOTE"
   },

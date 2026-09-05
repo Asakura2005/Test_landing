@@ -13,11 +13,73 @@ import {
 const SESSION_KEY = 'haq_auth_session'
 const LOCAL_ACCOUNTS_KEY = 'haq_admin_accounts_vault'
 
+// Session Security: TTL (Time To Live)
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 ngày cho "Ghi nhớ đăng nhập"
+
+// Login Rate Limiting
+const LOGIN_ATTEMPTS_KEY = 'haq_login_attempts'
+const LOGIN_LOCKOUT_KEY = 'haq_login_lockout_until'
+const LOGIN_MAX_ATTEMPTS = 5
+const LOGIN_LOCKOUT_MS = 30 * 1000 // Khoá 30 giây sau 5 lần sai
+
 // Sensitive account fields to encrypt/decrypt
 export const ACCOUNT_SENSITIVE_FIELDS = ['email', 'full_name', 'phone']
 
 // Re-export cryptographic helpers for components
 export { generateSalt, hashPassword, hashBlindIndex, encryptData, decryptData }
+
+// ============================================================
+// LOGIN RATE LIMITING HELPERS
+// ============================================================
+
+/**
+ * Kiểm tra xem login có đang bị khoá hay không
+ * @returns {{ locked: boolean, remainingMs: number }}
+ */
+export function checkLoginRateLimit() {
+  if (typeof window === 'undefined') return { locked: false, remainingMs: 0 }
+  const lockUntil = sessionStorage.getItem(LOGIN_LOCKOUT_KEY)
+  if (lockUntil) {
+    const remaining = Number(lockUntil) - Date.now()
+    if (remaining > 0) {
+      return { locked: true, remainingMs: remaining }
+    }
+    // Hết thời gian khoá → xoá
+    sessionStorage.removeItem(LOGIN_LOCKOUT_KEY)
+    sessionStorage.removeItem(LOGIN_ATTEMPTS_KEY)
+  }
+  return { locked: false, remainingMs: 0 }
+}
+
+/**
+ * Lấy số giây còn lại bị khoá (dùng cho UI countdown)
+ */
+export function getLoginLockoutRemaining() {
+  const { locked, remainingMs } = checkLoginRateLimit()
+  if (!locked) return 0
+  return Math.ceil(remainingMs / 1000)
+}
+
+/**
+ * Ghi nhận 1 lần login thất bại, khoá nếu đạt ngưỡng
+ */
+function recordLoginFailure() {
+  if (typeof window === 'undefined') return
+  const current = Number(sessionStorage.getItem(LOGIN_ATTEMPTS_KEY) || '0') + 1
+  sessionStorage.setItem(LOGIN_ATTEMPTS_KEY, String(current))
+  if (current >= LOGIN_MAX_ATTEMPTS) {
+    sessionStorage.setItem(LOGIN_LOCKOUT_KEY, String(Date.now() + LOGIN_LOCKOUT_MS))
+  }
+}
+
+/**
+ * Reset bộ đếm khi login thành công
+ */
+function resetLoginAttempts() {
+  if (typeof window === 'undefined') return
+  sessionStorage.removeItem(LOGIN_ATTEMPTS_KEY)
+  sessionStorage.removeItem(LOGIN_LOCKOUT_KEY)
+}
 
 // Bảng mẫu phân quyền chuẩn theo vai trò
 export const DEFAULT_ROLE_PERMISSIONS = {
@@ -182,6 +244,13 @@ export async function loginUser(email, password, rememberMe = true) {
     throw new Error('Vui lòng nhập đầy đủ Email và Mật khẩu!')
   }
 
+  // Rate Limiting: kiểm tra khoá tạm thời
+  const rateCheck = checkLoginRateLimit()
+  if (rateCheck.locked) {
+    const secs = Math.ceil(rateCheck.remainingMs / 1000)
+    throw new Error(`Đăng nhập tạm khoá do nhập sai nhiều lần. Vui lòng thử lại sau ${secs} giây.`)
+  }
+
   const cleanEmail = email.trim().toLowerCase()
 
   // 1. Thử đăng nhập qua Supabase Auth chính thống nếu có
@@ -222,6 +291,7 @@ export async function loginUser(email, password, rememberMe = true) {
         permissions: resolvedPermissions,
         avatar_url: matched?.avatar_url || '',
         logged_in_at: new Date().toISOString(),
+        expires_at: rememberMe ? new Date(Date.now() + SESSION_TTL_MS).toISOString() : null,
         auth_provider: 'supabase',
       }
       // 🔐 Mã hoá session trước khi lưu vào browser storage
@@ -232,6 +302,7 @@ export async function loginUser(email, password, rememberMe = true) {
       encryptedSession.permissions = sessionUser.permissions
       encryptedSession.avatar_url = sessionUser.avatar_url
       encryptedSession.logged_in_at = sessionUser.logged_in_at
+      encryptedSession.expires_at = sessionUser.expires_at
 
       const storage = rememberMe ? localStorage : sessionStorage
       storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
@@ -240,6 +311,7 @@ export async function loginUser(email, password, rememberMe = true) {
       } else {
         localStorage.removeItem(SESSION_KEY)
       }
+      resetLoginAttempts()
       return sessionUser
     }
   } catch (e) {
@@ -251,6 +323,7 @@ export async function loginUser(email, password, rememberMe = true) {
   const account = accounts.find(a => a.email && a.email.toLowerCase() === cleanEmail)
 
   if (!account) {
+    recordLoginFailure()
     throw new Error('Tài khoản Email không tồn tại trên hệ thống!')
   }
 
@@ -261,6 +334,7 @@ export async function loginUser(email, password, rememberMe = true) {
   // Tính hash mật khẩu đã nhập với salt của tài khoản
   const computedHash = await hashPassword(password, account.password_salt)
   if (computedHash !== account.password_hash) {
+    recordLoginFailure()
     throw new Error('Mật khẩu không chính xác! Vui lòng kiểm tra lại.')
   }
 
@@ -283,7 +357,8 @@ export async function loginUser(email, password, rememberMe = true) {
     avatar_url: account.avatar_url || '',
     permissions: account.permissions || (account.role === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES),
     last_login: account.last_login,
-    logged_in_at: new Date().toISOString()
+    logged_in_at: new Date().toISOString(),
+    expires_at: rememberMe ? new Date(Date.now() + SESSION_TTL_MS).toISOString() : null
   }
 
   // 🔐 Mã hoá session PII trước khi lưu vào browser storage
@@ -294,6 +369,7 @@ export async function loginUser(email, password, rememberMe = true) {
   encryptedSession.permissions = sessionUser.permissions
   encryptedSession.avatar_url = sessionUser.avatar_url
   encryptedSession.logged_in_at = sessionUser.logged_in_at
+  encryptedSession.expires_at = sessionUser.expires_at
 
   const storage = rememberMe ? localStorage : sessionStorage
   storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
@@ -303,6 +379,7 @@ export async function loginUser(email, password, rememberMe = true) {
     localStorage.removeItem(SESSION_KEY)
   }
 
+  resetLoginAttempts()
   return sessionUser
 }
 
@@ -311,11 +388,23 @@ export async function loginUser(email, password, rememberMe = true) {
  */
 export async function getCurrentUser() {
   if (typeof window === 'undefined') return null
+  const storageSource = localStorage.getItem(SESSION_KEY) ? 'local' : 'session'
   let raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)
   if (!raw) return null
   try {
     const parsed = JSON.parse(raw)
     if (!parsed || !parsed.id || !parsed.role) return null
+
+    // 🔒 Kiểm tra session hết hạn (TTL)
+    if (parsed.expires_at) {
+      const expiresAt = new Date(parsed.expires_at).getTime()
+      if (Date.now() > expiresAt) {
+        // Session đã hết hạn → xoá và bắt đăng nhập lại
+        localStorage.removeItem(SESSION_KEY)
+        sessionStorage.removeItem(SESSION_KEY)
+        return null
+      }
+    }
     // 🔓 Giải mã PII khỏi session
     const decrypted = await decryptObject(parsed, ACCOUNT_SENSITIVE_FIELDS)
 
@@ -362,6 +451,17 @@ export function getCurrentUserSync() {
   try {
     const parsed = JSON.parse(raw)
     if (!parsed || !parsed.id || !parsed.role) return null
+
+    // 🔒 Kiểm tra session hết hạn (TTL)
+    if (parsed.expires_at) {
+      const expiresAt = new Date(parsed.expires_at).getTime()
+      if (Date.now() > expiresAt) {
+        localStorage.removeItem(SESSION_KEY)
+        sessionStorage.removeItem(SESSION_KEY)
+        return null
+      }
+    }
+
     let permissions = parsed.permissions || null
     if (!permissions && parsed.avatar_url && typeof parsed.avatar_url === 'string' && parsed.avatar_url.startsWith('{')) {
       try { permissions = JSON.parse(parsed.avatar_url) } catch (e) {}

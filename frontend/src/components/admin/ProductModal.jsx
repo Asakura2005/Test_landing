@@ -232,12 +232,6 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
       return
     }
 
-    // Validate max 6 pins
-    if (formData.is_pinned && !product?.is_pinned && currentPinnedCount >= 6) {
-      alert("Không thể ghim! Bạn đã ghim tối đa 6 sản phẩm. Vui lòng bỏ ghim sản phẩm khác trước.")
-      return
-    }
-
     setIsSaving(true)
     try {
       const slug = formData.slug || `product-${Date.now()}`
@@ -450,9 +444,9 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     <div className="text-xs">
                       <div className="font-bold text-[#11261B] flex items-center gap-1.5">
                         <Pin className="w-3.5 h-3.5 text-[#C89B3C] fill-[#C89B3C]" />
-                        Ghim nổi bật TOP 6 trang chủ
+                        Ghim sản phẩm nổi bật của tỉnh này
                       </div>
-                      <div className="text-[10px] text-[#52665A]">Hiện tại đã ghim: {currentPinnedCount}/6 sản phẩm</div>
+                      <div className="text-[10px] text-[#52665A]">Ưu tiên hiển thị đầu tiên (chủ lực) khi xem tỉnh này trên bản đồ</div>
                     </div>
                   </label>
                 </div>

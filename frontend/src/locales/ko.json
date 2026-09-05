@@ -6,7 +6,9 @@
     "history": "연혁 및 주요 성과",
     "capabilities": "제조 역량 및 설비",
     "products": "제품 소개",
-    "news": "뉴스 및 소식",
+    "news": "뉴스 & 채용",
+    "news_only": "뉴스",
+    "careers": "채용",
     "contact": "문의하기",
     "cta": "B2B 견적 문의"
   },

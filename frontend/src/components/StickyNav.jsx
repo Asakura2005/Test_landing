@@ -21,12 +21,24 @@ export default function StickyNav() {
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
 
+  const location = useLocation()
+  const isHomePage = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/ko'
+  const isTransparent = isHomePage && !isScrolled
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const [dbCategories, setDbCategories] = useState(DEFAULT_DB_CATEGORIES)
   const [allProducts, setAllProducts] = useState([])
   const [hoveredCategory, setHoveredCategory] = useState(null)
 
   const timeoutRef = useRef(null)
-  const location = useLocation()
   const navigate = useNavigate()
 
   const aboutSubpages = useMemo(() => {
@@ -187,8 +199,11 @@ export default function StickyNav() {
     location.pathname.startsWith('/ko/products')
   const isNewsActive =
     location.pathname.startsWith('/tin-tuc') ||
+    location.pathname.startsWith('/tuyen-dung') ||
     location.pathname.startsWith('/en/news') ||
-    location.pathname.startsWith('/ko/news')
+    location.pathname.startsWith('/en/careers') ||
+    location.pathname.startsWith('/ko/news') ||
+    location.pathname.startsWith('/ko/careers')
   const isContactActive =
     location.pathname.startsWith('/lien-he') ||
     location.pathname.startsWith('/en/contact') ||
@@ -199,7 +214,9 @@ export default function StickyNav() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
+        isTransparent
+          ? 'bg-gradient-to-b from-black/80 via-black/35 to-transparent h-[72px] sm:h-[76px] flex items-center border-none shadow-none'
+          : isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-xs h-[68px] sm:h-[72px] border-b border-haq-border flex items-center'
           : 'bg-white h-[72px] sm:h-[76px] border-b border-haq-border flex items-center'
       }`}
@@ -219,7 +236,9 @@ export default function StickyNav() {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-haq-ink leading-none">
+            <span className={`font-heading font-extrabold text-xl sm:text-2xl tracking-tight leading-none transition-colors ${
+              isTransparent ? 'text-white' : 'text-haq-ink'
+            }`}>
               HAQ <span className="text-haq-green-dark">FOOD</span>
             </span>
           </div>
@@ -244,12 +263,12 @@ export default function StickyNav() {
               onClick={() => navigate('/gioi-thieu')}
               className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
                 activeMenu === 've-chung-toi' || isAboutActive
-                  ? 'text-haq-green-dark font-bold'
-                  : 'text-haq-ink hover:text-haq-green-dark'
+                  ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
+                  : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
               }`}
             >
               <span>{t('nav.about', 'Về chúng tôi')}</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 've-chung-toi' ? 'rotate-180 text-haq-green-dark' : (isTransparent ? 'text-white/70' : 'text-haq-text-secondary')}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 've-chung-toi' || isAboutActive ? 'w-full' : 'w-0'
               }`} />
@@ -318,11 +337,13 @@ export default function StickyNav() {
               to={language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : '/san-pham'}
               aria-current={isProductsActive ? 'page' : undefined}
               className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
-                activeMenu === 'san-pham' || isProductsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
+                activeMenu === 'san-pham' || isProductsActive
+                  ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
+                  : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
               }`}
             >
               <span>{t('nav.products', 'Sản phẩm')}</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'san-pham' ? 'rotate-180 text-haq-green-dark' : (isTransparent ? 'text-white/70' : 'text-haq-text-secondary')}`} />
               <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
                 activeMenu === 'san-pham' || isProductsActive ? 'w-full' : 'w-0'
               }`} />
@@ -331,132 +352,140 @@ export default function StickyNav() {
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[740px] bg-white rounded-3xl shadow-xl border border-haq-border p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[760px] bg-white rounded-3xl shadow-xl border border-haq-border p-6 pb-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="grid grid-cols-12 gap-6">
                   {/* Left Column: Dynamic Database Categories */}
-                  <div className="col-span-7 border-r border-haq-border pr-6 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin">
-                    <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-haq-green" />
+                  <div className="col-span-7 border-r border-haq-border pr-6 flex flex-col justify-between">
+                    <div>
+                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between border-b border-haq-border pb-1">
                         <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
+                        <span className="text-haq-text-secondary font-normal text-[11px]">
+                          {categoryTree.length} {language === 'en' ? 'CATEGORIES' : language === 'ko' ? '개 품목' : 'DANH MỤC'}
+                        </span>
                       </div>
-                      <span className="text-[10px] text-haq-text-secondary font-normal">HAQ FOOD CATALOG</span>
+
+                      <div className="space-y-1.5 max-h-[380px] overflow-y-auto scrollbar-thin pr-1 pb-2">
+                        {categoryTree.map((cat) => {
+                          const isHovered = (hoveredCategory?.id === cat.id) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
+                          return (
+                            <div key={cat.id} className="space-y-1">
+                              <div
+                                onMouseEnter={() => setHoveredCategory(cat)}
+                                className={`p-2.5 rounded-2xl transition-all cursor-pointer flex items-center justify-between ${
+                                  isHovered ? 'bg-haq-sage/50 border border-[#16A34A]/25' : 'hover:bg-haq-sage/20'
+                                }`}
+                              >
+                                <Link
+                                  to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
+                                  onClick={() => setActiveMenu(null)}
+                                  className="flex-1 font-heading text-xs font-bold uppercase tracking-wider text-haq-ink hover:text-[#16A34A]"
+                                >
+                                  {cat.name}
+                                </Link>
+                                <span className="text-[10px] text-haq-text-secondary font-mono">
+                                  ({cat.children?.length || 0})
+                                </span>
+                              </div>
+
+                              {/* Danh mục con (Subcategories) */}
+                              {cat.children && cat.children.length > 0 && (
+                                <div className="pl-3 pr-1 py-1 flex flex-wrap gap-1.5">
+                                  {cat.children.map((child) => {
+                                    const isChildHovered = hoveredCategory?.id === child.id || hoveredCategory?.slug === child.slug
+                                    return (
+                                      <Link
+                                        key={child.id}
+                                        to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
+                                        onMouseEnter={() => setHoveredCategory(child)}
+                                        onClick={() => setActiveMenu(null)}
+                                        className={`inline-flex items-center gap-1 text-[11px] font-heading font-semibold px-2.5 py-1 rounded-lg transition-colors border ${
+                                          isChildHovered
+                                            ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
+                                            : 'text-haq-ink/80 hover:text-haq-green-dark bg-haq-soft hover:bg-haq-green/10 border-haq-border'
+                                        }`}
+                                      >
+                                        <span>↳ {child.name}</span>
+                                      </Link>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
 
-                    {categoryTree.map((cat) => {
-                      const isHovered = hoveredCategory?.id === cat.id || hoveredCategory?.parent_id === cat.id
-                      return (
-                        <div key={cat.id} className="space-y-1">
-                          <Link
-                            to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
-                            onMouseEnter={() => setHoveredCategory(cat)}
-                            onClick={() => setActiveMenu(null)}
-                            className={`block p-2.5 rounded-2xl cursor-pointer transition-all focus:outline-none ${
-                              isHovered
-                                ? 'bg-haq-sage border border-haq-green/20 shadow-2xs'
-                                : 'hover:bg-haq-soft'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className={`text-xs font-heading font-bold ${
-                                isHovered ? 'text-haq-green-dark' : 'text-haq-ink'
-                              }`}>
-                                {cat.name}
-                              </span>
-                              <ArrowRight className={`w-3.5 h-3.5 ${
-                                isHovered ? 'text-haq-green-dark' : 'text-haq-text-secondary'
-                              }`} />
-                            </div>
-                            <p className="text-[11px] text-haq-text-secondary mt-0.5 line-clamp-1">
-                              {cat.desc}
-                            </p>
-                          </Link>
-
-                          {/* Subcategories */}
-                          {cat.children && cat.children.length > 0 && (
-                            <div className="pl-4 pr-1 py-1 flex flex-wrap gap-1.5">
-                              {cat.children.map((child) => {
-                                const isChildHovered = hoveredCategory?.id === child.id || hoveredCategory?.slug === child.slug
-                                return (
-                                  <Link
-                                    key={child.id}
-                                    to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
-                                    onMouseEnter={() => setHoveredCategory(child)}
-                                    onClick={() => setActiveMenu(null)}
-                                    className={`inline-flex items-center gap-1 text-[11px] font-heading font-semibold px-2.5 py-1 rounded-lg transition-colors border ${
-                                      isChildHovered
-                                        ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
-                                        : 'text-haq-ink/80 hover:text-haq-green-dark bg-haq-soft hover:bg-haq-green/10 border-haq-border'
-                                    }`}
-                                  >
-                                    <span>↳ {child.name}</span>
-                                  </Link>
-                                )
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-
-                    <div className="pt-3 border-t border-haq-border">
+                    <div className="pt-3 mt-2 border-t border-haq-border">
                       <Link
                         to="/san-pham"
                         onClick={() => setActiveMenu(null)}
-                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors py-1"
                       >
                         <span>{language === 'en' ? 'View all products →' : language === 'ko' ? '전체 제품 보기 →' : 'Xem tất cả sản phẩm →'}</span>
                       </Link>
                     </div>
                   </div>
 
-                  {/* Right Column: Dynamic Product Grid */}
-                  <div className="col-span-5 bg-haq-sage rounded-2xl p-5 border border-haq-border flex flex-col">
-                    <div className="text-[11px] font-heading font-bold tracking-wide text-haq-text-secondary uppercase mb-4 flex items-center justify-between">
-                      <span>{hoveredCategory?.name || (language === 'en' ? 'PRODUCTS' : language === 'ko' ? '제품' : 'SẢN PHẨM')}</span>
-                      <span className="text-[10px] font-normal text-haq-text-secondary/70">
-                        {filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree).length} {language === 'en' ? 'products' : language === 'ko' ? '개 제품' : 'sản phẩm'}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] scrollbar-thin">
-                      {(() => {
-                        const filtered = filterProductsByDbCategory(allProducts, hoveredCategory?.slug || hoveredCategory?.id, null, categoryTree)
-                        if (filtered.length === 0) {
-                          return (
-                            <div className="col-span-2 py-8 text-center text-xs text-haq-text-secondary">
-                              {language === 'en' ? 'Updating products...' : language === 'ko' ? '제품 업데이트 중...' : 'Đang cập nhật sản phẩm...'}
-                            </div>
+                  {/* Right Column: Live Showcase of Category Products */}
+                  <div className="col-span-5 flex flex-col justify-between">
+                    <div>
+                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between border-b border-haq-border pb-1">
+                        <span>{language === 'en' ? 'FEATURED PRODUCTS' : language === 'ko' ? '대표 상품' : 'SẢN PHẨM NỔI BẬT'}</span>
+                        <Link
+                          to={`/san-pham?category=${activePreviewCat?.slug || 'all'}`}
+                          onClick={() => setActiveMenu(null)}
+                          className="text-[10px] text-[#16A34A] hover:underline"
+                        >
+                          {language === 'en' ? 'View all →' : language === 'ko' ? '전체 보기 →' : 'Xem tất cả →'}
+                        </Link>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        {(() => {
+                          const filtered = filterProductsByDbCategory(
+                            allProducts,
+                            activePreviewCat?.slug || 'all',
+                            null,
+                            categoryTree
                           )
-                        }
-                        return filtered.slice(0, 8).map((p) => {
-                          const localizedProd = getLocalizedProduct(p, language)
-                          const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
-                          return (
-                            <Link
-                              key={p.id}
-                              to={`/san-pham/${p.slug}`}
-                              onClick={() => setActiveMenu(null)}
-                              className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
-                            >
-                              <div className="w-16 h-16 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
-                                <img
-                                  src={imgSrc}
-                                  alt={localizedProd.name}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  onError={(e) => {
-                                    e.currentTarget.onerror = null
-                                    e.currentTarget.src = catBanhTrangImg
-                                  }}
-                                />
+                          if (!filtered || filtered.length === 0) {
+                            return (
+                              <div className="col-span-2 text-center py-6 text-xs text-haq-text-secondary">
+                                {language === 'en' ? 'Updating items...' : language === 'ko' ? '업데이트 중...' : 'Đang cập nhật...'}
                               </div>
-                              <span className="text-[11px] font-heading font-medium text-haq-ink text-center line-clamp-2">
-                                {localizedProd.name}
-                              </span>
-                            </Link>
-                          )
-                        })
-                      })()}
+                            )
+                          }
+                          return filtered.slice(0, 8).map((p) => {
+                            const localizedProd = getLocalizedProduct(p, language)
+                            const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
+                            return (
+                              <Link
+                                key={p.id}
+                                to={`/san-pham/${p.slug}`}
+                                onClick={() => setActiveMenu(null)}
+                                className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
+                              >
+                                <div className="w-16 h-16 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
+                                  <img
+                                    src={imgSrc}
+                                    alt={localizedProd.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null
+                                      e.currentTarget.src = catBanhTrangImg
+                                    }}
+                                  />
+                                </div>
+                                <span className="text-[11px] font-heading font-medium text-haq-ink text-center line-clamp-2">
+                                  {localizedProd.name}
+                                </span>
+                              </Link>
+                            )
+                          })
+                        })()}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -464,26 +493,97 @@ export default function StickyNav() {
             )}
           </div>
 
-          {/* TIN TỨC */}
-          <Link
-            to={language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'}
-            aria-current={isNewsActive ? 'page' : undefined}
-            className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
-              isNewsActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
-            }`}
+          {/* TIN TỨC & TUYỂN DỤNG (Dropdown Menu) */}
+          <div
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('tin-tuc-tuyen-dung')}
           >
-            <span>{t('nav.news', 'Tin tức')}</span>
-            <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
-              isNewsActive ? 'w-full' : 'w-0 group-hover:w-full'
-            }`} />
-          </Link>
+            <button
+              type="button"
+              aria-expanded={activeMenu === 'tin-tuc-tuyen-dung'}
+              aria-haspopup="true"
+              onClick={() => navigate(language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc')}
+              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
+                activeMenu === 'tin-tuc-tuyen-dung' || isNewsActive
+                  ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
+                  : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
+              }`}
+            >
+              <span>{t('nav.news', 'Tin tức & Tuyển dụng')}</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeMenu === 'tin-tuc-tuyen-dung' ? 'rotate-180 text-haq-green-dark' : (isTransparent ? 'text-white/70' : 'text-haq-text-secondary')}`} />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-haq-green-dark transition-all duration-200 ${
+                activeMenu === 'tin-tuc-tuyen-dung' || isNewsActive ? 'w-full' : 'w-0'
+              }`} />
+            </button>
+
+            {activeMenu === 'tin-tuc-tuyen-dung' && (
+              <div
+                onMouseEnter={() => handleMouseEnter('tin-tuc-tuyen-dung')}
+                className="absolute top-full left-0 mt-2 w-[300px] bg-white rounded-3xl shadow-xl border border-haq-border p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+              >
+                <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 flex items-center justify-between border-b border-haq-border">
+                  <span>{language === 'en' ? 'UPDATES & CAREERS' : language === 'ko' ? '소식 및 채용' : 'THÔNG TIN & TUYỂN DỤNG'}</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1.5 pt-1">
+                  <Link
+                    to={language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'}
+                    onClick={() => {
+                      setActiveMenu(null)
+                      window.scrollTo(0, 0)
+                    }}
+                    className={`group block p-3 rounded-2xl transition-all ${
+                      (location.pathname.startsWith('/tin-tuc') && !location.pathname.startsWith('/tuyen-dung')) || location.pathname.startsWith('/en/news') || location.pathname.startsWith('/ko/news')
+                        ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
+                        : 'hover:bg-haq-sage/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-heading font-bold uppercase text-haq-ink group-hover:text-[#16A34A]">
+                        {t('nav.news_only', 'Tin tức')}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-haq-text-secondary group-hover:text-[#16A34A] transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                    <p className="text-[11px] text-haq-text-secondary mt-1 font-normal">
+                      {language === 'en' ? 'Corporate updates & market insights' : language === 'ko' ? '기업 소식 및 농식품 시장 정보' : 'Hoạt động doanh nghiệp & thông tin thị trường'}
+                    </p>
+                  </Link>
+
+                  <Link
+                    to={language === 'en' ? '/en/careers' : language === 'ko' ? '/ko/careers' : '/tuyen-dung'}
+                    onClick={() => {
+                      setActiveMenu(null)
+                      window.scrollTo(0, 0)
+                    }}
+                    className={`group block p-3 rounded-2xl transition-all ${
+                      location.pathname.startsWith('/tuyen-dung') || location.pathname.startsWith('/en/careers') || location.pathname.startsWith('/ko/careers')
+                        ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
+                        : 'hover:bg-haq-sage/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-heading font-bold uppercase text-haq-ink group-hover:text-[#16A34A]">
+                        {t('nav.careers', 'Tuyển dụng')}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-haq-text-secondary group-hover:text-[#16A34A] transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                    <p className="text-[11px] text-haq-text-secondary mt-1 font-normal">
+                      {language === 'en' ? 'Career opportunities & job openings' : language === 'ko' ? 'HAQ FOOD 채용 공고 및 지원 안내' : 'Cơ hội nghề nghiệp & gia nhập HAQ FOOD'}
+                    </p>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* LIÊN HỆ */}
           <Link
             to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
             aria-current={isContactActive ? 'page' : undefined}
             className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
-              isContactActive ? 'text-haq-green-dark font-bold' : 'text-haq-ink hover:text-haq-green-dark'
+              isContactActive
+                ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
+                : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
             }`}
           >
             <span>{t('nav.contact', 'Liên hệ')}</span>
@@ -497,7 +597,11 @@ export default function StickyNav() {
         <div className="hidden md:flex items-center gap-3.5">
           {/* Minimal B2B Segmented Switcher */}
           <div
-            className="inline-flex items-center p-0.5 rounded-full bg-haq-soft/80 border border-haq-border text-xs font-mono font-bold tracking-wider"
+            className={`inline-flex items-center p-0.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors ${
+              isTransparent
+                ? 'bg-black/30 border border-white/20 text-white'
+                : 'bg-haq-soft/80 border border-haq-border'
+            }`}
             role="group"
             aria-label="Language selection"
           >
@@ -505,14 +609,14 @@ export default function StickyNav() {
               const isActive = language === lang.code
               return (
                 <React.Fragment key={lang.code}>
-                  {idx > 0 && <span className="text-haq-border select-none text-[10px] px-0.5">|</span>}
+                  {idx > 0 && <span className={`${isTransparent ? 'text-white/30' : 'text-haq-border'} select-none text-[10px] px-0.5`}>|</span>}
                   <button
                     type="button"
                     onClick={() => switchLanguage(lang.code, navigate, location.pathname)}
                     className={`px-2 py-1 rounded-full text-[11px] transition-all cursor-pointer ${
                       isActive
                         ? 'bg-haq-green-dark text-white shadow-2xs font-bold'
-                        : 'text-haq-text-secondary hover:text-haq-ink'
+                        : (isTransparent ? 'text-white/80 hover:text-white' : 'text-haq-text-secondary hover:text-haq-ink')
                     }`}
                     aria-pressed={isActive}
                   >
@@ -525,7 +629,7 @@ export default function StickyNav() {
 
           <Link
             to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
-            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green"
+            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none"
           >
             <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -662,15 +766,29 @@ export default function StickyNav() {
             </div>
           </div>
 
-          {/* TIN TỨC */}
+          {/* TIN TỨC & TUYỂN DỤNG */}
           <div className="border-b border-haq-border pb-3">
-            <Link
-              to="/tin-tuc"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight"
-            >
-              {language === 'en' ? 'NEWS & EVENTS' : language === 'ko' ? '뉴스 및 이벤트' : 'TIN TỨC & SỰ KIỆN'}
-            </Link>
+            <div className="py-2 text-[15px] font-heading font-bold text-haq-ink uppercase tracking-tight">
+              {language === 'en' ? 'NEWS & CAREERS' : language === 'ko' ? '뉴스 & 채용' : 'TIN TỨC & TUYỂN DỤNG'}
+            </div>
+            <div className="pl-3 space-y-2 pt-1">
+              <Link
+                to={language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 text-sm text-[#52665A] hover:text-[#0F5132] font-medium"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0F5132]" />
+                <span>{language === 'en' ? 'News & Media' : language === 'ko' ? '뉴스' : 'Tin tức'}</span>
+              </Link>
+              <Link
+                to={language === 'en' ? '/en/careers' : language === 'ko' ? '/ko/careers' : '/tuyen-dung'}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 text-sm text-[#52665A] hover:text-[#0F5132] font-medium"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0F5132]" />
+                <span>{language === 'en' ? 'Careers & Recruitment' : language === 'ko' ? '채용 정보' : 'Tuyển dụng'}</span>
+              </Link>
+            </div>
           </div>
 
           {/* LIÊN HỆ & ĐỔI NGÔN NGỮ */}

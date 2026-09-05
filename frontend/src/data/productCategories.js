@@ -1,4 +1,4 @@
-import catAllImg from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
+import catAllImg from '../assets/herobanner/hero_banner_1.jpg'
 import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import catBanhImg from '../assets/categories/category_banh.jpg'
 import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'

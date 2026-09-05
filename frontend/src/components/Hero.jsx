@@ -1,159 +1,139 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
-import { useLanguage } from '../context/LanguageContext'
+import React, { useState, useEffect, useCallback } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import heroBanner1 from '../assets/herobanner/Gemini_Generated_Image_vplcvavplcvavplc.png'
-import heroBanner2 from '../assets/herobanner/Gemini_Generated_Image_bbdxopbbdxopbbdx.png'
-import heroBanner3 from '../assets/herobanner/Gemini_Generated_Image_pateylpateylpate.png'
+import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
+import heroBanner2 from '../assets/herobanner/hero_banner_2.jpg'
+import heroBanner3 from '../assets/herobanner/hero_banner_3.jpg'
 
-const SLIDE_IMAGES = [heroBanner1, heroBanner2, heroBanner3]
-
-const DEFAULT_SLIDES = [
-  {
-    image: heroBanner1,
-    eyebrow: 'NHÀ SẢN XUẤT & PHÂN PHỐI THỰC PHẨM VIỆT NAM',
-    title: 'CHẤT LƯỢNG LÀ CỐT LÕI CỦA THƯƠNG HIỆU',
-    subtext: 'HAQ FOOD — Doanh nghiệp sản xuất và phân phối thực phẩm Việt Nam, khẳng định uy tín qua từng dòng sản phẩm đạt chuẩn ISO 22000 & HACCP.',
-  },
-  {
-    image: heroBanner2,
-    eyebrow: 'TIÊU CHUẨN AN TOÀN & CÔNG NGHỆ KHÉP KÍN',
-    title: 'HƯƠNG VỊ VIỆT CHO NGƯỜI TIÊU DÙNG HIỆN ĐẠI',
-    subtext: 'Dây chuyền sấy giòn tự động, kết hợp tinh hoa gia vị truyền thống và quy chuẩn kiểm định nghiêm ngặt.',
-  },
-  {
-    image: heroBanner3,
-    eyebrow: 'BẢN SẮC ẨM THỰC · VƯƠN TẦM QUỐC TẾ',
-    title: 'KẾT NỐI GIÁ TRỊ TỪ NÔNG SẢN ĐẾN THÀNH PHẨM',
-    subtext: 'Đồng hành cùng chuỗi siêu thị lớn trong nước và mở rộng xuất khẩu sang Hàn Quốc, Đài Loan.',
-  },
+const SLIDES = [
+  { image: heroBanner1, alt: 'HAQ FOOD - Hệ Sinh Thái Sản Phẩm' },
+  { image: heroBanner2, alt: 'HAQ FOOD - Bánh Đậu Xanh Tươi Truyền Thống' },
+  { image: heroBanner3, alt: 'HAQ FOOD - Hương Vị Việt Tinh Túy' },
 ]
 
 export default function Hero() {
-  const { t } = useLanguage()
   const [current, setCurrent] = useState(0)
+  const [prev, setPrev] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  const rawSlides = t('home.hero.slides', null)
-  const slides = (Array.isArray(rawSlides) && rawSlides.length > 0)
-    ? rawSlides.map((slide, idx) => ({
-        ...slide,
-        image: SLIDE_IMAGES[idx] || heroBanner1,
-      }))
-    : DEFAULT_SLIDES
+  const goTo = useCallback((nextIdx, e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    setCurrent((curr) => {
+      setPrev(curr)
+      return nextIdx
+    })
+  }, [])
+
+  const next = useCallback((e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    setCurrent((curr) => {
+      setPrev(curr)
+      return (curr + 1) % SLIDES.length
+    })
+  }, [])
+
+  const prevSlide = useCallback((e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    setCurrent((curr) => {
+      setPrev(curr)
+      return (curr - 1 + SLIDES.length) % SLIDES.length
+    })
+  }, [])
 
   useEffect(() => {
     if (isPaused) return
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length)
-    }, 7000)
+      setCurrent((curr) => {
+        setPrev(curr)
+        return (curr + 1) % SLIDES.length
+      })
+    }, 5000)
     return () => clearInterval(timer)
-  }, [isPaused, slides.length])
-
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length)
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length)
+  }, [isPaused])
 
   return (
     <section
       id="hero"
-      aria-label="HAQ FOOD Hero Showcase"
+      aria-label="HAQ FOOD Hero Banner"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative w-full min-h-[560px] sm:min-h-[640px] lg:min-h-screen bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center pt-16 sm:pt-18 lg:pt-20"
+      className="relative w-full h-[100dvh] bg-black overflow-hidden select-none"
     >
-      {/* 1. Cinematic Background Slider */}
-      {slides.map((slide, idx) => (
-        <div
-          key={idx}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-            idx === current ? 'opacity-100 z-0' : 'opacity-0 -z-10 pointer-events-none'
-          }`}
-        >
-          <img
-            src={slide.image}
-            alt={slide.title}
-            className="w-full h-full object-cover object-center transform transition-all duration-1000 ease-out"
-            loading="eager"
-            decoding="async"
-          />
-          {/* Subtle Editorial Gradient Overlay for High Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0C1E15]/90 via-[#0C1E15]/65 to-[#0C1E15]/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-transparent to-black/25" />
-        </div>
-      ))}
+      {/* Seamless Direct Cross-Fade Slides (No background flash) */}
+      {SLIDES.map((slide, idx) => {
+        const isCurrent = idx === current
+        const isPrevious = idx === prev
 
-      {/* 2. Hero Content Container */}
-      <div className="relative z-10 mx-auto max-w-site px-5 sm:px-8 lg:px-12 w-full py-10 sm:py-14 lg:py-10">
-        <div className="max-w-3xl">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 mb-3.5 sm:mb-5 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#C89B3C]" />
-            <span className="font-heading text-[10px] xs:text-[11px] sm:text-xs font-bold tracking-wider uppercase text-white/95">
-              {slides[current]?.eyebrow}
-            </span>
+        // Current slide fades in on top (z-10)
+        // Previous slide stays 100% visible underneath (z-0) so background never flashes
+        // Other slides are hidden (-z-10)
+        let zClass = '-z-10'
+        let opacityClass = 'opacity-0 pointer-events-none'
+
+        if (isCurrent) {
+          zClass = 'z-10'
+          opacityClass = 'opacity-100'
+        } else if (isPrevious) {
+          zClass = 'z-0'
+          opacityClass = 'opacity-100 pointer-events-none'
+        }
+
+        return (
+          <div
+            key={idx}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${zClass} ${opacityClass}`}
+          >
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              className="w-full h-full object-cover object-[center_35%]"
+              loading="eager"
+              decoding="async"
+            />
           </div>
+        )
+      })}
 
-          {/* Main Headline */}
-          <h1 className="font-heading font-extrabold text-2xl xs:text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-white tracking-tight uppercase leading-[1.15] mb-3.5 sm:mb-5">
-            {slides[current]?.title}
-          </h1>
+      {/* Floating Prev Button */}
+      <button
+        type="button"
+        onClick={prevSlide}
+        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        aria-label="Previous banner"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
 
-          {/* Subtext */}
-          <p className="text-xs xs:text-sm sm:text-base lg:text-lg text-white/85 leading-relaxed max-w-2xl mb-6 sm:mb-8 font-normal line-clamp-3 sm:line-clamp-none">
-            {slides[current]?.subtext}
-          </p>
+      {/* Floating Next Button */}
+      <button
+        type="button"
+        onClick={next}
+        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        aria-label="Next banner"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
 
-          {/* 2 Clear CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4">
-            <Link
-              to="/san-pham"
-              className="inline-flex items-center justify-center gap-2 bg-[#16A34A] hover:bg-[#13863d] text-white text-[11px] sm:text-xs lg:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 sm:py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 sm:active:scale-102"
-            >
-              <span>{t('home.hero.cta_explore', 'KHÁM PHÁ SẢN PHẨM')}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              to="/gioi-thieu"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/30 text-[11px] sm:text-xs lg:text-sm font-heading font-semibold uppercase tracking-wider px-6 py-3.5 sm:py-4 rounded-full backdrop-blur-xs transition-all duration-300 active:scale-98"
-            >
-              <span>{t('home.hero.cta_about', 'VỀ HAQ FOOD')}</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Slider Navigation Controls */}
-      <div className="absolute bottom-8 right-6 sm:right-12 z-20 hidden sm:flex items-center gap-3">
-        <button
-          type="button"
-          onClick={prevSlide}
-          className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#16A34A] text-white flex items-center justify-center border border-white/20 backdrop-blur-xs transition-all duration-200"
-          aria-label={t('home.hero.slide_prev', 'Slide trước')}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          onClick={nextSlide}
-          className="w-11 h-11 rounded-full bg-white/10 hover:bg-[#16A34A] text-white flex items-center justify-center border border-white/20 backdrop-blur-xs transition-all duration-200"
-          aria-label={t('home.hero.slide_next', 'Slide kế tiếp')}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* 4. Bottom Indicator Dots */}
-      <div className="absolute bottom-8 left-6 sm:left-12 z-20 flex items-center gap-2">
-        {slides.map((_, i) => (
+      {/* Clean Bottom Indicator Dots */}
+      <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg pointer-events-auto">
+        {SLIDES.map((_, i) => (
           <button
             key={i}
-            onClick={() => setCurrent(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-              i === current ? 'w-8 bg-[#16A34A]' : 'w-2 bg-white/40 hover:bg-white/70'
+            type="button"
+            onClick={(e) => goTo(i, e)}
+            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+              i === current ? 'w-8 bg-[#16A34A]' : 'w-2.5 bg-white/50 hover:bg-white/90'
             }`}
-            aria-label={`${t('home.hero.slide_to', 'Chuyển tới slide')} ${i + 1}`}
+            aria-label={`Banner ${i + 1}`}
           />
         ))}
       </div>

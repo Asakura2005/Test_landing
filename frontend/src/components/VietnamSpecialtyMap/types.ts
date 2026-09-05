@@ -8,6 +8,9 @@ export interface Product {
   imageAlt?: string;
   region?: string;
   productId?: string;
+  slug?: string;
+  is_pinned?: boolean;
+  views?: number;
   href?: string;
 }
 
