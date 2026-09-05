@@ -29,7 +29,9 @@ const transporter = nodemailer.createTransport({
   },
   tls: {
     rejectUnauthorized: false
-  }
+  },
+  // Ép dùng IPv4 - Render không hỗ trợ outbound IPv6
+  family: 4
 })
 
 /**
