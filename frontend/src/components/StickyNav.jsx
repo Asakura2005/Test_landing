@@ -349,11 +349,8 @@ export default function StickyNav() {
                   {/* Left Column: Dynamic Database Categories */}
                   <div className="col-span-7 border-r border-haq-border pr-6 flex flex-col justify-between">
                     <div>
-                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between border-b border-haq-border pb-1">
+                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 border-b border-haq-border pb-1">
                         <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
-                        <span className="text-haq-text-secondary font-normal text-[11px]">
-                          {categoryTree.length} {language === 'en' ? 'CATEGORIES' : language === 'ko' ? '개 품목' : 'DANH MỤC'}
-                        </span>
                       </div>
 
                       <div className="space-y-1.5 max-h-[380px] overflow-y-auto scrollbar-thin pr-1 pb-2">
@@ -374,9 +371,6 @@ export default function StickyNav() {
                                 >
                                   {cat.name}
                                 </Link>
-                                <span className="text-[10px] text-haq-text-secondary font-mono">
-                                  ({cat.children?.length || 0})
-                                </span>
                               </div>
 
                               {/* Danh mục con (Subcategories) */}
