@@ -40,10 +40,22 @@ async function sendViaResend(recipient, subject, html) {
     throw new Error('Chưa cấu hình RESEND_API_KEY')
   }
 
-  // Sandbox onboarding@resend.dev chỉ gửi đến tài khoản chủ sở hữu
-  let toList = [ADMIN_NOTIFICATION_EMAIL]
-  if (!RESEND_FROM.includes('resend.dev') && recipient) {
-    toList = Array.isArray(recipient) ? recipient : recipient.split(',').map(s => s.trim()).filter(Boolean)
+  // Tách các email nếu được cấu hình dạng chuỗi "email1, email2"
+  let rawList = []
+  if (Array.isArray(recipient)) {
+    rawList = recipient
+  } else if (typeof recipient === 'string') {
+    rawList = recipient.split(',').map(s => s.trim()).filter(Boolean)
+  }
+  if (rawList.length === 0) {
+    rawList = (ADMIN_NOTIFICATION_EMAIL || '').split(',').map(s => s.trim()).filter(Boolean)
+  }
+
+  // Khi dùng domain mặc định (onboarding@resend.dev), Resend bắt buộc chỉ gửi đến tài khoản của chủ sở hữu
+  let toList = rawList
+  if (RESEND_FROM.includes('resend.dev')) {
+    const owner = rawList.find(e => e.toLowerCase() === 'trantienhung4112005@gmail.com') || 'trantienhung4112005@gmail.com'
+    toList = [owner]
   }
 
   const response = await fetch('https://api.resend.com/emails', {
