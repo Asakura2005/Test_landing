@@ -31,7 +31,8 @@ import {
   updateAdminProfile, 
   createSalesAccount, 
   updateSalesAccount, 
-  deleteSalesAccount 
+  deleteSalesAccount,
+  updateAccountPermissions
 } from '../../services/auth'
 import { testEmailApiConnection } from '../../services/email'
 
@@ -63,6 +64,9 @@ export default function SettingsManager() {
   // Drawer & Modals State
   const [selectedStaff, setSelectedStaff] = useState(null)
   const [isPermissionDrawerOpen, setIsPermissionDrawerOpen] = useState(false)
+  const [drawerRole, setDrawerRole] = useState('SALES')
+  const [drawerPermissions, setDrawerPermissions] = useState({})
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false)
   const [isAddSalesModalOpen, setIsAddSalesModalOpen] = useState(false)
   const [isResetPassModalOpen, setIsResetPassModalOpen] = useState(false)
   
@@ -324,10 +328,98 @@ export default function SettingsManager() {
     }, 1000)
   }
 
+  // Default Permission Templates by Role
+  const DEFAULT_MODULE_PERMISSIONS = {
+    ADMIN: {
+      dashboard_view: true,
+      products_view: true,
+      products_create: true,
+      products_edit: true,
+      products_delete: true,
+      leads_view: true,
+      leads_handle: true,
+      leads_edit_status: true,
+      leads_delete: true,
+      provinces_view: true,
+      provinces_manage: true,
+      news_view: true,
+      news_manage: true
+    },
+    SALES: {
+      dashboard_view: true,
+      products_view: true,
+      products_create: false,
+      products_edit: false,
+      products_delete: false,
+      leads_view: true,
+      leads_handle: true,
+      leads_edit_status: true,
+      leads_delete: false,
+      provinces_view: true,
+      provinces_manage: false,
+      news_view: true,
+      news_manage: false
+    }
+  }
+
   // Open Permission Drawer for Account
   const handleOpenPermissionDrawer = (acc) => {
     setSelectedStaff(acc)
+    const role = acc.role === 'ADMIN' ? 'ADMIN' : 'SALES'
+    setDrawerRole(role)
+
+    let initialPerms = acc.permissions
+    if (!initialPerms && acc.avatar_url && acc.avatar_url.startsWith('{')) {
+      try {
+        initialPerms = JSON.parse(acc.avatar_url)
+      } catch (e) {}
+    }
+
+    setDrawerPermissions(initialPerms ? { ...initialPerms } : { ...DEFAULT_MODULE_PERMISSIONS[role] })
     setIsPermissionDrawerOpen(true)
+  }
+
+  // Change Role inside Drawer
+  const handleDrawerRoleChange = (newRole) => {
+    setDrawerRole(newRole)
+    setDrawerPermissions({ ...DEFAULT_MODULE_PERMISSIONS[newRole] })
+  }
+
+  // Toggle single permission checkbox
+  const handleTogglePermission = (key) => {
+    setDrawerPermissions(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }))
+  }
+
+  // Quick preset: Select all / Deselect all
+  const handleSelectAllPermissions = (val = true) => {
+    const updated = {}
+    Object.keys(DEFAULT_MODULE_PERMISSIONS.ADMIN).forEach(k => {
+      updated[k] = val
+    })
+    setDrawerPermissions(updated)
+  }
+
+  // Save Staff Permissions
+  const handleSaveStaffPermissions = async () => {
+    if (!selectedStaff) return
+    try {
+      setIsSavingPermissions(true)
+      const updated = await updateAccountPermissions(selectedStaff.id, {
+        role: drawerRole,
+        permissions: drawerPermissions
+      })
+      setAccounts(prev => prev.map(a => a.id === updated.id ? updated : a))
+      setSelectedStaff(updated)
+      triggerToast(`Đã lưu phân quyền cho "${updated.full_name}" thành công!`)
+      setIsPermissionDrawerOpen(false)
+    } catch (err) {
+      setErrorMsg('Lỗi khi lưu phân quyền: ' + err.message)
+    } finally {
+      setIsSavingPermissions(false)
+    }
   }
 
   return (
@@ -1143,7 +1235,7 @@ export default function SettingsManager() {
                   Phân quyền chi tiết
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5 font-mono">
-                  {selectedStaff.full_name} ({selectedStaff.role === 'ADMIN' ? 'Quản trị viên' : 'Sales'})
+                  {selectedStaff.full_name} ({drawerRole === 'ADMIN' ? 'Quản trị viên' : 'Sales'})
                 </p>
               </div>
               <button 
@@ -1157,67 +1249,137 @@ export default function SettingsManager() {
               </button>
             </div>
 
-            {/* Drawer Body: Permissions grouped by module */}
+            {/* Drawer Body: Interactive Role & Permissions */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
               
-              {/* Account Quick Info */}
-              <div className="p-3 rounded-md border border-[#E2E8E4] bg-gray-50/50 space-y-1">
+              {/* Account Card & Role Switcher */}
+              <div className="p-3.5 rounded-lg border border-[#E2E8E4] bg-gray-50/70 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-gray-900">{selectedStaff.full_name}</span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                    selectedStaff.role === 'ADMIN' 
+                  <div>
+                    <div className="font-bold text-sm text-gray-900">{selectedStaff.full_name}</div>
+                    <div className="font-mono text-[11px] text-gray-500">{selectedStaff.email}</div>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider ${
+                    drawerRole === 'ADMIN' 
                       ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
-                      : 'bg-gray-100 text-gray-700 border-gray-200'
+                      : 'bg-gray-100 text-gray-700 border-gray-300'
                   }`}>
-                    {selectedStaff.role === 'ADMIN' ? 'Quản trị viên' : 'Nhân viên Sales'}
+                    {drawerRole === 'ADMIN' ? 'Quản trị viên' : 'Nhân viên Sales'}
                   </span>
                 </div>
-                <div className="font-mono text-[11px] text-gray-500">{selectedStaff.email}</div>
+
+                {/* Role Switcher */}
+                <div className="space-y-1.5 pt-2 border-t border-gray-200">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-gray-600 block">
+                    Thay đổi vai trò hệ thống
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDrawerRoleChange('ADMIN')}
+                      className={`py-2 px-3 rounded-lg border text-xs font-bold transition-all text-left flex flex-col gap-0.5 cursor-pointer ${
+                        drawerRole === 'ADMIN'
+                          ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-sm'
+                          : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span>Quản trị viên (Admin)</span>
+                      <span className={`text-[10px] font-normal ${drawerRole === 'ADMIN' ? 'text-emerald-100' : 'text-gray-400'}`}>Toàn quyền hệ thống</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDrawerRoleChange('SALES')}
+                      className={`py-2 px-3 rounded-lg border text-xs font-bold transition-all text-left flex flex-col gap-0.5 cursor-pointer ${
+                        drawerRole === 'SALES'
+                          ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-sm'
+                          : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span>Nhân viên Sales</span>
+                      <span className={`text-[10px] font-normal ${drawerRole === 'SALES' ? 'text-emerald-100' : 'text-gray-400'}`}>Kinh doanh & CRM</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions Toolbar */}
+              <div className="flex items-center justify-between px-1 text-xs pt-1">
+                <span className="font-bold text-gray-800 uppercase tracking-wider text-[11px]">
+                  Danh sách quyền hạn chi tiết
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectAllPermissions(true)}
+                    className="text-[11px] text-[#0F5132] hover:underline font-semibold cursor-pointer"
+                  >
+                    Chọn tất cả
+                  </button>
+                  <span className="text-gray-300">|</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDrawerRoleChange(drawerRole)}
+                    className="text-[11px] text-gray-500 hover:underline cursor-pointer"
+                  >
+                    Mặc định vai trò
+                  </button>
+                </div>
               </div>
 
               {/* Module 1: Tổng quan */}
-              <div className="space-y-2 p-3 rounded-md border border-[#E2E8E4]">
+              <div className="space-y-2 p-3 rounded-lg border border-[#E2E8E4] bg-white">
                 <div className="font-bold text-xs text-gray-900">Tổng quan</div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.dashboard_view)} 
+                      onChange={() => handleTogglePermission('dashboard_view')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
                     <span>Xem Dashboard KPIs</span>
                   </label>
                 </div>
               </div>
 
               {/* Module 2: Sản phẩm & Biến thể */}
-              <div className="space-y-2 p-3 rounded-md border border-[#E2E8E4]">
+              <div className="space-y-2 p-3 rounded-lg border border-[#E2E8E4] bg-white">
                 <div className="font-bold text-xs text-gray-900">Sản phẩm & Biến thể</div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Xem danh sách</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.products_view)} 
+                      onChange={() => handleTogglePermission('products_view')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Xem danh sách</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.products_create)} 
+                      onChange={() => handleTogglePermission('products_create')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Thêm sản phẩm</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.products_edit)} 
+                      onChange={() => handleTogglePermission('products_edit')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Sửa thông tin</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.products_delete)} 
+                      onChange={() => handleTogglePermission('products_delete')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Xóa sản phẩm</span>
                   </label>
@@ -1225,27 +1387,42 @@ export default function SettingsManager() {
               </div>
 
               {/* Module 3: Lead / CRM */}
-              <div className="space-y-2 p-3 rounded-md border border-[#E2E8E4]">
+              <div className="space-y-2 p-3 rounded-lg border border-[#E2E8E4] bg-white">
                 <div className="font-bold text-xs text-gray-900">Lead / CRM</div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Xem danh sách lead</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Tiếp nhận & Xử lý</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Sửa trạng thái lead</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.leads_view)} 
+                      onChange={() => handleTogglePermission('leads_view')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Xem danh sách lead</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.leads_handle)} 
+                      onChange={() => handleTogglePermission('leads_handle')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Tiếp nhận & Xử lý</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.leads_edit_status)} 
+                      onChange={() => handleTogglePermission('leads_edit_status')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Sửa trạng thái lead</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.leads_delete)} 
+                      onChange={() => handleTogglePermission('leads_delete')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Xóa lead</span>
                   </label>
@@ -1253,19 +1430,24 @@ export default function SettingsManager() {
               </div>
 
               {/* Module 4: Bản đồ đặc sản */}
-              <div className="space-y-2 p-3 rounded-md border border-[#E2E8E4]">
+              <div className="space-y-2 p-3 rounded-lg border border-[#E2E8E4] bg-white">
                 <div className="font-bold text-xs text-gray-900">Bản đồ đặc sản</div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Xem bản đồ</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.provinces_view)} 
+                      onChange={() => handleTogglePermission('provinces_view')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Xem bản đồ</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.provinces_manage)} 
+                      onChange={() => handleTogglePermission('provinces_manage')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Quản lý tỉnh & Gán SP</span>
                   </label>
@@ -1273,44 +1455,56 @@ export default function SettingsManager() {
               </div>
 
               {/* Module 5: Tin tức & Truyền thông */}
-              <div className="space-y-2 p-3 rounded-md border border-[#E2E8E4]">
+              <div className="space-y-2 p-3 rounded-lg border border-[#E2E8E4] bg-white">
                 <div className="font-bold text-xs text-gray-900">Tin tức & Truyền thông</div>
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <label className="flex items-center gap-2 cursor-default">
-                    <input type="checkbox" checked readOnly className="w-3.5 h-3.5 text-[#0F5132] rounded" />
-                    <span>Xem bài viết</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-default">
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
                     <input 
                       type="checkbox" 
-                      checked={selectedStaff.role === 'ADMIN'} 
-                      readOnly 
-                      className="w-3.5 h-3.5 text-[#0F5132] rounded disabled:opacity-40" 
+                      checked={Boolean(drawerPermissions.news_view)} 
+                      onChange={() => handleTogglePermission('news_view')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
+                    />
+                    <span>Xem bài viết</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer select-none hover:text-gray-900">
+                    <input 
+                      type="checkbox" 
+                      checked={Boolean(drawerPermissions.news_manage)} 
+                      onChange={() => handleTogglePermission('news_manage')}
+                      className="w-4 h-4 text-[#0F5132] rounded border-gray-300 focus:ring-[#0F5132] cursor-pointer" 
                     />
                     <span>Đăng bài & Sửa</span>
                   </label>
                 </div>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-md border border-[#E2E8E4] text-[11px] text-gray-500">
-                {selectedStaff.role === 'ADMIN'
-                  ? 'Quản trị viên có toàn quyền thao tác trên mọi phân hệ của hệ thống.'
-                  : 'Tài khoản Sales bị giới hạn chỉ được thao tác trong phân hệ CRM/Lead và tra cứu bảng giá.'}
-              </div>
-
             </div>
 
-            {/* Drawer Footer */}
-            <div className="p-3 border-t border-[#E2E8E4] bg-gray-50 flex items-center justify-end gap-2">
+            {/* Drawer Footer: Action Buttons */}
+            <div className="p-3.5 border-t border-[#E2E8E4] bg-gray-50 flex items-center justify-end gap-2.5">
               <button 
                 type="button" 
                 onClick={() => {
                   setIsPermissionDrawerOpen(false)
                   setSelectedStaff(null)
                 }} 
-                className="px-3.5 py-1.5 rounded-md border border-[#E2E8E4] bg-white text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
               >
-                Đóng
+                Hủy
+              </button>
+              <button 
+                type="button"
+                disabled={isSavingPermissions}
+                onClick={handleSaveStaffPermissions}
+                className="px-5 py-2 rounded-lg bg-[#0F5132] hover:bg-[#14532D] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+              >
+                {isSavingPermissions ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Check className="w-4 h-4" />
+                )}
+                <span>{isSavingPermissions ? 'Đang lưu...' : 'Lưu phân quyền'}</span>
               </button>
             </div>
 

@@ -62,11 +62,20 @@ async function decryptAccount(account) {
   const rawEmail    = account.email_encrypted || account.email    || ''
   const rawName     = account.full_name_encrypted || account.full_name || ''
   const rawPhone    = account.phone_encrypted  || account.phone   || ''
+  
+  let parsedPermissions = null
+  if (account.avatar_url && account.avatar_url.startsWith('{')) {
+    try {
+      parsedPermissions = JSON.parse(account.avatar_url)
+    } catch (e) {}
+  }
+
   return {
     ...account,
     email:     await decryptData(rawEmail),
     full_name: await decryptData(rawName),
     phone:     await decryptData(rawPhone),
+    permissions: parsedPermissions
   }
 }
 
@@ -521,4 +530,63 @@ export async function deleteSalesAccount(accountId) {
   await saveAccountsToLocal(filtered)
   return true
 }
+
+/**
+ * Cập nhật vai trò và phân quyền chi tiết cho tài khoản
+ */
+export async function updateAccountPermissions(accountId, { role, permissions, is_active }) {
+  const accounts = await getAllAccounts()
+  const idx = accounts.findIndex(a => a.id === accountId)
+  if (idx === -1) throw new Error('Không tìm thấy tài khoản nhân viên!')
+
+  const account = { ...accounts[idx] }
+  if (role) account.role = role
+  if (is_active !== undefined) account.is_active = Boolean(is_active)
+  if (permissions !== undefined) {
+    account.permissions = permissions
+    account.avatar_url = typeof permissions === 'string' ? permissions : JSON.stringify(permissions)
+  }
+
+  account.updated_at = new Date().toISOString()
+
+  // Chuẩn bị payload cập nhật Supabase
+  const updatePayload = {
+    role: account.role,
+    is_active: account.is_active,
+    avatar_url: account.avatar_url || null,
+    updated_at: account.updated_at
+  }
+
+  try {
+    const { error } = await supabase
+      .from('admin_accounts')
+      .update(updatePayload)
+      .eq('id', accountId)
+    if (error) console.warn('Supabase update permissions error:', error.message)
+  } catch (e) {
+    console.warn('Supabase updateAccountPermissions warn:', e.message)
+  }
+
+  accounts[idx] = account
+  await saveAccountsToLocal(accounts)
+
+  // Nếu cập nhật chính tài khoản đang đăng nhập, đồng bộ lại phiên làm việc
+  const currentUser = await getCurrentUser()
+  if (currentUser && currentUser.id === accountId) {
+    currentUser.role = account.role
+    currentUser.permissions = account.permissions
+    const storage = localStorage.getItem('haq_auth_session') ? localStorage : sessionStorage
+    const raw = storage.getItem('haq_auth_session')
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw)
+        parsed.role = account.role
+        storage.setItem('haq_auth_session', JSON.stringify(parsed))
+      } catch (e) {}
+    }
+  }
+
+  return account
+}
+
 
