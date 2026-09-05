@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedProvince, getLocalizedCategory } from '../utils/i18nData'
+import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 
 export default function ProductDetailPage() {
   const { slug } = useParams()
@@ -33,11 +34,14 @@ export default function ProductDetailPage() {
           trackProductView(data)
         }
         
-        // Set default active image from images array or fallback to old variant img
+        // Set default active image from images array, variant img or local asset map
+        const localFallback = PRODUCT_IMAGE_MAP[data.slug]
         if (data.images && data.images.length > 0) {
           setActiveImage(data.images[0])
         } else if (data.variants && data.variants.length > 0 && data.variants[0].img) {
           setActiveImage(data.variants[0].img)
+        } else if (localFallback) {
+          setActiveImage(localFallback)
         }
 
         // Ưu tiên sản phẩm cùng danh mục; nếu chưa đủ, bổ sung sản phẩm khác
@@ -99,10 +103,13 @@ export default function ProductDetailPage() {
     )
   }
 
-  // Fallback if the product only has images in variants (for backward compatibility)
-  const galleryImages = localizedProduct.images?.length > 0 
+  // Fallback if the product only has images in variants or local asset map
+  const rawGallery = localizedProduct.images?.length > 0 
     ? localizedProduct.images 
     : (localizedProduct.variants?.map(v => v.img).filter(Boolean) || [])
+  const galleryImages = rawGallery.length > 0 
+    ? rawGallery 
+    : (PRODUCT_IMAGE_MAP[localizedProduct.slug] ? [PRODUCT_IMAGE_MAP[localizedProduct.slug]] : [])
 
   return (
     <div className="min-h-screen bg-haq-cream pt-24 text-haq-ink font-sans selection:bg-haq-green selection:text-white">

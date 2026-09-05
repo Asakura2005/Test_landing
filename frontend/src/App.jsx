@@ -61,7 +61,7 @@ function AppRoutes() {
     <>
       <RouteSync />
       <SeoHead />
-      <div className="w-full overflow-x-hidden relative min-h-screen bg-[#0C1E15]">
+      <div className={`w-full overflow-x-hidden relative min-h-screen ${isAdmin ? 'bg-[#F4F8F4]' : 'bg-[#0C1E15]'}`}>
         {!isAdmin && <FloatingLanguageSwitcher />}
         <Routes>
           {/* ================= VIETNAMESE (Default) ================= */}

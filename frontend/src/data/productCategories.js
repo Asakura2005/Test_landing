@@ -13,21 +13,29 @@ import banhTrangSaTeTomImg from '../assets/products/banh_trang_soi_sa_te_tom_100
 import banhHanhNhanImg from '../assets/products/banh_hanh_nhan_truyen_thong_130g.jpg'
 import banhHanhNhanTraXanhImg from '../assets/products/banh_hanh_nhan_tra_xanh_130g.jpg'
 import banhDauXanhImg from '../assets/products/banh_dau_xanh_tuoi_250g.jpg'
+import banhDauXanhLaDuaImg from '../assets/products/banh_dau_xanh_la_dua_250g.jpg'
+import banhDauXanhMixViImg from '../assets/products/banh_dau_xanh_mix_vi_250g.jpg'
 import banhSuaDuaImg from '../assets/products/banh_sua_dua_130g.jpg'
 
 export const PRODUCT_IMAGE_MAP = {
   'banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
   'Banh-trang-say-gion-vi-tom': banhTrangSayTomImg,
   'banh-trang-say-bo-50g': banhTrangSayBoImg,
+  'banh-trang-say-gion-vi-bo': banhTrangSayBoImg,
   'banh-trang-say-cha-bong-50g': banhTrangSayChaBongImg,
+  'Banh-trang-say-gion-vi-tra-bong': banhTrangSayChaBongImg,
+  'banh-trang-say-gion-vi-tra-bong': banhTrangSayChaBongImg,
   'banh-trang-tron-ga-la-chanh': banhTrangCuonGaImg,
   'banh-trang-tron-sa-te-tom': banhTrangSaTeTomImg,
   'banh-trang-tron-haq': banhTrangSaTeTomImg,
+  'banh-dau-xanh-vi-la-dua': banhDauXanhLaDuaImg,
+  'banh-dau-xanh-tuoi-mix-vi': banhDauXanhMixViImg,
+  'banh-dau-xanh-tuoi': banhDauXanhImg,
+  'banh-dau-xanh-tuoi-250g': banhDauXanhImg,
+  'banh-dau-xanh-truyen-thong': banhDauXanhImg,
   'banh-hanh-nhan-truyen-thong-130g': banhHanhNhanImg,
   'banh-hanh-nhan-cao-cap': banhHanhNhanImg,
   'banh-hanh-nhan-tra-xanh-130g': banhHanhNhanTraXanhImg,
-  'banh-dau-xanh-tuoi-250g': banhDauXanhImg,
-  'banh-dau-xanh-truyen-thong': banhDauXanhImg,
   'banh-sua-dua-130g': banhSuaDuaImg,
   'bap-rang-bo-caramel': catDoAnVatImg,
   'bap-rang-bo-pho-mai': catDoAnVatImg,

@@ -112,6 +112,7 @@ export default function Admin() {
   
   // Tabs: 'dashboard' | 'products' | 'leads' | 'provinces' | 'categories' | 'news' | 'settings'
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [autoOpenNewsCreate, setAutoOpenNewsCreate] = useState(false)
 
   const isSales = currentUser?.role === 'SALES'
   const currentPinnedCount = (products || []).filter(p => p && p.is_pinned).length
@@ -467,9 +468,7 @@ export default function Admin() {
       </div>
     )
   }
-
-  const [autoOpenNewsCreate, setAutoOpenNewsCreate] = useState(false)
-
+ 
   // --- RENDER DASHBOARD LAYOUT & ACTIVE TAB ---
   return (
     <AdminLayout

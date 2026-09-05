@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, CheckCircle, Loader2, Tag, Sparkles } from 'lucide
 import { useReveal } from '../hooks/useReveal'
 import { submitLead } from '../services/supabase'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { useLanguage } from '../context/LanguageContext'
 
 const NEED_OPTIONS = ['Báo giá sỉ', 'Phân phối đại lý', 'Xuất khẩu', 'Gia công OEM', 'Khác']
 
@@ -19,6 +20,7 @@ function Field({ label, children }) {
 
 export default function LeadForm() {
   const ref = useReveal()
+  const { language } = useLanguage()
   const { trackContactFormStart, trackContactFormSubmit, getCurrentTrackingContext } = useAnalytics()
   const [hasStartedForm, setHasStartedForm] = useState(false)
   const [lastProduct, setLastProduct] = useState(null)
@@ -113,7 +115,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    Hotline (Điện thoại bàn)
+                    {language === 'en' ? 'Hotline (Landline)' : language === 'ko' ? '대표 핫라인 (유선전화)' : 'Hotline (Điện thoại bàn)'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     024 23 23 56 56
@@ -127,7 +129,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    Zalo Doanh Nghiệp (24/7)
+                    {language === 'en' ? 'Official Zalo (24/7)' : language === 'ko' ? '공식 비즈니스 Zalo (24/7)' : 'Zalo Doanh Nghiệp (24/7)'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     HAQ Hà Nội
@@ -141,7 +143,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    Email Hợp Tác Doanh Nghiệp
+                    {language === 'en' ? 'Corporate Partnership Email' : language === 'ko' ? '기업 제휴 이메일' : 'Email Hợp Tác Doanh Nghiệp'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     info@haq.com.vn

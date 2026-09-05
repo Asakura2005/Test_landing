@@ -152,7 +152,7 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#16A34A] shrink-0" />
                 <span>
-                  <strong className="text-white">{t('home.footer.hotline_label', 'Hotline:')}</strong>{' '}
+                  <strong className="text-white">{t('home.footer.hotline_label', 'Hotline / Zalo:')}</strong>{' '}
                   <a href="tel:02423235656" className="text-white font-semibold hover:text-[#C89B3C] transition-colors">
                     024 23 23 56 56
                   </a>
@@ -163,7 +163,7 @@ export default function Footer() {
                   Z
                 </span>
                 <span>
-                  <strong className="text-white">Zalo Doanh Nghiệp:</strong>{' '}
+                  <strong className="text-white">{t('home.footer.zalo_label', 'Zalo Doanh Nghiệp:')}</strong>{' '}
                   <a
                     href="https://zalo.me/1361851474644984696"
                     target="_blank"
