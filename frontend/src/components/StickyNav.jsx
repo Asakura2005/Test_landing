@@ -427,7 +427,7 @@ export default function StickyNav() {
                         </Link>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-1.5">
                         {(() => {
                           const filtered = filterProductsByDbCategory(
                             allProducts,
@@ -437,7 +437,7 @@ export default function StickyNav() {
                           )
                           if (!filtered || filtered.length === 0) {
                             return (
-                              <div className="col-span-2 text-center py-6 text-xs text-haq-text-secondary">
+                              <div className="col-span-2 text-center py-4 text-xs text-haq-text-secondary">
                                 {language === 'en' ? 'Updating items...' : language === 'ko' ? '업데이트 중...' : 'Đang cập nhật...'}
                               </div>
                             )
@@ -450,9 +450,9 @@ export default function StickyNav() {
                                 key={p.id}
                                 to={`/san-pham/${p.slug}`}
                                 onClick={() => setActiveMenu(null)}
-                                className="group flex flex-col items-center gap-1.5 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-all"
+                                className="group flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-all"
                               >
-                                <div className="w-13 h-13 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
                                   <img
                                     src={imgSrc}
                                     alt={localizedProd.name}
