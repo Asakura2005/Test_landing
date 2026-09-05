@@ -343,24 +343,24 @@ export default function StickyNav() {
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[760px] bg-white rounded-3xl shadow-xl border border-haq-border p-6 pb-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[680px] max-h-[calc(100vh-90px)] overflow-y-auto bg-white rounded-3xl shadow-xl border border-haq-border p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 scrollbar-none"
               >
-                <div className="grid grid-cols-12 gap-6">
+                <div className="grid grid-cols-12 gap-5">
                   {/* Left Column: Dynamic Database Categories */}
-                  <div className="col-span-7 border-r border-haq-border pr-6 flex flex-col justify-between">
+                  <div className="col-span-7 border-r border-haq-border pr-5 flex flex-col justify-between">
                     <div>
-                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 border-b border-haq-border pb-1">
+                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-2 border-b border-haq-border pb-1">
                         <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
                       </div>
 
-                      <div className="space-y-1.5 max-h-[380px] overflow-y-auto scrollbar-thin pr-1 pb-2">
+                      <div className="space-y-1 max-h-[250px] overflow-y-auto scrollbar-thin pr-1 pb-1">
                         {categoryTree.map((cat) => {
                           const isHovered = (hoveredCategory?.id === cat.id) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
                           return (
-                            <div key={cat.id} className="space-y-1">
+                            <div key={cat.id} className="space-y-0.5">
                               <div
                                 onMouseEnter={() => setHoveredCategory(cat)}
-                                className={`p-2.5 rounded-2xl transition-all cursor-pointer flex items-center justify-between ${
+                                className={`px-2.5 py-1.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
                                   isHovered ? 'bg-haq-sage/50 border border-[#16A34A]/25' : 'hover:bg-haq-sage/20'
                                 }`}
                               >
@@ -375,7 +375,7 @@ export default function StickyNav() {
 
                               {/* Danh mục con (Subcategories) */}
                               {cat.children && cat.children.length > 0 && (
-                                <div className="pl-3 pr-1 py-1 flex flex-wrap gap-1.5">
+                                <div className="pl-3 pr-1 py-0.5 flex flex-wrap gap-1">
                                   {cat.children.map((child) => {
                                     const isChildHovered = hoveredCategory?.id === child.id || hoveredCategory?.slug === child.slug
                                     return (
@@ -384,7 +384,7 @@ export default function StickyNav() {
                                         to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
                                         onMouseEnter={() => setHoveredCategory(child)}
                                         onClick={() => setActiveMenu(null)}
-                                        className={`inline-flex items-center gap-1 text-[11px] font-heading font-semibold px-2.5 py-1 rounded-lg transition-colors border ${
+                                        className={`inline-flex items-center gap-1 text-[10px] font-heading font-semibold px-2 py-0.5 rounded-md transition-colors border ${
                                           isChildHovered
                                             ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
                                             : 'text-haq-ink/80 hover:text-haq-green-dark bg-haq-soft hover:bg-haq-green/10 border-haq-border'
@@ -402,11 +402,11 @@ export default function StickyNav() {
                       </div>
                     </div>
 
-                    <div className="pt-3 mt-2 border-t border-haq-border">
+                    <div className="pt-2.5 mt-2 border-t border-haq-border">
                       <Link
                         to="/san-pham"
                         onClick={() => setActiveMenu(null)}
-                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors py-1"
+                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors"
                       >
                         <span>{language === 'en' ? 'View all products →' : language === 'ko' ? '전체 제품 보기 →' : 'Xem tất cả sản phẩm →'}</span>
                       </Link>
@@ -416,7 +416,7 @@ export default function StickyNav() {
                   {/* Right Column: Live Showcase of Category Products */}
                   <div className="col-span-5 flex flex-col justify-between">
                     <div>
-                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-3 flex items-center justify-between border-b border-haq-border pb-1">
+                      <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase mb-2 flex items-center justify-between border-b border-haq-border pb-1">
                         <span>{language === 'en' ? 'FEATURED PRODUCTS' : language === 'ko' ? '대표 상품' : 'SẢN PHẨM NỔI BẬT'}</span>
                         <Link
                           to={`/san-pham?category=${activePreviewCat?.slug || 'all'}`}
@@ -442,7 +442,7 @@ export default function StickyNav() {
                               </div>
                             )
                           }
-                          return filtered.slice(0, 8).map((p) => {
+                          return filtered.slice(0, 4).map((p) => {
                             const localizedProd = getLocalizedProduct(p, language)
                             const imgSrc = resolveProductImage(p, hoveredCategory?.slug)
                             return (
@@ -450,9 +450,9 @@ export default function StickyNav() {
                                 key={p.id}
                                 to={`/san-pham/${p.slug}`}
                                 onClick={() => setActiveMenu(null)}
-                                className="group flex flex-col items-center gap-2 p-2 rounded-xl hover:bg-white transition-all"
+                                className="group flex flex-col items-center gap-1.5 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-all"
                               >
-                                <div className="w-16 h-16 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
+                                <div className="w-13 h-13 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
                                   <img
                                     src={imgSrc}
                                     alt={localizedProd.name}
@@ -463,7 +463,7 @@ export default function StickyNav() {
                                     }}
                                   />
                                 </div>
-                                <span className="text-[11px] font-heading font-medium text-haq-ink text-center line-clamp-2">
+                                <span className="text-[10px] font-heading font-semibold text-haq-ink text-center line-clamp-1 group-hover:text-[#16A34A] transition-colors">
                                   {localizedProd.name}
                                 </span>
                               </Link>
