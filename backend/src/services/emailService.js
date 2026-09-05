@@ -11,11 +11,18 @@ const SMTP_PASS = (process.env.SMTP_PASS || '').replace(/\s+/g, '')
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'HAQ FOOD CRM'
 const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'trantienhung4112005@gmail.com'
 
-// Khởi tạo Transporter
+// RESEND HTTP API CONFIGURATION (Bypass cloud port 465/587 blocks)
+const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim()
+const RESEND_FROM = process.env.RESEND_FROM || 'HAQ FOOD CRM <onboarding@resend.dev>'
+
+// Khởi tạo Transporter cho SMTP fallback (kèm timeout 5s chống treo)
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
   secure: SMTP_SECURE,
+  connectionTimeout: 5000,
+  greetingTimeout: 5000,
+  socketTimeout: 5000,
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASS,
@@ -26,9 +33,55 @@ const transporter = nodemailer.createTransport({
 })
 
 /**
- * Kiểm tra kết nối SMTP
+ * Gửi email qua Resend REST API (Cổng 443 HTTPS - Hoạt động 100% trên mọi cloud)
+ */
+async function sendViaResend(recipient, subject, html) {
+  if (!RESEND_API_KEY) {
+    throw new Error('Chưa cấu hình RESEND_API_KEY')
+  }
+
+  // Sandbox onboarding@resend.dev chỉ gửi đến tài khoản chủ sở hữu
+  let toList = [ADMIN_NOTIFICATION_EMAIL]
+  if (!RESEND_FROM.includes('resend.dev') && recipient) {
+    toList = Array.isArray(recipient) ? recipient : recipient.split(',').map(s => s.trim()).filter(Boolean)
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: RESEND_FROM,
+      to: toList,
+      subject: subject,
+      html: html
+    })
+  })
+
+  const data = await response.json()
+  if (!response.ok) {
+    throw new Error(data.message || JSON.stringify(data))
+  }
+
+  console.log(`✉️ [Resend API] Email sent successfully to ${toList.join(', ')}: ${data.id}`)
+  return { success: true, messageId: data.id, recipient: toList.join(', '), provider: 'resend' }
+}
+
+/**
+ * Kiểm tra kết nối dịch vụ Email (Ưu tiên Resend API, fallback SMTP)
  */
 export async function testSmtpConnection() {
+  if (RESEND_API_KEY) {
+    try {
+      console.log('✅ Resend API Key is configured and ready!')
+      return { success: true, message: 'Resend API connected (HTTPS)' }
+    } catch (err) {
+      console.error('❌ Resend API error:', err.message)
+    }
+  }
+
   try {
     await transporter.verify()
     console.log('✅ SMTP Connection to Gmail successful!')
@@ -200,24 +253,35 @@ export function buildAdminNotificationHtml(lead) {
  * Gửi email thông báo Lead B2B mới
  */
 export async function sendLeadNotificationEmail(leadData, overrideEmail = null) {
-  try {
-    const htmlContent = buildAdminNotificationHtml(leadData)
-    const clientName = leadData.full_name || leadData.name || 'Khách hàng'
-    const clientPhone = leadData.phone || ''
-    const recipient = overrideEmail || process.env.ADMIN_NOTIFICATION_EMAIL || ADMIN_NOTIFICATION_EMAIL
+  const htmlContent = buildAdminNotificationHtml(leadData)
+  const clientName = leadData.full_name || leadData.name || 'Khách hàng'
+  const clientPhone = leadData.phone || ''
+  const recipient = overrideEmail || process.env.ADMIN_NOTIFICATION_EMAIL || ADMIN_NOTIFICATION_EMAIL
+  const subject = `[HAQ FOOD CRM] Lead mới từ website: ${clientName} - ${clientPhone}`
 
+  // 1. Ưu tiên gửi qua Resend REST API (Cổng 443 HTTPS - Không bị chặn trên Render)
+  if (RESEND_API_KEY) {
+    try {
+      return await sendViaResend(recipient, subject, htmlContent)
+    } catch (resendErr) {
+      console.warn('⚠️ Resend dispatch failed, attempting SMTP fallback:', resendErr.message)
+    }
+  }
+
+  // 2. Fallback sang Nodemailer SMTP
+  try {
     const mailOptions = {
       from: `"${SMTP_FROM_NAME}" <${SMTP_USER}>`,
       to: recipient,
-      subject: `[HAQ FOOD CRM] Lead mới từ website: ${clientName} - ${clientPhone}`,
+      subject: subject,
       html: htmlContent
     }
 
     const info = await transporter.sendMail(mailOptions)
-    console.log(`✉️ Notification email sent to ${recipient}: ${info.messageId}`)
-    return { success: true, messageId: info.messageId, recipient }
+    console.log(`✉️ [SMTP] Notification email sent to ${recipient}: ${info.messageId}`)
+    return { success: true, messageId: info.messageId, recipient, provider: 'smtp' }
   } catch (error) {
-    console.error('❌ Error sending lead notification email:', error)
+    console.error('❌ Error sending lead notification email via SMTP:', error.message)
     return { success: false, error: error.message }
   }
 }

@@ -223,8 +223,14 @@ export default function ProductDetailPage() {
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-haq-ink leading-tight mb-2 uppercase">
                 {localizedProduct.name}
               </h1>
-              {localizedProduct.en_name && (
-                <p className="text-haq-text-secondary text-sm font-heading font-normal">{localizedProduct.en_name}</p>
+              {language === 'vi' ? (
+                localizedProduct.en_name && (
+                  <p className="text-haq-text-secondary text-sm font-heading font-normal">{localizedProduct.en_name}</p>
+                )
+              ) : (
+                product.name && product.name !== localizedProduct.name && (
+                  <p className="text-haq-text-secondary text-sm font-heading font-normal italic">{product.name}</p>
+                )
               )}
             </div>
 

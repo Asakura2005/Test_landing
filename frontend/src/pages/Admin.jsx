@@ -1,18 +1,8 @@
 import React, { useState, useEffect, Component } from 'react'
 import { 
-  Plus, 
-  Sparkles,
-  ShieldCheck,
-  KeyRound,
-  Eye,
-  EyeOff,
   AlertTriangle,
   RefreshCw,
-  Home,
-  Mail,
-  Lock,
-  ArrowRight,
-  UserCheck
+  Home
 } from 'lucide-react'
 import { 
   getProducts, 
@@ -23,7 +13,7 @@ import {
   getOrders, 
   subscribeToLeads 
 } from '../services/supabase'
-import { loginUser, getCurrentUser, logoutUser } from '../services/auth'
+import { loginUser, getCurrentUser, getCurrentUserSync, logoutUser } from '../services/auth'
 import AdminLayout from '../components/admin/AdminLayout'
 import DashboardOverview from '../components/admin/DashboardOverview'
 import ProductsManager from '../components/admin/ProductsManager'
@@ -90,8 +80,8 @@ class AdminErrorBoundary extends Component {
 }
 
 export default function Admin() {
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser())
-  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getCurrentUser()))
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUserSync())
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getCurrentUserSync()?.role))
   
   // Login Form State
   const [email, setEmail] = useState('')
@@ -118,21 +108,45 @@ export default function Admin() {
   const currentPinnedCount = (products || []).filter(p => p && p.is_pinned).length
   const newLeadsCount = (leads || []).filter(l => l && (l.status === 'NEW' || l.status === 'new' || !l.status)).length
 
-  // Check auth session on mount
+  // Check and verify auth session asynchronously on mount
   useEffect(() => {
-    const user = getCurrentUser()
-    if (user) {
-      setCurrentUser(user)
-      setIsAuthenticated(true)
+    let isMounted = true
+    const verifyAuth = async () => {
+      try {
+        const user = await getCurrentUser()
+        if (!isMounted) return
+        if (user && user.id && user.role) {
+          setCurrentUser(user)
+          setIsAuthenticated(true)
+        } else {
+          setCurrentUser(null)
+          setIsAuthenticated(false)
+        }
+      } catch (err) {
+        console.warn('Lỗi kiểm tra phiên làm việc:', err)
+        if (!isMounted) return
+        setCurrentUser(null)
+        setIsAuthenticated(false)
+      }
     }
+
+    verifyAuth()
+    return () => { isMounted = false }
   }, [])
+
+  // Đảm bảo tài khoản Sales không thể truy cập các tab đặc quyền Admin
+  useEffect(() => {
+    if (isSales && ['categories', 'news', 'settings', 'dashboard_marketing', 'dashboard_management'].includes(activeTab)) {
+      setActiveTab('dashboard')
+    }
+  }, [isSales, activeTab])
 
   // Login handler
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoginError('')
     if (!email || !password) {
-      setLoginError('Vui lòng nhập đầy đủ Gmail và Mật khẩu!')
+      setLoginError('Vui lòng nhập đầy đủ Email và Mật khẩu!')
       return
     }
 
@@ -144,7 +158,7 @@ export default function Admin() {
       setPassword('')
       setActiveTab('dashboard')
     } catch (err) {
-      setLoginError(err.message || 'Mật khẩu hoặc Gmail không chính xác! Vui lòng thử lại.')
+      setLoginError(err.message || 'Email hoặc Mật khẩu không chính xác! Vui lòng thử lại.')
     } finally {
       setIsSubmitting(false)
     }
@@ -306,163 +320,101 @@ export default function Admin() {
     }
   }
 
-  // Helper quick fill for testing credentials
-  const fillCredentials = (type) => {
-    if (type === 'admin') {
-      setEmail('trantienhung4112005@gmail.com')
-      setPassword('Hung4112005@')
-    } else if (type === 'sales') {
-      setEmail('sales@haqfood.vn')
-      setPassword('HaqFood@2024')
-    }
-  }
-
-  // --- FRAME 01: LOGIN SCREEN ---
+  // --- FRAME 01: ENTERPRISE B2B LOGIN SCREEN ---
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#F4F8F4] flex items-center justify-center p-4 selection:bg-[#0F5132] selection:text-white font-body relative overflow-hidden">
-        
-        {/* Subtle Eco-Pattern Watermark Background */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#0F5132_1px,transparent_1px)] [background-size:20px_20px]" />
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#0F5132]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#C89B3C]/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="bg-white p-8 sm:p-10 border border-[#D8E5DA] rounded-3xl shadow-2xl shadow-emerald-950/10 w-full max-w-md text-center space-y-6 relative z-10 animate-scaleUp">
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 selection:bg-[#0F5132] selection:text-white font-body">
+        <div className="bg-white p-8 sm:p-10 border border-slate-200 rounded-xl shadow-lg w-full max-w-md space-y-6">
           
-          {/* Logo HAQ FOOD Dập Nổi */}
-          <div className="relative inline-block">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#0F5132] via-[#145e3c] to-[#16A34A] text-white flex items-center justify-center font-heading font-black text-3xl mx-auto shadow-xl shadow-emerald-950/20 border-2 border-white/40 transform hover:scale-105 transition-transform">
-              H
-            </div>
-            <div className="absolute -bottom-1 -right-1 bg-[#C89B3C] text-white p-1.5 rounded-full shadow-md border border-white">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[#0F5132] text-[11px] font-extrabold uppercase tracking-wider">
-              <ShieldCheck className="w-3.5 h-3.5" />
+          {/* Header & Corporate Identity */}
+          <div className="text-center space-y-2 pb-2 border-b border-slate-100">
+            <div className="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase bg-emerald-50 text-[#0F5132] border border-emerald-200">
               B2B Enterprise Portal
             </div>
-            <h1 className="font-heading font-black text-2xl sm:text-3xl text-[#11261B] tracking-tight">
-              HAQ FOOD PORTAL
+            <h1 className="font-heading font-black text-2xl sm:text-3xl text-slate-900 tracking-tight">
+              HAQ FOOD
             </h1>
-            <p className="text-xs font-semibold text-[#52665A]">
-              Hệ thống quản trị kinh doanh & phân quyền bảo mật B2B
+            <p className="text-xs text-slate-500 font-medium">
+              Cổng Quản Trị & Vận Hành Doanh Nghiệp
             </p>
           </div>
 
+          {/* Login Error Notification */}
           {loginError && (
-            <div className="p-3.5 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-xs font-bold animate-fadeIn text-left flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{loginError}</span>
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-medium text-left leading-relaxed">
+              {loginError}
             </div>
           )}
 
+          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4 text-left">
             {/* Email Field */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center justify-between">
-                <span>Gmail / Tài Khoản</span>
-                <span className="text-[10px] text-[#52665A] font-normal">Được cấp quyền</span>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Email doanh nghiệp
               </label>
-              
-              <div className="relative">
-                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  placeholder="admin@haqfood.vn hoặc gmail..."
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full border border-[#D8E5DA] pl-10 pr-4 py-3 rounded-2xl text-xs sm:text-sm text-[#11261B] font-semibold focus:outline-none focus:border-[#0F5132] focus:ring-4 focus:ring-[#0F5132]/10 bg-[#F4F8F4]/50 transition-all font-mono"
-                  autoFocus
-                  required
-                />
-              </div>
+              <input
+                type="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-[#0F5132] focus:ring-1 focus:ring-[#0F5132] bg-white transition"
+                autoFocus
+                required
+              />
             </div>
 
             {/* Password Field */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center justify-between">
-                <span>Mật Khẩu</span>
-                <span className="text-[10px] text-[#52665A] font-normal">Bảo mật SHA-256</span>
-              </label>
-              
-              <div className="relative">
-                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu..."
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full border border-[#D8E5DA] pl-10 pr-11 py-3 rounded-2xl text-xs sm:text-sm text-[#11261B] font-semibold focus:outline-none focus:border-[#0F5132] focus:ring-4 focus:ring-[#0F5132]/10 bg-[#F4F8F4]/50 transition-all"
-                  required
-                />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Mật khẩu
+                </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#52665A] hover:text-[#11261B] p-1"
-                  title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  className="text-xs text-slate-500 hover:text-slate-800 font-medium transition select-none"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? "Ẩn" : "Hiện"}
                 </button>
               </div>
-
-              {/* Remember Me Checkbox */}
-              <div className="flex items-center justify-between mt-2.5 text-[11px]">
-                <label className="flex items-center gap-2 cursor-pointer text-[#52665A] hover:text-[#11261B] select-none">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={e => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 text-[#0F5132] rounded focus:ring-emerald-500 cursor-pointer"
-                  />
-                  <span>Ghi nhớ phiên đăng nhập</span>
-                </label>
-              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Nhập mật khẩu"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 font-medium placeholder:text-slate-400 focus:outline-none focus:border-[#0F5132] focus:ring-1 focus:ring-[#0F5132] bg-white transition"
+                required
+              />
             </div>
 
-            {/* Quick Demo Fill Credentials */}
-            <div className="p-3 bg-[#F4F8F4] border border-[#D8E5DA] rounded-2xl space-y-1.5 text-xs">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#52665A]">
-                Tài khoản mẫu thử nghiệm:
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => fillCredentials('admin')}
-                  className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-[#D8E5DA] hover:border-[#0F5132] text-[11px] font-bold text-[#0F5132] transition-colors"
-                >
-                  👑 Admin
-                </button>
-                <button
-                  type="button"
-                  onClick={() => fillCredentials('sales')}
-                  className="flex-1 py-1.5 px-2 rounded-xl bg-white border border-[#D8E5DA] hover:border-amber-600 text-[11px] font-bold text-amber-800 transition-colors"
-                >
-                  💼 Sales
-                </button>
-              </div>
+            {/* Session Persistence */}
+            <div className="flex items-center justify-between text-xs text-slate-600 pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={e => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-[#0F5132] rounded border-slate-300 focus:ring-[#0F5132] cursor-pointer"
+                />
+                <span>Ghi nhớ đăng nhập trên thiết bị này</span>
+              </label>
             </div>
 
             {/* Submit Button */}
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className="w-full bg-[#0F5132] hover:bg-[#16A34A] text-white p-3.5 font-black rounded-2xl text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-emerald-950/15 flex items-center justify-center gap-2 group disabled:opacity-50"
+              className="w-full bg-[#0F5132] hover:bg-[#145E3C] disabled:bg-slate-300 disabled:text-slate-500 text-white py-3 px-4 font-bold rounded-lg text-sm transition duration-150 shadow-sm disabled:cursor-not-allowed text-center"
             >
-              {isSubmitting ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
-              ) : (
-                <KeyRound className="w-4 h-4 group-hover:rotate-45 transition-transform" />
-              )}
-              <span>{isSubmitting ? 'Đang xác thực bảo mật...' : 'Đăng Nhập Vào Hệ Thống'}</span>
+              {isSubmitting ? 'Đang xác thực...' : 'Đăng nhập hệ thống'}
             </button>
           </form>
 
-          <div className="pt-4 border-t border-[#D8E5DA] flex items-center justify-center gap-2 text-[11px] text-[#52665A]">
-            <ShieldCheck className="w-4 h-4 text-[#0F5132]" />
-            <span>Mã hóa SHA-256 + Salt • Supabase RLS RBAC</span>
+          {/* Footer Notice */}
+          <div className="pt-4 border-t border-slate-100 text-center space-y-1 text-[11px] text-slate-400 font-medium">
+            <p>Hệ thống quản lý nội bộ HAQ FOOD</p>
+            <p>Truy cập chỉ dành cho nhân sự được phân quyền</p>
           </div>
         </div>
       </div>

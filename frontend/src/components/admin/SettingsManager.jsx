@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { 
   getCurrentUser, 
+  getCurrentUserSync,
   getAllAccounts, 
   updateAdminProfile, 
   createSalesAccount, 
@@ -40,7 +41,7 @@ export default function SettingsManager() {
   const [errorMsg, setErrorMsg] = useState('')
 
   // Current User Profile State
-  const [currentUser, setCurrentUser] = useState(getCurrentUser())
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUserSync())
   const [adminProfile, setAdminProfile] = useState({
     fullName: '',
     email: '',

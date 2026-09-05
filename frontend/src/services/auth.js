@@ -117,9 +117,11 @@ export async function getAllAccounts() {
 
   // Fallback: đọc local vault (đã mã hoá)
   const fromLocal = await loadAccountsFromLocal()
-  if (fromLocal) return fromLocal
+  if (fromLocal) {
+    return fromLocal
+  }
 
-  // Fallback cuối: dùng default (plaintext) — chỉ khi chưa có gì
+  // Fallback cuối: dùng default nếu hệ thống chưa khởi tạo
   return DEFAULT_INITIAL_ACCOUNTS
 }
 
@@ -141,19 +143,49 @@ export async function loginUser(email, password, rememberMe = true) {
     })
 
     if (!authError && authData?.user) {
+      // Tra cứu tài khoản từ admin_accounts để lấy quyền và họ tên chuẩn nhất
+      let assignedRole = authData.user.user_metadata?.role
+      let resolvedName = authData.user.user_metadata?.full_name || authData.user.email.split('@')[0]
+      let resolvedPhone = authData.user.phone || ''
+
+      try {
+        const accounts = await getAllAccounts()
+        const matched = accounts.find(a => a.email && a.email.toLowerCase() === cleanEmail)
+        if (matched) {
+          assignedRole = matched.role || assignedRole
+          resolvedName = matched.full_name || resolvedName
+          resolvedPhone = matched.phone || resolvedPhone
+        }
+      } catch (err) {}
+
+      // Nếu không có role và là sales email -> gán SALES
+      if (!assignedRole) {
+        assignedRole = cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'
+      }
+
       const sessionUser = {
         id: authData.user.id,
         email: authData.user.email,
-        full_name: authData.user.user_metadata?.full_name || authData.user.email.split('@')[0],
-        phone: authData.user.phone || '',
-        role: authData.user.user_metadata?.role || 'ADMIN',
+        full_name: resolvedName,
+        phone: resolvedPhone,
+        role: assignedRole,
         logged_in_at: new Date().toISOString(),
         auth_provider: 'supabase',
       }
       // 🔐 Mã hoá session trước khi lưu vào browser storage
       const encryptedSession = await encryptObject(sessionUser, ACCOUNT_SENSITIVE_FIELDS)
+      // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
+      encryptedSession.id = sessionUser.id
+      encryptedSession.role = sessionUser.role
+      encryptedSession.logged_in_at = sessionUser.logged_in_at
+
       const storage = rememberMe ? localStorage : sessionStorage
       storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
+      if (rememberMe) {
+        sessionStorage.removeItem(SESSION_KEY)
+      } else {
+        localStorage.removeItem(SESSION_KEY)
+      }
       return sessionUser
     }
   } catch (e) {
@@ -193,7 +225,7 @@ export async function loginUser(email, password, rememberMe = true) {
     email: account.email,
     full_name: account.full_name,
     phone: account.phone || '',
-    role: account.role || 'SALES',
+    role: account.role || (cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'),
     avatar_url: account.avatar_url || '',
     last_login: account.last_login,
     logged_in_at: new Date().toISOString()
@@ -201,6 +233,11 @@ export async function loginUser(email, password, rememberMe = true) {
 
   // 🔐 Mã hoá session PII trước khi lưu vào browser storage
   const encryptedSession = await encryptObject(sessionUser, ACCOUNT_SENSITIVE_FIELDS)
+  // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
+  encryptedSession.id = sessionUser.id
+  encryptedSession.role = sessionUser.role
+  encryptedSession.logged_in_at = sessionUser.logged_in_at
+
   const storage = rememberMe ? localStorage : sessionStorage
   storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
   if (rememberMe) {
@@ -221,8 +258,14 @@ export async function getCurrentUser() {
   if (!raw) return null
   try {
     const parsed = JSON.parse(raw)
+    if (!parsed || !parsed.id || !parsed.role) return null
     // 🔓 Giải mã PII khỏi session
-    return await decryptObject(parsed, ACCOUNT_SENSITIVE_FIELDS)
+    const decrypted = await decryptObject(parsed, ACCOUNT_SENSITIVE_FIELDS)
+    return {
+      ...decrypted,
+      role: parsed.role || decrypted.role || 'SALES',
+      id: parsed.id || decrypted.id,
+    }
   } catch (e) {
     return null
   }
@@ -235,7 +278,20 @@ export function getCurrentUserSync() {
   if (typeof window === 'undefined') return null
   const raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)
   if (!raw) return null
-  try { return JSON.parse(raw) } catch (e) { return null }
+  try {
+    const parsed = JSON.parse(raw)
+    if (!parsed || !parsed.id || !parsed.role) return null
+    return {
+      ...parsed,
+      id: parsed.id,
+      role: parsed.role,
+      full_name: parsed.full_name && !String(parsed.full_name).startsWith('enc_v1:') 
+        ? parsed.full_name 
+        : (parsed.role === 'SALES' ? 'Nhân Viên Sales' : 'Quản Trị Viên')
+    }
+  } catch (e) {
+    return null
+  }
 }
 
 /**

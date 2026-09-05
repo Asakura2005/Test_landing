@@ -589,27 +589,96 @@ export async function deleteProduct(id) {
   return true
 }
 
+// Các cột chuẩn tồn tại trong bảng 'products' trên Supabase
+const VALID_PRODUCT_COLUMNS = [
+  'slug',
+  'name',
+  'en_name',
+  'description',
+  'tag',
+  'highlights',
+  'is_pinned',
+  'category',
+  'category_id',
+  'images',
+  'province_id'
+]
+
+/**
+ * Làm sạch dữ liệu trước khi gửi lên Supabase bảng 'products'
+ * Loại bỏ các trường UI như 'box_spec', 'shelf_life', 'certifications', 'is_active', 'storage_guide'
+ * và các relation joins như 'variants', 'categories', 'provinces'
+ */
+function sanitizeProductPayload(data) {
+  if (!data || typeof data !== 'object') return {}
+  const payload = {}
+  for (const key of VALID_PRODUCT_COLUMNS) {
+    if (data[key] !== undefined) {
+      payload[key] = data[key]
+    }
+  }
+
+  // Chuẩn hóa UUID sang null nếu là chuỗi rỗng
+  if (payload.category_id === '') payload.category_id = null
+  if (payload.province_id === '') payload.province_id = null
+
+  // Đảm bảo kiểu dữ liệu mảng
+  if (payload.highlights !== undefined && !Array.isArray(payload.highlights)) {
+    payload.highlights = payload.highlights ? [String(payload.highlights)] : []
+  }
+  if (payload.images !== undefined && !Array.isArray(payload.images)) {
+    payload.images = payload.images ? [String(payload.images)] : []
+  }
+
+  return payload
+}
+
+/**
+ * Làm sạch dữ liệu biến thể trước khi lưu vào bảng 'product_variants'
+ * Map đúng các cột DB: product_id, size, img, shelf, pack, moq
+ */
+function sanitizeVariantPayload(v, productId) {
+  return {
+    product_id: productId,
+    size: String(v.size || v.name || v.weight || 'Tiêu chuẩn').trim(),
+    pack: String(v.pack || (v.unit ? `${v.unit} (${v.name || ''})` : v.name) || 'Gói').trim(),
+    shelf: String(v.shelf || '6-12 tháng').trim(),
+    moq: String(v.moq || v.min_order || 10).trim(),
+    img: v.img || null
+  }
+}
+
 /**
  * Tạo sản phẩm mới kèm variants
  */
 export async function createProduct(productData, variantsData) {
+  const cleanPayload = sanitizeProductPayload(productData)
+
   // 1. Tạo Product
   const { data: newProduct, error: pError } = await supabase
     .from('products')
-    .insert([productData])
+    .insert([cleanPayload])
     .select()
     .single()
 
   if (pError) throw pError
 
   // 2. Tạo Variants nếu có
-  if (variantsData && variantsData.length > 0) {
-    const vData = variantsData.map(v => ({ ...v, product_id: newProduct.id }))
-    const { error: vError } = await supabase
-      .from('product_variants')
-      .insert(vData)
+  if (Array.isArray(variantsData) && variantsData.length > 0 && newProduct?.id) {
+    const vData = variantsData
+      .filter(v => (v.size && v.size.trim()) || (v.name && v.name.trim()))
+      .map(v => sanitizeVariantPayload(v, newProduct.id))
+    
+    if (vData.length > 0) {
+      const { error: vError } = await supabase
+        .from('product_variants')
+        .insert(vData)
 
-    if (vError) throw vError
+      if (vError) {
+        console.error("Lỗi thêm variants:", vError)
+        throw new Error("Không thể lưu quy cách biến thể: " + vError.message)
+      }
+    }
   }
 
   return newProduct
@@ -619,29 +688,37 @@ export async function createProduct(productData, variantsData) {
  * Cập nhật sản phẩm & variants
  */
 export async function updateProduct(id, productData, variantsData) {
+  const cleanPayload = sanitizeProductPayload(productData)
+
   // 1. Cập nhật Product
   const { error: pError } = await supabase
     .from('products')
-    .update(productData)
+    .update(cleanPayload)
     .eq('id', id)
 
   if (pError) throw pError
 
-  // 2. Cập nhật Variants (Xóa cũ, thêm mới cho đơn giản)
-  const { error: delError } = await supabase
-    .from('product_variants')
-    .delete()
-    .eq('product_id', id)
-    
-  if (delError) throw delError
-
-  if (variantsData && variantsData.length > 0) {
-    const vData = variantsData.map(v => ({ ...v, product_id: id }))
-    const { error: vError } = await supabase
+  // 2. Cập nhật Variants (Xóa cũ, thêm mới)
+  if (Array.isArray(variantsData)) {
+    const { error: delError } = await supabase
       .from('product_variants')
-      .insert(vData)
+      .delete()
+      .eq('product_id', id)
+      
+    if (delError) console.warn("Lỗi xóa variants cũ:", delError)
 
-    if (vError) throw vError
+    const validVariants = variantsData.filter(v => (v.size && v.size.trim()) || (v.name && v.name.trim()))
+    if (validVariants.length > 0) {
+      const vData = validVariants.map(v => sanitizeVariantPayload(v, id))
+      const { error: vError } = await supabase
+        .from('product_variants')
+        .insert(vData)
+
+      if (vError) {
+        console.error("Lỗi cập nhật variants:", vError)
+        throw new Error("Không thể lưu quy cách biến thể: " + vError.message)
+      }
+    }
   }
 
   return true

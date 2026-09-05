@@ -49,11 +49,11 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     images: [],
   })
 
-  // Variants State
+  // Variants State (Đồng bộ chuẩn với bảng product_variants trong DB: size, pack, shelf, moq)
   const [variants, setVariants] = useState([
-    { name: 'Gói 100g', sku: '', price: 25000, wholesale_price: 18000, unit: 'gói', weight: '100g', min_order: 50, shelf: '6 tháng' },
-    { name: 'Gói 250g', sku: '', price: 55000, wholesale_price: 40000, unit: 'gói', weight: '250g', min_order: 30, shelf: '6 tháng' },
-    { name: 'Thùng 5kg (Bán sỉ)', sku: '', price: 950000, wholesale_price: 720000, unit: 'thùng', weight: '5kg', min_order: 5, shelf: '12 tháng' },
+    { size: '100g', pack: 'Túi zip', shelf: '6 tháng', moq: '50' },
+    { size: '250g', pack: 'Hũ nhựa', shelf: '6 tháng', moq: '30' },
+    { size: 'Thùng 5kg (Bán sỉ)', pack: 'Thùng carton', shelf: '12 tháng', moq: '5' },
   ])
 
   // Gallery files state
@@ -98,7 +98,13 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         images: Array.isArray(product.images) ? product.images : [],
       })
       if (product.variants && product.variants.length > 0) {
-        setVariants(product.variants)
+        setVariants(product.variants.map(v => ({
+          id: v.id,
+          size: v.size || v.name || '',
+          pack: v.pack || v.unit || '',
+          shelf: v.shelf || '6 tháng',
+          moq: v.moq || v.min_order || '10'
+        })))
       }
     }
   }, [product])
@@ -152,7 +158,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const addVariantRow = () => {
     setVariants([
       ...variants, 
-      { name: 'Quy cách mới', sku: '', price: 0, wholesale_price: 0, unit: 'gói', weight: '', min_order: 10, shelf: '6 tháng' }
+      { size: 'Quy cách mới', pack: 'Hũ nhựa', shelf: '6 tháng', moq: '10' }
     ])
   }
 
@@ -211,6 +217,19 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    if (!formData.name?.trim()) {
+      alert("Vui lòng nhập Tên sản phẩm ở Tab 1 (Thông Tin Cơ Bản)!")
+      setActiveModalTab('basic')
+      return
+    }
+
+    const validVariants = variants.filter(v => v.size && v.size.trim() !== '')
+    if (validVariants.length === 0) {
+      alert("Vui lòng nhập ít nhất một quy cách/trọng lượng (ví dụ: 100g, 250g) ở Tab 2!")
+      setActiveModalTab('variants')
+      return
+    }
+
     // Validate max 6 pins
     if (formData.is_pinned && !product?.is_pinned && currentPinnedCount >= 6) {
       alert("Không thể ghim! Bạn đã ghim tối đa 6 sản phẩm. Vui lòng bỏ ghim sản phẩm khác trước.")
@@ -306,7 +325,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             }`}
           >
             <Layers className="w-4 h-4" />
-            2. Ma Trận Biến Thể & Giá Sỉ ({variants.length} SKU)
+            2. Quy Cách Đóng Gói ({variants.length} quy cách)
           </button>
 
           <button
@@ -455,28 +474,26 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             <div className="space-y-5 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-[#11261B]">Ma Trận Quy Cách Đóng Gói & Giá Sỉ B2B</h3>
-                  <p className="text-xs text-[#52665A]">Hỗ trợ nhiều phân loại: Túi 100g, Hũ 250g, Thùng carton 5kg cho đại lý</p>
+                  <h3 className="text-sm font-bold text-[#11261B]">Quy Cách Đóng Gói & Biến Thể B2B</h3>
+                  <p className="text-xs text-[#52665A]">Định nghĩa các quy cách: Túi 100g, Hũ 250g, Thùng 5kg hiển thị trên trang chi tiết sản phẩm</p>
                 </div>
                 <button
                   type="button"
                   onClick={addVariantRow}
                   className="px-3.5 py-2 rounded-xl bg-[#0F5132] text-white text-xs font-bold hover:bg-[#16A34A] transition-colors flex items-center gap-1.5 shadow-sm"
                 >
-                  <Plus className="w-4 h-4" /> Thêm Quy Cách / SKU
+                  <Plus className="w-4 h-4" /> Thêm Quy Cách
                 </button>
               </div>
 
               <div className="overflow-x-auto rounded-2xl border border-[#D8E5DA]">
-                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
+                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
                   <thead>
                     <tr className="bg-[#F4F8F4] border-b border-[#D8E5DA] text-[11px] uppercase tracking-wider text-[#52665A]">
-                      <th className="p-3 font-bold">Tên Quy Cách / Trọng Lượng</th>
-                      <th className="p-3 font-bold">Mã SKU</th>
-                      <th className="p-3 font-bold">Giá Lẻ Tham Chiếu</th>
-                      <th className="p-3 font-bold">Giá Sỉ Đại Lý</th>
-                      <th className="p-3 font-bold">Đơn Vị</th>
-                      <th className="p-3 font-bold">MOQ (Đơn Tối Thiểu)</th>
+                      <th className="p-3 font-bold">Kích cỡ / Trọng lượng *</th>
+                      <th className="p-3 font-bold">Quy cách bao bì</th>
+                      <th className="p-3 font-bold">Hạn sử dụng (HSD)</th>
+                      <th className="p-3 font-bold">MOQ (Đơn tối thiểu)</th>
                       <th className="p-3 font-bold text-center">Xóa</th>
                     </tr>
                   </thead>
@@ -486,51 +503,38 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                         <td className="p-2.5">
                           <input
                             type="text"
-                            value={v.name || ''}
-                            onChange={e => handleVariantChange(i, 'name', e.target.value)}
-                            placeholder="Gói 250g"
+                            required
+                            value={v.size || ''}
+                            onChange={e => handleVariantChange(i, 'size', e.target.value)}
+                            placeholder="VD: 100g, 250g, Thùng 5kg"
                             className="w-full p-2 rounded-lg border border-[#D8E5DA] font-semibold text-xs bg-white focus:outline-none focus:border-[#0F5132]"
                           />
                         </td>
                         <td className="p-2.5">
                           <input
                             type="text"
-                            value={v.sku || ''}
-                            onChange={e => handleVariantChange(i, 'sku', e.target.value)}
-                            placeholder="HAQ-BT-250"
-                            className="w-28 p-2 rounded-lg border border-[#D8E5DA] font-mono text-xs bg-white focus:outline-none focus:border-[#0F5132]"
-                          />
-                        </td>
-                        <td className="p-2.5">
-                          <input
-                            type="number"
-                            value={v.price || ''}
-                            onChange={e => handleVariantChange(i, 'price', Number(e.target.value))}
-                            className="w-24 p-2 rounded-lg border border-[#D8E5DA] font-mono text-xs bg-white focus:outline-none focus:border-[#0F5132]"
-                          />
-                        </td>
-                        <td className="p-2.5">
-                          <input
-                            type="number"
-                            value={v.wholesale_price || ''}
-                            onChange={e => handleVariantChange(i, 'wholesale_price', Number(e.target.value))}
-                            className="w-24 p-2 rounded-lg border border-[#D8E5DA] font-mono text-xs font-bold text-[#0F5132] bg-white focus:outline-none focus:border-[#0F5132]"
+                            value={v.pack || ''}
+                            onChange={e => handleVariantChange(i, 'pack', e.target.value)}
+                            placeholder="VD: Hũ nhựa, Túi zip, Hộp giấy"
+                            className="w-full p-2 rounded-lg border border-[#D8E5DA] text-xs bg-white focus:outline-none focus:border-[#0F5132]"
                           />
                         </td>
                         <td className="p-2.5">
                           <input
                             type="text"
-                            value={v.unit || 'gói'}
-                            onChange={e => handleVariantChange(i, 'unit', e.target.value)}
-                            className="w-16 p-2 rounded-lg border border-[#D8E5DA] text-xs bg-white text-center focus:outline-none focus:border-[#0F5132]"
+                            value={v.shelf || ''}
+                            onChange={e => handleVariantChange(i, 'shelf', e.target.value)}
+                            placeholder="VD: 6 tháng, 12 tháng"
+                            className="w-32 p-2 rounded-lg border border-[#D8E5DA] text-xs bg-white focus:outline-none focus:border-[#0F5132]"
                           />
                         </td>
                         <td className="p-2.5">
                           <input
-                            type="number"
-                            value={v.min_order || 10}
-                            onChange={e => handleVariantChange(i, 'min_order', Number(e.target.value))}
-                            className="w-20 p-2 rounded-lg border border-[#D8E5DA] font-mono text-xs bg-white focus:outline-none focus:border-[#0F5132]"
+                            type="text"
+                            value={v.moq || ''}
+                            onChange={e => handleVariantChange(i, 'moq', e.target.value)}
+                            placeholder="VD: 10, 50 gói"
+                            className="w-28 p-2 rounded-lg border border-[#D8E5DA] font-semibold text-xs bg-white focus:outline-none focus:border-[#0F5132]"
                           />
                         </td>
                         <td className="p-2.5 text-center">
