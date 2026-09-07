@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase.js'
 import crypto from 'crypto'
+import argon2 from 'argon2'
 
 // ============================================================
 // HELPERS
@@ -11,13 +12,58 @@ if (!JWT_SECRET) {
 }
 
 /**
- * Hash password bằng SHA-256 + salt (tương thích với frontend cũ)
+ * Hash password bằng SHA-256 + salt (CHỈ dùng để verify password cũ, KHÔNG dùng cho password mới)
  */
-function hashPassword(password, salt) {
+function hashPasswordSHA256(password, salt) {
   return crypto
     .createHash('sha256')
     .update(password + (salt || ''))
     .digest('hex')
+}
+
+/**
+ * Hash password bằng Argon2id (chuẩn OWASP cho password mới)
+ */
+async function hashPasswordArgon2(password) {
+  return argon2.hash(password, {
+    type: argon2.argon2id,
+    memoryCost: 65536,  // 64 MB
+    timeCost: 3,        // 3 iterations
+    parallelism: 4,
+  })
+}
+
+/**
+ * Xác minh password: thử Argon2 trước, fallback SHA-256 cho password cũ
+ * Trả về { valid: boolean, needsMigration: boolean }
+ */
+async function verifyPassword(password, storedHash, storedSalt) {
+  // 1. Nếu hash bắt đầu bằng $argon2 → dùng argon2 verify
+  if (storedHash && storedHash.startsWith('$argon2')) {
+    const valid = await argon2.verify(storedHash, password)
+    return { valid, needsMigration: false }
+  }
+
+  // 2. Fallback: SHA-256 (password cũ)
+  const sha256Hash = hashPasswordSHA256(password, storedSalt)
+  const valid = sha256Hash === storedHash
+  return { valid, needsMigration: valid } // Nếu đúng → cần migrate sang argon2
+}
+
+/**
+ * Auto-migrate password từ SHA-256 sang Argon2id (chạy sau khi login thành công)
+ */
+async function migratePasswordToArgon2(accountId, password) {
+  try {
+    const newHash = await hashPasswordArgon2(password)
+    await supabase
+      .from('admin_accounts')
+      .update({ password_hash: newHash, password_salt: 'argon2id' })
+      .eq('id', accountId)
+    console.log(`✅ Migrated password to Argon2id for account ${accountId}`)
+  } catch (err) {
+    console.warn('Password migration failed (non-blocking):', err.message)
+  }
 }
 
 /**
@@ -126,10 +172,15 @@ export async function login(req, res) {
       return res.status(403).json({ error: 'Tài khoản này đang bị tạm khóa. Vui lòng liên hệ Quản trị viên.' })
     }
 
-    // 2. Xác minh mật khẩu
-    const computedHash = hashPassword(password, account.password_salt)
-    if (computedHash !== account.password_hash) {
+    // 2. Xác minh mật khẩu (Argon2 hoặc SHA-256 legacy)
+    const { valid, needsMigration } = await verifyPassword(password, account.password_hash, account.password_salt)
+    if (!valid) {
       return res.status(401).json({ error: 'Mật khẩu không chính xác.' })
+    }
+
+    // Auto-migrate SHA-256 → Argon2id (chạy ngầm, không block login)
+    if (needsMigration) {
+      migratePasswordToArgon2(account.id, password)
     }
 
     // 3. Cập nhật last_login
@@ -242,9 +293,8 @@ export async function createAccount(req, res) {
       return res.status(409).json({ error: 'Tài khoản Email này đã tồn tại.' })
     }
 
-    // Hash password
-    const salt = crypto.randomBytes(16).toString('hex')
-    const hash = hashPassword(password, salt)
+    // Hash password bằng Argon2id
+    const hash = await hashPasswordArgon2(password)
 
     const newAccount = {
       email: cleanEmail,
@@ -252,7 +302,7 @@ export async function createAccount(req, res) {
       phone: phone ? phone.trim() : '',
       role: role || 'SALES',
       password_hash: hash,
-      password_salt: salt,
+      password_salt: 'argon2id',
       is_active: true,
     }
 
@@ -291,9 +341,8 @@ export async function updateAccount(req, res) {
     }
 
     if (newPassword) {
-      const salt = crypto.randomBytes(16).toString('hex')
-      updates.password_hash = hashPassword(newPassword, salt)
-      updates.password_salt = salt
+      updates.password_hash = await hashPasswordArgon2(newPassword)
+      updates.password_salt = 'argon2id'
     }
 
     const { data, error } = await supabase
@@ -363,16 +412,15 @@ export async function updateProfile(req, res) {
       if (!currentPassword) {
         return res.status(400).json({ error: 'Vui lòng nhập Mật khẩu hiện tại.' })
       }
-      const checkHash = hashPassword(currentPassword, account.password_salt)
-      if (checkHash !== account.password_hash) {
+      const { valid: currentValid } = await verifyPassword(currentPassword, account.password_hash, account.password_salt)
+      if (!currentValid) {
         return res.status(401).json({ error: 'Mật khẩu hiện tại không chính xác.' })
       }
       if (newPassword.length < 6) {
         return res.status(400).json({ error: 'Mật khẩu mới phải có tối thiểu 6 ký tự.' })
       }
-      const salt = crypto.randomBytes(16).toString('hex')
-      updates.password_hash = hashPassword(newPassword, salt)
-      updates.password_salt = salt
+      updates.password_hash = await hashPasswordArgon2(newPassword)
+      updates.password_salt = 'argon2id'
     }
 
     if (full_name !== undefined) updates.full_name = full_name.trim()
