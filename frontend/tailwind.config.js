@@ -40,9 +40,14 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         ticker: 'ticker 40s linear infinite',
+        marquee: 'marquee 20s linear infinite',
       },
     },
   },

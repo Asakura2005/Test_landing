@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
@@ -8,9 +7,6 @@ import { useLanguage } from '../context/LanguageContext'
 
 import factoryImg from '../assets/factory/factory_production.jpg'
 import exportImg from '../assets/distribution/distribution_export.jpg'
-import catBanhImg from '../assets/categories/category_banh.jpg'
-import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
-import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
 import factoryHqImg from '../assets/about/factory_hq.jpg'
 import riceFieldImg from '../assets/about/rice_field.jpg'
@@ -113,33 +109,6 @@ const getProductionProcess = (lang) => {
   ]
 }
 
-/* ───────────────────────────────────────────────────────────────────
-   Data — Product Categories
-   ─────────────────────────────────────────────────────────────────── */
-const getProductCategories = (lang) => {
-  if (lang === 'en') {
-    return [
-      { title: 'HOKI Rice Paper Snacks', subtitle: 'Crispy Vietnamese Rice Paper', desc: 'Premium crispy rice paper snacks seasoned with authentic Vietnamese spices.', img: catBanhTrangImg, badge: 'SIGNATURE' },
-      { title: 'Traditional Baked Snacks', subtitle: 'Heritage Recipes', desc: 'Artisanal baked treats combined with modern hygiene for irresistible crunch and aroma.', img: catBanhImg, badge: 'TRADITIONAL' },
-      { title: 'Dried Agricultural Foods', subtitle: 'Selected Farm Produce', desc: 'Nutrient-rich dried local agricultural produce serving retail and food service industries.', img: catDoAnKhoImg, badge: 'NATURAL' },
-    ]
-  }
-  if (lang === 'ko') {
-    return [
-      { title: 'HOKI 크리스피 라이스페이퍼', subtitle: '베트남 정통 라이스페이퍼 스낵', desc: '베트남 본연의 깊은 풍미를 바삭하게 살린 프리미엄 라이스페이퍼 스낵.', img: catBanhTrangImg, badge: '시그니처' },
-      { title: '전통 구운 과자', subtitle: '고소하고 바삭한 전통 과자', desc: '현대식 위생 설비로 구워낸 고소하고 안전한 베트남 전통 베이커리 스낵.', img: catBanhImg, badge: '전통 비법' },
-      { title: '건조 농산물', subtitle: '엄선된 베트남 청정 농산물', desc: '자연 원재료의 영양을 온전히 보존한 프리미엄 건조 농산물 라인업.', img: catDoAnKhoImg, badge: '자연주의' },
-    ]
-  }
-  return [
-    { title: 'Bánh Tráng Sấy HOKI', subtitle: 'Bánh tráng sấy giòn đậm vị Việt', desc: 'Dòng sản phẩm bánh tráng sấy giòn cao cấp, hương vị đậm đà nguyên bản Việt Nam.', img: catBanhTrangImg, badge: 'TIÊU BIỂU' },
-    { title: 'Bánh Nướng Truyền Thống', subtitle: 'Hương vị thơm bùi tự nhiên', desc: 'Bánh nướng thủ công kết hợp công nghệ hiện đại, thơm ngon và an toàn tuyệt đối.', img: catBanhImg, badge: 'GIA TRUYỀN' },
-    { title: 'Nông Sản Sấy Khô', subtitle: 'Nông sản Việt chọn lọc', desc: 'Nông sản sấy khô giữ nguyên dưỡng chất, phục vụ tiêu dùng trong nước và công nghiệp thực phẩm.', img: catDoAnKhoImg, badge: 'TỰ NHIÊN' },
-  ]
-}
-
-const TICKER_ITEMS = ['WinMart', 'Circle K', 'GS25', 'Bách Hóa Xanh', 'K-Market', 'ISO 22000', 'HACCP', 'OEM / ODM', 'Hàn Quốc', 'Đài Loan']
-
 /* ═══════════════════════════════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════════════════════════════ */
@@ -147,14 +116,6 @@ export default function CompanyProfilePage() {
   const { t, language } = useLanguage()
   const CORE_VALUES = getCoreValues(language)
   const PRODUCTION_PROCESS = getProductionProcess(language)
-  const PRODUCT_CATEGORIES = getProductCategories(language)
-
-  // Hero entrance animation
-  const [heroReady, setHeroReady] = useState(false)
-  useEffect(() => {
-    const timer = setTimeout(() => setHeroReady(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
 
   // Parallax scroll
   const [scrollY, setScrollY] = useState(0)
@@ -172,99 +133,9 @@ export default function CompanyProfilePage() {
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
 
         {/* ═══════════════════════════════════════════════════════════════
-            HERO — Cinematic full-width + parallax + staggered text
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#0C1E15]">
-          {/* Parallax background image */}
-          <img
-            src={factoryHqImg}
-            alt="HAQ FOOD Factory"
-            className={`absolute inset-0 w-full h-[120%] object-cover will-change-transform transition-transform duration-[6000ms] ease-out ${heroReady ? 'scale-100' : 'scale-110'}`}
-            style={{ transform: `translateY(${scrollY * 0.25}px) scale(${heroReady ? 1 : 1.1})`, opacity: 0.35 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0C1E15] via-[#0C1E15]/80 to-transparent" />
-
-          <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-20 w-full">
-            <div className="max-w-2xl">
-              <p className={`font-heading text-xs tracking-[0.25em] text-[#C89B3C] uppercase mb-8 transition-all duration-700 delay-200 ${heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                {t('profile.hero_location', 'Hà Nội, Việt Nam')}
-              </p>
-
-              <h1 className={`font-heading font-extrabold text-6xl sm:text-7xl lg:text-8xl text-white tracking-tight uppercase leading-[0.9] transition-all duration-700 delay-[400ms] ${heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                {t('profile.hero_title', 'HAQ FOOD')}
-              </h1>
-
-              <p className={`mt-6 text-lg sm:text-xl text-white/80 font-medium leading-snug max-w-lg transition-all duration-700 delay-[600ms] ${heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                {t('profile.hero_sub', 'Doanh nghiệp sản xuất & xuất khẩu thực phẩm Việt Nam')}
-              </p>
-
-              <p className={`mt-4 text-sm text-white/45 leading-relaxed max-w-md transition-all duration-700 delay-[800ms] ${heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                {t('profile.hero_desc', 'Công ty Cổ phần HAQ Hà Nội là doanh nghiệp sản xuất và phân phối thực phẩm chế biến đóng gói tại Việt Nam. Chúng tôi kết hợp nguồn nông sản địa phương với quy trình sản xuất sấy sạch khép kín, hướng tới tiêu chuẩn an toàn và nâng tầm giá trị ẩm thực Việt.')}
-              </p>
-
-              <div className={`mt-10 transition-all duration-700 delay-[1000ms] ${heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                <a
-                  href="#tong-quan"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-7 py-3.5 rounded-full font-heading font-bold text-sm tracking-wide hover:bg-haq-cream transition-colors cursor-pointer"
-                >
-                  <span>{t('profile.hero_cta', 'Tìm hiểu về HAQ Food')}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Scroll indicator */}
-          <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-1000 delay-[1200ms] ${heroReady ? 'opacity-60' : 'opacity-0'}`}>
-            <div className="w-5 h-8 border-2 border-white/40 rounded-full flex justify-center pt-1.5">
-              <div className="w-1 h-2 bg-white/60 rounded-full animate-bounce" />
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════════
-            TICKER — Scrolling partner & certification band
-            ═══════════════════════════════════════════════════════════════ */}
-        <div className="py-4 bg-haq-cream border-b border-haq-border overflow-hidden">
-          <div className="flex animate-ticker">
-            {[0, 1].map((i) => (
-              <div key={i} className="flex items-center shrink-0">
-                {TICKER_ITEMS.map((item, j) => (
-                  <React.Fragment key={j}>
-                    <span className="font-heading text-[11px] font-bold text-haq-ink/70 uppercase tracking-[0.15em] whitespace-nowrap px-6">{item}</span>
-                    <span className="text-haq-border text-xs">✦</span>
-                  </React.Fragment>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════════
-            KEY STATS — 4 chỉ số nổi bật
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="bg-white border-b border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-14 sm:py-20">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16">
-              {[
-                { num: '2021', label: language === 'en' ? 'Established in Hanoi' : language === 'ko' ? '하노이 설립' : 'Thành lập tại Hà Nội' },
-                { num: 'ISO', label: language === 'en' ? '22000 & HACCP Certified' : language === 'ko' ? '22000 & HACCP 인증' : '22000 & HACCP' },
-                { num: '3+', label: language === 'en' ? 'Export Markets' : language === 'ko' ? '수출 시장' : 'Thị trường xuất khẩu' },
-                { num: 'OEM', label: language === 'en' ? 'Private Label Ready' : language === 'ko' ? 'OEM/ODM 맞춤 제조' : 'Gia công nhãn hàng riêng' },
-              ].map((s, i) => (
-                <Reveal key={i} delay={i * 120}>
-                  <div className="font-heading font-extrabold text-4xl sm:text-5xl text-haq-red tracking-tight">{s.num}</div>
-                  <div className="text-sm text-haq-text-secondary mt-2">{s.label}</div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════════
             TỔNG QUAN — Text + Photo grid
             ═══════════════════════════════════════════════════════════════ */}
-        <section id="tong-quan" className="py-20 sm:py-32 bg-white">
+        <section id="tong-quan" className="pt-8 sm:pt-12 pb-20 sm:pb-32 bg-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-24 items-start">
               {/* Text column */}
@@ -524,53 +395,11 @@ export default function CompanyProfilePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════
-            SẢN PHẨM — Photo-forward cards + Export
+            XUẤT KHẨU QUỐC TẾ
             ═══════════════════════════════════════════════════════════════ */}
         <section className="py-20 sm:py-32 bg-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-14 gap-4">
-              <Reveal>
-                <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight">
-                  {t('profile.sec5_title', 'Sản phẩm tiêu biểu')}
-                </h2>
-              </Reveal>
-              <Reveal delay={200}>
-                <Link
-                  to="/san-pham"
-                  className="inline-flex items-center gap-2 text-sm font-heading font-bold text-haq-red hover:underline cursor-pointer shrink-0"
-                >
-                  <span>{t('profile.sec5_all_btn', 'Xem tất cả sản phẩm')}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Reveal>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-              {PRODUCT_CATEGORIES.map((prod, idx) => (
-                <Reveal key={idx} delay={idx * 150}>
-                  <Link to="/san-pham" className="group cursor-pointer block hover:-translate-y-1.5 transition-transform duration-300">
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5">
-                      <img
-                        src={prod.img}
-                        alt={prod.title}
-                        className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="font-heading text-[10px] font-bold uppercase tracking-wider bg-white/90 backdrop-blur-sm text-haq-ink px-3 py-1 rounded-full">
-                          {prod.badge}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="font-heading text-xs text-[#C89B3C] tracking-wider mb-1">{prod.subtitle}</p>
-                    <h3 className="font-heading font-bold text-xl text-haq-ink group-hover:text-haq-red transition-colors mb-2">{prod.title}</h3>
-                    <p className="text-sm text-haq-text-secondary leading-relaxed">{prod.desc}</p>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Export */}
-            <div className="mt-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <Reveal>
                 <div className="rounded-2xl overflow-hidden">
                   <img src={exportImg} alt="Xuất khẩu thực phẩm" className="w-full aspect-[16/10] object-cover hover:scale-[1.02] transition-transform duration-700" />
@@ -607,50 +436,6 @@ export default function CompanyProfilePage() {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════
-            CTA — Liên hệ hợp tác
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="py-24 sm:py-40 bg-[#0C1E15] text-white relative overflow-hidden">
-          {/* Subtle background image */}
-          <img
-            src={riceFieldImg}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-10"
-          />
-          <div className="absolute inset-0 bg-[#0C1E15]/80" />
-
-          <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12 text-center">
-            <Reveal>
-              <div className="max-w-3xl mx-auto">
-                <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-7xl text-white tracking-tight leading-[1.05]">
-                  {t('profile.cta_title_1', 'Cùng kiến tạo')}{' '}
-                  <span className="text-[#C89B3C]">{t('profile.cta_title_2', 'giá trị nông sản Việt')}</span>
-                </h2>
-
-                <p className="mt-8 text-sm sm:text-base text-white/50 leading-relaxed max-w-xl mx-auto">
-                  {t('profile.cta_desc', 'Chúng tôi luôn sẵn sàng đồng hành cùng các đối tác phân phối, chuỗi bán lẻ và doanh nghiệp có nhu cầu gia công OEM/ODM thực phẩm chất lượng cao.')}
-                </p>
-
-                <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link
-                    to="/lien-he"
-                    className="w-full sm:w-auto px-8 py-4 bg-white text-haq-ink font-heading font-bold text-sm rounded-full hover:bg-haq-cream transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>{t('profile.cta_btn', 'Liên hệ với HAQ Food')}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    to="/san-pham"
-                    className="w-full sm:w-auto px-8 py-4 text-white font-heading font-bold text-sm rounded-full border border-white/20 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>{t('common.explore', 'Khám phá sản phẩm')}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
       </main>
 
       <Footer />

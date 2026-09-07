@@ -174,7 +174,7 @@ export default function StickyNav() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => {
       setActiveMenu(null)
-    }, 140)
+    }, 250)
   }
 
   const toggleMobileAccordion = (key) => {
@@ -277,7 +277,7 @@ export default function StickyNav() {
             {activeMenu === 've-chung-toi' && (
               <div
                 onMouseEnter={() => handleMouseEnter('ve-chung-toi')}
-                className="absolute top-full left-0 mt-2 w-[340px] bg-white rounded-3xl shadow-xl border border-haq-border p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute top-full left-0 mt-2 w-[340px] bg-white rounded-3xl shadow-xl border border-haq-border p-3 z-50 animate-in fade-in duration-150 before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:content-['']"
               >
                 <div className="text-[11px] font-heading font-bold tracking-wider text-haq-green-dark uppercase px-3 py-1.5 mb-1 border-b border-haq-border">
                   <span>{language === 'en' ? 'HAQ FOOD CORPORATE PROFILE' : language === 'ko' ? 'HAQ FOOD 기업 프로필' : 'HỒ SƠ DOANH NGHIỆP HAQ FOOD'}</span>
@@ -294,10 +294,10 @@ export default function StickyNav() {
                           setActiveMenu(null)
                           window.scrollTo(0, 0)
                         }}
-                        className={`group block px-3.5 py-2.5 rounded-2xl transition-all ${
+                        className={`group block px-3.5 py-2.5 rounded-2xl border transition-colors ${
                           isSubActive
-                            ? 'bg-haq-sage/30 border border-[#16A34A]/20 shadow-2xs'
-                            : 'hover:bg-haq-sage/20'
+                            ? 'bg-haq-sage/30 border-[#16A34A]/20 shadow-2xs'
+                            : 'border-transparent hover:bg-haq-sage/20'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -343,7 +343,7 @@ export default function StickyNav() {
             {activeMenu === 'san-pham' && (
               <div
                 onMouseEnter={() => handleMouseEnter('san-pham')}
-                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[680px] max-h-[calc(100vh-90px)] overflow-y-auto bg-white rounded-3xl shadow-xl border border-haq-border p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 scrollbar-none"
+                className="absolute top-full -left-20 lg:-left-16 mt-2 w-[680px] bg-white rounded-3xl shadow-xl border border-haq-border p-5 z-50 animate-in fade-in duration-150 before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:content-['']"
               >
                 <div className="grid grid-cols-12 gap-5">
                   {/* Left Column: Dynamic Database Categories */}
@@ -353,15 +353,15 @@ export default function StickyNav() {
                         <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : 'DANH MỤC SẢN PHẨM'}</span>
                       </div>
 
-                      <div className="space-y-1 max-h-[250px] overflow-y-auto scrollbar-thin pr-1 pb-1">
+                      <div className="space-y-1">
                         {categoryTree.map((cat) => {
                           const isHovered = (hoveredCategory?.id === cat.id) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
                           return (
                             <div key={cat.id} className="space-y-0.5">
                               <div
                                 onMouseEnter={() => setHoveredCategory(cat)}
-                                className={`px-2.5 py-1.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
-                                  isHovered ? 'bg-haq-sage/50 border border-[#16A34A]/25' : 'hover:bg-haq-sage/20'
+                                className={`px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer flex items-center justify-between ${
+                                  isHovered ? 'bg-haq-sage/50 border-[#16A34A]/25' : 'border-transparent hover:bg-haq-sage/20'
                                 }`}
                               >
                                 <Link
@@ -427,7 +427,7 @@ export default function StickyNav() {
                         </Link>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-2 gap-1.5 min-h-[170px] content-start">
                         {(() => {
                           const filtered = filterProductsByDbCategory(
                             allProducts,
@@ -437,7 +437,7 @@ export default function StickyNav() {
                           )
                           if (!filtered || filtered.length === 0) {
                             return (
-                              <div className="col-span-2 text-center py-4 text-xs text-haq-text-secondary">
+                              <div className="col-span-2 flex items-center justify-center h-[160px] text-xs text-haq-text-secondary">
                                 {language === 'en' ? 'Updating items...' : language === 'ko' ? '업데이트 중...' : 'Đang cập nhật...'}
                               </div>
                             )
@@ -450,7 +450,7 @@ export default function StickyNav() {
                                 key={p.id}
                                 to={`/san-pham/${p.slug}`}
                                 onClick={() => setActiveMenu(null)}
-                                className="group flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-all"
+                                className="group flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-colors"
                               >
                                 <div className="w-12 h-12 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">
                                   <img

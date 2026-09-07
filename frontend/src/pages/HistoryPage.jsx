@@ -16,12 +16,6 @@ import exportImg from '../assets/distribution/distribution_export.jpg'
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
 import catBanhImg from '../assets/categories/category_banh.jpg'
 
-import winmartLogo from '../assets/pictures_doitac/winmart.png'
-import goLogo from '../assets/pictures_doitac/go!.png'
-import circleKLogo from '../assets/pictures_doitac/circle_k.png'
-import gs25Logo from '../assets/pictures_doitac/gs25.png'
-import kmartLogo from '../assets/pictures_doitac/kmart.png'
-import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
 
 /* ───────────────────────────────────────────────────────────────────
    Reveal — scroll-triggered fade + slide
@@ -96,14 +90,6 @@ export default function HistoryPage() {
   }
 
   const credentials = useMemo(() => getCredentials(language), [language])
-  const PARTNERS = [
-    { name: 'WinMart', logo: winmartLogo },
-    { name: 'GO!', logo: goLogo },
-    { name: 'Circle K', logo: circleKLogo },
-    { name: 'GS25', logo: gs25Logo },
-    { name: 'K-Market', logo: kmartLogo },
-    { name: 'Bách Hóa Xanh', logo: bachHoaXanhLogo },
-  ]
 
   return (
     <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col relative">
@@ -320,21 +306,6 @@ export default function HistoryPage() {
               ))}
             </div>
 
-            {/* Partner logos */}
-            <Reveal delay={200}>
-              <div className="mt-16 pt-12 border-t border-haq-border">
-                <p className="text-center text-xs text-haq-text-secondary uppercase tracking-[0.2em] mb-8">
-                  {language === 'en' ? 'Strategic Retail Partners' : language === 'ko' ? '전략적 유통 파트너' : 'Đối tác phân phối chiến lược'}
-                </p>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-                  {PARTNERS.map((p, i) => (
-                    <div key={i} className="h-16 sm:h-20 flex items-center justify-center rounded-xl bg-haq-cream/60 p-3 border border-haq-border/60">
-                      <img src={p.logo} alt={p.name} className="max-h-8 sm:max-h-10 max-w-full object-contain grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
           </div>
         </section>
 

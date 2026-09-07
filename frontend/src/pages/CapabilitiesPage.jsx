@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  CheckCircle2,
-  ArrowRight,
-} from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
@@ -365,14 +361,32 @@ export default function CapabilitiesPage() {
               </p>
             </Reveal>
 
-            {/* Partner logos on dark */}
+            {/* Partner logos — infinite horizontal marquee */}
             <Reveal delay={200}>
-              <div className="mt-14 grid grid-cols-3 sm:grid-cols-6 gap-4">
-                {PARTNERS.map((p, i) => (
-                  <div key={i} className="h-20 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 p-3 hover:bg-white/10 transition-colors">
-                    <img src={p.logo} alt={p.name} className="max-h-9 max-w-full object-contain brightness-0 invert opacity-60 hover:opacity-100 transition-opacity" />
-                  </div>
-                ))}
+              <style>{`
+                @keyframes marquee-scroll {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+              `}</style>
+              <div className="mt-14 overflow-hidden group" style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}>
+                <div
+                  className="flex w-max gap-8 group-hover:[animation-play-state:paused]"
+                  style={{ animation: 'marquee-scroll 18s linear infinite' }}
+                >
+                  {[...PARTNERS, ...PARTNERS].map((p, i) => (
+                    <div
+                      key={i}
+                      className="h-20 w-40 shrink-0 flex items-center justify-center p-4"
+                    >
+                      <img
+                        src={p.logo}
+                        alt={p.name}
+                        className="max-h-12 max-w-full object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </Reveal>
 
@@ -380,49 +394,15 @@ export default function CapabilitiesPage() {
             <Reveal delay={350}>
               <div className="mt-10 flex flex-wrap gap-3">
                 {[
-                  { flag: '🇻🇳', name: en ? 'Vietnam — Nationwide' : ko ? '베트남 — 전국' : 'Việt Nam — Toàn quốc' },
-                  { flag: '🇰🇷', name: en ? 'South Korea' : ko ? '한국' : 'Hàn Quốc' },
-                  { flag: '🇹🇼', name: en ? 'Taiwan' : ko ? '대만' : 'Đài Loan' },
+                  { code: 'vn', name: en ? 'Vietnam — Nationwide' : ko ? '베트남 — 전국' : 'Việt Nam — Toàn quốc' },
+                  { code: 'kr', name: en ? 'South Korea' : ko ? '한국' : 'Hàn Quốc' },
+                  { code: 'tw', name: en ? 'Taiwan' : ko ? '대만' : 'Đài Loan' },
                 ].map((m, i) => (
                   <span key={i} className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white/80">
-                    <span className="text-lg">{m.flag}</span>
+                    <img src={`https://flagcdn.com/24x18/${m.code}.png`} alt={m.name} className="w-6 h-4 object-cover rounded-sm" />
                     <span className="font-heading font-bold text-xs">{m.name}</span>
                   </span>
                 ))}
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════
-            CTA — Contact partnership
-            ═══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-28 bg-white">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 text-center">
-            <Reveal>
-              <div className="max-w-2xl mx-auto">
-                <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink tracking-tight">
-                  {en ? 'Partner with HAQ Food' : ko ? 'HAQ FOOD와의 비즈니스 파트너십' : 'Hợp tác doanh nghiệp cùng HAQ Food'}
-                </h2>
-                <p className="mt-4 text-sm text-haq-text-secondary leading-relaxed">
-                  {en ? 'Contact our sales and OEM/ODM team directly to receive product catalogs and distributor policies.' : ko ? '영업 및 OEM/ODM 담당 부서로 직접 문의하시면 카탈로그와 유통 정책을 안내해 드립니다.' : 'Liên hệ trực tiếp với bộ phận kinh doanh & OEM/ODM để nhận catalog và chính sách đại lý.'}
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link
-                    to="/lien-he"
-                    className="w-full sm:w-auto px-8 py-4 bg-haq-red text-white font-heading font-bold text-sm rounded-full hover:bg-haq-red/90 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>{en ? 'Contact us' : ko ? '문의하기' : 'Liên hệ hợp tác'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    to="/san-pham"
-                    className="w-full sm:w-auto px-8 py-4 text-haq-ink font-heading font-bold text-sm rounded-full border border-haq-border hover:bg-haq-cream transition-colors flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>{en ? 'View products' : ko ? '제품 보기' : 'Xem sản phẩm'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
               </div>
             </Reveal>
           </div>
