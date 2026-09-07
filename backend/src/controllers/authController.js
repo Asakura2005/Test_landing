@@ -134,11 +134,14 @@ export async function login(req, res) {
 
     // 3. Cập nhật last_login
     const now = new Date().toISOString()
-    await supabase
-      .from('admin_accounts')
-      .update({ last_login: now })
-      .eq('id', account.id)
-      .catch(() => {})
+    try {
+      await supabase
+        .from('admin_accounts')
+        .update({ last_login: now })
+        .eq('id', account.id)
+    } catch (e) {
+      // Không block login nếu update last_login thất bại
+    }
 
     // 4. Parse permissions từ avatar_url nếu có
     let permissions = null
