@@ -17,6 +17,7 @@ import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { getNewsBySlug, getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
+import DOMPurify from 'dompurify'
 
 const CATEGORY_MAP = {
   'Tất cả': { vi: 'Tất cả', en: 'All News', ko: '전체 소식' },
@@ -240,10 +241,17 @@ export default function NewsDetailPage() {
             </div>
           )}
 
-          {/* Content Body (Rich Text) */}
+          {/* Content Body (Rich Text - N-H1: Sanitized with DOMPurify) */}
           <div 
             className="prose prose-base sm:prose-lg max-w-none text-[#11261B] leading-relaxed bg-white p-6 sm:p-10 md:p-12 rounded-2xl border border-[#E2E8E4] shadow-2xs font-light text-left"
-            dangerouslySetInnerHTML={{ __html: news.content }}
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(news.content || '', {
+                USE_PROFILES: { html: true },
+                ADD_ATTR: ['target', 'rel'],
+                FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form'],
+                FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur']
+              })
+            }}
           />
 
           {/* Source & Citation Footer Box */}
@@ -256,9 +264,9 @@ export default function NewsDetailPage() {
                   <strong className="text-[#11261B] font-semibold">{news.source_name || 'Báo chí & Truyền thông'}</strong>
                 </span>
               </div>
-              {news.source_url && (
+              {news.source_url && /^https?:\/\//i.test(news.source_url.trim()) && (
                 <a
-                  href={news.source_url}
+                  href={news.source_url.trim()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#0F5132] hover:underline font-semibold inline-flex items-center gap-1"

@@ -23,6 +23,7 @@ import {
   ExternalLink
 } from 'lucide-react'
 import { createNews, updateNews, uploadNewsImage } from '../../services/supabase'
+import DOMPurify from 'dompurify'
 
 const CATEGORY_OPTIONS = [
   'Tin tức',
@@ -169,6 +170,27 @@ export default function NewsModal({ news, onClose, onSave, isReadOnly = false })
         ? formData.content
         : (editorRef.current ? editorRef.current.innerHTML : formData.content)
 
+      // N-H1: Sanitize nội dung HTML bằng DOMPurify trước khi lưu vào DB
+      const sanitizedContent = DOMPurify.sanitize(finalContent || '', {
+        USE_PROFILES: { html: true },
+        ADD_ATTR: ['target', 'rel'],
+        FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form'],
+        FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur']
+      })
+
+      // N-H1: Xác thực giao thức an toàn cho source_url (chống javascript: URI)
+      let safeSourceUrl = null
+      if (formData.source_url && formData.source_url.trim()) {
+        const trimmedUrl = formData.source_url.trim()
+        if (/^https?:\/\//i.test(trimmedUrl)) {
+          safeSourceUrl = trimmedUrl
+        } else {
+          alert("URL nguồn không an toàn. Vui lòng nhập đường dẫn bắt đầu bằng http:// hoặc https://")
+          setIsSubmitting(false)
+          return
+        }
+      }
+
       const targetStatus = forcedStatus || formData.status || 'published'
 
       const payload = {
@@ -177,11 +199,11 @@ export default function NewsModal({ news, onClose, onSave, isReadOnly = false })
         category: formData.category,
         status: targetStatus,
         summary: formData.summary,
-        content: finalContent,
+        content: sanitizedContent,
         image_url: formData.image_url,
         author: formData.author,
         source_name: formData.source_name ? formData.source_name.trim() : null,
-        source_url: formData.source_url ? formData.source_url.trim() : null,
+        source_url: safeSourceUrl,
         is_pinned: formData.is_pinned,
         meta_title: formData.meta_title || formData.title,
         meta_description: formData.meta_description || formData.summary,
