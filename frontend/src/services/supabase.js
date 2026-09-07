@@ -178,6 +178,39 @@ export async function submitLead(leadData) {
 }
 
 export async function getLeads() {
+  // 1. Ưu tiên lấy danh sách leads qua Backend API (xác thực JWT, backend dùng Service Key an toàn)
+  const token = typeof window !== 'undefined'
+    ? (() => {
+        try {
+          const raw = localStorage.getItem('haq_auth_session') || sessionStorage.getItem('haq_auth_session')
+          return raw ? JSON.parse(raw)?.token : null
+        } catch (e) { return null }
+      })()
+    : null
+
+  const backendUrl = import.meta.env.VITE_BACKEND_API_URL || ''
+  if (backendUrl && token) {
+    try {
+      const response = await fetch(`${backendUrl}/leads`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (response.ok) {
+        const result = await response.json()
+        const rawLeads = result.data || []
+        return await Promise.all(
+          rawLeads.map(async (lead) => {
+            const decrypted = await decryptObject(lead, LEAD_SENSITIVE_FIELDS)
+            const parsedEmail = decrypted.email || extractEmailFromNote(decrypted.note) || ''
+            return { ...decrypted, email: parsedEmail }
+          })
+        )
+      }
+    } catch (apiErr) {
+      console.warn("Backend getLeads API call failed, falling back:", apiErr.message)
+    }
+  }
+
+  // 2. Fallback: Truy vấn trực tiếp Supabase
   try {
     let rawLeads = []
     const { data, error } = await supabase
@@ -190,7 +223,6 @@ export async function getLeads() {
 
     if (error) {
       console.warn("Supabase getLeads query error (trying direct query):", error)
-      // Thử query trực tiếp bảng leads
       const { data: simpleData, error: simpleError } = await supabase
         .from('leads')
         .select('*')
