@@ -1,61 +1,53 @@
 /**
  * ==============================================================================
- * HAQ FOOD B2B: ENTERPRISE SECURITY & FIELD-LEVEL ENCRYPTION (FLE) ENGINE
- * Chuẩn mã hóa: AES-256-GCM (Đối xứng có xác thực) + SHA-256 Dynamic Salt (Băm 1 chiều) + Blind Index
+ * HAQ FOOD B2B: SECURITY SERVICE (Server-Side Encryption Proxy)
+ * Tất cả mã hoá/giải mã được thực hiện trên Backend — salt KHÔNG bao giờ lộ ra browser
  * ==============================================================================
  */
 
-// SECURITY: Đọc encryption salt từ biến môi trường (cần chuyển sang server-side trong tương lai)
-const MASTER_SECRET_SALT = import.meta.env.VITE_ENCRYPTION_SALT || ''
-if (!MASTER_SECRET_SALT) {
-  console.warn('WARNING: VITE_ENCRYPTION_SALT not configured. Encryption/decryption may not work correctly.')
-}
-
-let cachedCryptoKey = null
+const CRYPTO_API_URL = import.meta.env.VITE_BACKEND_API_URL || ''
 
 /**
- * Lấy Web Crypto instance an toàn trên cả Browser và Node
+ * Helper: Lấy auth token từ session storage
  */
-function getCrypto() {
-  if (typeof window !== 'undefined' && window.crypto) {
-    return window.crypto
+function getAuthToken() {
+  if (typeof window === 'undefined') return null
+  const raw = localStorage.getItem('haq_auth_session') || sessionStorage.getItem('haq_auth_session')
+  if (!raw) return null
+  try {
+    return JSON.parse(raw)?.token || null
+  } catch (e) {
+    return null
   }
-  if (typeof globalThis !== 'undefined' && globalThis.crypto) {
-    return globalThis.crypto
-  }
-  return null
 }
 
 /**
- * Sinh chuỗi Salt ngẫu nhiên 32 hex
+ * Sinh chuỗi Salt ngẫu nhiên 32 hex (client-side, không cần secret)
  */
 export function generateSalt() {
-  const cryptoObj = getCrypto()
-  if (cryptoObj && cryptoObj.getRandomValues) {
+  if (typeof window !== 'undefined' && window.crypto?.getRandomValues) {
     const array = new Uint8Array(16)
-    cryptoObj.getRandomValues(array)
+    window.crypto.getRandomValues(array)
     return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
   }
   return Math.random().toString(36).substring(2) + Date.now().toString(36)
 }
 
 /**
- * Băm mật khẩu 1 chiều bằng SHA-256 + Dynamic Salt (Không thể đảo ngược)
+ * Băm mật khẩu SHA-256 + Salt (client-side, không cần master secret)
  */
 export async function hashPassword(password, salt) {
   if (!password) return ''
   const combined = password + (salt || '')
-  const cryptoObj = getCrypto()
 
-  if (cryptoObj && cryptoObj.subtle) {
+  if (typeof window !== 'undefined' && window.crypto?.subtle) {
     const encoder = new TextEncoder()
     const data = encoder.encode(combined)
-    const hashBuffer = await cryptoObj.subtle.digest('SHA-256', data)
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data)
     const hashArray = Array.from(new Uint8Array(hashBuffer))
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
   }
 
-  // Fallback hash
   let hash = 0
   for (let i = 0; i < combined.length; i++) {
     hash = (hash << 5) - hash + combined.charCodeAt(i)
@@ -65,147 +57,91 @@ export async function hashPassword(password, salt) {
 }
 
 /**
- * Sinh chuỗi Blind Index (Chỉ mục mờ) để tìm kiếm chính xác mà không để lộ plaintext
- * Ví dụ: email user@example.com -> blind_v1:9f8a...
+ * Sinh Blind Index qua Backend API (salt nằm trên server)
  */
 export async function hashBlindIndex(text) {
   if (!text) return ''
-  const normalized = String(text).trim().toLowerCase()
-  const rawHash = await hashPassword(normalized, MASTER_SECRET_SALT)
-  return `blind_v1:${rawHash}`
-}
 
-/**
- * Tạo khóa đối xứng AES-256-GCM từ Master Secret
- */
-async function getAESKey() {
-  if (cachedCryptoKey) return cachedCryptoKey
-  const cryptoObj = getCrypto()
-
-  if (cryptoObj && cryptoObj.subtle) {
-    const encoder = new TextEncoder()
-    const keyData = encoder.encode(MASTER_SECRET_SALT)
-    // Hash keyData để đảm bảo đúng 256 bits (32 bytes)
-    const hashKey = await cryptoObj.subtle.digest('SHA-256', keyData)
-    cachedCryptoKey = await cryptoObj.subtle.importKey(
-      'raw',
-      hashKey,
-      { name: 'AES-GCM' },
-      false,
-      ['encrypt', 'decrypt']
-    )
-    return cachedCryptoKey
+  if (CRYPTO_API_URL) {
+    try {
+      const response = await fetch(`${CRYPTO_API_URL}/crypto/hash`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: String(text).trim().toLowerCase() }),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success) return result.hash
+      }
+    } catch (e) {
+      // Backend không khả dụng
+    }
   }
-  return null
+  return ''
 }
 
 /**
- * Helper chuyển ArrayBuffer sang Hex String
- */
-function bufferToHex(buffer) {
-  return Array.from(new Uint8Array(buffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('')
-}
-
-/**
- * Helper chuyển Hex String sang Uint8Array
- */
-function hexToBuffer(hexString) {
-  const bytes = new Uint8Array(hexString.length / 2)
-  for (let i = 0; i < hexString.length; i += 2) {
-    bytes[i / 2] = parseInt(hexString.substr(i, 2), 16)
-  }
-  return bytes
-}
-
-/**
- * MÃ HÓA DỮ LIỆU BẰNG AES-256-GCM
- * Trả về chuỗi ciphertext: enc_v1:${iv_hex}:${cipher_hex}
+ * MÃ HÓA DỮ LIỆU qua Backend API (salt không lộ ra browser)
  */
 export async function encryptData(plainText) {
   if (plainText === null || plainText === undefined || plainText === '') return ''
   const str = String(plainText)
-  
-  // Nếu đã mã hóa rồi thì không mã hóa đè
-  if (str.startsWith('enc_v1:')) return str
+  if (str.startsWith('enc_v1:')) return str // Đã mã hoá
 
-  const cryptoObj = getCrypto()
-  if (cryptoObj && cryptoObj.subtle) {
+  if (CRYPTO_API_URL) {
     try {
-      const key = await getAESKey()
-      const iv = new Uint8Array(12) // 96-bit IV chuẩn cho AES-GCM
-      cryptoObj.getRandomValues(iv)
-      
-      const encoder = new TextEncoder()
-      const data = encoder.encode(str)
-      
-      const encryptedBuffer = await cryptoObj.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        data
-      )
-
-      const ivHex = bufferToHex(iv)
-      const cipherHex = bufferToHex(encryptedBuffer)
-      return `enc_v1:${ivHex}:${cipherHex}`
-    } catch (err) {
-      console.warn("AES-GCM Encryption failed, falling back:", err)
+      const response = await fetch(`${CRYPTO_API_URL}/crypto/encrypt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: { value: str },
+          sensitiveFields: ['value'],
+        }),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.data?.value) {
+          return result.data.value
+        }
+      }
+    } catch (e) {
+      // Backend không khả dụng
     }
   }
 
-  // Obfuscation Fallback nếu không có Web Crypto Subtle
-  try {
-    const encoded = btoa(encodeURIComponent(str))
-    return `enc_v1:fb0000000000000000000000:${encoded}`
-  } catch (e) {
-    return str
-  }
+  console.warn('Encryption unavailable: backend API not reachable.')
+  return str
 }
 
 /**
- * GIẢI MÃ DỮ LIỆU AES-256-GCM
- * Tự động nhận diện chuỗi enc_v1:... và giải mã về chuỗi gốc
+ * GIẢI MÃ DỮ LIỆU qua Backend API (cần auth token)
  */
 export async function decryptData(cipherText) {
   if (!cipherText || typeof cipherText !== 'string') return cipherText
-  
-  // Nếu không phải chuỗi mã hóa (dữ liệu cũ), trả về nguyên bản
   if (!cipherText.startsWith('enc_v1:')) return cipherText
 
-  const parts = cipherText.split(':')
-  if (parts.length < 3) return cipherText
-
-  const ivHex = parts[1]
-  const cipherHex = parts[2]
-
-  // Kiểm tra Fallback base64
-  if (ivHex === 'fb0000000000000000000000') {
+  if (CRYPTO_API_URL) {
     try {
-      return decodeURIComponent(atob(cipherHex))
+      const token = getAuthToken()
+      const headers = { 'Content-Type': 'application/json' }
+      if (token) headers['Authorization'] = `Bearer ${token}`
+
+      const response = await fetch(`${CRYPTO_API_URL}/crypto/decrypt`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          data: { value: cipherText },
+          sensitiveFields: ['value'],
+        }),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.data?.value) {
+          return result.data.value
+        }
+      }
     } catch (e) {
-      return cipherText
-    }
-  }
-
-  const cryptoObj = getCrypto()
-  if (cryptoObj && cryptoObj.subtle) {
-    try {
-      const key = await getAESKey()
-      const iv = hexToBuffer(ivHex)
-      const encryptedData = hexToBuffer(cipherHex)
-
-      const decryptedBuffer = await cryptoObj.subtle.decrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        encryptedData
-      )
-
-      const decoder = new TextDecoder()
-      return decoder.decode(decryptedBuffer)
-    } catch (err) {
-      console.warn("Decryption failed for ciphertext, returning raw:", err.message)
-      return cipherText
+      // Backend không khả dụng
     }
   }
 
@@ -213,31 +149,68 @@ export async function decryptData(cipherText) {
 }
 
 /**
- * Mã hóa toàn bộ các trường nhạy cảm trong 1 Object (Lead / User Profile)
+ * Mã hoá nhiều trường nhạy cảm trong 1 Object qua Backend API
  */
 export async function encryptObject(obj, fieldsToEncrypt = []) {
-  if (!obj || typeof obj !== 'object') return obj
-  const result = { ...obj }
-  
-  for (const field of fieldsToEncrypt) {
-    if (result[field] !== undefined && result[field] !== null) {
-      result[field] = await encryptData(result[field])
+  if (!obj || typeof obj !== 'object' || fieldsToEncrypt.length === 0) return obj
+
+  if (CRYPTO_API_URL) {
+    try {
+      const response = await fetch(`${CRYPTO_API_URL}/crypto/encrypt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: obj,
+          sensitiveFields: fieldsToEncrypt,
+        }),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success) {
+          // Merge blind indexes vào object
+          const merged = { ...result.data }
+          if (result.blindIndexes) {
+            Object.assign(merged, result.blindIndexes)
+          }
+          return merged
+        }
+      }
+    } catch (e) {
+      // Backend không khả dụng
     }
   }
-  return result
+
+  return obj
 }
 
 /**
- * Giải mã toàn bộ các trường nhạy cảm trong 1 Object (Lead / User Profile)
+ * Giải mã nhiều trường nhạy cảm trong 1 Object qua Backend API (cần auth)
  */
 export async function decryptObject(obj, fieldsToDecrypt = []) {
-  if (!obj || typeof obj !== 'object') return obj
-  const result = { ...obj }
-  
-  for (const field of fieldsToDecrypt) {
-    if (result[field] !== undefined && result[field] !== null) {
-      result[field] = await decryptData(result[field])
+  if (!obj || typeof obj !== 'object' || fieldsToDecrypt.length === 0) return obj
+
+  if (CRYPTO_API_URL) {
+    try {
+      const token = getAuthToken()
+      const headers = { 'Content-Type': 'application/json' }
+      if (token) headers['Authorization'] = `Bearer ${token}`
+
+      const response = await fetch(`${CRYPTO_API_URL}/crypto/decrypt`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          data: obj,
+          sensitiveFields: fieldsToDecrypt,
+        }),
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success) return result.data
+      }
+    } catch (e) {
+      // Backend không khả dụng
     }
   }
-  return result
+
+  return obj
 }
