@@ -39,40 +39,67 @@ app.use(cors({
 }))
 app.use(express.json({ limit: '50kb' })) // Chặn payload quá lớn
 
-// Security Rate Limiter (Tối đa 60 requests / 1 phút / IP đối với API nhạy cảm)
+// ============================================================
+// RATE LIMITER (M1: Sliding Window + Periodic Cleanup)
+// ============================================================
 const ipRequestLogs = new Map()
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 phút
-const MAX_REQUESTS_PER_WINDOW = 60
 
-// Các endpoint nội bộ (crypto, health) không bị rate limit
+// Giới hạn theo loại endpoint
+const RATE_LIMITS = {
+  '/api/auth/login': 10,      // Login: 10/phút (chống brute-force)
+  '/api/auth/refresh': 30,    // Refresh: 30/phút
+  '/api/leads': 20,           // Lead submit: 20/phút
+  default: 60,                // Mặc định: 60/phút
+}
+
+// Các endpoint miễn rate limit (gọi nội bộ tần suất cao)
 const RATE_LIMIT_EXEMPT = ['/api/crypto/', '/api/health']
 
+// Dọn dẹp bộ nhớ mỗi 5 phút (tránh memory leak)
+setInterval(() => {
+  const now = Date.now()
+  for (const [ip, logs] of ipRequestLogs.entries()) {
+    const filtered = logs.filter(t => now - t < RATE_LIMIT_WINDOW)
+    if (filtered.length === 0) {
+      ipRequestLogs.delete(ip)
+    } else {
+      ipRequestLogs.set(ip, filtered)
+    }
+  }
+}, 5 * 60 * 1000)
+
 function rateLimitMiddleware(req, res, next) {
-  // Bỏ qua rate limit cho crypto endpoints (gọi nội bộ từ frontend)
+  // Bỏ qua cho crypto endpoints
   if (RATE_LIMIT_EXEMPT.some(path => req.path.startsWith(path))) {
     return next()
   }
 
-  const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown_ip'
+  // Lấy IP thật (đằng sau Render proxy)
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || req.ip
+    || req.socket.remoteAddress
+    || 'unknown_ip'
+
   const now = Date.now()
+  const key = `${ip}:${req.path}`
 
-  let userLogs = ipRequestLogs.get(ip) || []
-  userLogs = userLogs.filter(t => now - t < RATE_LIMIT_WINDOW)
+  let logs = ipRequestLogs.get(key) || []
+  logs = logs.filter(t => now - t < RATE_LIMIT_WINDOW)
 
-  if (userLogs.length >= MAX_REQUESTS_PER_WINDOW) {
+  // Xác định giới hạn cho endpoint này
+  const matchedRoute = Object.keys(RATE_LIMITS).find(r => r !== 'default' && req.path.startsWith(r))
+  const limit = matchedRoute ? RATE_LIMITS[matchedRoute] : RATE_LIMITS.default
+
+  if (logs.length >= limit) {
+    res.set('Retry-After', '60')
     return res.status(429).json({
       error: 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau 1 phút.',
     })
   }
 
-  userLogs.push(now)
-  ipRequestLogs.set(ip, userLogs)
-
-  // Dọn dẹp bộ nhớ định kỳ
-  if (ipRequestLogs.size > 5000) {
-    ipRequestLogs.clear()
-  }
-
+  logs.push(now)
+  ipRequestLogs.set(key, logs)
   next()
 }
 

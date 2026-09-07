@@ -82,12 +82,20 @@ export function validateVietnamesePhone(phone) {
 }
 
 /**
- * Làm sạch chuỗi văn bản chống XSS và ký tự độc hại
+ * Làm sạch chuỗi văn bản chống XSS — escape HTML entities + loại bỏ patterns nguy hiểm
  */
 export function sanitizeInput(input) {
   if (typeof input !== 'string') return ''
   return input
     .trim()
-    .replace(/[<>]/g, '') // Loại bỏ thẻ HTML nguy hiểm
-    .substring(0, 1000) // Giới hạn độ dài tối đa
+    .substring(0, 1000)                              // Giới hạn độ dài
+    .replace(/&/g, '&amp;')                           // & phải escape trước
+    .replace(/</g, '&lt;')                            // <script>, <img>
+    .replace(/>/g, '&gt;')                            // Đóng tag
+    .replace(/"/g, '&quot;')                          // Attribute injection
+    .replace(/'/g, '&#x27;')                          // Attribute injection (single quote)
+    .replace(/\//g, '&#x2F;')                         // Closing tag </
+    .replace(/javascript\s*:/gi, '')                  // javascript: URI
+    .replace(/on\w+\s*=/gi, '')                       // onclick=, onerror=, onload=, ...
+    .replace(/data\s*:\s*text\/html/gi, '')           // data:text/html
 }

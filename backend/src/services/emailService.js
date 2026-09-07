@@ -3,6 +3,19 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+/**
+ * L2: Escape HTML entities để chống injection trong email template
+ */
+function escapeHtml(str) {
+  if (!str || typeof str !== 'string') return ''
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10)
 const SMTP_SECURE = process.env.SMTP_SECURE === 'true' || SMTP_PORT === 465
@@ -128,7 +141,14 @@ export function buildAdminNotificationHtml(lead) {
     created_at = new Date().toISOString()
   } = lead
 
-  const displayName = full_name || name || 'Chưa cung cấp'
+  const displayName = escapeHtml(full_name || name || 'Chưa cung cấp')
+  const safePhone = escapeHtml(phone)
+  const safeEmail = escapeHtml(email)
+  const safeCompany = escapeHtml(company || 'Không có')
+  const safeRegion = escapeHtml(region || 'Toàn quốc')
+  const safeNote = escapeHtml(note)
+  const safeNeed = escapeHtml(need)
+  const safeProduct = escapeHtml(last_product_name)
   const formattedDate = new Date(created_at).toLocaleString('vi-VN', {
     timeZone: 'Asia/Ho_Chi_Minh',
     hour: '2-digit',
@@ -187,22 +207,22 @@ export function buildAdminNotificationHtml(lead) {
                   <tr style="border-bottom: 1px solid #E5E7EB;">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Số điện thoại</td>
                     <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">
-                      <a href="tel:${phone}" style="color: #111827; text-decoration: none;">${phone}</a>
+                      <a href="tel:${safePhone}" style="color: #111827; text-decoration: none;">${safePhone}</a>
                     </td>
                   </tr>
                   <tr style="border-bottom: 1px solid #E5E7EB;">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Email</td>
                     <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">
-                      ${email && email !== 'Chưa cung cấp' ? `<a href="mailto:${email}" style="color: #111827; text-decoration: none;">${email}</a>` : '<span style="color: #9CA3AF;">Chưa cung cấp</span>'}
+                      ${safeEmail && safeEmail !== 'Chưa cung cấp' ? `<a href="mailto:${safeEmail}" style="color: #111827; text-decoration: none;">${safeEmail}</a>` : '<span style="color: #9CA3AF;">Chưa cung cấp</span>'}
                     </td>
                   </tr>
                   <tr style="border-bottom: 1px solid #E5E7EB;">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Doanh nghiệp</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${company || 'Không có'}</td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${safeCompany}</td>
                   </tr>
                   <tr>
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Khu vực</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${region || 'Toàn quốc'}</td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${safeRegion}</td>
                   </tr>
                 </tbody>
               </table>
@@ -216,19 +236,19 @@ export function buildAdminNotificationHtml(lead) {
               
               <table width="100%" border="0" cellspacing="0" cellpadding="0" style="width: 100%; border-collapse: collapse; border: 1px solid #E5E7EB;">
                 <tbody>
-                  <tr style="border-bottom: ${last_product_name || note ? '1px solid #E5E7EB' : 'none'};">
+                  <tr style="border-bottom: ${safeProduct || safeNote ? '1px solid #E5E7EB' : 'none'};">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Loại yêu cầu</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${need || 'Đại lý & Nhà phân phối'}</td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${safeNeed || 'Đại lý &amp; Nhà phân phối'}</td>
                   </tr>
-                  ${last_product_name ? `
-                  <tr style="border-bottom: ${note ? '1px solid #E5E7EB' : 'none'};">
+                  ${safeProduct ? `
+                  <tr style="border-bottom: ${safeNote ? '1px solid #E5E7EB' : 'none'};">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Sản phẩm quan tâm</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${last_product_name}</td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${safeProduct}</td>
                   </tr>` : ''}
-                  ${note ? `
+                  ${safeNote ? `
                   <tr>
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;" valign="top">Nội dung</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; line-height: 1.5; white-space: pre-line;">${note}</td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; line-height: 1.5; white-space: pre-line;">${safeNote}</td>
                   </tr>` : ''}
                 </tbody>
               </table>
