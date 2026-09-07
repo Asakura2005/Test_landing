@@ -32,3 +32,8 @@ old_*.txt
 payload.json
 test.mjs
 
+# SQL migration files (contain sensitive seed data)
+supabase_*.sql
+
+# User content files
+user_content_*.txt

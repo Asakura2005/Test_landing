@@ -9,6 +9,9 @@ import {
   decryptObject 
 } from './security.js'
 
+// Backend API URL cho auth endpoints
+const AUTH_API_URL = import.meta.env.VITE_BACKEND_API_URL || ''
+
 // Storage Keys
 const SESSION_KEY = 'haq_auth_session'
 const LOCAL_ACCOUNTS_KEY = 'haq_admin_accounts_vault'
@@ -115,32 +118,9 @@ export const DEFAULT_ROLE_PERMISSIONS = {
   }
 }
 
-// Khởi tạo tài khoản mặc định (email/full_name/phone lưu plaintext trong bộ nhớ,
-// sẽ được mã hoá khi push lên Supabase hoặc localStorage)
-const DEFAULT_INITIAL_ACCOUNTS = [
-  {
-    id: 'admin-master-001',
-    email: 'trantienhung4112005@gmail.com',
-    full_name: 'Trần Tiến Hùng (Quản Trị Viên)',
-    phone: '0900000000',
-    role: 'ADMIN',
-    password_hash: 'cf54814cd1a6843a187e270aa0a3ac9ea3536c78d399dd727df983744a59bce2',
-    password_salt: '8ddcf0daf3ada111a519fdb006788906',
-    is_active: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'sales-demo-001',
-    email: 'sales@haqfood.vn',
-    full_name: 'Nguyễn Văn Tuấn (Kinh Doanh)',
-    phone: '0912345678',
-    role: 'SALES',
-    password_hash: '99cc78791e34bd5693e0c10f14c036118560ee4e0ed230c84dd0983626ca753d',
-    password_salt: '5c8a1b2e3f4d5e6f7a8b9c0d1e2f3a4b',
-    is_active: true,
-    created_at: new Date().toISOString()
-  }
-]
+// SECURITY: Không lưu tài khoản mặc định trong source code.
+// Tất cả tài khoản phải được quản lý qua Supabase Database.
+const DEFAULT_INITIAL_ACCOUNTS = []
 
 /**
  * Mã hoá tài khoản trước khi lưu local/Supabase
@@ -207,37 +187,63 @@ async function loadAccountsFromLocal() {
 }
 
 /**
- * Lấy danh sách tài khoản từ Supabase (tự động giải mã PII)
+ * Helper: Lấy token hiện tại từ session storage
+ */
+function getAuthToken() {
+  if (typeof window === 'undefined') return null
+  const raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw)
+    return parsed?.token || null
+  } catch (e) {
+    return null
+  }
+}
+
+/**
+ * Lấy danh sách tài khoản từ Backend API (KHÔNG truy vấn trực tiếp Supabase)
  */
 export async function getAllAccounts() {
-  try {
-    const { data, error } = await supabase
-      .from('admin_accounts')
-      .select('*')
-      .order('created_at', { ascending: true })
-
-    if (!error && Array.isArray(data) && data.length > 0) {
-      const decryptedAccounts = await Promise.all(data.map(decryptAccount))
-      // Cache về local (mã hoá lại trước khi lưu)
-      await saveAccountsToLocal(decryptedAccounts)
-      return decryptedAccounts
+  // 1. Thử lấy từ backend API (an toàn, đã lọc password hash)
+  if (AUTH_API_URL) {
+    try {
+      const token = getAuthToken()
+      const response = await fetch(`${AUTH_API_URL}/auth/accounts`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      })
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+          const accounts = result.data.map(account => {
+            const role = account.role === 'ADMIN' ? 'ADMIN' : 'SALES'
+            const finalPermissions = role === 'ADMIN'
+              ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(account.permissions || {}) }
+              : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(account.permissions || {}) }
+            return { ...account, role, permissions: finalPermissions }
+          })
+          // Cache về local
+          await saveAccountsToLocal(accounts)
+          return accounts
+        }
+      }
+    } catch (e) {
+      // Backend không khả dụng, thử fallback
     }
-  } catch (e) {
-    // Supabase chưa tạo bảng hoặc lỗi mạng
   }
 
-  // Fallback: đọc local vault (đã mã hoá)
+  // 2. Fallback: đọc local vault (cache từ lần trước)
   const fromLocal = await loadAccountsFromLocal()
   if (fromLocal) {
     return fromLocal
   }
 
-  // Fallback cuối: dùng default nếu hệ thống chưa khởi tạo
+  // 3. Fallback cuối: mảng rỗng
   return DEFAULT_INITIAL_ACCOUNTS
 }
 
 /**
- * Đăng nhập an toàn bằng Email & Mật khẩu
+ * Đăng nhập an toàn bằng Email & Mật khẩu (qua Backend API)
  */
 export async function loginUser(email, password, rememberMe = true) {
   if (!email || !password) {
@@ -253,7 +259,63 @@ export async function loginUser(email, password, rememberMe = true) {
 
   const cleanEmail = email.trim().toLowerCase()
 
-  // 1. Thử đăng nhập qua Supabase Auth chính thống nếu có
+  // 1. Đăng nhập qua Backend API (xác thực server-side, không lộ password hash)
+  if (AUTH_API_URL) {
+    try {
+      const response = await fetch(`${AUTH_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, password }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        recordLoginFailure()
+        throw new Error(result.error || 'Đăng nhập không thành công.')
+      }
+
+      if (result.success && result.user && result.token) {
+        const user = result.user
+        const role = user.role === 'ADMIN' ? 'ADMIN' : 'SALES'
+        const finalPermissions = role === 'ADMIN'
+          ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(user.permissions || {}) }
+          : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(user.permissions || {}) }
+
+        const sessionUser = {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          phone: user.phone || '',
+          role,
+          permissions: finalPermissions,
+          avatar_url: user.avatar_url || '',
+          logged_in_at: new Date().toISOString(),
+          expires_at: rememberMe ? new Date(Date.now() + SESSION_TTL_MS).toISOString() : null,
+          token: result.token,
+        }
+
+        // Lưu session vào storage
+        const storage = rememberMe ? localStorage : sessionStorage
+        storage.setItem(SESSION_KEY, JSON.stringify(sessionUser))
+        if (rememberMe) {
+          sessionStorage.removeItem(SESSION_KEY)
+        } else {
+          localStorage.removeItem(SESSION_KEY)
+        }
+
+        resetLoginAttempts()
+        return sessionUser
+      }
+    } catch (err) {
+      if (err.message && !err.message.includes('Failed to fetch')) {
+        throw err // Re-throw auth errors (wrong password, etc.)
+      }
+      // Network error → try Supabase Auth fallback below
+    }
+  }
+
+  // 2. Fallback: Supabase Auth (nếu backend chưa khả dụng)
   try {
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email: cleanEmail,
@@ -261,126 +323,39 @@ export async function loginUser(email, password, rememberMe = true) {
     })
 
     if (!authError && authData?.user) {
-      // Tra cứu tài khoản từ admin_accounts để lấy quyền và họ tên chuẩn nhất
-      let assignedRole = authData.user.user_metadata?.role
-      let resolvedName = authData.user.user_metadata?.full_name || authData.user.email.split('@')[0]
-      let resolvedPhone = authData.user.phone || ''
+      const assignedRole = authData.user.user_metadata?.role || 
+        (cleanEmail.includes('sales') ? 'SALES' : 'ADMIN')
+      const resolvedName = authData.user.user_metadata?.full_name || authData.user.email.split('@')[0]
 
-      try {
-        const accounts = await getAllAccounts()
-        const matched = accounts.find(a => a.email && a.email.toLowerCase() === cleanEmail)
-        if (matched) {
-          assignedRole = matched.role || assignedRole
-          resolvedName = matched.full_name || resolvedName
-          resolvedPhone = matched.phone || resolvedPhone
-        }
-      } catch (err) {}
-
-      // Nếu không có role và là sales email -> gán SALES
-      if (!assignedRole) {
-        assignedRole = cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'
-      }
-
-      const resolvedPermissions = matched?.permissions || (assignedRole === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES)
       const sessionUser = {
         id: authData.user.id,
         email: authData.user.email,
         full_name: resolvedName,
-        phone: resolvedPhone,
+        phone: authData.user.phone || '',
         role: assignedRole,
-        permissions: resolvedPermissions,
-        avatar_url: matched?.avatar_url || '',
+        permissions: assignedRole === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES,
         logged_in_at: new Date().toISOString(),
         expires_at: rememberMe ? new Date(Date.now() + SESSION_TTL_MS).toISOString() : null,
         auth_provider: 'supabase',
       }
-      // 🔐 Mã hoá session trước khi lưu vào browser storage
-      const encryptedSession = await encryptObject(sessionUser, ACCOUNT_SENSITIVE_FIELDS)
-      // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
-      encryptedSession.id = sessionUser.id
-      encryptedSession.role = sessionUser.role
-      encryptedSession.permissions = sessionUser.permissions
-      encryptedSession.avatar_url = sessionUser.avatar_url
-      encryptedSession.logged_in_at = sessionUser.logged_in_at
-      encryptedSession.expires_at = sessionUser.expires_at
 
       const storage = rememberMe ? localStorage : sessionStorage
-      storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
+      storage.setItem(SESSION_KEY, JSON.stringify(sessionUser))
       if (rememberMe) {
         sessionStorage.removeItem(SESSION_KEY)
       } else {
         localStorage.removeItem(SESSION_KEY)
       }
+
       resetLoginAttempts()
       return sessionUser
     }
   } catch (e) {
-    // Tiếp tục kiểm tra bảng admin_accounts và Vault
+    // Supabase Auth cũng thất bại
   }
 
-  // 2. Tra cứu tài khoản trong danh sách (đã được giải mã)
-  const accounts = await getAllAccounts()
-  const account = accounts.find(a => a.email && a.email.toLowerCase() === cleanEmail)
-
-  if (!account) {
-    recordLoginFailure()
-    throw new Error('Tài khoản Email không tồn tại trên hệ thống!')
-  }
-
-  if (!account.is_active) {
-    throw new Error('Tài khoản này đang bị tạm khóa. Vui lòng liên hệ Quản trị viên!')
-  }
-
-  // Tính hash mật khẩu đã nhập với salt của tài khoản
-  const computedHash = await hashPassword(password, account.password_salt)
-  if (computedHash !== account.password_hash) {
-    recordLoginFailure()
-    throw new Error('Mật khẩu không chính xác! Vui lòng kiểm tra lại.')
-  }
-
-  // Cập nhật last_login (non-PII)
-  account.last_login = new Date().toISOString()
-  try {
-    await supabase
-      .from('admin_accounts')
-      .update({ last_login: account.last_login })
-      .eq('id', account.id)
-  } catch (e) {}
-
-  // Tạo đối tượng phiên làm việc — tuyệt đối không lưu password_hash/salt
-  const sessionUser = {
-    id: account.id,
-    email: account.email,
-    full_name: account.full_name,
-    phone: account.phone || '',
-    role: account.role || (cleanEmail.includes('sales') ? 'SALES' : 'ADMIN'),
-    avatar_url: account.avatar_url || '',
-    permissions: account.permissions || (account.role === 'ADMIN' ? DEFAULT_ROLE_PERMISSIONS.ADMIN : DEFAULT_ROLE_PERMISSIONS.SALES),
-    last_login: account.last_login,
-    logged_in_at: new Date().toISOString(),
-    expires_at: rememberMe ? new Date(Date.now() + SESSION_TTL_MS).toISOString() : null
-  }
-
-  // 🔐 Mã hoá session PII trước khi lưu vào browser storage
-  const encryptedSession = await encryptObject(sessionUser, ACCOUNT_SENSITIVE_FIELDS)
-  // Bảo toàn các trường không nhạy cảm để sync getter đọc ngay lập tức
-  encryptedSession.id = sessionUser.id
-  encryptedSession.role = sessionUser.role
-  encryptedSession.permissions = sessionUser.permissions
-  encryptedSession.avatar_url = sessionUser.avatar_url
-  encryptedSession.logged_in_at = sessionUser.logged_in_at
-  encryptedSession.expires_at = sessionUser.expires_at
-
-  const storage = rememberMe ? localStorage : sessionStorage
-  storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
-  if (rememberMe) {
-    sessionStorage.removeItem(SESSION_KEY)
-  } else {
-    localStorage.removeItem(SESSION_KEY)
-  }
-
-  resetLoginAttempts()
-  return sessionUser
+  recordLoginFailure()
+  throw new Error('Đăng nhập không thành công. Vui lòng kiểm tra Email và Mật khẩu.')
 }
 
 /**

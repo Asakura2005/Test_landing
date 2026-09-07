@@ -6,10 +6,14 @@ dotenv.config()
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10)
 const SMTP_SECURE = process.env.SMTP_SECURE === 'true' || SMTP_PORT === 465
-const SMTP_USER = process.env.SMTP_USER || 'trantienhung4112005@gmail.com'
+const SMTP_USER = process.env.SMTP_USER || ''
 const SMTP_PASS = (process.env.SMTP_PASS || '').replace(/\s+/g, '')
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'HAQ FOOD CRM'
-const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'trantienhung4112005@gmail.com'
+const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || ''
+
+if (!SMTP_USER) {
+  console.warn('WARNING: SMTP_USER not configured. SMTP email sending will fail.')
+}
 
 // RESEND HTTP API CONFIGURATION (Bypass cloud port 465/587 blocks)
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim()
@@ -56,8 +60,9 @@ async function sendViaResend(recipient, subject, html) {
   // Khi dùng domain mặc định (onboarding@resend.dev), Resend bắt buộc chỉ gửi đến tài khoản của chủ sở hữu
   let toList = rawList
   if (RESEND_FROM.includes('resend.dev')) {
-    const owner = rawList.find(e => e.toLowerCase() === 'trantienhung4112005@gmail.com') || 'trantienhung4112005@gmail.com'
-    toList = [owner]
+    const ownerEmail = (ADMIN_NOTIFICATION_EMAIL || '').split(',').map(s => s.trim()).filter(Boolean)[0] || ''
+    const owner = rawList.find(e => e.toLowerCase() === ownerEmail.toLowerCase()) || ownerEmail
+    toList = owner ? [owner] : rawList.slice(0, 1)
   }
 
   const response = await fetch('https://api.resend.com/emails', {

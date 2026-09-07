@@ -11,8 +11,13 @@ import { sendLeadEmailNotification } from './email.js'
 // Sensitive customer PII fields requiring AES-256-GCM encryption
 export const LEAD_SENSITIVE_FIELDS = ['full_name', 'name', 'company', 'phone', 'email', 'note', 'notes', 'lost_note', 'customer_name', 'customer_phone', 'company_name']
 
-const SUPABASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_PUBLIC_SUPABASE_URL)) || 'https://yknnmkocgqbfkmonbvbn.supabase.co'
-const SUPABASE_ANON_KEY = (typeof import.meta !== 'undefined' && import.meta.env && (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY)) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrbm5ta29jZ3FiZmttb25idmJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NDA1NzMsImV4cCI6MjEwMzExNjU3M30.sdPOiUez26Gp-NU-EXf_4f3qDNA816LTdrWbMeF-V4I'
+// SECURITY: Đọc từ biến môi trường — không dùng fallback hardcode
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_PUBLIC_SUPABASE_URL || ''
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY || ''
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('FATAL: Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY environment variables.')
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 

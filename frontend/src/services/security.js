@@ -5,8 +5,11 @@
  * ==============================================================================
  */
 
-// Enterprise Vault Master Secret (Dùng để khởi tạo khóa mã hóa AES-256)
-const MASTER_SECRET_SALT = 'HAQ_FOOD_B2B_ENTERPRISE_FLE_KEY_v2.7_SECRET_SALT_2024_08'
+// SECURITY: Đọc encryption salt từ biến môi trường (cần chuyển sang server-side trong tương lai)
+const MASTER_SECRET_SALT = import.meta.env.VITE_ENCRYPTION_SALT || ''
+if (!MASTER_SECRET_SALT) {
+  console.warn('WARNING: VITE_ENCRYPTION_SALT not configured. Encryption/decryption may not work correctly.')
+}
 
 let cachedCryptoKey = null
 
@@ -63,7 +66,7 @@ export async function hashPassword(password, salt) {
 
 /**
  * Sinh chuỗi Blind Index (Chỉ mục mờ) để tìm kiếm chính xác mà không để lộ plaintext
- * Ví dụ: email trantienhung4112005@gmail.com -> blind_v1:9f8a...
+ * Ví dụ: email user@example.com -> blind_v1:9f8a...
  */
 export async function hashBlindIndex(text) {
   if (!text) return ''

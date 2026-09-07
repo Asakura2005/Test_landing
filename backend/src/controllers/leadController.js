@@ -146,7 +146,7 @@ export async function testEmailHandler(req, res) {
       full_name: 'Quản Trị Viên (Test)',
       phone: '0901234567',
       company: 'HAQ FOOD Test System',
-      email: 'trantienhung4112005@gmail.com',
+      email: process.env.ADMIN_NOTIFICATION_EMAIL?.split(',')[0]?.trim() || 'test@example.com',
       need: 'Kiểm tra đường truyền gửi mail',
       note: 'Đây là email kiểm tra tính năng gửi mail tự động của hệ thống HAQ FOOD.',
       created_at: new Date().toISOString()

@@ -4,8 +4,16 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://yknnmkocgqbfkmonbvbn.supabase.co'
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlrbm5ta29jZ3FiZmttb25idmJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NDA1NzMsImV4cCI6MjEwMzExNjU3M30.sdPOiUez26Gp-NU-EXf_4f3qDNA816LTdrWbMeF-V4I'
+// SECURITY: Biến môi trường bắt buộc — không dùng fallback hardcode
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error(
+    'FATAL: Missing required environment variables SUPABASE_URL and/or SUPABASE_SERVICE_KEY. ' +
+    'Please configure them in your .env file or deployment platform.'
+  )
+}
 
 export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
