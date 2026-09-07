@@ -27,7 +27,7 @@ router.post('/auth/refresh', authMiddleware, refreshToken)
 router.put('/auth/profile', authMiddleware, updateProfile)
 
 // Admin only: CRUD tài khoản nhân viên
-router.get('/auth/accounts', authMiddleware, getAccounts)
+router.get('/auth/accounts', authMiddleware, adminOnly, getAccounts)
 router.post('/auth/accounts', authMiddleware, adminOnly, createAccount)
 router.put('/auth/accounts/:id', authMiddleware, adminOnly, updateAccount)
 router.delete('/auth/accounts/:id', authMiddleware, adminOnly, deleteAccount)

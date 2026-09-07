@@ -87,20 +87,29 @@ function createToken(payload, expiresInSeconds = 30 * 60) {
 }
 
 /**
- * Xác minh JWT token
+ * Xác minh JWT token (N-M1: timingSafeEqual + kiểm tra alg HS256)
  */
 function verifyToken(token) {
   try {
+    if (!JWT_SECRET) return null
+
     const parts = token.split('.')
     if (parts.length !== 3) return null
 
     const [header, body, signature] = parts
+    const parsedHeader = JSON.parse(Buffer.from(header, 'base64url').toString())
+    if (parsedHeader.alg !== 'HS256') return null
+
     const expectedSig = crypto
       .createHmac('sha256', JWT_SECRET)
       .update(`${header}.${body}`)
       .digest('base64url')
 
-    if (signature !== expectedSig) return null
+    const sigBuf = Buffer.from(signature)
+    const expSigBuf = Buffer.from(expectedSig)
+    if (sigBuf.length !== expSigBuf.length || !crypto.timingSafeEqual(sigBuf, expSigBuf)) {
+      return null
+    }
 
     const payload = JSON.parse(Buffer.from(body, 'base64url').toString())
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return null
@@ -113,8 +122,9 @@ function verifyToken(token) {
 
 /**
  * Middleware xác thực token cho các route bảo vệ
+ * N-C2: Xác minh token_version và is_active từ DB (chống dùng token cũ sau rotation, chống tài khoản bị khóa)
  */
-export function authMiddleware(req, res, next) {
+export async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Truy cập bị từ chối. Cần đăng nhập.' })
@@ -126,8 +136,35 @@ export function authMiddleware(req, res, next) {
     return res.status(401).json({ error: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.' })
   }
 
-  req.user = payload
-  next()
+  try {
+    const { data: account, error } = await supabase
+      .from('admin_accounts')
+      .select('id, token_version, is_active, role')
+      .eq('id', payload.id)
+      .single()
+
+    if (error || !account) {
+      return res.status(401).json({ error: 'Tài khoản không tồn tại trên hệ thống.' })
+    }
+
+    if (!account.is_active) {
+      return res.status(403).json({ error: 'Tài khoản này đã bị tạm khóa. Vui lòng liên hệ Quản trị viên.' })
+    }
+
+    // Kiểm tra token rotation: nếu token_version khác DB → token cũ bị vô hiệu ngay lập tức
+    const dbVersion = account.token_version || 0
+    const tokenVersion = payload.token_version || 0
+    if (dbVersion !== tokenVersion) {
+      return res.status(401).json({ error: 'Phiên đăng nhập đã bị thu hồi do đổi token. Vui lòng đăng nhập lại.' })
+    }
+
+    payload.role = account.role
+    req.user = payload
+    next()
+  } catch (err) {
+    console.error('Auth verification error:', err)
+    return res.status(500).json({ error: 'Lỗi xác thực hệ thống.' })
+  }
 }
 
 /**

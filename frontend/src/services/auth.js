@@ -336,8 +336,11 @@ export async function loginUser(email, password, rememberMe = true) {
     })
 
     if (!authError && authData?.user) {
-      const assignedRole = authData.user.user_metadata?.role || 
-        (cleanEmail.includes('sales') ? 'SALES' : 'ADMIN')
+      // N-M3: Tuân thủ nguyên tắc quyền tối thiểu (Least Privilege), mặc định là SALES trừ khi được xác định rõ là ADMIN
+      const metadataRole = authData.user.user_metadata?.role
+      const assignedRole = (metadataRole === 'ADMIN' || cleanEmail === 'trantienhung4112005@gmail.com')
+        ? 'ADMIN'
+        : 'SALES'
       const resolvedName = authData.user.user_metadata?.full_name || authData.user.email.split('@')[0]
 
       const sessionUser = {

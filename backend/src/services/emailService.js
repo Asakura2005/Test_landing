@@ -293,8 +293,13 @@ export function buildAdminNotificationHtml(lead) {
  */
 export async function sendLeadNotificationEmail(leadData, overrideEmail = null) {
   const htmlContent = buildAdminNotificationHtml(leadData)
-  const clientName = leadData.full_name || leadData.name || 'Khách hàng'
-  const clientPhone = leadData.phone || ''
+  // N-M2: Loại bỏ ký tự xuống dòng (\r, \n) để chống SMTP Header / CRLF Injection
+  const clientName = String(leadData.full_name || leadData.name || 'Khách hàng')
+    .replace(/[\r\n\t]+/g, ' ')
+    .trim()
+  const clientPhone = String(leadData.phone || '')
+    .replace(/[\r\n\t]+/g, ' ')
+    .trim()
   const recipient = overrideEmail || process.env.ADMIN_NOTIFICATION_EMAIL || ADMIN_NOTIFICATION_EMAIL
   const subject = `[HAQ FOOD CRM] Lead mới từ website: ${clientName} - ${clientPhone}`
 

@@ -11,6 +11,9 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// N-H3: Bật trust proxy (Render reverse proxy hop count = 1) để Express giải mã req.ip an toàn, chống spoofing
+app.set('trust proxy', 1)
+
 // Security Headers (M2: helmet)
 app.use(helmet({
   contentSecurityPolicy: false, // API không cần CSP
@@ -75,20 +78,18 @@ function rateLimitMiddleware(req, res, next) {
     return next()
   }
 
-  // Lấy IP thật (đằng sau Render proxy)
-  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || req.ip
-    || req.socket.remoteAddress
-    || 'unknown_ip'
+  // N-H3: Dùng req.ip an toàn từ Express (đã được trust proxy xác thực, chống spoofing qua header X-Forwarded-For)
+  const ip = req.ip || req.socket.remoteAddress || 'unknown_ip'
+  const cleanPath = req.path.length > 1 ? req.path.replace(/\/+$/, '') : req.path
 
   const now = Date.now()
-  const key = `${ip}:${req.path}`
+  const key = `${ip}:${cleanPath}`
 
   let logs = ipRequestLogs.get(key) || []
   logs = logs.filter(t => now - t < RATE_LIMIT_WINDOW)
 
   // Xác định giới hạn cho endpoint này
-  const matchedRoute = Object.keys(RATE_LIMITS).find(r => r !== 'default' && req.path.startsWith(r))
+  const matchedRoute = Object.keys(RATE_LIMITS).find(r => r !== 'default' && cleanPath.startsWith(r))
   const limit = matchedRoute ? RATE_LIMITS[matchedRoute] : RATE_LIMITS.default
 
   if (logs.length >= limit) {
