@@ -164,15 +164,10 @@ export async function testEmailHandler(req, res) {
 }
 
 /**
- * GET /api/leads — Lấy danh sách leads (Admin only)
+ * GET /api/leads — Lấy danh sách leads (cần xác thực JWT thật qua authMiddleware)
  */
 export async function getLeads(req, res) {
   try {
-    const authHeader = req.headers.authorization
-    if (!authHeader) {
-      return res.status(401).json({ error: 'Truy cập bị từ chối. Cần xác thực quản trị viên.' })
-    }
-
     const { data, error } = await supabase
       .from('leads')
       .select('*')

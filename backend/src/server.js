@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
 import dotenv from 'dotenv'
 import leadRoutes from './routes/leadRoutes.js'
 import authRoutes from './routes/authRoutes.js'
@@ -10,8 +11,32 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Middleware
-app.use(cors())
+// Security Headers (M2: helmet)
+app.use(helmet({
+  contentSecurityPolicy: false, // API không cần CSP
+  crossOriginEmbedderPolicy: false,
+}))
+
+// CORS Whitelist (H2)
+const ALLOWED_ORIGINS = [
+  'https://test-landing-five-blond.vercel.app',
+  'http://localhost:5173',   // Vite dev
+  'http://localhost:3000',   // Local build
+]
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Cho phép request không có origin (curl, mobile app, server-to-server)
+    if (!origin) return callback(null, true)
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true)
+    }
+    return callback(new Error('Blocked by CORS policy.'))
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}))
 app.use(express.json({ limit: '50kb' })) // Chặn payload quá lớn
 
 // Security Rate Limiter (Tối đa 60 requests / 1 phút / IP đối với API nhạy cảm)

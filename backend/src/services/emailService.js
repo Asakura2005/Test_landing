@@ -32,7 +32,7 @@ const transporter = nodemailer.createTransport({
     pass: SMTP_PASS,
   },
   tls: {
-    rejectUnauthorized: false
+    rejectUnauthorized: true  // H4: Bật xác minh TLS certificate (chống MITM)
   },
   // Ép dùng IPv4 - Render không hỗ trợ outbound IPv6
   family: 4
