@@ -1,6 +1,9 @@
 import { supabase } from '../config/supabase.js'
 import crypto from 'crypto'
 import argon2 from 'argon2'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // ============================================================
 // HELPERS

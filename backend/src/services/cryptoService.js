@@ -5,6 +5,9 @@
  * ==============================================================================
  */
 import crypto from 'crypto'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const ENCRYPTION_SALT = process.env.ENCRYPTION_SALT || ''
 if (!ENCRYPTION_SALT) {
