@@ -14,12 +14,20 @@ const PORT = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json({ limit: '50kb' })) // Chặn payload quá lớn
 
-// Security Rate Limiter (Tối đa 10 requests / 1 phút / IP đối với API)
+// Security Rate Limiter (Tối đa 60 requests / 1 phút / IP đối với API nhạy cảm)
 const ipRequestLogs = new Map()
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 phút
-const MAX_REQUESTS_PER_WINDOW = 10
+const MAX_REQUESTS_PER_WINDOW = 60
+
+// Các endpoint nội bộ (crypto, health) không bị rate limit
+const RATE_LIMIT_EXEMPT = ['/api/crypto/', '/api/health']
 
 function rateLimitMiddleware(req, res, next) {
+  // Bỏ qua rate limit cho crypto endpoints (gọi nội bộ từ frontend)
+  if (RATE_LIMIT_EXEMPT.some(path => req.path.startsWith(path))) {
+    return next()
+  }
+
   const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown_ip'
   const now = Date.now()
 
