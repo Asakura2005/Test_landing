@@ -67,9 +67,9 @@ async function migratePasswordToArgon2(accountId, password) {
 }
 
 /**
- * Tạo JWT token đơn giản (HMAC-SHA256)
+ * Tạo JWT token đơn giản (HMAC-SHA256) — TTL mặc định 30 phút
  */
-function createToken(payload, expiresInSeconds = 7 * 24 * 3600) {
+function createToken(payload, expiresInSeconds = 30 * 60) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')
   const now = Math.floor(Date.now() / 1000)
   const body = Buffer.from(JSON.stringify({
@@ -160,7 +160,7 @@ export async function login(req, res) {
     // 1. Truy vấn tài khoản từ admin_accounts (service key bypass RLS)
     const { data: account, error } = await supabase
       .from('admin_accounts')
-      .select('id, email, full_name, phone, role, password_hash, password_salt, is_active, avatar_url, last_login')
+      .select('id, email, full_name, phone, role, password_hash, password_salt, is_active, avatar_url, last_login, token_version')
       .eq('email', cleanEmail)
       .single()
 
@@ -200,7 +200,8 @@ export async function login(req, res) {
       try { permissions = JSON.parse(account.avatar_url) } catch (e) {}
     }
 
-    // 5. Tạo JWT token
+    // 5. Tạo JWT token (bao gồm token_version để hỗ trợ rotation)
+    const currentVersion = account.token_version || 0
     const tokenPayload = {
       id: account.id,
       email: account.email,
@@ -208,6 +209,7 @@ export async function login(req, res) {
       phone: account.phone || '',
       role: account.role || 'SALES',
       permissions: permissions,
+      token_version: currentVersion,
     }
 
     const token = createToken(tokenPayload)
@@ -239,6 +241,70 @@ export async function login(req, res) {
 export async function verify(req, res) {
   // authMiddleware đã verify và gắn req.user
   res.json({ success: true, user: req.user })
+}
+
+/**
+ * POST /api/auth/refresh — Đổi token mới (Token Rotation)
+ * Token cũ bị vô hiệu ngay lập tức nhờ tăng token_version trong DB
+ */
+export async function refreshToken(req, res) {
+  try {
+    const userId = req.user.id
+
+    // 1. Lấy thông tin tài khoản hiện tại
+    const { data: account, error } = await supabase
+      .from('admin_accounts')
+      .select('id, email, full_name, phone, role, avatar_url, token_version')
+      .eq('id', userId)
+      .single()
+
+    if (error || !account) {
+      return res.status(401).json({ error: 'Tài khoản không tồn tại.' })
+    }
+
+    // 2. Tăng token_version → vô hiệu hoá tất cả token cũ
+    const newVersion = (account.token_version || 0) + 1
+    await supabase
+      .from('admin_accounts')
+      .update({ token_version: newVersion })
+      .eq('id', userId)
+
+    // 3. Parse permissions
+    let permissions = null
+    if (account.avatar_url && typeof account.avatar_url === 'string' && account.avatar_url.startsWith('{')) {
+      try { permissions = JSON.parse(account.avatar_url) } catch (e) {}
+    }
+
+    // 4. Tạo token mới với version mới
+    const tokenPayload = {
+      id: account.id,
+      email: account.email,
+      full_name: account.full_name,
+      phone: account.phone || '',
+      role: account.role || 'SALES',
+      permissions: permissions,
+      token_version: newVersion,
+    }
+
+    const token = createToken(tokenPayload)
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: account.id,
+        email: account.email,
+        full_name: account.full_name,
+        phone: account.phone || '',
+        role: account.role || 'SALES',
+        permissions: permissions,
+        avatar_url: account.avatar_url || '',
+      }
+    })
+  } catch (err) {
+    console.error('Refresh token error:', err)
+    res.status(500).json({ error: 'Lỗi server.' })
+  }
 }
 
 /**

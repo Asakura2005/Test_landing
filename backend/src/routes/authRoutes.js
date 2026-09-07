@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   login,
   verify,
+  refreshToken,
   getAccounts,
   createAccount,
   updateAccount,
@@ -18,6 +19,9 @@ router.post('/auth/login', login)
 
 // Protected: Xác minh token
 router.post('/auth/verify', authMiddleware, verify)
+
+// Protected: Đổi token mới (Token Rotation)
+router.post('/auth/refresh', authMiddleware, refreshToken)
 
 // Protected: Cập nhật profile chính mình
 router.put('/auth/profile', authMiddleware, updateProfile)

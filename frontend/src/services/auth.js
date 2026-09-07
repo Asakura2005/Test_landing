@@ -15,15 +15,27 @@ const AUTH_API_URL = import.meta.env.VITE_BACKEND_API_URL || ''
 // Storage Keys
 const SESSION_KEY = 'haq_auth_session'
 const LOCAL_ACCOUNTS_KEY = 'haq_admin_accounts_vault'
+const LAST_ACTIVITY_KEY = 'haq_last_activity'
 
-// Session Security: TTL (Time To Live)
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 ngày cho "Ghi nhớ đăng nhập"
+// Session Security
+const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 giờ tối đa cho "Ghi nhớ đăng nhập"
+
+// Token Rotation: tự động đổi token mỗi 25 phút (token TTL = 30 phút)
+const TOKEN_REFRESH_INTERVAL_MS = 25 * 60 * 1000 // 25 phút
+
+// Idle Timeout: tự động logout sau 2 giờ không hoạt động
+const IDLE_TIMEOUT_MS = 2 * 60 * 60 * 1000 // 2 giờ
+const IDLE_CHECK_INTERVAL_MS = 60 * 1000 // Kiểm tra mỗi 1 phút
 
 // Login Rate Limiting
 const LOGIN_ATTEMPTS_KEY = 'haq_login_attempts'
 const LOGIN_LOCKOUT_KEY = 'haq_login_lockout_until'
 const LOGIN_MAX_ATTEMPTS = 5
 const LOGIN_LOCKOUT_MS = 30 * 1000 // Khoá 30 giây sau 5 lần sai
+
+// Internal timer references
+let _refreshTimer = null
+let _idleCheckTimer = null
 
 // Sensitive account fields to encrypt/decrypt
 export const ACCOUNT_SENSITIVE_FIELDS = ['email', 'full_name', 'phone']
@@ -305,6 +317,7 @@ export async function loginUser(email, password, rememberMe = true) {
         }
 
         resetLoginAttempts()
+        startSessionTimers()
         return sessionUser
       }
     } catch (err) {
@@ -348,6 +361,7 @@ export async function loginUser(email, password, rememberMe = true) {
       }
 
       resetLoginAttempts()
+      startSessionTimers()
       return sessionUser
     }
   } catch (e) {
@@ -446,7 +460,7 @@ export function getCurrentUserSync() {
       ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(permissions || {}) }
       : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(permissions || {}) }
 
-    return {
+    const result = {
       ...parsed,
       id: parsed.id,
       role,
@@ -455,6 +469,11 @@ export function getCurrentUserSync() {
         ? parsed.full_name 
         : (parsed.role === 'SALES' ? 'Nhân Viên Sales' : 'Quản Trị Viên')
     }
+
+    // Khởi động lại timers khi restore session (page reload)
+    startSessionTimers()
+
+    return result
   } catch (e) {
     return null
   }
@@ -465,12 +484,112 @@ export function getCurrentUserSync() {
  */
 export async function logoutUser() {
   if (typeof window === 'undefined') return
+  stopSessionTimers()
   try {
     await supabase.auth.signOut()
   } catch (e) {}
   localStorage.removeItem(SESSION_KEY)
   sessionStorage.removeItem(SESSION_KEY)
   localStorage.removeItem('haq_admin_auth')
+  localStorage.removeItem(LAST_ACTIVITY_KEY)
+}
+
+// ============================================================
+// TOKEN ROTATION — Tự động đổi token mỗi 25 phút
+// ============================================================
+
+/**
+ * Gọi backend để lấy token mới, token cũ bị vô hiệu ngay lập tức
+ */
+async function refreshAuthToken() {
+  if (typeof window === 'undefined') return
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) return
+
+  try {
+    const response = await fetch(`${AUTH_API_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      console.warn('Token refresh failed, logging out...')
+      await logoutUser()
+      window.location.reload()
+      return
+    }
+
+    const result = await response.json()
+    if (result.success && result.token) {
+      const raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)
+      if (raw) {
+        const session = JSON.parse(raw)
+        session.token = result.token
+        if (result.user) {
+          session.full_name = result.user.full_name || session.full_name
+          session.role = result.user.role || session.role
+          session.permissions = result.user.permissions || session.permissions
+        }
+        const storage = localStorage.getItem(SESSION_KEY) ? localStorage : sessionStorage
+        storage.setItem(SESSION_KEY, JSON.stringify(session))
+      }
+    }
+  } catch (err) {
+    console.warn('Token refresh error:', err.message)
+  }
+}
+
+// ============================================================
+// IDLE TIMEOUT — Tự động logout sau 2 giờ không hoạt động
+// ============================================================
+
+function recordActivity() {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString())
+  }
+}
+
+async function checkIdleTimeout() {
+  if (typeof window === 'undefined') return
+  const raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)
+  if (!raw) return // Chưa login
+
+  const lastActivity = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10)
+  if (!lastActivity) return
+
+  const idleTime = Date.now() - lastActivity
+  if (idleTime >= IDLE_TIMEOUT_MS) {
+    console.warn(`Idle timeout (${Math.round(idleTime / 60000)} phút). Auto-logout...`)
+    await logoutUser()
+    window.location.reload()
+  }
+}
+
+/**
+ * Khởi động Token Rotation + Idle Timeout (gọi sau khi login thành công)
+ */
+export function startSessionTimers() {
+  if (typeof window === 'undefined') return
+  stopSessionTimers()
+
+  _refreshTimer = setInterval(refreshAuthToken, TOKEN_REFRESH_INTERVAL_MS)
+
+  recordActivity()
+  _idleCheckTimer = setInterval(checkIdleTimeout, IDLE_CHECK_INTERVAL_MS)
+
+  const events = ['mousedown', 'keydown', 'scroll', 'touchstart']
+  events.forEach(evt => window.addEventListener(evt, recordActivity, { passive: true }))
+}
+
+/**
+ * Dừng tất cả timers (gọi khi logout)
+ */
+export function stopSessionTimers() {
+  if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
+  if (_idleCheckTimer) { clearInterval(_idleCheckTimer); _idleCheckTimer = null }
 }
 
 /**
