@@ -610,279 +610,149 @@ export function stopSessionTimers() {
 }
 
 /**
- * Đổi thông tin Admin (Email, Mật khẩu, Họ tên, SĐT)
+ * Đổi thông tin Admin (Email, Mật khẩu, Họ tên, SĐT) qua Backend API
  */
 export async function updateAdminProfile({ email, currentPassword, newPassword, full_name, phone }) {
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) {
+    throw new Error('Phiên làm việc đã hết hạn hoặc dịch vụ xác thực không khả dụng.')
+  }
+
+  const response = await fetch(`${AUTH_API_URL}/auth/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email, currentPassword, newPassword, full_name, phone }),
+  })
+
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(result.error || 'Lỗi khi cập nhật thông tin cá nhân.')
+  }
+
+  // Cập nhật lại Session trong storage
   const currentUser = await getCurrentUser()
-  if (!currentUser) throw new Error('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại!')
-
-  const accounts = await getAllAccounts()
-  const accountIndex = accounts.findIndex(a => a.id === currentUser.id || a.email.toLowerCase() === currentUser.email.toLowerCase())
-  if (accountIndex === -1) throw new Error('Không tìm thấy tài khoản người dùng!')
-
-  const account = { ...accounts[accountIndex] }
-
-  // Nếu muốn đổi mật khẩu, bắt buộc phải nhập đúng mật khẩu hiện tại
-  if (newPassword) {
-    if (!currentPassword) {
-      throw new Error('Vui lòng nhập Mật khẩu hiện tại để xác thực thay đổi!')
-    }
-    const checkHash = await hashPassword(currentPassword, account.password_salt)
-    if (checkHash !== account.password_hash) {
-      throw new Error('Mật khẩu hiện tại không chính xác!')
-    }
-    if (newPassword.length < 6) {
-      throw new Error('Mật khẩu mới phải có độ dài tối thiểu 6 ký tự!')
-    }
-    const newSalt = generateSalt()
-    const newHash = await hashPassword(newPassword, newSalt)
-    account.password_salt = newSalt
-    account.password_hash = newHash
-  }
-
-  if (email && email.trim().toLowerCase() !== account.email.toLowerCase()) {
-    const cleanNewEmail = email.trim().toLowerCase()
-    const isExisted = accounts.some((a, idx) => idx !== accountIndex && a.email.toLowerCase() === cleanNewEmail)
-    if (isExisted) {
-      throw new Error('Email này đã được sử dụng bởi một tài khoản khác!')
-    }
-    account.email = cleanNewEmail
-  }
-
-  if (full_name) account.full_name = full_name.trim()
-  if (phone !== undefined) account.phone = phone.trim()
-  account.updated_at = new Date().toISOString()
-
-  // 🔐 Mã hoá PII trước khi ghi lên Supabase
-  const encryptedForDB = await encryptObject({
-    email:     account.email,
-    full_name: account.full_name,
-    phone:     account.phone,
-    password_hash: account.password_hash,
-    password_salt: account.password_salt,
-    updated_at: account.updated_at
-  }, ACCOUNT_SENSITIVE_FIELDS)
-
-  try {
-    await supabase
-      .from('admin_accounts')
-      .update(encryptedForDB)
-      .eq('id', account.id)
-  } catch (e) {
-    console.warn("Supabase update account warn:", e.message)
-  }
-
-  // Cập nhật Local Vault (mã hoá)
-  accounts[accountIndex] = account
-  await saveAccountsToLocal(accounts)
-
-  // 🔐 Cập nhật lại Session (mã hoá PII)
-  const updatedSessionUser = {
+  const updatedUser = {
     ...currentUser,
-    email: account.email,
-    full_name: account.full_name,
-    phone: account.phone
+    ...(result.data || {}),
   }
-  const encryptedSession = await encryptObject(updatedSessionUser, ACCOUNT_SENSITIVE_FIELDS)
   const storage = localStorage.getItem(SESSION_KEY) ? localStorage : sessionStorage
-  storage.setItem(SESSION_KEY, JSON.stringify(encryptedSession))
+  storage.setItem(SESSION_KEY, JSON.stringify(updatedUser))
 
-  return updatedSessionUser
+  return updatedUser
 }
 
 /**
- * Thêm tài khoản nhân viên Sales mới
+ * Thêm tài khoản nhân viên Sales mới qua Backend API (chỉ Admin)
  */
 export async function createSalesAccount({ email, full_name, phone, password }) {
-  if (!email || !password || !full_name) {
-    throw new Error('Vui lòng điền đầy đủ Họ tên, Email và Mật khẩu khởi tạo!')
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) {
+    throw new Error('Bạn không có quyền thực hiện thao tác này hoặc dịch vụ chưa sẵn sàng.')
   }
 
-  const cleanEmail = email.trim().toLowerCase()
-  const accounts = await getAllAccounts()
-  if (accounts.some(a => a.email.toLowerCase() === cleanEmail)) {
-    throw new Error('Tài khoản Email này đã tồn tại!')
+  const response = await fetch(`${AUTH_API_URL}/auth/accounts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email, full_name, phone, password, role: 'SALES' }),
+  })
+
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(result.error || 'Lỗi khi tạo tài khoản nhân viên.')
   }
 
-  const salt = generateSalt()
-  const hash = await hashPassword(password, salt)
-
-  const newAccount = {
-    id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'acc-' + Date.now(),
-    email: cleanEmail,
-    full_name: full_name.trim(),
-    phone: phone ? phone.trim() : '',
-    role: 'SALES',
-    password_hash: hash,
-    password_salt: salt,
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
-
-  // 🔐 Mã hoá PII trước khi INSERT vào Supabase
-  const encryptedForDB = await encryptObject({
-    id: newAccount.id,
-    email: newAccount.email,
-    full_name: newAccount.full_name,
-    phone: newAccount.phone,
-    role: 'SALES',
-    password_hash: hash,
-    password_salt: salt,
-    is_active: true,
-    created_at: newAccount.created_at,
-    updated_at: newAccount.updated_at
-  }, ACCOUNT_SENSITIVE_FIELDS)
-
-  try {
-    const { data, error } = await supabase
-      .from('admin_accounts')
-      .insert([encryptedForDB])
-      .select()
-    if (!error && data && data.length > 0) {
-      newAccount.id = data[0].id
-    }
-  } catch (e) {
-    console.warn("Supabase createSalesAccount warn:", e.message)
-  }
-
-  // Lưu local (mã hoá)
-  accounts.push(newAccount)
-  await saveAccountsToLocal(accounts)
-
-  return newAccount
+  return result.data
 }
 
 /**
- * Đổi trạng thái hoặc reset mật khẩu cho nhân viên Sales
+ * Đổi trạng thái hoặc reset mật khẩu cho nhân viên Sales qua Backend API (chỉ Admin)
  */
 export async function updateSalesAccount(accountId, { is_active, newPassword, full_name, phone }) {
-  const accounts = await getAllAccounts()
-  const idx = accounts.findIndex(a => a.id === accountId)
-  if (idx === -1) throw new Error('Không tìm thấy tài khoản nhân viên!')
-
-  const account = { ...accounts[idx] }
-  if (is_active !== undefined) account.is_active = Boolean(is_active)
-  if (full_name) account.full_name = full_name.trim()
-  if (phone !== undefined) account.phone = phone.trim()
-
-  if (newPassword) {
-    const salt = generateSalt()
-    const newHash = await hashPassword(newPassword, salt)
-    account.password_salt = salt
-    account.password_hash = newHash
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) {
+    throw new Error('Bạn không có quyền thực hiện thao tác này.')
   }
 
-  account.updated_at = new Date().toISOString()
+  const response = await fetch(`${AUTH_API_URL}/auth/accounts/${accountId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ is_active, newPassword, full_name, phone }),
+  })
 
-  // 🔐 Mã hoá PII trước khi UPDATE lên Supabase
-  const encryptedForDB = await encryptObject({
-    is_active: account.is_active,
-    full_name: account.full_name,
-    phone: account.phone,
-    password_hash: account.password_hash,
-    password_salt: account.password_salt,
-    updated_at: account.updated_at
-  }, ACCOUNT_SENSITIVE_FIELDS)
-
-  try {
-    await supabase
-      .from('admin_accounts')
-      .update(encryptedForDB)
-      .eq('id', accountId)
-  } catch (e) {
-    console.warn("Supabase updateSalesAccount warn:", e.message)
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(result.error || 'Lỗi khi cập nhật tài khoản nhân viên.')
   }
 
-  accounts[idx] = account
-  await saveAccountsToLocal(accounts)
-
-  return account
+  return result.data
 }
 
 /**
- * Xóa tài khoản nhân viên Sales
+ * Xóa tài khoản nhân viên Sales qua Backend API (chỉ Admin)
  */
 export async function deleteSalesAccount(accountId) {
-  const currentUser = await getCurrentUser()
-  if (currentUser && currentUser.id === accountId) {
-    throw new Error('Bạn không thể xóa chính tài khoản đang đăng nhập!')
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) {
+    throw new Error('Bạn không có quyền thực hiện thao tác này.')
   }
 
-  try {
-    await supabase
-      .from('admin_accounts')
-      .delete()
-      .eq('id', accountId)
-  } catch (e) {
-    console.warn("Supabase deleteSalesAccount warn:", e.message)
+  const response = await fetch(`${AUTH_API_URL}/auth/accounts/${accountId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  })
+
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(result.error || 'Lỗi khi xóa tài khoản nhân viên.')
   }
 
-  const accounts = await getAllAccounts()
-  const filtered = accounts.filter(a => a.id !== accountId)
-  await saveAccountsToLocal(filtered)
   return true
 }
 
 /**
- * Cập nhật vai trò và phân quyền chi tiết cho tài khoản
+ * Cập nhật vai trò và phân quyền chi tiết cho tài khoản qua Backend API (chỉ Admin)
  */
 export async function updateAccountPermissions(accountId, { role, permissions, is_active }) {
-  const accounts = await getAllAccounts()
-  const idx = accounts.findIndex(a => a.id === accountId)
-  if (idx === -1) throw new Error('Không tìm thấy tài khoản nhân viên!')
-
-  const account = { ...accounts[idx] }
-  if (role) account.role = role
-  if (is_active !== undefined) account.is_active = Boolean(is_active)
-  if (permissions !== undefined) {
-    account.permissions = permissions
-    account.avatar_url = typeof permissions === 'string' ? permissions : JSON.stringify(permissions)
+  const token = getAuthToken()
+  if (!token || !AUTH_API_URL) {
+    throw new Error('Bạn không có quyền thực hiện thao tác này.')
   }
 
-  account.updated_at = new Date().toISOString()
+  const response = await fetch(`${AUTH_API_URL}/auth/accounts/${accountId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ role, permissions, is_active }),
+  })
 
-  // Chuẩn bị payload cập nhật Supabase
-  const updatePayload = {
-    role: account.role,
-    is_active: account.is_active,
-    avatar_url: account.avatar_url || null,
-    updated_at: account.updated_at
+  const result = await response.json()
+  if (!response.ok) {
+    throw new Error(result.error || 'Lỗi khi cập nhật quyền tài khoản.')
   }
-
-  try {
-    const { error } = await supabase
-      .from('admin_accounts')
-      .update(updatePayload)
-      .eq('id', accountId)
-    if (error) console.warn('Supabase update permissions error:', error.message)
-  } catch (e) {
-    console.warn('Supabase updateAccountPermissions warn:', e.message)
-  }
-
-  accounts[idx] = account
-  await saveAccountsToLocal(accounts)
 
   // Nếu cập nhật chính tài khoản đang đăng nhập, đồng bộ lại phiên làm việc
   const currentUser = await getCurrentUser()
   if (currentUser && currentUser.id === accountId) {
-    currentUser.role = account.role
-    currentUser.permissions = account.permissions
-    currentUser.avatar_url = account.avatar_url
+    currentUser.role = result.data.role || role
+    currentUser.permissions = permissions !== undefined ? permissions : currentUser.permissions
     const storage = localStorage.getItem(SESSION_KEY) ? localStorage : sessionStorage
-    const raw = storage.getItem(SESSION_KEY)
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw)
-        parsed.role = account.role
-        parsed.permissions = account.permissions
-        parsed.avatar_url = account.avatar_url
-        storage.setItem(SESSION_KEY, JSON.stringify(parsed))
-      } catch (e) {}
-    }
+    storage.setItem(SESSION_KEY, JSON.stringify(currentUser))
   }
 
-  return account
+  return result.data
 }
 
 
