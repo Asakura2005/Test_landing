@@ -138,7 +138,11 @@ const DEFAULT_INITIAL_ACCOUNTS = []
  * Mã hoá tài khoản trước khi lưu local/Supabase
  */
 async function encryptAccount(account) {
-  return encryptObject(account, ACCOUNT_SENSITIVE_FIELDS)
+  // N-H5: Loại bỏ triệt để password_hash và password_salt trước khi ghi vào localStorage
+  const sanitized = { ...account }
+  delete sanitized.password_hash
+  delete sanitized.password_salt
+  return encryptObject(sanitized, ACCOUNT_SENSITIVE_FIELDS)
 }
 
 /**
@@ -163,7 +167,7 @@ async function decryptAccount(account) {
     ? { ...DEFAULT_ROLE_PERMISSIONS.ADMIN, ...(parsedPermissions || {}) }
     : { ...DEFAULT_ROLE_PERMISSIONS.SALES, ...(parsedPermissions || {}) }
 
-  return {
+  const decrypted = {
     ...account,
     role,
     email:     await decryptData(rawEmail),
@@ -171,6 +175,11 @@ async function decryptAccount(account) {
     phone:     await decryptData(rawPhone),
     permissions: finalPermissions
   }
+
+  // N-H5: Đảm bảo không bao giờ lưu trữ hoặc xuất khẩu password hash trong client-side state
+  delete decrypted.password_hash
+  delete decrypted.password_salt
+  return decrypted
 }
 
 /**
@@ -192,7 +201,12 @@ async function loadAccountsFromLocal() {
   try {
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed) || parsed.length === 0) return null
-    return await Promise.all(parsed.map(decryptAccount))
+    const list = await Promise.all(parsed.map(decryptAccount))
+    list.forEach(item => {
+      delete item.password_hash
+      delete item.password_salt
+    })
+    return list
   } catch (e) {
     return null
   }

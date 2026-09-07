@@ -105,12 +105,12 @@ export async function encryptData(plainText) {
         }
       }
     } catch (e) {
-      // Backend không khả dụng
+      console.error('Lỗi kết nối crypto service:', e)
     }
   }
 
-  console.warn('Encryption unavailable: backend API not reachable.')
-  return str
+  // N-H2: Fail-Closed: Tuyệt đối không trả về plaintext khi mã hoá thất bại, tránh lưu PII dạng rõ
+  throw new Error('Dịch vụ mã hóa dữ liệu bảo mật không khả dụng. Vui lòng thử lại sau.')
 }
 
 /**
@@ -176,11 +176,12 @@ export async function encryptObject(obj, fieldsToEncrypt = []) {
         }
       }
     } catch (e) {
-      // Backend không khả dụng
+      console.error('Lỗi kết nối crypto service:', e)
     }
   }
 
-  return obj
+  // N-H2: Fail-Closed: Báo lỗi thay vì trả về object chưa mã hoá
+  throw new Error('Dịch vụ mã hóa dữ liệu bảo mật không khả dụng. Vui lòng thử lại sau.')
 }
 
 /**

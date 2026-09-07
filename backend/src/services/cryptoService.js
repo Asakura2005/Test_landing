@@ -33,7 +33,9 @@ export function encryptData(plainText) {
   // Đã mã hoá rồi thì bỏ qua
   if (str.startsWith('enc_v1:')) return str
 
-  if (!ENCRYPTION_SALT) return str
+  if (!ENCRYPTION_SALT) {
+    throw new Error('Cấu hình ENCRYPTION_SALT bị thiếu trên server.')
+  }
 
   try {
     const key = getAESKey()
@@ -44,8 +46,6 @@ export function encryptData(plainText) {
     const authTag = cipher.getAuthTag() // 16 bytes
 
     // Format tương thích: enc_v1:iv_hex:cipherWithTag_hex
-    // Frontend cũ lưu: iv (12 bytes) + encrypted buffer (bao gồm authTag ở cuối do Web Crypto API)
-    // Node crypto tách riêng authTag, cần concat lại cho tương thích
     const ivHex = iv.toString('hex')
     const cipherWithTag = Buffer.concat([encrypted, authTag])
     const cipherHex = cipherWithTag.toString('hex')
@@ -53,7 +53,8 @@ export function encryptData(plainText) {
     return `enc_v1:${ivHex}:${cipherHex}`
   } catch (err) {
     console.error('Encryption failed:', err.message)
-    return str
+    // N-H2: Fail-closed (ném lỗi, tuyệt đối không trả về plaintext để tránh lưu PII dạng rõ)
+    throw new Error('Không thể mã hóa dữ liệu: ' + err.message)
   }
 }
 
@@ -70,21 +71,19 @@ export function decryptData(cipherText) {
   const ivHex = parts[1]
   const cipherHex = parts[2]
 
-  // Fallback base64 (dữ liệu cũ encode bằng btoa)
-  if (ivHex === 'fb0000000000000000000000') {
-    try {
-      return decodeURIComponent(Buffer.from(cipherHex, 'base64').toString('utf8'))
-    } catch (e) {
-      return cipherText
-    }
+  if (!ENCRYPTION_SALT) {
+    throw new Error('Cấu hình ENCRYPTION_SALT bị thiếu trên server.')
   }
-
-  if (!ENCRYPTION_SALT) return cipherText
 
   try {
     const key = getAESKey()
     const iv = Buffer.from(ivHex, 'hex')
     const cipherWithTag = Buffer.from(cipherHex, 'hex')
+
+    // Kiểm tra độ dài tối thiểu của ciphertext + authTag (16 bytes)
+    if (cipherWithTag.length < 16) {
+      throw new Error('Dữ liệu mã hóa không hợp lệ (ngắn hơn 16 bytes auth tag).')
+    }
 
     // Web Crypto API concat: ciphertext + authTag (16 bytes) ở cuối
     const authTag = cipherWithTag.subarray(cipherWithTag.length - 16)

@@ -50,14 +50,17 @@ const RATE_LIMIT_WINDOW = 60 * 1000 // 1 phút
 
 // Giới hạn theo loại endpoint
 const RATE_LIMITS = {
-  '/api/auth/login': 10,      // Login: 10/phút (chống brute-force)
-  '/api/auth/refresh': 30,    // Refresh: 30/phút
-  '/api/leads': 20,           // Lead submit: 20/phút
-  default: 60,                // Mặc định: 60/phút
+  '/api/auth/login': 10,       // Login: 10/phút (chống brute-force)
+  '/api/auth/refresh': 30,     // Refresh: 30/phút
+  '/api/leads': 20,            // Lead submit: 20/phút
+  '/api/crypto/hash': 30,      // N-H4: Hash/Blind-index: 30/phút (chống oracle brute-force)
+  '/api/crypto/encrypt': 60,   // N-H4: Encrypt: 60/phút (chống CPU DoS)
+  '/api/crypto/decrypt': 150,  // N-H4: Decrypt (đã có JWT): 150/phút (đảm bảo admin dashboard load mượt)
+  default: 60,                 // Mặc định: 60/phút
 }
 
-// Các endpoint miễn rate limit (gọi nội bộ tần suất cao)
-const RATE_LIMIT_EXEMPT = ['/api/crypto/', '/api/health']
+// Chỉ miễn rate limit cho health check monitoring
+const RATE_LIMIT_EXEMPT = ['/api/health']
 
 // Dọn dẹp bộ nhớ mỗi 5 phút (tránh memory leak)
 setInterval(() => {

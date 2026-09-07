@@ -9,8 +9,21 @@ backend/dist/
 
 # Environment
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
+.env*.local
+
+# Certificates & Keys
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+
+# Database Dumps & SQL files
+*.sql
+*.sqlite
+*.db
 
 # Editor
 .vscode/
