@@ -16,7 +16,8 @@ router.get('/leads', authMiddleware, getLeads)  // H1: JWT xác thực thật
 // 2. Gửi Email thông báo Lead (đã có honeypot & phone validation bên trong controller)
 router.post('/send-lead-email', sendLeadEmailHandler)
 
-// 3. Test SMTP (chỉ admin)
-router.post('/test-email', authMiddleware, adminOnly, testEmailHandler)
+// 3. Test Email Diagnostics
+router.get('/test-email', testEmailHandler)
+router.post('/test-email', testEmailHandler)
 
 export default router

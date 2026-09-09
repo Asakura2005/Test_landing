@@ -70,12 +70,16 @@ async function sendViaResend(recipient, subject, html) {
     rawList = (ADMIN_NOTIFICATION_EMAIL || '').split(',').map(s => s.trim()).filter(Boolean)
   }
 
-  // Khi dùng domain mặc định (onboarding@resend.dev), Resend bắt buộc chỉ gửi đến tài khoản của chủ sở hữu
-  let toList = rawList
+  // Lọc bỏ email burner/tạm thời và ưu tiên trantienhung4112005@gmail.com
+  let toList = rawList.filter(e => !e.includes('curuth.com'))
+  if (toList.length === 0) {
+    toList = ['trantienhung4112005@gmail.com']
+  }
+
+  // Khi dùng domain mặc định (onboarding@resend.dev), Resend bắt buộc chỉ gửi đến email chủ tài khoản
   if (RESEND_FROM.includes('resend.dev')) {
-    const ownerEmail = (ADMIN_NOTIFICATION_EMAIL || '').split(',').map(s => s.trim()).filter(Boolean)[0] || ''
-    const owner = rawList.find(e => e.toLowerCase() === ownerEmail.toLowerCase()) || ownerEmail
-    toList = owner ? [owner] : rawList.slice(0, 1)
+    const owner = toList.find(e => e.includes('trantienhung4112005@gmail.com')) || toList.find(e => e.includes('gmail.com')) || toList[0]
+    toList = [owner]
   }
 
   const response = await fetch('https://api.resend.com/emails', {
@@ -303,12 +307,14 @@ export async function sendLeadNotificationEmail(leadData, overrideEmail = null) 
   const recipient = overrideEmail || process.env.ADMIN_NOTIFICATION_EMAIL || ADMIN_NOTIFICATION_EMAIL
   const subject = `[HAQ FOOD CRM] Lead mới từ website: ${clientName} - ${clientPhone}`
 
+  let resendErrorMessage = null
   // 1. Ưu tiên gửi qua Resend REST API (Cổng 443 HTTPS - Không bị chặn trên Render)
   if (RESEND_API_KEY) {
     try {
       return await sendViaResend(recipient, subject, htmlContent)
     } catch (resendErr) {
       console.warn('⚠️ Resend dispatch failed, attempting SMTP fallback:', resendErr.message)
+      resendErrorMessage = resendErr.message
     }
   }
 
@@ -326,7 +332,10 @@ export async function sendLeadNotificationEmail(leadData, overrideEmail = null) 
     return { success: true, messageId: info.messageId, recipient, provider: 'smtp' }
   } catch (error) {
     console.error('❌ Error sending lead notification email via SMTP:', error.message)
-    return { success: false, error: error.message }
+    const combinedError = resendErrorMessage 
+      ? `Resend: ${resendErrorMessage} | SMTP: ${error.message}`
+      : error.message
+    return { success: false, error: combinedError }
   }
 }
 
