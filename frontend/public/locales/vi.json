@@ -62,8 +62,8 @@
     "fact_tax_label": "Mã số thuế / ĐKKD",
     "fact_tax_val": "0109675204",
     "fact_tax_sub": "— Sở Kế hoạch & Đầu tư TP. Hà Nội cấp",
-    "fact_hq_label": "Trụ sở & Vận hành",
-    "fact_hq_val": "Thành phố Hà Nội, Việt Nam",
+    "fact_hq_label": "Trụ sở chính",
+    "fact_hq_val": "Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam",
     "fact_scope_label": "Lĩnh vực sản xuất",
     "fact_scope_val": "Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh nướng hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.",
     "fact_dist_label": "Hệ thống phân phối",
@@ -150,6 +150,63 @@
     "sec7_badge": "07 — TRÁCH NHIỆM DOANH NGHIỆP",
     "sec7_title": "Trách Nhiệm Phát Triển Bền Vững",
     "sec7_desc": "Cam kết dài hạn đối với người tiêu dùng, đối tác, nhân sự và nông sản Việt Nam.",
+    "vision_mission": {
+      "badge": "03 — TẦM NHÌN · SỨ MỆNH · GIÁ TRỊ CỐT LÕI",
+      "badge_en": "VISION · MISSION · CORE VALUES",
+      "heading_main": "ĐỊNH HƯỚNG CHIẾN LƯỢC & NỀN TẢNG PHÁT TRIỂN",
+      "heading_sub": "Khẳng định vị thế tiên phong từ thị trường Việt Nam và vươn tầm các thị trường tiêu chuẩn cao quốc tế.",
+      "vision_title": "TẦM NHÌN",
+      "vision_title_en": "VISION",
+      "vision_desc": "Trở thành doanh nghiệp tiên phong và dẫn đầu trong lĩnh vực sản xuất – phân phối đồ ăn vặt tại Việt Nam; mở rộng sang các thị trường tiêu chuẩn cao như Nhật Bản, Hàn Quốc và các quốc gia châu Á.",
+      "vision_desc_en": "To become a leading pioneer in Vietnam’s snack manufacturing and distribution sector, expanding into high-standard markets such as Japan, South Korea, and other Asian countries.",
+      "mission_title": "SỨ MỆNH",
+      "mission_title_en": "MISSION",
+      "mission_desc": "Mang đến sản phẩm ngon – an toàn – đạt chuẩn, đáp ứng nhu cầu ngày càng cao của người tiêu dùng.",
+      "mission_desc_en": "To deliver delicious, safe, and certified-quality products that meet evolving consumer demands.",
+      "mission_points": [
+        { "title": "Sản phẩm ngon", "desc": "Giữ trọn vị đậm đà, giòn rụm từ công thức truyền thống" },
+        { "title": "An toàn tuyệt đối", "desc": "Không dầu chiên tồn dư, kiểm soát nghiêm ngặt vi sinh" },
+        { "title": "Đạt chuẩn quốc tế", "desc": "Quy trình khép kín, chứng nhận ISO 22000 & HACCP" }
+      ],
+      "values_badge": "NỀN TẢNG VĂN HÓA DOANH NGHIỆP",
+      "values_title": "GIÁ TRỊ CỐT LÕI",
+      "values_title_en": "CORE VALUES",
+      "values_desc": "5 nguyên tắc cốt lõi dẫn dắt mọi quyết định sản xuất, kiểm soát chất lượng và hợp tác phát triển tại HAQ FOOD.",
+      "values": [
+        {
+          "key": "01",
+          "name": "Chất lượng là nền tảng",
+          "name_en": "Quality First",
+          "desc": "Mọi quy trình từ tuyển chọn nguyên liệu, kiểm soát nhiệt sấy đến thành phẩm đều đặt chất lượng và an toàn thực phẩm làm thước đo tiên quyết."
+        },
+        {
+          "key": "02",
+          "name": "Minh bạch quy trình",
+          "name_en": "Transparency",
+          "desc": "Công khai, rõ ràng nguồn gốc xuất xứ nông sản bản địa và hồ sơ kiểm định chất lượng, xây dựng niềm tin vững bền cùng đối tác và khách hàng."
+        },
+        {
+          "key": "03",
+          "name": "Đổi mới sản phẩm",
+          "name_en": "Innovation",
+          "desc": "Liên tục nghiên cứu, làm chủ công nghệ sấy sạch đối lưu hiện đại và đa dạng hóa danh mục snack tiện lợi, đậm đà bản sắc."
+        },
+        {
+          "key": "04",
+          "name": "Hợp tác bền vững",
+          "name_en": "Sustainable Partnership",
+          "desc": "Đồng hành tin cậy, tôn trọng hợp đồng, hài hòa lợi ích lâu dài cùng chuỗi bán lẻ hiện đại, nhà phân phối và bà con nông dân."
+        },
+        {
+          "key": "05",
+          "name": "Lấy khách hàng làm trung tâm",
+          "name_en": "Customer-centric Approach",
+          "desc": "Lắng nghe sâu sắc, thấu hiểu nhu cầu và chăm sóc sức khỏe người tiêu dùng qua từng cải tiến hương vị, bao bì và quy cách đóng gói."
+        }
+      ],
+      "expansion_badge": "ĐỊNH HƯỚNG THỊ TRƯỜNG",
+      "expansion_title": "LỘ TRÌNH PHÁT TRIỂN THỊ TRƯỜNG CHIẾN LƯỢC"
+    },
     "cta_badge": "KẾT NỐI HỢP TÁC B2B",
     "cta_title_1": "ĐỒNG HÀNH CÙNG",
     "cta_title_2": "PHÁT TRIỂN BỀN VỮNG",

@@ -1,443 +1,323 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { CheckCircle2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
 
 import factoryImg from '../assets/factory/factory_production.jpg'
-import exportImg from '../assets/distribution/distribution_export.jpg'
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
 import factoryHqImg from '../assets/about/factory_hq.jpg'
 import riceFieldImg from '../assets/about/rice_field.jpg'
 import labInspectionImg from '../assets/about/lab_inspection.jpg'
-import cargoExportImg from '../assets/about/cargo_export.jpg'
+import VisionSection from '../components/VisionSection'
+import Partners from '../components/Partners'
 
-/* ───────────────────────────────────────────────────────────────────
-   Scroll Reveal Component — fade + slide up on viewport entry
-   ─────────────────────────────────────────────────────────────────── */
+/* ─── Reveal ────────────────────────────────────────────── */
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
-  const [visible, setVisible] = useState(false)
-
+  const [vis, setVis] = useState(false)
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    const ob = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); ob.unobserve(el) } },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     )
-    observer.observe(el)
-    return () => observer.disconnect()
+    ob.observe(el)
+    return () => ob.disconnect()
   }, [])
-
   return (
-    <div
-      ref={ref}
-      className={`transition-all duration-[800ms] ease-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <div ref={ref} className={`transition-all duration-700 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
       {children}
     </div>
   )
 }
 
-/* ───────────────────────────────────────────────────────────────────
-   Data — Core Values (TÂM – TÍN – TINH)
-   ─────────────────────────────────────────────────────────────────── */
-const getCoreValues = (lang) => {
-  if (lang === 'en') {
-    return [
-      { key: 'DEVOTION', title: 'PROFESSIONAL CONSCIENCE & CARE', tagline: 'Prioritizing genuine quality and human responsibility.', desc: 'Food nourishes human vitality directly. Every item is produced with the deepest care, just like meals prepared for our own families.', number: '01' },
-      { key: 'INTEGRITY', title: 'TRANSPARENCY & RELIABILITY', tagline: 'Fulfilling commitments to clients and partners.', desc: 'Forging partnerships built on transparency, contract fidelity, punctual delivery, and unwavering consistency across batches.', number: '02' },
-      { key: 'EXCELLENCE', title: 'INNOVATION & LOCAL VALUE', tagline: 'Continually elevating processes and Vietnamese agricultural value.', desc: 'Applying closed convection drying tech, standardizing traditional recipes, and augmenting added value for Vietnamese farms.', number: '03' },
-    ]
-  }
-  if (lang === 'ko') {
-    return [
-      { key: '진심 (TÂM)', title: '식품에 대한 정성과 양심', tagline: '품질과 생명에 대한 책임을 최우선합니다.', desc: '음식은 사람의 몸으로 직접 들어갑니다. 내 가족의 식탁에 올리는 마음으로 정성을 다해 안전하게 제조합니다.', number: '01' },
-      { key: '신뢰 (TÍN)', title: '정직과 변함없는 신뢰', tagline: '고객 및 B2B 파트너와의 약속을 지킵니다.', desc: '철저한 품질 일관성, 정확한 납기 준수 및 투명한 계약 이행으로 지속 가능한 비즈니스 파트너십을 만듭니다.', number: '02' },
-      { key: '혁신 (TINH)', title: '기술 혁신과 농산물 가치 제고', tagline: '베트남 청정 농산물의 가치를 극대화합니다.', desc: '밀폐 대류 건조 기술을 접목하여 전통 제조법을 현대화하고 베트남 농산물의 글로벌 가치를 높입니다.', number: '03' },
-    ]
-  }
-  return [
-    { key: 'TÂM', title: 'ĐẠO ĐỨC & LƯƠNG TÂM NGHỀ NGHIỆP', tagline: 'Đặt chất lượng và trách nhiệm lên trước.', desc: 'Chúng tôi hiểu rằng thực phẩm đi trực tiếp vào cơ thể người dùng. Mọi sản phẩm xuất xưởng đều được kiểm soát với tinh thần trách nhiệm cao nhất, như chính món ăn chuẩn bị cho gia đình.', number: '01' },
-    { key: 'TÍN', title: 'CHÍNH TRỰC & CAM KẾT VỮNG BỀN', tagline: 'Giữ trọn cam kết với khách hàng và đối tác.', desc: 'Xây dựng mối quan hệ dựa trên sự minh bạch, tôn trọng hợp đồng, đúng tiến độ giao hàng và giữ vững phẩm chất sản phẩm qua từng lô xuất xưởng.', number: '02' },
-    { key: 'TINH', title: 'TINH HOA & ĐỔI MỚI LIÊN TỤC', tagline: 'Không ngừng hoàn thiện sản phẩm, quy trình và giá trị nông sản Việt.', desc: 'Ứng dụng công nghệ sấy sạch đối lưu, chuẩn hóa công thức chế biến truyền thống, nâng cao giá trị gia tăng cho nguồn nông sản địa phương.', number: '03' },
-  ]
+/* ─── Section divider ───────────────────────────────────── */
+function SectionLabel({ vi }) {
+  return (
+    <div className="flex items-center gap-3 mb-6">
+      <div className="h-px w-8 bg-[#16A34A]" />
+      <span className="font-heading text-xs font-bold tracking-[0.15em] text-haq-text-secondary uppercase">{vi}</span>
+    </div>
+  )
 }
 
-/* ───────────────────────────────────────────────────────────────────
-   Data — Production Process (7 steps)
-   ─────────────────────────────────────────────────────────────────── */
-const getProductionProcess = (lang) => {
-  if (lang === 'en') {
-    return [
-      { step: '01', title: 'Farm Sourcing', desc: 'Selecting fresh Vietnamese agricultural produce meeting strict standards.' },
-      { step: '02', title: 'Sanitizing & Prep', desc: 'Thorough washing, peeling, and slicing in controlled cleanrooms.' },
-      { step: '03', title: 'Seasoning & Blend', desc: 'Marinated with proprietary recipes preserving traditional Vietnamese zest.' },
-      { step: '04', title: 'Convection Drying', desc: 'Closed-loop thermal circulation drying locking in crunch and natural color.' },
-      { step: '05', title: 'QC Inspection', desc: 'Multi-stage sorting, moisture check, crispness test, and microbial evaluation.' },
-      { step: '06', title: 'Barrier Packaging', desc: 'Sealed in aluminum foil barrier bags with batch traceability barcodes.' },
-      { step: '07', title: 'Storage & Dispatch', desc: 'Standard climate warehouse storage ready for domestic and international dispatch.' },
-    ]
-  }
-  if (lang === 'ko') {
-    return [
-      { step: '01', title: '청정 원재료 선별', desc: '베트남 우수 농가에서 엄선한 최상급 농산물 선별.' },
-      { step: '02', title: '세척 및 전처리', desc: '위생적인 시설에서 정밀 세척, 절단 및 살균 전처리.' },
-      { step: '03', title: '독자 배합 및 조미', desc: '전통 풍미를 살린 HAQ 독자 레시피로 균일 조미.' },
-      { step: '04', title: '열풍 대류 건조', desc: '최신 밀폐 대류 건조 기술로 바삭함과 고유 색상 보존.' },
-      { step: '05', title: 'KCS 품질 검수', desc: '이물 선별, 수분율 측정, 바삭함 및 미생물 안전 검사.' },
-      { step: '06', title: '무균 진공 포장', desc: '다층 알루미늄 파우치 밀폐 포장 및 생산 로트 인쇄.' },
-      { step: '07', title: '보관 및 신속 출고', desc: '온습도 관리 물류창고 보관 및 국내외 정식 출고.' },
-    ]
-  }
-  return [
-    { step: '01', title: 'Tuyển chọn nông sản', desc: 'Lựa chọn nguyên liệu nông sản Việt Nam đạt chuẩn chất lượng.' },
-    { step: '02', title: 'Sơ chế & làm sạch', desc: 'Quy trình rửa sạch, gọt cắt và khử trùng trong môi trường kiểm soát.' },
-    { step: '03', title: 'Chế biến & tẩm ướp', desc: 'Phối trộn gia vị công thức độc quyền, giữ nguyên hương vị truyền thống.' },
-    { step: '04', title: 'Sấy giòn khép kín', desc: 'Ứng dụng công nghệ sấy đối lưu tiên tiến, giữ màu sắc và độ giòn tự nhiên.' },
-    { step: '05', title: 'Kiểm tra KCS', desc: 'Sàng lọc tạp chất, kiểm tra độ ẩm, độ giòn và cảm quan vi sinh.' },
-    { step: '06', title: 'Đóng gói hút chân không', desc: 'Đóng gói màng nhôm bảo quản kín khí, in hạn sử dụng và mã vạch.' },
-    { step: '07', title: 'Lưu kho & Phân phối', desc: 'Bảo quản kho tiêu chuẩn xuất xưởng nội địa và xuất khẩu quốc tế.' },
-  ]
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   COMPONENT
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════
+   COMPANY PROFILE PAGE
+   ═════════════════════════════════════════════════════════════ */
 export default function CompanyProfilePage() {
   const { t, language } = useLanguage()
-  const CORE_VALUES = getCoreValues(language)
-  const PRODUCTION_PROCESS = getProductionProcess(language)
-
-  // Parallax scroll
-  const [scrollY, setScrollY] = useState(0)
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   return (
-    <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col relative">
+    <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col">
       <StickyNav />
       <FloatingContactBar />
 
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
 
-        {/* ═══════════════════════════════════════════════════════════════
-            TỔNG QUAN — Text + Photo grid
-            ═══════════════════════════════════════════════════════════════ */}
-        <section id="tong-quan" className="pt-8 sm:pt-12 pb-20 sm:pb-32 bg-white">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-24 items-start">
-              {/* Text column */}
-              <div>
-                <Reveal>
-                  <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[2.75rem] text-haq-ink tracking-tight leading-tight">
-                    {t('profile.sec1_title', 'Công ty Cổ phần HAQ Hà Nội')}
-                  </h2>
-                </Reveal>
-                <Reveal delay={150}>
-                  <p className="mt-6 text-base text-haq-text-secondary leading-[1.8]">
-                    {t('profile.sec1_desc', 'Thành lập từ năm 2021 tại Thủ đô Hà Nội, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối thực phẩm chế biến đóng gói. Doanh nghiệp làm chủ công nghệ sấy sạch đối lưu, tập trung vào các dòng bánh tráng sấy giòn, bánh nướng truyền thống và nông sản sấy, phục vụ hệ thống siêu thị, đại lý trên toàn quốc và thị trường xuất khẩu.')}
-                  </p>
-                </Reveal>
+        {/* ════════════════════════════════════════════════════════
+            HERO BANNER
+            ════════════════════════════════════════════════════════ */}
+        <section className="relative bg-[#0C1E15] overflow-hidden">
+          {/* Background */}
+          <img src={heroBanner1} alt="" className="absolute inset-0 w-full h-full object-cover opacity-35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-[#0C1E15]/50 to-[#0C1E15]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0C1E15]/60 via-transparent to-transparent" />
 
-                {/* Inline facts */}
-                <Reveal delay={300}>
-                  <dl className="mt-10 space-y-5 text-sm border-t border-haq-border pt-8">
-                    {[
-                      [t('profile.fact_legal_name_label', 'Tên pháp nhân'), t('profile.fact_legal_name', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')],
-                      [t('profile.fact_tax_label', 'Mã số thuế'), t('profile.fact_tax_val', '0109675204')],
-                      [t('profile.fact_hq_label', 'Trụ sở'), t('profile.fact_hq_val', 'Thành phố Hà Nội, Việt Nam')],
-                      [t('profile.fact_scope_label', 'Lĩnh vực'), t('profile.fact_scope_val', 'Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh nướng hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.')],
-                    ].map(([label, value], i) => (
-                      <div key={i} className="flex flex-col sm:flex-row sm:gap-6">
-                        <dt className="font-heading font-semibold text-haq-text-secondary text-xs uppercase tracking-wider shrink-0 sm:w-28 mb-1 sm:mb-0">{label}</dt>
-                        <dd className="text-haq-ink leading-relaxed">{value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </Reveal>
-              </div>
-
-              {/* Photo grid */}
-              <div className="space-y-4">
-                <Reveal delay={200}>
-                  <div className="rounded-2xl overflow-hidden">
-                    <img src={factoryHqImg} alt="Cơ sở sản xuất HAQ FOOD" className="w-full aspect-[4/3] object-cover hover:scale-[1.03] transition-transform duration-700" />
-                  </div>
-                </Reveal>
-                <div className="grid grid-cols-2 gap-4">
-                  <Reveal delay={350}>
-                    <div className="rounded-xl overflow-hidden">
-                      <img src={riceFieldImg} alt="Vùng nguyên liệu" className="w-full aspect-square object-cover hover:scale-[1.03] transition-transform duration-700" />
-                    </div>
-                  </Reveal>
-                  <Reveal delay={450}>
-                    <div className="rounded-xl overflow-hidden">
-                      <img src={labInspectionImg} alt="Kiểm soát chất lượng" className="w-full aspect-square object-cover hover:scale-[1.03] transition-transform duration-700" />
-                    </div>
-                  </Reveal>
-                </div>
-                <Reveal delay={500}>
-                  <p className="text-xs text-haq-text-secondary px-1">
-                    {t('profile.photo_caption', 'Cơ sở sản xuất HAQ FOOD tại Hà Nội: Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đối lưu đến đóng gói bao bì màng nhôm tiệt trùng.')}
-                  </p>
-                </Reveal>
-              </div>
-            </div>
-
-            {/* 3 Năng lực cốt lõi */}
-            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-px bg-haq-border rounded-2xl overflow-hidden">
-              {(t('profile.core_caps') || [
-                { num: '01', title: 'Sấy Sạch Đối Lưu Khép Kín', desc: 'Ứng dụng công nghệ sấy tuần hoàn nhiệt kín, kiểm soát chính xác nhiệt độ và độ ẩm, giữ trọn độ giòn xốp tự nhiên mà không tồn dư dầu chiên.' },
-                { num: '02', title: 'Liên Kết Nông Sản Bản Địa', desc: 'Ưu tiên kết nối và thu mua nguồn nông sản Việt Nam sạch, rõ ràng nguồn gốc xuất xứ, kiểm nghiệm định kỳ các chỉ tiêu vi sinh và an toàn thực phẩm.' },
-                { num: '03', title: 'Gia Công OEM / ODM Linh Hoạt', desc: 'Hỗ trợ đối tác chuỗi bán lẻ và xuất khẩu từ khâu R&D phát triển hương vị, gửi mẫu thử, thiết kế quy cách đóng gói đến hoàn tất hồ sơ tự công bố.' },
-              ]).map((c, i) => (
-                <Reveal key={i} delay={i * 150} className="bg-white p-8 sm:p-10">
-                  <span className="font-heading text-3xl font-extrabold text-haq-border">{c.num}</span>
-                  <h4 className="font-heading font-bold text-base text-haq-ink mt-3 mb-3">{c.title}</h4>
-                  <p className="text-sm text-haq-text-secondary leading-relaxed">{c.desc}</p>
-                </Reveal>
-              ))}
-            </div>
+          <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12 pt-24 sm:pt-32 lg:pt-40 pb-20 sm:pb-28">
+            <p className="font-heading text-[11px] font-bold tracking-[0.3em] text-[#16A34A] uppercase mb-5">
+              Giới thiệu doanh nghiệp
+            </p>
+            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[3.25rem] text-white leading-[1.12] tracking-tight uppercase max-w-3xl">
+              Công ty Cổ phần<br />
+              <span className="text-[#16A34A]">HAQ Hà Nội</span>
+            </h1>
+            <div className="h-[2px] w-16 bg-[#16A34A] mt-6 mb-6" />
+            <p className="text-base sm:text-lg text-white/50 leading-relaxed max-w-xl font-medium italic">
+              "Chất lượng là cốt lõi của thương hiệu"
+            </p>
+            <p className="mt-2 text-sm text-white/35 max-w-lg">
+              Sản xuất & phân phối thực phẩm chế biến đóng gói chuẩn vị Việt — Phục vụ thị trường nội địa & xuất khẩu quốc tế.
+            </p>
           </div>
-        </section>
 
-        {/* ═══════════════════════════════════════════════════════════════
-            FULL-WIDTH IMAGE DIVIDER — Product hero banner
-            ═══════════════════════════════════════════════════════════════ */}
-        <div className="relative overflow-hidden">
-          <img
-            src={heroBanner1}
-            alt="Sản phẩm HAQ FOOD"
-            className="w-full h-72 sm:h-96 lg:h-[480px] object-cover"
-            style={{ transform: `translateY(${(scrollY - 1200) * 0.1}px)` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════════
-            CÂU CHUYỆN + GIÁ TRỊ CỐT LÕI — Sticky image layout
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 bg-white">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            {/* Story statement */}
-            <Reveal>
-              <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-haq-ink tracking-tight leading-[1.1] max-w-4xl">
-                {t('profile.sec2_title_1', 'Mỗi sản phẩm')}{' '}
-                {t('profile.sec2_title_2', 'đều bắt đầu')}{' '}
-                <span className="text-haq-red">{t('profile.sec2_title_3', 'từ tự nhiên.')}</span>
-              </h2>
-            </Reveal>
-
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 mb-24">
-              <Reveal delay={150}>
-                <p className="text-lg text-haq-ink leading-[1.8] font-medium">
-                  {t('profile.sec2_desc_1', 'Chúng tôi tin rằng thực phẩm ngon phải bắt đầu từ nguyên liệu tốt, quy trình đúng và con người có trách nhiệm. HAQ FOOD không ngừng đổi mới để mang đến những sản phẩm tiện lợi, an toàn và giữ trọn hương vị truyền thống Việt Nam.')}
-                </p>
-              </Reveal>
-              <Reveal delay={300}>
-                <p className="text-base text-haq-text-secondary leading-[1.8]">
-                  {t('profile.sec2_desc_2', 'Chúng tôi xây dựng chuỗi giá trị khép kín từ khâu tuyển chọn nguyên liệu tươi sạch tại các vùng nông nghiệp trọng điểm cho đến dây chuyền sấy giòn đối lưu và đóng gói tiệt trùng, phục vụ khách hàng tiêu dùng và xuất khẩu.')}
-                </p>
-              </Reveal>
-            </div>
-
-            {/* TÂM – TÍN – TINH: Sticky image + scrolling values */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-              {/* Sticky image (desktop) */}
-              <div className="hidden lg:block relative">
-                <div className="sticky top-24 pr-16">
-                  <div className="rounded-2xl overflow-hidden">
-                    <img src={factoryImg} alt="Sản xuất HAQ FOOD" className="w-full aspect-[3/4] object-cover" />
+          {/* Stats bar */}
+          <div className="relative z-10 border-t border-white/10 bg-[#0C1E15]/50 backdrop-blur-sm">
+            <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 py-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-0">
+                {[
+                  { value: '2021', label: 'Năm thành lập' },
+                  { value: '7+', label: 'Chuỗi bán lẻ quốc gia' },
+                  { value: '02', label: 'Thị trường xuất khẩu' },
+                  { value: 'ISO · HACCP', label: 'Tiêu chuẩn xưởng & QC' },
+                ].map((s, i) => (
+                  <div key={i} className={`text-center ${i > 0 ? 'sm:border-l sm:border-white/10' : ''}`}>
+                    <div className="font-heading font-extrabold text-xl sm:text-2xl text-white tracking-tight">{s.value}</div>
+                    <div className="font-heading text-[10px] sm:text-[11px] uppercase font-bold tracking-[0.15em] text-white/35 mt-0.5">{s.label}</div>
                   </div>
-                  <p className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-[0.2em] mt-6">
-                    {t('profile.sec2_values_tag', 'Triết lý vận hành')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Mobile image */}
-              <div className="lg:hidden mb-10">
-                <Reveal>
-                  <div className="rounded-2xl overflow-hidden">
-                    <img src={factoryImg} alt="Sản xuất HAQ FOOD" className="w-full aspect-video object-cover" />
-                  </div>
-                  <p className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-[0.2em] mt-4">
-                    {t('profile.sec2_values_tag', 'Triết lý vận hành')}
-                  </p>
-                </Reveal>
-              </div>
-
-              {/* Scrolling values */}
-              <div>
-                {CORE_VALUES.map((val, idx) => (
-                  <Reveal key={val.key}>
-                    <div className={`py-14 lg:py-20 ${idx < CORE_VALUES.length - 1 ? 'border-b border-haq-border' : ''}`}>
-                      <div className="flex items-baseline gap-4 mb-5">
-                        <span className="font-heading font-extrabold text-5xl sm:text-6xl text-haq-red leading-none">{val.key}</span>
-                        <span className="font-heading text-sm font-bold text-[#C89B3C]">{val.number}</span>
-                      </div>
-                      <h4 className="font-heading font-bold text-sm text-haq-ink uppercase tracking-wide mb-2">{val.title}</h4>
-                      <p className="text-sm text-haq-red font-medium mb-4">{val.tagline}</p>
-                      <p className="text-sm text-haq-text-secondary leading-[1.8]">{val.desc}</p>
-                    </div>
-                  </Reveal>
                 ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════
-            QUY TRÌNH — Dark section + KCS
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 bg-[#0C1E15] text-white overflow-hidden">
+        {/* ════════════════════════════════════════════════════════
+            01 · LỜI NGỎ
+            ════════════════════════════════════════════════════════ */}
+        <section className="py-14 sm:py-20 bg-[#FAFAF8] border-b border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <Reveal>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight max-w-2xl">
-                {t('profile.sec4_title', 'Quy trình sản xuất')}{' '}
-                <span className="text-[#C89B3C]">{language === 'en' ? '7 stages' : language === 'ko' ? '7단계' : '7 công đoạn'}</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={150}>
-              <p className="mt-5 text-sm sm:text-base text-white/50 leading-relaxed max-w-xl">
-                {t('profile.sec4_desc', 'Hệ thống vận hành liên hoàn kiểm soát nhiệt ẩm và an toàn vệ sinh thực phẩm nghiêm ngặt từ khâu nguyên liệu đầu vào đến thành phẩm đóng gói xuất xưởng.')}
-              </p>
-            </Reveal>
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-2xl border border-haq-border p-6 sm:p-10 lg:p-14 relative overflow-hidden">
+                  {/* Green accent */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#16A34A] rounded-l-2xl" />
 
-            {/* Desktop: Horizontal steps */}
-            <div className="hidden lg:grid grid-cols-7 gap-5 mt-16">
-              {PRODUCTION_PROCESS.map((proc, i) => (
-                <Reveal key={proc.step} delay={i * 80}>
-                  <div className="group">
-                    <div className="font-heading font-extrabold text-4xl text-[#C89B3C]/30 group-hover:text-[#C89B3C] transition-colors duration-300 mb-3">
-                      {proc.step}
+                  <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-haq-ink uppercase tracking-tight mb-6">
+                    Kính gửi Quý Đối Tác & Khách Hàng!
+                  </h2>
+
+                  <div className="space-y-4 text-sm sm:text-[15px] text-haq-ink leading-[1.85]">
+                    <p>
+                      Trong bối cảnh thị trường thực phẩm ngày càng đòi hỏi sự an toàn – minh bạch – chất lượng, <strong>CÔNG TY CỔ PHẦN HAQ HÀ NỘI</strong> được thành lập với mong muốn mang đến những sản phẩm đồ ăn vặt chuẩn vị Việt, đáp ứng tiêu chuẩn vệ sinh an toàn thực phẩm và phù hợp khẩu vị đa dạng của người tiêu dùng hiện đại.
+                    </p>
+                    <p>
+                      Với quan điểm xuyên suốt <em>"Chất lượng là cốt lõi của thương hiệu"</em>, HAQ Hà Nội không ngừng cải tiến quy trình, nâng cao năng lực sản xuất và đa dạng hoá sản phẩm.
+                    </p>
+                    <p className="text-[#0F5132] font-medium">
+                      Chúng tôi tự hào là đối tác tin cậy của nhiều hệ thống bán lẻ lớn trên toàn quốc và từng bước khẳng định vị thế tại thị trường quốc tế.
+                    </p>
+                  </div>
+
+                  <div className="mt-8 pt-6 border-t border-haq-border flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-haq-text-secondary">Trân trọng,</p>
+                      <p className="font-heading font-bold text-sm text-haq-ink uppercase tracking-wide mt-1">
+                        Ban Lãnh Đạo — Công ty Cổ phần HAQ Hà Nội
+                      </p>
                     </div>
-                    <div className="h-px w-full bg-white/10 group-hover:bg-[#C89B3C]/60 transition-colors duration-300 mb-4" />
-                    <h3 className="font-heading font-bold text-sm text-white mb-2 leading-snug">{proc.title}</h3>
-                    <p className="text-xs text-white/40 leading-relaxed group-hover:text-white/65 transition-colors duration-300">{proc.desc}</p>
+                    <span className="text-xs text-haq-text-secondary">Hà Nội, Việt Nam</span>
                   </div>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Mobile: Vertical */}
-            <div className="lg:hidden space-y-5 mt-12">
-              {PRODUCTION_PROCESS.map((proc, i) => (
-                <Reveal key={proc.step} delay={i * 60}>
-                  <div className="flex gap-5">
-                    <span className="font-heading font-extrabold text-2xl text-[#C89B3C]/60 shrink-0 w-8">{proc.step}</span>
-                    <div className="border-l border-white/10 pl-5 pb-2">
-                      <h3 className="font-heading font-bold text-sm text-white">{proc.title}</h3>
-                      <p className="text-xs text-white/40 mt-1 leading-relaxed">{proc.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* KCS Section */}
-            <div className="mt-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-              <Reveal>
-                <div className="rounded-2xl overflow-hidden">
-                  <img src={cargoExportImg} alt="Xuất khẩu HAQ FOOD" className="w-full aspect-[4/3] object-cover" />
                 </div>
-              </Reveal>
-              <div>
-                <Reveal delay={150}>
-                  <h3 className="font-heading font-bold text-2xl sm:text-3xl text-white leading-tight">
-                    {t('profile.sec3_kcs_title_1', 'Chuẩn hóa')}{' '}
-                    <span className="text-[#C89B3C]">{t('profile.sec3_kcs_title_2', 'chất lượng đồng nhất.')}</span>
-                  </h3>
-                </Reveal>
-
-                <div className="mt-8 space-y-5">
-                  {(t('profile.sec3_kcs_points') || [
-                    { title: 'Vệ Sinh An Toàn Thực Phẩm Tuyệt Đối', desc: 'Quy trình kiểm soát nghiêm ngặt từ trang phục công nhân đến khu vực chế biến.' },
-                    { title: 'Độ Đồng Đều Sản Phẩm Cao', desc: 'Công nghệ tự động hóa kiểm soát nhiệt độ sấy, đảm bảo chất lượng đồng nhất giữa các lô.' },
-                    { title: 'Kiểm Tra KCS Độc Lập', desc: 'Mọi lô hàng trước khi xuất kho đều phải vượt qua bài kiểm tra cảm quan và vi sinh.' },
-                  ]).map((point, pIdx) => (
-                    <Reveal key={pIdx} delay={300 + pIdx * 120}>
-                      <div className="flex items-start gap-3">
-                        <CheckCircle2 className="w-4 h-4 text-[#C89B3C] shrink-0 mt-1" />
-                        <div>
-                          <h4 className="font-heading font-bold text-sm text-white">{point.title}</h4>
-                          <p className="text-xs text-white/40 mt-0.5">{point.desc}</p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-
-                <Reveal delay={650}>
-                  <div className="flex flex-wrap gap-2.5 mt-8">
-                    {['ISO 22000', 'HACCP', 'OEM/ODM'].map((cert) => (
-                      <span key={cert} className="font-heading text-[11px] font-bold uppercase tracking-wider text-[#C89B3C] border border-[#C89B3C]/30 px-4 py-2 rounded-full">
-                        {cert}
-                      </span>
-                    ))}
-                  </div>
-                </Reveal>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════
-            XUẤT KHẨU QUỐC TẾ
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 bg-white">
+        {/* ════════════════════════════════════════════════════════
+            02 · TỔNG QUAN DOANH NGHIỆP
+            ════════════════════════════════════════════════════════ */}
+        <section className="py-14 sm:py-20 bg-white">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-              <Reveal>
-                <div className="rounded-2xl overflow-hidden">
-                  <img src={exportImg} alt="Xuất khẩu thực phẩm" className="w-full aspect-[16/10] object-cover hover:scale-[1.02] transition-transform duration-700" />
-                </div>
-              </Reveal>
-              <div>
-                <Reveal delay={150}>
-                  <h3 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink tracking-tight leading-tight">
-                    {t('profile.sec6_title_1', 'Từ Việt Nam')}<br />
-                    <span className="text-haq-red">{t('profile.sec6_title_2', 'vươn ra thế giới.')}</span>
-                  </h3>
-                </Reveal>
-                <Reveal delay={300}>
-                  <p className="mt-5 text-sm text-haq-text-secondary leading-[1.8]">
-                    {t('profile.sec6_desc', 'HAQ FOOD định hướng phát triển mạnh mẽ trên thị trường quốc tế, đưa các sản phẩm nông sản chế biến đậm đà bản sắc Việt Nam đến với đối tác và người tiêu dùng toàn cầu.')}
+            <SectionLabel number="01" vi="Tổng quan" en="Company Overview" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14">
+              {/* Left: Text + facts */}
+              <div className="lg:col-span-3">
+                <Reveal>
+                  <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink tracking-tight leading-tight mb-5">
+                    Công ty Cổ phần HAQ Hà Nội
+                  </h2>
+                  <p className="text-sm sm:text-[15px] text-haq-text-secondary leading-[1.85] mb-8">
+                    Thành lập từ năm 2021 tại Thủ đô Hà Nội, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối thực phẩm chế biến đóng gói. Doanh nghiệp làm chủ công nghệ sấy sạch đối lưu, tập trung vào các dòng bánh tráng sấy giòn, bánh nướng truyền thống và nông sản sấy, phục vụ hệ thống siêu thị, đại lý trên toàn quốc và thị trường xuất khẩu.
                   </p>
                 </Reveal>
-                <Reveal delay={450}>
-                  <div className="mt-8 grid grid-cols-3 gap-3">
-                    {(t('profile.sec6_markets') || [
-                      { region: 'NỘI ĐỊA', country: 'Việt Nam' },
-                      { region: 'ĐÔNG BẮC Á', country: 'Hàn Quốc' },
-                      { region: 'ĐÔNG Á', country: 'Đài Loan' },
-                    ]).map((m, idx) => (
-                      <div key={idx} className="text-center py-4 bg-haq-cream rounded-xl">
-                        <div className="font-heading text-[10px] text-haq-text-secondary uppercase tracking-wider">{m.region}</div>
-                        <div className="font-heading font-bold text-sm text-haq-ink mt-0.5">{m.country}</div>
-                      </div>
-                    ))}
+
+                {/* Corporate facts table */}
+                <Reveal delay={100}>
+                  <table className="w-full text-sm border-t border-haq-border">
+                    <tbody>
+                      {[
+                        ['Tên pháp nhân', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI'],
+                        ['Năm thành lập', '2021'],
+                        ['Trụ sở chính', 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Cầu Giấy, Hà Nội'],
+                        ['Hotline', '024 23 23 56 56'],
+                        ['Email', 'info@haq.com.vn'],
+                        ['Lĩnh vực', 'Sản xuất – phân phối thực phẩm đóng gói; đồ ăn vặt; OEM/ODM'],
+                        ['Thị trường', 'Việt Nam · Hàn Quốc · Đài Loan (Mục tiêu: Nhật Bản & Châu Á)'],
+                        ['Chứng nhận', 'ISO 22000 · HACCP'],
+                      ].map(([k, v], i) => (
+                        <tr key={i} className="border-b border-haq-border/50">
+                          <td className="py-3 pr-4 font-heading font-bold text-[11px] text-haq-text-secondary uppercase tracking-wider align-top w-28 sm:w-36">{k}</td>
+                          <td className="py-3 text-haq-ink leading-relaxed">{v}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Reveal>
+              </div>
+
+              {/* Right: Photos */}
+              <div className="lg:col-span-2 space-y-4">
+                <Reveal delay={150}>
+                  <div className="rounded-xl overflow-hidden">
+                    <img src={factoryHqImg} alt="Cơ sở sản xuất HAQ FOOD" className="w-full aspect-[4/3] object-cover" />
                   </div>
                 </Reveal>
+                <div className="grid grid-cols-2 gap-4">
+                  <Reveal delay={250}>
+                    <div className="rounded-xl overflow-hidden">
+                      <img src={riceFieldImg} alt="Vùng nguyên liệu" className="w-full aspect-square object-cover" />
+                    </div>
+                  </Reveal>
+                  <Reveal delay={300}>
+                    <div className="rounded-xl overflow-hidden">
+                      <img src={labInspectionImg} alt="Kiểm soát chất lượng" className="w-full aspect-square object-cover" />
+                    </div>
+                  </Reveal>
+                </div>
+                <Reveal delay={350}>
+                  <p className="text-[11px] text-haq-text-secondary leading-relaxed">
+                    Cơ sở sản xuất HAQ FOOD tại Hà Nội — Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đối lưu đến đóng gói bao bì màng nhôm.
+                  </p>
+                </Reveal>
+              </div>
+            </div>
+
+            {/* 3 năng lực cốt lõi */}
+            <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-px bg-haq-border rounded-xl overflow-hidden border border-haq-border">
+              {[
+                { num: '01', title: 'Sấy Sạch Đối Lưu Khép Kín', desc: 'Ứng dụng công nghệ sấy tuần hoàn nhiệt kín, kiểm soát chính xác nhiệt độ và độ ẩm, giữ trọn độ giòn xốp tự nhiên mà không tồn dư dầu chiên.' },
+                { num: '02', title: 'Liên Kết Nông Sản Bản Địa', desc: 'Ưu tiên kết nối và thu mua nguồn nông sản Việt Nam sạch, rõ ràng nguồn gốc xuất xứ, kiểm nghiệm định kỳ các chỉ tiêu vi sinh và an toàn thực phẩm.' },
+                { num: '03', title: 'Gia Công OEM / ODM Linh Hoạt', desc: 'Hỗ trợ đối tác chuỗi bán lẻ và xuất khẩu từ khâu R&D phát triển hương vị, gửi mẫu thử, thiết kế quy cách đóng gói đến hoàn tất hồ sơ tự công bố.' },
+              ].map((c, i) => (
+                <Reveal key={i} delay={i * 100}>
+                  <div className="bg-white p-6 sm:p-8 h-full">
+                    <span className="font-heading text-2xl font-extrabold text-haq-border">{c.num}</span>
+                    <h4 className="font-heading font-bold text-sm text-haq-ink mt-3 mb-2 uppercase tracking-wide">{c.title}</h4>
+                    <p className="text-sm text-haq-text-secondary leading-relaxed">{c.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
+        {/* ════════════════════════════════════════════════════════
+            03 · TẦM NHÌN · SỨ MỆNH · GIÁ TRỊ CỐT LÕI
+            ════════════════════════════════════════════════════════ */}
+        <VisionSection />
+
+
+        {/* ════════════════════════════════════════════════════════
+            LỢI THẾ CẠNH TRANH & ĐỊNH HƯỚNG CHIẾN LƯỢC
+            ════════════════════════════════════════════════════════ */}
+        <section className="py-14 sm:py-20 bg-[#FAFAF8] border-t border-haq-border">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <SectionLabel number="05" vi="Năng lực & Cam kết" en="Competitive Advantages" />
+
+            <Reveal>
+              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase tracking-tight mb-10">
+                Lợi thế cạnh tranh & Cam kết chiến lược
+              </h2>
+            </Reveal>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-haq-border border border-haq-border rounded-xl overflow-hidden">
+
+              {/* Cột 1: Lợi thế */}
+              <div className="bg-white p-6 sm:p-10">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-haq-border">
+                  <div>
+                    <span className="font-heading text-[10px] font-bold text-[#16A34A] uppercase tracking-[0.2em] block">Năng lực vượt trội</span>
+                    <h3 className="font-heading font-extrabold text-lg sm:text-xl text-haq-ink uppercase tracking-tight mt-0.5">Lợi thế cạnh tranh</h3>
+                  </div>
+                  <span className="font-heading font-black text-3xl text-haq-border">01</span>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    { t: 'Chất Lượng Ổn Định – Giá Cạnh Tranh', d: 'Quy trình sấy đối lưu kiểm soát nhiệt độ nghiêm ngặt, đảm bảo độ đồng đều cao và giá thành tối ưu.' },
+                    { t: 'Sản Phẩm Đa Dạng – Gia Công OEM/ODM', d: 'Nghiên cứu khẩu vị riêng, tùy biến bao bì và hoàn thiện hồ sơ tự công bố cho từng đối tác bán lẻ.' },
+                    { t: 'Đội Ngũ Am Hiểu Thị Trường', d: 'Đội ngũ chuyên môn giàu kinh nghiệm ngành hàng tiêu dùng nhanh (FMCG) và thương mại thực phẩm.' },
+                    { t: 'Hệ Thống Phân Phối Rộng Khắp', d: 'Hiện diện tại WinMart, Big C, GO!, Circle K, GS25, Kmart, Bách Hóa Xanh trên toàn quốc.' },
+                    { t: 'Kinh Nghiệm Xuất Khẩu Quốc Tế', d: 'Đã xuất khẩu chính ngạch sang Hàn Quốc, Đài Loan và đang chuẩn bị tiêu chuẩn thâm nhập Nhật Bản.' },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 py-2 border-b border-haq-border/40 last:border-b-0">
+                      <span className="font-heading font-bold text-xs text-[#16A34A] shrink-0 mt-0.5 w-5">0{i + 1}.</span>
+                      <div>
+                        <h4 className="font-heading font-bold text-[13px] text-haq-ink uppercase tracking-wide">{item.t}</h4>
+                        <p className="text-[11px] text-haq-text-secondary leading-relaxed mt-0.5">{item.d}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Cột 2: Cam kết */}
+              <div className="bg-[#FAF9F5] p-6 sm:p-10">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-haq-border">
+                  <div>
+                    <span className="font-heading text-[10px] font-bold text-[#C89B3C] uppercase tracking-[0.2em] block">Tầm nhìn dài hạn</span>
+                    <h3 className="font-heading font-extrabold text-lg sm:text-xl text-haq-ink uppercase tracking-tight mt-0.5">Cam kết & Định hướng</h3>
+                  </div>
+                  <span className="font-heading font-black text-3xl text-haq-border">02</span>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    { t: 'Sản Phẩm An Toàn – Minh Bạch – Đạt Chuẩn', d: 'Truy xuất 100% nguồn gốc nông sản, lưu mẫu đối chứng và tuân thủ tuyệt đối tiêu chuẩn ISO/HACCP.' },
+                    { t: 'Đổi Mới & Phát Triển Sản Phẩm Mới', d: 'Nghiên cứu các dòng snack dinh dưỡng mới, ít dầu chiên, phù hợp lối sống năng động hiện đại.' },
+                    { t: 'Tối Ưu Vận Hành & Logistics', d: 'Chuẩn hóa quy trình xuất kho minh bạch, duy trì độ tươi mới và hạn dùng tối ưu cho đối tác.' },
+                    { t: 'Hướng Tới Chuẩn Thị Trường Nhật Bản', d: 'Nâng cấp phòng sạch và kiểm nghiệm vi sinh nhằm đáp ứng các yêu cầu kiểm dịch khắt khe của Nhật Bản.' },
+                    { t: 'Đầu Tư Thương Hiệu Bền Vững', d: 'Đồng hành cùng nông dân bản địa, tham gia các hội chợ giao thương quốc tế lan tỏa ẩm thực Việt.' },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 py-2 border-b border-haq-border/40 last:border-b-0">
+                      <span className="font-heading font-bold text-xs text-[#C89B3C] shrink-0 mt-0.5 w-5">0{i + 1}.</span>
+                      <div>
+                        <h4 className="font-heading font-bold text-[13px] text-haq-ink uppercase tracking-wide">{item.t}</h4>
+                        <p className="text-[11px] text-haq-text-secondary leading-relaxed mt-0.5">{item.d}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-      </main>
 
+      </main>
       <Footer />
     </div>
   )

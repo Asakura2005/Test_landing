@@ -326,6 +326,7 @@ export default function ContactPage() {
     } catch (err) {
       console.error('Contact submission error:', err)
       setErrorMessage(
+        err?.message ||
         'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0993 308 319 để được hỗ trợ trực tiếp.'
       )
     } finally {

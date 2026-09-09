@@ -160,7 +160,7 @@ export default function LeadForm() {
                     Trụ Sở Chính (Google Maps)
                   </span>
                   <span className="font-heading font-bold text-sm text-white leading-relaxed">
-                    Tổ 6, Phường Cầu Giấy, TP. Hà Nội
+                    Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, TP. Hà Nội
                   </span>
                 </div>
               </a>

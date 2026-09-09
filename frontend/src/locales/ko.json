@@ -64,8 +64,8 @@
     "fact_tax_label": "사업자등록번호",
     "fact_tax_val": "0109675204",
     "fact_tax_sub": "— 하노이 기획투자국 발급",
-    "fact_hq_label": "본사 및 운영 센터",
-    "fact_hq_val": "베트남 하노이시",
+    "fact_hq_label": "본사 주소",
+    "fact_hq_val": "Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam",
     "fact_scope_label": "주요 사업 영역",
     "fact_scope_val": "포장 가공식품 제조 및 가공: 프리미엄 크리스피 라이스페이퍼 스낵(HOKI), 아몬드 구운 스낵, 코코넛 밀크 과자, 녹두떡 및 건조 농산물.",
     "fact_dist_label": "유통 채널",
@@ -152,6 +152,63 @@
     "sec7_badge": "07 — 기업의 사회적 책임",
     "sec7_title": "지속 가능한 성장과 신뢰의 약속",
     "sec7_desc": "소비자, B2B 파트너, 임직원 및 베트남 농가와 함께 상생 발전하는 지속 가능한 식품 생태계를 구축합니다.",
+    "vision_mission": {
+      "badge": "03 — 비전 · 사명 · 핵심 가치",
+      "badge_en": "VISION · MISSION · CORE VALUES",
+      "heading_main": "전략적 비전 및 기업 발전 기반",
+      "heading_sub": "베트남 스낵 시장의 선도적 입지를 다지고 글로벌 고표준 시장으로 뻗어나갑니다.",
+      "vision_title": "비전 (VISION)",
+      "vision_title_en": "TẦM NHÌN",
+      "vision_desc": "베트남 스낵 제조 및 유통 분야의 선도 기업으로 도약하며, 일본, 한국 및 아시아 주요 고표준 시장으로 확장합니다.",
+      "vision_desc_en": "To become a leading pioneer in Vietnam’s snack manufacturing and distribution sector, expanding into high-standard markets such as Japan, South Korea, and other Asian countries.",
+      "mission_title": "사명 (MISSION)",
+      "mission_title_en": "SỨ MỆNH",
+      "mission_desc": "소비자의 높아지는 눈높이에 부응하여 맛있고, 안전하며, 표준 규격을 준수하는 우수한 제품을 제공합니다.",
+      "mission_desc_en": "To deliver delicious, safe, and certified-quality products that meet evolving consumer demands.",
+      "mission_points": [
+        { "title": "풍부한 전통 풍미", "desc": "전통 비법과 고유 레시피를 담아 바삭하고 깊은 풍미 보존" },
+        { "title": "철저한 식품 안전", "desc": "잔류 튀김유 배제, 미생물 및 위해요소 완벽 차단 관리" },
+        { "title": "국제 표준 준수", "desc": "ISO 22000 및 HACCP 인증 무균 클린룸 제조 설비" }
+      ],
+      "values_badge": "기업 문화 및 행동 원칙",
+      "values_title": "핵심 가치",
+      "values_title_en": "CORE VALUES",
+      "values_desc": "HAQ FOOD의 모든 제조 공정, 품질 검수 및 파트너 협력을 이끄는 5대 핵심 가치입니다.",
+      "values": [
+        {
+          "key": "01",
+          "name": "품질 우선 (Quality First)",
+          "name_en": "Chất lượng là nền tảng",
+          "desc": "원재료 선별부터 열풍 대류 건조 및 최종 포장까지, 완벽한 식품 안전과 품질을 모든 의사결정의 최우선 기준으로 삼습니다."
+        },
+        {
+          "key": "02",
+          "name": "공정 투명성 (Transparency)",
+          "name_en": "Minh bạch quy trình",
+          "desc": "베트남 청정 농산물의 원산지 추적성과 공인 시험 성적서를 투명하게 공개하여 고객 및 B2B 파트너의 굳건한 신뢰를 구축합니다."
+        },
+        {
+          "key": "03",
+          "name": "제품 혁신 (Innovation)",
+          "name_en": "Đổi mới sản phẩm",
+          "desc": "선진 밀폐 대류 건조 기술을 지속 연구하여 현대적이고 편리한 프리미엄 스낵 제품군을 끊임없이 개발합니다."
+        },
+        {
+          "key": "04",
+          "name": "지속 가능한 파트너십 (Sustainable Partnership)",
+          "name_en": "Hợp tác bền vững",
+          "desc": "대형 유통망, 협력 바이어 및 생산 농가와의 계약과 신뢰를 엄수하며 장기적인 동반 성장을 도모합니다."
+        },
+        {
+          "key": "05",
+          "name": "고객 중심 접근 (Customer-centric Approach)",
+          "name_en": "Lấy khách hàng làm trung tâm",
+          "desc": "소비자의 건강과 변화하는 입맛을 깊이 경청하여 풍미, 패키징 디자인, 편의성을 지속적으로 개선합니다."
+        }
+      ],
+      "expansion_badge": "시장 확대 로드맵",
+      "expansion_title": "전략적 해외 시장 확장 로드맵"
+    },
     "cta_badge": "B2B 파트너십 및 제휴 문의",
     "cta_title_1": "지속 가능한 성장을 위한",
     "cta_title_2": "든든한 비즈니스 파트너",

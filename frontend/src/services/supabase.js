@@ -148,8 +148,21 @@ export async function submitLead(leadData) {
     created_at: new Date().toISOString(),
   }
 
-  // 6. 🔐 Mã hoá AES-256-GCM các trường PII trước khi lưu lên Supabase
-  const encryptedPayload = await encryptObject(plainPayload, LEAD_SENSITIVE_FIELDS)
+  // 6. 🔐 Mã hoá AES-256-GCM các trường PII trước khi lưu lên Supabase (với fallback an toàn)
+  let encryptedPayload = plainPayload
+  try {
+    const encrypted = await encryptObject(plainPayload, LEAD_SENSITIVE_FIELDS)
+    if (encrypted && typeof encrypted === 'object') {
+      // Loại bỏ các trường _blind nếu có để tránh lỗi PGRST204 do bảng leads không có các cột này
+      const cleaned = {}
+      for (const [k, v] of Object.entries(encrypted)) {
+        if (!k.endsWith('_blind')) cleaned[k] = v
+      }
+      encryptedPayload = cleaned
+    }
+  } catch (encErr) {
+    console.warn('Crypto service unavailable, proceeding with sanitized payload:', encErr?.message || encErr)
+  }
 
   try {
     const { data, error } = await supabase

@@ -62,8 +62,8 @@
     "fact_tax_label": "Tax ID / Business Code",
     "fact_tax_val": "0109675204",
     "fact_tax_sub": "— Issued by Hanoi Dept. of Planning & Investment",
-    "fact_hq_label": "Headquarters & Ops",
-    "fact_hq_val": "Hanoi City, Vietnam",
+    "fact_hq_label": "Headquarters",
+    "fact_hq_val": "No. 30, Alley 1 Pham Tuan Tai Street, Nghia Do Ward, Hanoi City, Vietnam",
     "fact_scope_label": "Industry & Scope",
     "fact_scope_val": "Manufacturing, deep processing and preserving packaged foods: Premium crispy rice paper snacks (HOKI), Almond baked snacks, Coconut milk biscuits, Mung bean cakes, and Dried agricultural goods.",
     "fact_dist_label": "Distribution Channels",
@@ -150,6 +150,63 @@
     "sec7_badge": "07 — CORPORATE RESPONSIBILITY",
     "sec7_title": "Sustainable Growth & Stewardship",
     "sec7_desc": "Long-term commitments to consumers, B2B partners, workforce welfare, and Vietnamese sustainable agriculture.",
+    "vision_mission": {
+      "badge": "03 — VISION · MISSION · CORE VALUES",
+      "badge_en": "STRATEGIC FOUNDATION",
+      "heading_main": "STRATEGIC VISION & CORE FOUNDATION",
+      "heading_sub": "Affirming our leadership position from Vietnam's snack market and expanding into global high-standard international markets.",
+      "vision_title": "VISION",
+      "vision_title_en": "TẦM NHÌN",
+      "vision_desc": "To become a leading pioneer in Vietnam’s snack manufacturing and distribution sector, expanding into high-standard markets such as Japan, South Korea, and other Asian countries.",
+      "vision_desc_en": "Trở thành doanh nghiệp tiên phong và dẫn đầu trong lĩnh vực sản xuất – phân phối đồ ăn vặt tại Việt Nam; mở rộng sang các thị trường tiêu chuẩn cao như Nhật Bản, Hàn Quốc và các quốc gia châu Á.",
+      "mission_title": "MISSION",
+      "mission_title_en": "SỨ MỆNH",
+      "mission_desc": "To deliver delicious, safe, and certified-quality products that meet evolving consumer demands.",
+      "mission_desc_en": "Mang đến sản phẩm ngon – an toàn – đạt chuẩn, đáp ứng nhu cầu ngày càng cao của người tiêu dùng.",
+      "mission_points": [
+        { "title": "Delicious Taste", "desc": "Preserving rich, authentic crispy textures from heritage recipes" },
+        { "title": "Absolute Safety", "desc": "Zero residual frying oil, rigorous microbiological hazard controls" },
+        { "title": "Certified Standards", "desc": "Closed-loop cleanroom operations with ISO 22000 & HACCP certification" }
+      ],
+      "values_badge": "CORPORATE CULTURE FOUNDATION",
+      "values_title": "CORE VALUES",
+      "values_title_en": "GIÁ TRỊ CỐT LÕI",
+      "values_desc": "5 foundational pillars guiding every manufacturing protocol, quality assurance decision, and commercial partnership at HAQ FOOD.",
+      "values": [
+        {
+          "key": "01",
+          "name": "Quality First",
+          "name_en": "Chất lượng là nền tảng",
+          "desc": "From ingredient selection and thermal regulation to final packaging, uncompromising food safety is our ultimate benchmark."
+        },
+        {
+          "key": "02",
+          "name": "Transparency",
+          "name_en": "Minh bạch quy trình",
+          "desc": "Open and verifiable origin tracing of local agricultural produce, backed by full laboratory test certificates to build enduring trust."
+        },
+        {
+          "key": "03",
+          "name": "Innovation",
+          "name_en": "Đổi mới sản phẩm",
+          "desc": "Continuous R&D in convection drying technology, developing new flavor profiles and expanding convenient modern snack categories."
+        },
+        {
+          "key": "04",
+          "name": "Sustainable Partnership",
+          "name_en": "Hợp tác bền vững",
+          "desc": "Reliable collaboration, honoring commercial agreements, and cultivating mutual long-term prosperity with retail chains and farmers."
+        },
+        {
+          "key": "05",
+          "name": "Customer-centric Approach",
+          "name_en": "Lấy khách hàng làm trung tâm",
+          "desc": "Attentive to consumer dietary wellness and market trends, continually refining taste profiles, packaging convenience, and brand experience."
+        }
+      ],
+      "expansion_badge": "MARKET EXPANSION",
+      "expansion_title": "STRATEGIC EXPANSION ROADMAP"
+    },
     "cta_badge": "B2B PARTNERSHIP INQUIRIES",
     "cta_title_1": "GROWING TOGETHER FOR",
     "cta_title_2": "SUSTAINABLE SUCCESS",

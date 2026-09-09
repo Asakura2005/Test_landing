@@ -31,7 +31,7 @@ export const POLICY_TRANSLATIONS = {
       contactBox: {
         company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
         addressLabel: 'Địa chỉ:',
-        address: 'Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam',
+        address: 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam',
         hotlineLabel: 'Hotline:',
         zaloLabel: 'Zalo OA:',
         zaloName: 'HAQ Hà Nội',
@@ -495,7 +495,7 @@ export const POLICY_TRANSLATIONS = {
       contactBox: {
         company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
         addressLabel: 'Địa chỉ:',
-        address: 'Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam',
+        address: 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam',
         hotlineLabel: 'Hotline:',
         zaloLabel: 'Zalo OA:',
         zaloName: 'HAQ Hà Nội',
@@ -938,7 +938,7 @@ export const POLICY_TRANSLATIONS = {
       contactBox: {
         company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
         addressLabel: 'Địa chỉ:',
-        address: 'Tổ 6, Phường Cầu Giấy, Thành Phố Hà Nội, Việt Nam',
+        address: 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam',
         hotlineLabel: 'Hotline:',
         zaloLabel: 'Zalo OA:',
         zaloName: 'HAQ Hà Nội',

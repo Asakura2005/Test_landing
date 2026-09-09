@@ -521,27 +521,27 @@ function getChapters(lang) {
       id: 'year-2025-2026', year: '2025–2026',
       phase: en ? 'CHAPTER 05' : lang === 'ko' ? '제5장' : 'CHƯƠNG 05',
       theme: en ? 'AUTOMATION & SCALE' : lang === 'ko' ? '자동화 및 글로벌' : 'TỰ ĐỘNG HÓA & MỞ RỘNG',
-      title: en ? 'Cleanroom Upgrades & Full-Service OEM/ODM Expansion'
-        : lang === 'ko' ? '무균 클린룸 고도화 및 OEM/ODM 확대'
-        : 'Nâng Cấp Phòng Sạch & Mở Rộng OEM/ODM',
+      title: en ? 'Vietnam – China Trade Fair & OEM/ODM Expansion'
+        : lang === 'ko' ? '베트남-중국 무역 박람회 참가 및 OEM/ODM 확대'
+        : 'Hội Chợ Giao Thương Việt – Trung & Mở Rộng OEM/ODM',
       lead: en ? 'Comprehensive modernization of technological infrastructure, international trade exhibitions, and supply chain expansion.'
         : lang === 'ko' ? '기술 인프라 전면 현대화, 국제 무역 박람회 참가 및 공급망 다각화 추진.'
         : 'Hiện đại hóa toàn diện hạ tầng kỹ thuật, tham gia hội chợ thương mại quốc tế và mở rộng chuỗi cung ứng.',
-      desc: en ? 'HAQ FOOD continually invests in automated packaging systems and positive-pressure cleanrooms. Concurrently, participating in international trade expos to scale OEM/ODM partnerships across Asia.'
-        : lang === 'ko' ? '자동 계량 포장 시스템과 양압 클린룸 환경을 지속적으로 업그레이드하고 있습니다. 국제 무역 교역회에 참가하여 OEM/ODM 위탁 제조 파트너십을 체결하고 일본 및 동남아 시장 진출을 준비하고 있습니다.'
-        : 'HAQ FOOD liên tục đầu tư hệ thống tự động hóa cân đóng gói, kiểm soát môi trường phòng sạch áp suất dương. Đồng thời tham gia các hội chợ giao thương quốc tế để mở rộng dịch vụ gia công OEM/ODM và tiếp cận thị trường mới.',
+      desc: en ? 'HAQ FOOD continually invests in automated packaging systems and positive-pressure cleanrooms. Concurrently, participating in the Vietnam – China Trade Fair to scale OEM/ODM partnerships across Asia and targeting the Japanese market.'
+        : lang === 'ko' ? '자동 계량 포장 시스템과 양압 클린룸 환경을 지속적으로 업그레이드하고 있습니다. 베트남-중국 무역 박람회에 참가하여 OEM/ODM 위탁 제조 파트너십을 체결하고 일본 및 동남아 시장 진출을 준비하고 있습니다.'
+        : 'HAQ FOOD liên tục đầu tư hệ thống tự động hóa cân đóng gói, kiểm soát môi trường phòng sạch áp suất dương. Doanh nghiệp tham gia Hội chợ Giao thương Việt – Trung để mở rộng dịch vụ gia công OEM/ODM và xúc tiến thị trường Nhật Bản.',
       achievements: en ? [
-        'Participated in international trade fairs, establishing connections with 50+ B2B partners.',
+        'Participated in the Vietnam – China Trade Fair, establishing connections with 50+ B2B partners.',
         'Implemented automated sterile packaging lines controlling temperature and humidity.',
         'Offered turnkey OEM/ODM solutions for partner brands and regional F&B chains.',
         'Positioned toward building a sustainable high-tech agri-food ecosystem.',
       ] : lang === 'ko' ? [
-        '국제 무역 박람회 참가 및 50여 개 이상의 B2B 바이어 상담 진행.',
+        '베트남-중국 무역 박람회 참가 및 50여 개 이상의 B2B 바이어 상담 진행.',
         '온습도 자동 제어 무균 포장 라인 전면 가동.',
         'F&B 체인 및 브랜드 파트너 대상 턴키 OEM/ODM 솔루션 제공.',
         '지속 가능한 첨단 농식품 융합 생태계 비전 수립.',
       ] : [
-        'Tham gia Hội chợ Giao thương Quốc tế, kết nối hơn 50+ đối tác B2B.',
+        'Tham gia Hội chợ Giao thương Việt – Trung, kết nối hơn 50+ đối tác B2B quốc tế.',
         'Ứng dụng dây chuyền đóng gói vô trùng tự động kiểm soát độ ẩm và nhiệt độ.',
         'Cung cấp dịch vụ gia công trọn gói OEM/ODM cho các chuỗi F&B và thương hiệu đối tác.',
         'Định hướng xây dựng hệ sinh thái nông sản thực phẩm công nghệ cao bền vững.',

@@ -167,12 +167,8 @@ export async function encryptObject(obj, fieldsToEncrypt = []) {
       if (response.ok) {
         const result = await response.json()
         if (result.success) {
-          // Merge blind indexes vào object
-          const merged = { ...result.data }
-          if (result.blindIndexes) {
-            Object.assign(merged, result.blindIndexes)
-          }
-          return merged
+          // Trả về dữ liệu đã mã hoá an toàn (không merge blindIndexes vì schema Supabase không có các cột _blind)
+          return { ...result.data }
         }
       }
     } catch (e) {
