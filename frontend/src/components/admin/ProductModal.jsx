@@ -136,8 +136,8 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         is_active: product.is_active !== undefined ? product.is_active : true,
         storage_guide: product.storage_guide || 'Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp',
         ingredients: product.ingredients || '',
-        shelf_life: product.shelf_life || '6-12 tháng kể từ ngày sản xuất',
-        certifications: product.certifications || 'ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP',
+        shelf_life: product.shelf_life !== undefined && product.shelf_life !== null ? product.shelf_life : '',
+        certifications: product.certifications !== undefined && product.certifications !== null ? product.certifications : '',
         box_spec: product.box_spec || '',
         images: Array.isArray(product.images) ? product.images : [],
         shopee_url: shopeeUrl,
@@ -693,33 +693,121 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             <div className="space-y-5 animate-fadeIn">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Chứng nhận chất lượng</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Chứng nhận chất lượng</label>
+                    {formData.certifications && (
+                      <button 
+                        type="button" 
+                        onClick={() => setFormData(prev => ({ ...prev, certifications: '' }))}
+                        className="text-[11px] text-red-500 hover:underline font-medium cursor-pointer"
+                      >
+                        Xóa trắng
+                      </button>
+                    )}
+                  </div>
                   <input 
                     type="text" 
-                    value={formData.certifications} 
-                    onChange={e => setFormData({ ...formData, certifications: e.target.value })} 
+                    value={formData.certifications ?? ''} 
+                    onChange={e => setFormData(prev => ({ ...prev, certifications: e.target.value }))} 
+                    placeholder="VD: ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
                   />
+                  {/* Quick Select Chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {['ISO 22000:2018', 'HACCP', 'OCOP 4 Sao', 'OCOP 3 Sao', 'VSATTP', 'Halal', 'FDA'].map(cert => {
+                      const currentList = (formData.certifications || '')
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(Boolean)
+                      const isSelected = currentList.includes(cert)
+                      return (
+                        <button
+                          key={cert}
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => {
+                              const current = (prev.certifications || '')
+                                .split(',')
+                                .map(s => s.trim())
+                                .filter(Boolean)
+                              let updated
+                              if (current.includes(cert)) {
+                                updated = current.filter(c => c !== cert)
+                              } else {
+                                updated = [...current, cert]
+                              }
+                              return { ...prev, certifications: updated.join(', ') }
+                            })
+                          }}
+                          className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
+                            isSelected 
+                              ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-xs' 
+                              : 'bg-white text-[#52665A] border-[#D8E5DA] hover:border-[#0F5132] hover:text-[#0F5132]'
+                          }`}
+                        >
+                          {isSelected ? `✓ ${cert}` : `+ ${cert}`}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hạn sử dụng</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hạn sử dụng</label>
+                    {formData.shelf_life && (
+                      <button 
+                        type="button" 
+                        onClick={() => setFormData(prev => ({ ...prev, shelf_life: '' }))}
+                        className="text-[11px] text-red-500 hover:underline font-medium cursor-pointer"
+                      >
+                        Xóa trắng
+                      </button>
+                    )}
+                  </div>
                   <input 
                     type="text" 
-                    value={formData.shelf_life} 
-                    onChange={e => setFormData({ ...formData, shelf_life: e.target.value })} 
+                    value={formData.shelf_life ?? ''} 
+                    onChange={e => setFormData(prev => ({ ...prev, shelf_life: e.target.value }))} 
+                    placeholder="VD: 6-12 tháng kể từ ngày sản xuất"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
                   />
+                  {/* Quick Select Chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {['6 tháng', '9 tháng', '12 tháng', '6-12 tháng kể từ ngày sản xuất', '24 tháng'].map(item => {
+                      const isSelected = formData.shelf_life === item
+                      return (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, shelf_life: item }))
+                          }}
+                          className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
+                            isSelected 
+                              ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-xs' 
+                              : 'bg-white text-[#52665A] border-[#D8E5DA] hover:border-[#0F5132] hover:text-[#0F5132]'
+                          }`}
+                        >
+                          {isSelected ? `✓ ${item}` : item}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
 
                 <div className="space-y-1.5 md:col-span-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hướng dẫn bảo quản & Vận chuyển</label>
-                  <input 
-                    type="text" 
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hướng dẫn bảo quản & Vận chuyển</label>
+                    <span className="text-[11px] text-[#52665A]">Nhấn Enter để xuống dòng (mỗi dòng hiển thị một mục riêng)</span>
+                  </div>
+                  <textarea 
+                    rows={3} 
                     value={formData.storage_guide} 
                     onChange={e => setFormData({ ...formData, storage_guide: e.target.value })} 
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
+                    placeholder="VD:&#10;Sản phẩm nên sử dụng ngay sau khi mở bao bì.&#10;Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp&#10;Tránh côn trùng và nhiệt độ cao..." 
+                    className="w-full p-4 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132] leading-relaxed resize-y"
                   />
                 </div>
               </div>

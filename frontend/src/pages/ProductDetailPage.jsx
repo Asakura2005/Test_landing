@@ -654,12 +654,16 @@ export default function ProductDetailPage() {
                   {openAccordion === 'storage' && (
                     <div className="px-6 pb-6 pt-2 border-t border-haq-border">
                       <div className="pt-3 text-sm text-haq-text-secondary leading-relaxed">
-                        {localizedProduct.storage_guide.split('\n').map((line, idx) => (
-                          <div key={idx} className="flex items-start gap-2 mb-2 last:mb-0">
-                            <span className="text-[#16A34A] mt-0.5 shrink-0">◆</span>
-                            <span>{line}</span>
-                          </div>
-                        ))}
+                        {localizedProduct.storage_guide
+                          .split(/\r?\n/)
+                          .map(line => line.trim())
+                          .filter(Boolean)
+                          .map((line, idx) => (
+                            <div key={idx} className="flex items-start gap-2 mb-2 last:mb-0">
+                              <span className="text-[#16A34A] mt-0.5 shrink-0">◆</span>
+                              <span>{line.replace(/^[-•*◆]\s*/, '')}</span>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   )}
