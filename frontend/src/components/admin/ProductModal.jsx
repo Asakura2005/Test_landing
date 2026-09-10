@@ -43,6 +43,16 @@ const DEFAULT_CERT_RECOMMENDATIONS = [
   'FDA'
 ]
 
+const DEFAULT_STORAGE_GUIDE_RECOMMENDATIONS = [
+  'Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp',
+  'Sản phẩm nên sử dụng ngay sau khi mở bao bì',
+  'Tránh côn trùng và nhiệt độ cao',
+  'Không sử dụng khi sản phẩm hết hạn hoặc có dấu hiệu ẩm mốc',
+  'Đậy kín miệng túi/nắp hộp sau khi dùng',
+  'Vận chuyển nhẹ tay, tránh va đập mạnh làm vỡ vụn bánh',
+  'Bảo quản ở nhiệt độ thường (dưới 30°C)'
+]
+
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount = 0 }) {
   const [activeModalTab, setActiveModalTab] = useState('basic') // 'basic' | 'variants' | 'specs' | 'gallery'
   const [categories, setCategories] = useState([])
@@ -211,6 +221,82 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const removeCertOption = (itemToRemove) => {
     const updated = certOptions.filter(item => item !== itemToRemove)
     saveCertOptions(updated)
+  }
+
+  // Recommended Storage Guide State (Lưu localStorage, cho phép thêm, sửa, xoá)
+  const [storageOptions, setStorageOptions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('haq_storage_guide_recommendations')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {}
+    return DEFAULT_STORAGE_GUIDE_RECOMMENDATIONS
+  })
+  const [isAddingStorage, setIsAddingStorage] = useState(false)
+  const [newStorageInput, setNewStorageInput] = useState('')
+  const [editingStorageIdx, setEditingStorageIdx] = useState(null)
+  const [editingStorageText, setEditingStorageText] = useState('')
+
+  const saveStorageOptions = (newList) => {
+    setStorageOptions(newList)
+    try {
+      localStorage.setItem('haq_storage_guide_recommendations', JSON.stringify(newList))
+    } catch (e) {}
+  }
+
+  const toggleStorageLine = (text) => {
+    const cleanText = text.trim()
+    if (!cleanText) return
+    setFormData(prev => {
+      const currentLines = (prev.storage_guide || '')
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(Boolean)
+      let updatedLines
+      if (currentLines.includes(cleanText)) {
+        updatedLines = currentLines.filter(l => l !== cleanText)
+      } else {
+        updatedLines = [...currentLines, cleanText]
+      }
+      return { ...prev, storage_guide: updatedLines.join('\n') }
+    })
+  }
+
+  const addStorageOption = (val) => {
+    const text = (typeof val === 'string' ? val : newStorageInput).trim()
+    if (!text) return
+    if (!storageOptions.includes(text)) {
+      const updated = [...storageOptions, text]
+      saveStorageOptions(updated)
+    }
+    toggleStorageLine(text)
+    setNewStorageInput('')
+    setIsAddingStorage(false)
+  }
+
+  const updateStorageOption = (index) => {
+    const text = editingStorageText.trim()
+    if (!text) return
+    const oldVal = storageOptions[index]
+    const updated = [...storageOptions]
+    updated[index] = text
+    saveStorageOptions(updated)
+    setFormData(prev => {
+      const currentLines = (prev.storage_guide || '')
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(Boolean)
+      const mapped = currentLines.map(l => l === oldVal ? text : l)
+      return { ...prev, storage_guide: mapped.join('\n') }
+    })
+    setEditingStorageIdx(null)
+  }
+
+  const removeStorageOption = (itemToRemove) => {
+    const updated = storageOptions.filter(item => item !== itemToRemove)
+    saveStorageOptions(updated)
   }
 
   // Danh sách ảnh có sẵn để gán cho biến thể (kết hợp thư viện ảnh sản phẩm + ảnh các biến thể khác + ảnh map cục bộ)
@@ -1187,15 +1273,168 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                 <div className="space-y-1.5 md:col-span-2">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hướng dẫn bảo quản & Vận chuyển</label>
-                    <span className="text-[11px] text-[#52665A]">Nhấn Enter để xuống dòng (mỗi dòng hiển thị một mục riêng)</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-[#52665A]">Nhấn Enter để xuống dòng (mỗi dòng hiển thị một mục riêng)</span>
+                      {formData.storage_guide && (
+                        <button 
+                          type="button" 
+                          onClick={() => setFormData(prev => ({ ...prev, storage_guide: '' }))}
+                          className="text-[11px] text-red-500 hover:underline font-medium cursor-pointer"
+                        >
+                          Xóa trắng
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <textarea 
                     rows={3} 
-                    value={formData.storage_guide} 
-                    onChange={e => setFormData({ ...formData, storage_guide: e.target.value })} 
+                    value={formData.storage_guide ?? ''} 
+                    onChange={e => setFormData(prev => ({ ...prev, storage_guide: e.target.value }))} 
                     placeholder="VD:&#10;Sản phẩm nên sử dụng ngay sau khi mở bao bì.&#10;Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp&#10;Tránh côn trùng và nhiệt độ cao..." 
                     className="w-full p-4 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132] leading-relaxed resize-y"
                   />
+                  {/* Quick Select & Editable Chips for Storage Guide */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {storageOptions.map((item, idx) => {
+                      const currentLines = (formData.storage_guide || '')
+                        .split(/\r?\n/)
+                        .map(l => l.trim())
+                        .filter(Boolean)
+                      const isSelected = currentLines.includes(item)
+
+                      if (editingStorageIdx === idx) {
+                        return (
+                          <div key={idx} className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                            <input
+                              type="text"
+                              autoFocus
+                              value={editingStorageText}
+                              onChange={e => setEditingStorageText(e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  updateStorageOption(idx)
+                                } else if (e.key === 'Escape') {
+                                  setEditingStorageIdx(null)
+                                }
+                              }}
+                              className="px-2 py-0.5 text-[11px] w-48 focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => updateStorageOption(idx)}
+                              className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                            >
+                              Lưu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingStorageIdx(null)}
+                              className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )
+                      }
+
+                      return (
+                        <div 
+                          key={idx}
+                          className={`group inline-flex items-center text-[11px] rounded-lg border transition-all ${
+                            isSelected 
+                              ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-xs' 
+                              : 'bg-white text-[#52665A] border-[#D8E5DA] hover:border-[#0F5132] hover:text-[#0F5132]'
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => toggleStorageLine(item)}
+                            className="px-2.5 py-1 font-medium cursor-pointer text-left"
+                            title={`Bấm để ${isSelected ? 'bỏ chọn' : 'thêm vào'} hướng dẫn`}
+                          >
+                            {isSelected ? `✓ ${item}` : `+ ${item}`}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setEditingStorageIdx(idx)
+                              setEditingStorageText(item)
+                            }}
+                            className={`px-1 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-[#0F5132]'
+                            }`}
+                            title="Sửa gợi ý này"
+                          >
+                            <Pencil className="w-2.5 h-2.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeStorageOption(item)
+                            }}
+                            className={`pr-1.5 pl-0.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-red-600'
+                            }`}
+                            title="Xóa mốc này khỏi danh sách gợi ý"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )
+                    })}
+
+                    {/* Form thêm gợi ý bảo quản & vận chuyển mới */}
+                    {isAddingStorage ? (
+                      <div className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                        <input
+                          type="text"
+                          autoFocus
+                          value={newStorageInput}
+                          onChange={e => setNewStorageInput(e.target.value)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                              addStorageOption()
+                            } else if (e.key === 'Escape') {
+                              setIsAddingStorage(false)
+                              setNewStorageInput('')
+                            }
+                          }}
+                          placeholder="VD: Tránh va đập mạnh..."
+                          className="px-2 py-0.5 text-[11px] w-48 focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => addStorageOption()}
+                          className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                        >
+                          Lưu
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAddingStorage(false)
+                            setNewStorageInput('')
+                          }}
+                          className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingStorage(true)}
+                        className="text-[11px] px-2.5 py-1 rounded-lg border border-dashed border-[#0F5132]/60 text-[#0F5132] bg-[#F4F8F4]/60 hover:bg-[#F4F8F4] font-semibold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Thêm hướng dẫn mới vào danh sách gợi ý"
+                      >
+                        <Plus className="w-3 h-3" /> Thêm gợi ý
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
