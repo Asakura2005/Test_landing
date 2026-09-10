@@ -50,3 +50,6 @@ supabase_*.sql
 
 # User content files
 user_content_*.txt
+
+# Raw assets
+frontend/src/assets/*.mp4

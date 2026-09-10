@@ -76,7 +76,7 @@
     "core_caps": [
       {
         "num": "01 · 첨단 가공 기술",
-        "title": "밀폐 순환 대류 건조",
+        "title": "밀폐 순환 청정 건조",
         "desc": "정밀한 온도 및 습도 제어를 통해 기름 잔여물 없이 원재료 고유의 바삭함과 영양을 완벽하게 보존합니다."
       },
       {
@@ -357,6 +357,7 @@
     "breadcrumb_products": "제품",
     "origin_label": "원자재 원산지:",
     "view_map": "지도 보기 →",
+    "weight_label": "중량 / 규격",
     "highlights_title": "주요 특징",
     "packaging_title": "포장 규격",
     "col_weight": "중량",

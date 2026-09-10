@@ -3,7 +3,8 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 export type ScrollState = 'IDLE' | 'RESISTING' | 'SPRING_BACK' | 'COMMITTING' | 'LOCKED'
 
 export interface MagneticScrollOptions {
-  headerHeight?: number
+  headerHeight?: number | (() => number)
+  headerSelector?: string
   enabled?: boolean
   resistance?: number
   commitThreshold?: number
@@ -13,6 +14,8 @@ export interface MagneticScrollOptions {
   lockDuration?: number
   inactivityTimeout?: number
   desktopBreakpoint?: number // default 1024px
+  sectionSelector?: string
+  footerSelector?: string
 }
 
 // Easing functions
@@ -22,6 +25,7 @@ const easeOutQuad = (t: number): number => 1 - (1 - t) * (1 - t)
 export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
   const {
     headerHeight = 72,
+    headerSelector,
     enabled = true,
     resistance = 0.35,
     commitThreshold = 60,
@@ -31,6 +35,8 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     lockDuration = 220,
     inactivityTimeout = 200,
     desktopBreakpoint = 1024,
+    sectionSelector,
+    footerSelector = '[data-section="footer"]',
   } = options
 
   const [activeSectionId, setActiveSectionId] = useState<string>('hero')
@@ -50,42 +56,65 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     setScrollState(state)
   }
 
-  // Query all 6 100vh snap sections: Hero, Specialty Map, Brand Statement, Quick Stats, Brand Visual, CtaBanner
+  // Dynamic header height calculation
+  const getHeaderHeight = useCallback((): number => {
+    if (typeof headerHeight === 'function') {
+      return headerHeight()
+    }
+    if (headerSelector) {
+      const els = document.querySelectorAll<HTMLElement>(headerSelector)
+      if (els.length > 0) {
+        let total = 0
+        els.forEach((el) => {
+          total += el.offsetHeight
+        })
+        return total
+      }
+    }
+    return typeof headerHeight === 'number' ? headerHeight : 72
+  }, [headerHeight, headerSelector])
+
+  // Query snap sections: customizable via sectionSelector, or default 6 home sections
   const getSnapSections = useCallback((): HTMLElement[] => {
+    if (sectionSelector) {
+      return Array.from(document.querySelectorAll<HTMLElement>(sectionSelector))
+    }
     return Array.from(
       document.querySelectorAll<HTMLElement>(
         '[data-section="hero"], [data-section="specialty-map"], [data-section="brand-statement"], [data-section="quick-stats"], [data-section="brand-visual"], [data-section="cta-banner"]'
       )
     )
-  }, [])
+  }, [sectionSelector])
 
   // Calculate target top for a snap section
   const getSectionTargetTop = useCallback(
     (index: number, sections: HTMLElement[]): number => {
+      const hHeight = getHeaderHeight()
       if (index <= 0 || !sections[index]) return 0
       const el = sections[index]
       const rect = el.getBoundingClientRect()
       const absoluteTop = rect.top + window.scrollY
-      return Math.max(0, Math.round(absoluteTop - headerHeight))
+      return Math.max(0, Math.round(absoluteTop - hHeight))
     },
-    [headerHeight]
+    [getHeaderHeight]
   )
 
   // Get top position of Footer
   const getFooterTop = useCallback((): number => {
-    const footerEl = document.querySelector<HTMLElement>('[data-section="footer"]')
+    const hHeight = getHeaderHeight()
+    const footerEl = document.querySelector<HTMLElement>(footerSelector)
     if (footerEl) {
       const rect = footerEl.getBoundingClientRect()
-      return Math.max(0, Math.round(rect.top + window.scrollY - headerHeight))
+      return Math.max(0, Math.round(rect.top + window.scrollY - hHeight))
     }
     const snapSections = getSnapSections()
     const lastSnap = snapSections[snapSections.length - 1]
     if (lastSnap) {
       const rect = lastSnap.getBoundingClientRect()
-      return Math.max(0, Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - headerHeight))
+      return Math.max(0, Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - hHeight))
     }
     return 0
-  }, [headerHeight, getSnapSections])
+  }, [getHeaderHeight, footerSelector, getSnapSections])
 
   // Synchronize current section index with actual scroll position
   const syncCurrentIndex = useCallback(() => {
@@ -118,7 +147,10 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     currentSectionIndexRef.current = closestIndex
     baseScrollYRef.current = getSectionTargetTop(closestIndex, sections)
 
-    const secId = sections[closestIndex]?.getAttribute('data-section') || ''
+    const secId =
+      sections[closestIndex]?.getAttribute('data-section') ||
+      sections[closestIndex]?.id ||
+      ''
     if (secId) setActiveSectionId(secId)
   }, [getSnapSections, getSectionTargetTop, getFooterTop])
 
@@ -207,7 +239,9 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
           const secId =
             targetIndex === sections.length
               ? 'footer'
-              : sections[targetIndex]?.getAttribute('data-section') || ''
+              : sections[targetIndex]?.getAttribute('data-section') ||
+                sections[targetIndex]?.id ||
+                ''
           if (secId) setActiveSectionId(secId)
 
           setInternalState('LOCKED')
@@ -499,8 +533,47 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
     startSpringBack,
   ])
 
+  // Programmatic smooth commit by numerical index
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      const sections = getSnapSections()
+      if (index < 0 || index > sections.length) return
+
+      if (window.matchMedia(`(min-width: ${desktopBreakpoint}px)`).matches) {
+        startCommitTransition(index)
+      } else {
+        let targetScroll = 0
+        if (index === sections.length) {
+          targetScroll = getFooterTop()
+        } else {
+          targetScroll = getSectionTargetTop(index, sections)
+        }
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' })
+      }
+    },
+    [getSnapSections, desktopBreakpoint, startCommitTransition, getFooterTop, getSectionTargetTop]
+  )
+
+  // Programmatic smooth commit by section ID
+  const scrollToSectionId = useCallback(
+    (id: string) => {
+      const sections = getSnapSections()
+      const foundIdx = sections.findIndex(
+        (el) => el.getAttribute('data-section') === id || el.id === id
+      )
+      if (foundIdx !== -1) {
+        scrollToIndex(foundIdx)
+      } else if (id === 'footer') {
+        scrollToIndex(sections.length)
+      }
+    },
+    [getSnapSections, scrollToIndex]
+  )
+
   return {
     activeSectionId,
     scrollState,
+    scrollToIndex,
+    scrollToSectionId,
   }
 }

@@ -56,7 +56,7 @@ export default function JourneyTimeline() {
             <span className="h-px w-10 bg-[#16A34A]" />
           </div>
           <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
-            HÀNH TRÌNH TỪ <span className="text-[#16A34A]">2021 ĐẾN NAY</span>
+            HÀNH TRÌNH TỪ <span className="text-black">2021 ĐẾN NAY</span>
           </h2>
           <p className="mt-3 text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
             Mỗi cột mốc là một bước tiến vững chắc trong việc chuẩn hóa chất lượng,

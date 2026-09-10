@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, X, ArrowRight, Package, Sparkles } from 'lucide-react'
 import { getProducts } from '../services/supabase'
+import { useLanguage } from '../context/LanguageContext'
+import { getLocalizedProduct } from '../utils/i18nData'
+import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
+import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 
 export default function SearchOverlay({ isOpen, onClose }) {
+  const { t, language } = useLanguage()
   const [query, setQuery] = useState('')
   const [products, setProducts] = useState([])
   const [results, setResults] = useState([])
@@ -41,6 +46,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
     const filtered = products.filter(
       (p) =>
         p.name?.toLowerCase().includes(q) ||
+        p.en_name?.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q) ||
         p.categories?.name?.toLowerCase().includes(q)
     )
@@ -52,18 +58,18 @@ export default function SearchOverlay({ isOpen, onClose }) {
   const handleSelect = (item) => {
     onClose()
     if (item.slug) {
-      navigate(`/san-pham/${item.slug}`)
+      navigate(getProductDetailUrl(item.slug, language))
     } else {
-      navigate('/san-pham')
+      navigate(getProductsPageUrl(language))
     }
   }
 
   const QUICK_LINKS = [
-    { label: 'Bánh tráng trộn HAQ', path: '/san-pham' },
-    { label: 'Bánh đậu xanh', path: '/san-pham' },
-    { label: 'Bánh hạnh nhân', path: '/san-pham' },
-    { label: 'Năng lực OEM/ODM', path: '/#nang-luc' },
-    { label: 'Hệ thống phân phối', path: '/#thi-truong' },
+    { label: language === 'en' ? 'HAQ Mixed Rice Paper' : language === 'ko' ? 'HAQ 비빔 라이스페이퍼' : 'Bánh tráng trộn HAQ', path: getProductsPageUrl(language) },
+    { label: language === 'en' ? 'Green Bean Cake' : language === 'ko' ? '녹두 케이크' : 'Bánh đậu xanh', path: getProductsPageUrl(language) },
+    { label: language === 'en' ? 'Almond Pastry' : language === 'ko' ? '아몬드 페이스트리' : 'Bánh hạnh nhân', path: getProductsPageUrl(language) },
+    { label: language === 'en' ? 'OEM/ODM Solutions' : language === 'ko' ? 'OEM/ODM 솔루션' : 'Năng lực OEM/ODM', path: `${getHomeUrl(language)}#nang-luc` },
+    { label: language === 'en' ? 'Distribution Network' : language === 'ko' ? '유통 네트워크' : 'Hệ thống phân phối', path: `${getHomeUrl(language)}#thi-truong` },
   ]
 
   return (
@@ -115,36 +121,40 @@ export default function SearchOverlay({ isOpen, onClose }) {
               </div>
               {results.length > 0 ? (
                 <div className="divide-y divide-haq-border">
-                  {results.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => handleSelect(item)}
-                      className="py-3 px-3 rounded-2xl hover:bg-haq-sage/20 transition-colors flex items-center justify-between cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-haq-sage/30 overflow-hidden flex items-center justify-center p-1 border border-haq-border">
-                          {item.image_url ? (
-                            <img
-                              src={item.image_url}
-                              alt={item.name}
-                              className="w-full h-full object-contain"
-                            />
-                          ) : (
-                            <Package className="w-5 h-5 text-haq-text-secondary" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="text-sm font-heading font-bold text-haq-ink group-hover:text-[#16A34A] transition-colors">
-                            {item.name}
+                  {results.map((item) => {
+                    const locItem = getLocalizedProduct(item, language)
+                    const itemImg = item.image_url || locItem.images?.[0] || locItem.variants?.[0]?.img || PRODUCT_IMAGE_MAP[locItem.slug] || ''
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => handleSelect(locItem)}
+                        className="py-3 px-3 rounded-2xl hover:bg-haq-sage/20 transition-colors flex items-center justify-between cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-haq-sage/30 overflow-hidden flex items-center justify-center p-1 border border-haq-border">
+                            {itemImg ? (
+                              <img
+                                src={itemImg}
+                                alt={locItem.name}
+                                className="w-full h-full object-contain"
+                              />
+                            ) : (
+                              <Package className="w-5 h-5 text-haq-text-secondary" />
+                            )}
                           </div>
-                          <div className="text-xs text-haq-text-secondary line-clamp-1 font-normal">
-                            {item.categories?.name || 'HAQ FOOD'}
+                          <div>
+                            <div className="text-sm font-heading font-bold text-haq-ink group-hover:text-[#16A34A] transition-colors">
+                              {locItem.name}
+                            </div>
+                            <div className="text-xs text-haq-text-secondary line-clamp-1 font-normal">
+                              {locItem.categories?.name || 'HAQ FOOD'}
+                            </div>
                           </div>
                         </div>
+                        <ArrowRight className="w-4 h-4 text-haq-text-secondary group-hover:text-[#16A34A] group-hover:translate-x-1 transition-all" />
                       </div>
-                      <ArrowRight className="w-4 h-4 text-haq-text-secondary group-hover:text-[#16A34A] group-hover:translate-x-1 transition-all" />
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-10 text-haq-text-secondary text-sm">

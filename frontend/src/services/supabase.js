@@ -543,7 +543,7 @@ export function subscribeToLeads(onNewLead) {
 }
 
 /**
- * Lấy danh sách sản phẩm (kèm variants, categories và provinces)
+ * Lấy danh sách sản phẩm (kèm variants, categories và provinces) trực tiếp từ database
  */
 export async function getProducts() {
   try {
@@ -558,31 +558,41 @@ export async function getProducts() {
       .order('is_pinned', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false })
 
-    if (!error && data) return data
+    if (!error && Array.isArray(data)) {
+      return data
+    }
   } catch (e) {
-    // graceful fallback
+    // Graceful fallback on DB query failure
   }
 
-  const { data, error } = await supabase
-    .from('products')
-    .select(`
-      *,
-      categories(*),
-      variants:product_variants(*)
-    `)
-    .order('is_pinned', { ascending: false, nullsFirst: false })
-    .order('created_at', { ascending: false })
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories(*),
+        variants:product_variants(*)
+      `)
+      .order('is_pinned', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return data
+    if (!error && Array.isArray(data)) {
+      return data
+    }
+  } catch (e) {
+    // Graceful fallback
+  }
+
+  return []
 }
 
 /**
- * Lấy chi tiết 1 sản phẩm theo slug hoặc id (fallback)
+ * Lấy chi tiết 1 sản phẩm theo slug hoặc id trực tiếp từ database
  */
 export async function getProductBySlug(slug) {
-  // Kiểm tra xem slug có phải là UUID không (dùng cho các sản phẩm cũ chưa có slug)
-  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+  if (!slug || typeof slug !== 'string') return null
+  const cleanSlug = slug.trim().replace(/\/+$/, '')
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanSlug);
 
   try {
     let query = supabase
@@ -595,35 +605,43 @@ export async function getProductBySlug(slug) {
       `)
 
     if (isUUID) {
-      query = query.eq('id', slug)
+      query = query.eq('id', cleanSlug)
     } else {
-      query = query.eq('slug', slug)
+      query = query.ilike('slug', cleanSlug)
     }
 
     const { data, error } = await query.single()
-    if (!error && data) return data
+    if (!error && data) {
+      return data
+    }
   } catch (e) {
     // graceful fallback
   }
 
-  let fallbackQuery = supabase
-    .from('products')
-    .select(`
-      *,
-      categories(*),
-      variants:product_variants(*)
-    `)
+  try {
+    let fallbackQuery = supabase
+      .from('products')
+      .select(`
+        *,
+        categories(*),
+        variants:product_variants(*)
+      `)
 
-  if (isUUID) {
-    fallbackQuery = fallbackQuery.eq('id', slug)
-  } else {
-    fallbackQuery = fallbackQuery.eq('slug', slug)
+    if (isUUID) {
+      fallbackQuery = fallbackQuery.eq('id', cleanSlug)
+    } else {
+      fallbackQuery = fallbackQuery.ilike('slug', cleanSlug)
+    }
+
+    const { data, error } = await fallbackQuery.single()
+    if (!error && data) {
+      return data
+    }
+  } catch (e) {
+    // graceful fallback
   }
 
-  const { data, error } = await fallbackQuery.single()
-
-  if (error) throw error
-  return data
+  return null
 }
 
 /**
@@ -696,9 +714,9 @@ function sanitizeVariantPayload(v, productId) {
   return {
     product_id: productId,
     size: String(v.size || v.name || v.weight || 'Tiêu chuẩn').trim(),
-    pack: String(v.pack || (v.unit ? `${v.unit} (${v.name || ''})` : v.name) || 'Gói').trim(),
-    shelf: String(v.shelf || '6-12 tháng').trim(),
-    moq: String(v.moq || v.min_order || 10).trim(),
+    pack: null,
+    shelf: null,
+    moq: null,
     img: v.img || null
   }
 }

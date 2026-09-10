@@ -23,8 +23,16 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   specialtyDataOverride,
   className = "",
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
+
+  const resolveProductLink = (p: Product) => {
+    if (p.href) return p.href;
+    const s = p.slug || p.productId || '';
+    if (language === 'en') return `/en/products/${s}`;
+    if (language === 'ko') return `/ko/products/${s}`;
+    return `/san-pham/${s}`;
+  };
   const [hoveredProvince, setHoveredProvince] = useState<{
     id: string;
     name: string;
@@ -389,7 +397,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                 >
                   {/* LEFT: FEATURED PRODUCT */}
                   <Link
-                    to={featuredProduct.href || `/san-pham/${featuredProduct.slug || featuredProduct.productId || ''}`}
+                    to={resolveProductLink(featuredProduct)}
                     className={`${
                       supportingProducts.length === 2
                         ? "col-span-7"
@@ -402,7 +410,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
                       {featuredProduct.is_pinned && (
                         <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
-                          <Pin className="w-2.5 h-2.5 fill-[#C89B3C] text-[#C89B3C]" />
+                          <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
                           Chủ lực
                         </span>
                       )}
@@ -438,13 +446,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                       {supportingProducts.map((prod, idx) => (
                         <Link
                           key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                          to={prod.href || `/san-pham/${prod.slug || prod.productId || ''}`}
+                          to={resolveProductLink(prod)}
                           className="flex-1 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2 sm:p-2.5 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
                         >
                           <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-1.5 flex items-center justify-center overflow-hidden relative">
                             {prod.is_pinned && (
                               <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.2 rounded">
-                                <Pin className="w-2 h-2 fill-[#C89B3C] text-[#C89B3C]" />
+                                <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
                               </span>
                             )}
                             {prod.image ? (
@@ -477,13 +485,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     </div>
                   ) : supportingProducts.length === 1 ? (
                     <Link
-                      to={supportingProducts[0].href || `/san-pham/${supportingProducts[0].slug || supportingProducts[0].productId || ''}`}
+                      to={resolveProductLink(supportingProducts[0])}
                       className="col-span-6 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
                     >
                       <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
                         {supportingProducts[0].is_pinned && (
                           <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
-                            <Pin className="w-2.5 h-2.5 fill-[#C89B3C] text-[#C89B3C]" />
+                            <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
                             Chủ lực
                           </span>
                         )}

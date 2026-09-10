@@ -309,11 +309,16 @@ export default function Admin() {
       const duplicateVariants = (product.variants || []).map(v => ({
         sku: v.sku ? `${v.sku}-COPY` : '',
         name: v.name,
+        size: v.size || v.name,
+        pack: v.pack || v.unit,
+        shelf: v.shelf,
+        moq: null,
         price: v.price,
         wholesale_price: v.wholesale_price,
         unit: v.unit,
         weight: v.weight,
-        min_order: v.min_order
+        min_order: v.min_order,
+        img: v.img || null
       }))
       await createProduct(duplicateData, duplicateVariants)
       await fetchData()

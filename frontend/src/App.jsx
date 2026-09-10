@@ -19,6 +19,7 @@ import ProductDetailPage from './pages/ProductDetailPage.jsx'
 import { initPostHog, recordSessionVisit } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import SeoHead from './components/SeoHead'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Scroll to top and track session visit ONLY on genuine page navigations
 function RouteSync() {
@@ -55,74 +56,79 @@ function RouteSync() {
 function AppRoutes() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
+  const isProductRoute = pathname.includes('/san-pham') || pathname.includes('/products')
+  const containerBg = isAdmin ? 'bg-[#F4F8F4]' : isProductRoute ? 'bg-haq-cream' : 'bg-[#0C1E15]'
 
   return (
     <>
       <RouteSync />
       <SeoHead />
-      <div className={`w-full overflow-x-hidden relative min-h-screen ${isAdmin ? 'bg-[#F4F8F4]' : 'bg-[#0C1E15]'}`}>
-        <Routes>
-          {/* ================= VIETNAMESE (Default) ================= */}
-          <Route path="/" element={<Home />} />
-          <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
-          <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/lich-su" element={<HistoryPage />} />
-          <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
-          <Route path="/nang-luc" element={<CapabilitiesPage />} />
-          <Route path="/san-pham" element={<ProductsPage />} />
-          <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
-          <Route path="/tin-tuc" element={<NewsPage />} />
-          <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
-          <Route path="/tuyen-dung" element={<NewsPage defaultTab="tuyen-dung" />} />
-          <Route path="/tuyen-dung/:slug" element={<NewsDetailPage />} />
-          <Route path="/lien-he" element={<ContactPage />} />
+      <div className={`w-full overflow-x-clip relative min-h-screen ${containerBg}`}>
+        <ErrorBoundary>
+          <Routes>
+            {/* ================= VIETNAMESE (Default) ================= */}
+            <Route path="/" element={<Home />} />
+            <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
+            <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/lich-su" element={<HistoryPage />} />
+            <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
+            <Route path="/nang-luc" element={<CapabilitiesPage />} />
+            <Route path="/san-pham" element={<ProductsPage />} />
+            <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/tin-tuc" element={<NewsPage />} />
+            <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
+            <Route path="/tuyen-dung" element={<NewsPage defaultTab="tuyen-dung" />} />
+            <Route path="/tuyen-dung/:slug" element={<NewsDetailPage />} />
+            <Route path="/lien-he" element={<ContactPage />} />
 
-          {/* ================= ENGLISH (B2B International) ================= */}
-          <Route path="/en" element={<Home />} />
-          <Route path="/en/about" element={<CompanyProfilePage />} />
-          <Route path="/en/history" element={<HistoryPage />} />
-          <Route path="/en/capabilities" element={<CapabilitiesPage />} />
-          <Route path="/en/products" element={<ProductsPage />} />
-          <Route path="/en/products/:slug" element={<ProductDetailPage />} />
-          <Route path="/en/news" element={<NewsPage />} />
-          <Route path="/en/news/:slug" element={<NewsDetailPage />} />
-          <Route path="/en/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
-          <Route path="/en/careers/:slug" element={<NewsDetailPage />} />
-          <Route path="/en/contact" element={<ContactPage />} />
-          <Route path="/en/policy" element={<PolicyPage />} />
-          <Route path="/en/privacy-policy" element={<PrivacyPolicyPage />} />
-          <Route path="/en/terms-of-service" element={<TermsOfServicePage />} />
-          <Route path="/en/refund-policy" element={<RefundPolicyPage />} />
+            {/* ================= ENGLISH (B2B International) ================= */}
+            <Route path="/en" element={<Home />} />
+            <Route path="/en/about" element={<CompanyProfilePage />} />
+            <Route path="/en/history" element={<HistoryPage />} />
+            <Route path="/en/capabilities" element={<CapabilitiesPage />} />
+            <Route path="/en/products" element={<ProductsPage />} />
+            <Route path="/en/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/en/news" element={<NewsPage />} />
+            <Route path="/en/news/:slug" element={<NewsDetailPage />} />
+            <Route path="/en/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
+            <Route path="/en/careers/:slug" element={<NewsDetailPage />} />
+            <Route path="/en/contact" element={<ContactPage />} />
+            <Route path="/en/policy" element={<PolicyPage />} />
+            <Route path="/en/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/en/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/en/refund-policy" element={<RefundPolicyPage />} />
 
-          {/* English Aliases for backward compatibility */}
-          <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
-          <Route path="/en/san-pham" element={<ProductsPage />} />
-          <Route path="/en/lien-he" element={<ContactPage />} />
+            {/* English Aliases for backward compatibility */}
+            <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
+            <Route path="/en/san-pham" element={<ProductsPage />} />
+            <Route path="/en/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/en/lien-he" element={<ContactPage />} />
 
-          {/* ================= KOREAN (B2B Korea) ================= */}
-          <Route path="/ko" element={<Home />} />
-          <Route path="/ko/about" element={<CompanyProfilePage />} />
-          <Route path="/ko/history" element={<HistoryPage />} />
-          <Route path="/ko/capabilities" element={<CapabilitiesPage />} />
-          <Route path="/ko/products" element={<ProductsPage />} />
-          <Route path="/ko/products/:slug" element={<ProductDetailPage />} />
-          <Route path="/ko/news" element={<NewsPage />} />
-          <Route path="/ko/news/:slug" element={<NewsDetailPage />} />
-          <Route path="/ko/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
-          <Route path="/ko/careers/:slug" element={<NewsDetailPage />} />
-          <Route path="/ko/contact" element={<ContactPage />} />
-          <Route path="/ko/policy" element={<PolicyPage />} />
-          <Route path="/ko/privacy-policy" element={<PrivacyPolicyPage />} />
-          <Route path="/ko/terms-of-service" element={<TermsOfServicePage />} />
-          <Route path="/ko/refund-policy" element={<RefundPolicyPage />} />
+            {/* ================= KOREAN (B2B Korea) ================= */}
+            <Route path="/ko" element={<Home />} />
+            <Route path="/ko/about" element={<CompanyProfilePage />} />
+            <Route path="/ko/history" element={<HistoryPage />} />
+            <Route path="/ko/capabilities" element={<CapabilitiesPage />} />
+            <Route path="/ko/products" element={<ProductsPage />} />
+            <Route path="/ko/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/ko/news" element={<NewsPage />} />
+            <Route path="/ko/news/:slug" element={<NewsDetailPage />} />
+            <Route path="/ko/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
+            <Route path="/ko/careers/:slug" element={<NewsDetailPage />} />
+            <Route path="/ko/contact" element={<ContactPage />} />
+            <Route path="/ko/policy" element={<PolicyPage />} />
+            <Route path="/ko/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/ko/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/ko/refund-policy" element={<RefundPolicyPage />} />
 
-          {/* Korean Aliases for backward compatibility */}
-          <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
-          <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
-          <Route path="/ko/san-pham" element={<ProductsPage />} />
-          <Route path="/ko/lien-he" element={<ContactPage />} />
+            {/* Korean Aliases for backward compatibility */}
+            <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
+            <Route path="/ko/san-pham" element={<ProductsPage />} />
+            <Route path="/ko/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/ko/lien-he" element={<ContactPage />} />
 
           {/* Legal & Policy Pages (Vietnamese) */}
           <Route path="/chinh-sach" element={<PolicyPage />} />
@@ -141,8 +147,9 @@ function AppRoutes() {
           <Route path="/tintuc" element={<Navigate to="/tin-tuc" replace />} />
           <Route path="/nangluc" element={<Navigate to="/nang-luc" replace />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ErrorBoundary>
       </div>
     </>
   )

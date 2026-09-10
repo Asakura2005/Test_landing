@@ -13,6 +13,7 @@ import {
 import { getProducts, getCategories } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '../utils/i18nData'
+import { getProductDetailUrl } from '../utils/routeI18n'
 
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
 import banhTrangSayTomImg from '../assets/products/banh_trang_say_tom_50g.jpg'
@@ -95,7 +96,11 @@ export default function ProductsPage() {
           getProducts().catch(() => null),
         ])
         if (cats && cats.length > 0) setDbCategories(cats)
-        if (prods && prods.length > 0) setDbProducts(prods)
+        if (prods && Array.isArray(prods)) {
+          setDbProducts(prods)
+        } else {
+          setDbProducts([])
+        }
       } catch (err) {
         console.warn('Lỗi khi tải dữ liệu sản phẩm từ DB:', err)
       } finally {
@@ -192,7 +197,7 @@ export default function ProductsPage() {
 
             {/* Title area */}
             <div className="py-10 sm:py-14">
-              <p className="font-heading text-xs tracking-[0.2em] text-[#C89B3C] uppercase mb-3">
+              <p className="font-heading text-xs tracking-[0.2em] text-haq-ink uppercase mb-3">
                 {t('products_page.eyebrow', 'HAQ FOOD · Danh mục sản phẩm')}
               </p>
               <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight leading-tight">
@@ -311,7 +316,7 @@ export default function ProductsPage() {
                   return (
                     <Reveal key={prod.id} delay={Math.min(idx * 60, 360)}>
                       <Link
-                        to={`/san-pham/${detailSlug}`}
+                        to={getProductDetailUrl(detailSlug, language)}
                         className="group block bg-white rounded-2xl overflow-hidden border border-haq-border hover:border-haq-red/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full flex flex-col"
                       >
                         {/* Image */}
@@ -323,7 +328,7 @@ export default function ProductsPage() {
                             loading="lazy"
                           />
                           {prod.is_pinned && (
-                            <span className="absolute top-3 left-3 bg-[#C89B3C] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                            <span className="absolute top-3 left-3 bg-[#16A34A] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
                               {en ? 'Flagship' : ko ? '대표' : 'Chủ lực'}
                             </span>
                           )}

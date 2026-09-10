@@ -28,8 +28,8 @@ export default function Certifications({ className = '' }) {
       title: isEn ? 'Food Safety Management System' : 'Hệ Thống Quản Lý An Toàn Thực Phẩm',
       issuer: isEn ? 'International Certification' : 'Chứng nhận Quốc tế',
       desc: isEn 
-        ? 'Closed convection drying line, strict temperature control and zero oil residue standards.' 
-        : 'Chứng nhận toàn bộ dây chuyền sản xuất sấy đối lưu và chế biến khép kín đạt tiêu chuẩn quốc tế.',
+        ? 'Closed clean drying line, strict temperature control and zero oil residue standards.' 
+        : 'Chứng nhận toàn bộ dây chuyền sản xuất sấy sạch và chế biến khép kín đạt tiêu chuẩn quốc tế.',
       // 👉 Gán ảnh chứng chỉ ISO vào đây: image: certIsoImg
       image: null,
       badge: 'ISO 22000',
@@ -184,7 +184,7 @@ export default function Certifications({ className = '' }) {
                     <h3 className="font-heading font-bold text-sm text-haq-ink uppercase tracking-wide mb-1 leading-snug">
                       {c.code}
                     </h3>
-                    <p className="text-xs font-semibold text-[#C89B3C] mb-2 leading-tight">
+                    <p className="text-xs font-semibold text-haq-ink mb-2 leading-tight">
                       {c.title}
                     </p>
                     <p className="text-[11px] text-haq-text-secondary leading-relaxed line-clamp-3">

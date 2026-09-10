@@ -43,7 +43,7 @@ export default function FloatingContactBar() {
       label: 'B2B / OEM',
       color: 'bg-[#0C1E15]',
       title: 'B2B & OEM/ODM',
-      extraClass: 'border border-white/20 text-[#C89B3C]',
+      extraClass: 'border border-white/20 text-white',
     },
   ]
 
@@ -96,7 +96,7 @@ export default function FloatingContactBar() {
         ) : (
           <>
             <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
-            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-[#C89B3C] rounded-full border-2 border-white" />
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-[#16A34A] rounded-full border-2 border-white" />
           </>
         )}
       </button>

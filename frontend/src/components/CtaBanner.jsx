@@ -27,7 +27,7 @@ export default function CtaBanner() {
     <section className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/50 border-b border-haq-border flex items-center justify-center py-16 sm:py-20 lg:py-0">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center w-full">
         <Reveal>
-          <span className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#C89B3C]">
+          <span className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#16A34A]">
             {t('home.cta_banner.badge', 'HAQ FOOD · Đồng hành & Phát triển')}
           </span>
         </Reveal>

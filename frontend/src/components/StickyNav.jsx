@@ -217,7 +217,7 @@ export default function StickyNav() {
         isTransparent
           ? 'bg-gradient-to-b from-black/80 via-black/35 to-transparent h-[72px] sm:h-[76px] flex items-center border-none shadow-none'
           : isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-xs h-[68px] sm:h-[72px] border-b border-haq-border flex items-center'
+          ? 'bg-white/95 backdrop-blur-md shadow-xs h-[72px] sm:h-[76px] border-b border-haq-border flex items-center'
           : 'bg-white h-[72px] sm:h-[76px] border-b border-haq-border flex items-center'
       }`}
     >
@@ -239,7 +239,7 @@ export default function StickyNav() {
             <span className={`font-heading font-extrabold text-xl sm:text-2xl tracking-tight leading-none transition-colors ${
               isTransparent ? 'text-white' : 'text-haq-ink'
             }`}>
-              HAQ <span className="text-haq-green-dark">FOOD</span>
+              HAQ FOOD
             </span>
           </div>
         </Link>
@@ -358,20 +358,23 @@ export default function StickyNav() {
                           const isHovered = (hoveredCategory?.id === cat.id) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
                           return (
                             <div key={cat.id} className="space-y-0.5">
-                              <div
+                              <Link
+                                to={cat.slug === 'all' ? (language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : '/san-pham') : `${language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : '/san-pham'}?category=${cat.slug}`}
+                                onClick={() => {
+                                  setActiveMenu(null)
+                                  window.scrollTo(0, 0)
+                                }}
                                 onMouseEnter={() => setHoveredCategory(cat)}
-                                className={`px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer flex items-center justify-between ${
+                                className={`px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer flex items-center justify-between group/cat ${
                                   isHovered ? 'bg-haq-sage/50 border-[#16A34A]/25' : 'border-transparent hover:bg-haq-sage/20'
                                 }`}
                               >
-                                <Link
-                                  to={cat.slug === 'all' ? '/san-pham' : `/san-pham?category=${cat.slug}`}
-                                  onClick={() => setActiveMenu(null)}
-                                  className="flex-1 font-heading text-xs font-bold uppercase tracking-wider text-haq-ink hover:text-[#16A34A]"
-                                >
+                                <span className={`flex-1 font-heading text-xs font-bold uppercase tracking-wider transition-colors ${
+                                  isHovered ? 'text-haq-green-dark' : 'text-haq-ink group-hover/cat:text-[#16A34A]'
+                                }`}>
                                   {cat.name}
-                                </Link>
-                              </div>
+                                </span>
+                              </Link>
 
                               {/* Danh mục con (Subcategories) */}
                               {cat.children && cat.children.length > 0 && (
@@ -381,9 +384,12 @@ export default function StickyNav() {
                                     return (
                                       <Link
                                         key={child.id}
-                                        to={`/san-pham?category=${cat.slug}&sub=${child.slug}`}
+                                        to={`${language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : '/san-pham'}?category=${cat.slug}&sub=${child.slug}`}
                                         onMouseEnter={() => setHoveredCategory(child)}
-                                        onClick={() => setActiveMenu(null)}
+                                        onClick={() => {
+                                          setActiveMenu(null)
+                                          window.scrollTo(0, 0)
+                                        }}
                                         className={`inline-flex items-center gap-1 text-[10px] font-heading font-semibold px-2 py-0.5 rounded-md transition-colors border ${
                                           isChildHovered
                                             ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
@@ -400,16 +406,6 @@ export default function StickyNav() {
                           )
                         })}
                       </div>
-                    </div>
-
-                    <div className="pt-2.5 mt-2 border-t border-haq-border">
-                      <Link
-                        to="/san-pham"
-                        onClick={() => setActiveMenu(null)}
-                        className="inline-flex items-center gap-1.5 text-xs font-heading font-bold tracking-wide text-haq-green-dark hover:text-haq-green transition-colors"
-                      >
-                        <span>{language === 'en' ? 'View all products →' : language === 'ko' ? '전체 제품 보기 →' : 'Xem tất cả sản phẩm →'}</span>
-                      </Link>
                     </div>
                   </div>
 
@@ -448,7 +444,7 @@ export default function StickyNav() {
                             return (
                               <Link
                                 key={p.id}
-                                to={`/san-pham/${p.slug}`}
+                                to={language === 'en' ? `/en/products/${p.slug}` : language === 'ko' ? `/ko/products/${p.slug}` : `/san-pham/${p.slug}`}
                                 onClick={() => setActiveMenu(null)}
                                 className="group flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-colors"
                               >
@@ -733,14 +729,7 @@ export default function StickyNav() {
                     )}
                   </div>
                 ))}
-                <Link
-                  to="/san-pham"
-                  onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-2 py-2 font-bold text-[#16A34A] pt-3 border-t border-haq-border w-full uppercase tracking-wider text-[11px]"
-                >
-                  <span>{language === 'en' ? 'VIEW ALL PRODUCTS' : language === 'ko' ? '전체 제품 보기' : 'XEM TẤT CẢ SẢN PHẨM'}</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
+
               </div>
             </div>
           </div>

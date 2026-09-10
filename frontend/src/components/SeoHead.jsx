@@ -55,9 +55,9 @@ const SEO_DESCRIPTIONS = {
     ko: '베트남 농산물의 가치를 글로벌 시장으로 확장하는 HAQ FOOD의 기업 사명, 미래 비전 및 5대 핵심 가치를 소개합니다.',
   },
   capabilities: {
-    vi: 'Hệ thống nhà xưởng hiện đại, dây chuyền sấy giòn đối lưu khép kín và năng lực gia công thực phẩm OEM/ODM theo tiêu chuẩn xuất khẩu.',
-    en: 'State-of-the-art manufacturing facility, closed-loop convective drying line, cleanrooms, and OEM/ODM private-label food processing capabilities.',
-    ko: '최첨단 제조 공장, 밀폐식 대류 열풍 건조 라인, 클린룸 및 글로벌 수출 기준에 맞춘 식품 OEM/ODM 프라이빗 라벨 수탁 역량.',
+    vi: 'Hệ thống nhà xưởng hiện đại, dây chuyền sấy giòn khép kín và năng lực gia công thực phẩm OEM/ODM theo tiêu chuẩn xuất khẩu.',
+    en: 'State-of-the-art manufacturing facility, closed-loop clean drying line, cleanrooms, and OEM/ODM private-label food processing capabilities.',
+    ko: '최첨단 제조 공장, 밀폐식 청정 건조 라인, 클린룸 및 글로벌 수출 기준에 맞춘 식품 OEM/ODM 프라이빗 라벨 수탁 역량.',
   },
   contact: {
     vi: 'Liên hệ phòng kinh doanh B2B HAQ FOOD để nhận bảng giá đại lý toàn quốc, chính sách gia công OEM/ODM hoặc tư vấn xuất khẩu.',

@@ -36,13 +36,13 @@ export default function AboutCompany() {
             {/* Main Headline from HAQ */}
             <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-[1.15] mb-3 uppercase">
               CÔNG TY CỔ PHẦN <br/>
-              <span className="text-[#16A34A]">HAQ HÀ NỘI</span>
+              <span className="text-black">HAQ HÀ NỘI</span>
             </h2>
             <h3 className="font-heading font-bold text-lg md:text-xl text-[#0F5132] mb-4">
-              Chất lượng chuẩn mực — Đồng hành cùng ẩm thực Việt
+              Chất lượng vượt niềm tin
             </h3>
             <p className="text-haq-text-secondary leading-relaxed mb-8 text-justify text-sm sm:text-base font-normal">
-              HAQ Hà Nội được thành lập với tầm nhìn trở thành nhà sản xuất thực phẩm snack và bánh truyền thống hàng đầu. Chúng tôi đầu tư hệ thống máy sấy giòn hiện đại, kiểm soát nghiêm ngặt vệ sinh an toàn thực phẩm từ khâu tuyển chọn nguyên liệu nông sản Việt đến khi đóng gói thành phẩm hoàn thiện.
+              Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là bánh nướng và bánh tráng đạt chuẩn ISO – HACCP.
             </p>
 
             {/* Badges / Value Stats */}

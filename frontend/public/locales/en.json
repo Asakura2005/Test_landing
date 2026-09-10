@@ -76,7 +76,7 @@
     "core_caps": [
       {
         "num": "01 · PRODUCTION TECH",
-        "title": "Closed Convection Drying",
+        "title": "Closed Clean Drying",
         "desc": "Applies circulating hot-air drying with precision temperature and humidity control, ensuring crispness without residual frying oil."
       },
       {
@@ -357,6 +357,7 @@
     "breadcrumb_products": "Products",
     "origin_label": "Raw Material Origin:",
     "view_map": "View Map →",
+    "weight_label": "Weight / Size",
     "highlights_title": "Key Highlights",
     "packaging_title": "Packaging Specifications",
     "col_weight": "Weight",

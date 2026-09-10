@@ -32,7 +32,7 @@ export default function CapabilitiesSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/80 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
                 <div>
-                  <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                  <span className="font-heading text-xs font-bold text-white uppercase tracking-wider">
                     QUY CHUẨN AN TOÀN QUỐC TẾ
                   </span>
                   <h3 className="font-heading font-extrabold text-xl sm:text-2xl uppercase mt-1">

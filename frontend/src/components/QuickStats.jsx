@@ -39,7 +39,7 @@ export default function QuickStats() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 lg:mb-12">
           <div>
             <Reveal>
-              <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#C89B3C] uppercase mb-2">
+              <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#16A34A] uppercase mb-2">
                 {t('home.quick_stats.badge', 'Tiêu chuẩn & Năng lực')}
               </p>
               <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink tracking-tight leading-tight">

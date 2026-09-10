@@ -4,18 +4,20 @@ import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
 import Certifications from '../components/Certifications'
-import { Play, Film, X } from 'lucide-react'
+import { Play } from 'lucide-react'
 
-import heroFactoryImg from '../assets/hero-factory.jpg'
-import factoryHqImg from '../assets/about/factory_hq.jpg'
-import factoryImg from '../assets/factory/factory_production.jpg'
+import heroFactoryImg from '../assets/kiem-soat-chat-luong.jpg'
+import factoryHqImg from '../assets/may-tron-banh-trang.jpg'
+import factoryImg from '../assets/Kho-banh-trang.jpg'
+import cakeMoldingImg from '../assets/factory/may-tao-hinh-banh.jpg'
+import bakedCakesImg from '../assets/factory/san-xuat-banh-nuong.jpg'
 import distributionImg from '../assets/distribution/distribution_export.jpg'
 
 import winmartLogo from '../assets/pictures_doitac/winmart.png'
 import goLogo from '../assets/pictures_doitac/go!.png'
-import circleKLogo from '../assets/pictures_doitac/circle_k.png'
+import circleKLogo from '../assets/pictures_doitac/Circle_K.png'
 import gs25Logo from '../assets/pictures_doitac/gs25.png'
-import kmartLogo from '../assets/pictures_doitac/kmart.png'
+import kmartLogo from '../assets/pictures_doitac/k-market.webp'
 import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
 
 /* ─── Reveal ─────────────────────────────────────── */
@@ -50,14 +52,19 @@ export default function CapabilitiesPage() {
   const { t, language } = useLanguage()
   const en = language === 'en', ko = language === 'ko'
 
-  // =========================================================================
-  // VIDEO QUY TRÌNH SẢN XUẤT:
-  // Khi có video, bạn có thể:
-  // 1. Đặt file vào thư mục public hoặc src/assets (ví dụ: '/videos/quy-trinh.mp4')
-  // 2. Điền đường dẫn vào biến `processVideoSrc` bên dưới:
-  // =========================================================================
-  const processVideoSrc = null // Ví dụ: '/videos/quy-trinh-san-xuat.mp4' hoặc link YouTube
-  const [showVideoModal, setShowVideoModal] = useState(false)
+  // Video Quy trình sản xuất HAQ FOOD (Phát trực tiếp tại chỗ, chuẩn mp4)
+  const processVideoSrc = '/videos/quy-trinh-san-xuat.mp4'
+  const [isPlaying, setIsPlaying] = useState(false)
+  const videoRef = useRef(null)
+
+  const handleStartPlay = () => {
+    setIsPlaying(true)
+    if (videoRef.current) {
+      videoRef.current.play().catch((err) => {
+        console.warn('Playback error:', err)
+      })
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col">
@@ -109,41 +116,49 @@ export default function CapabilitiesPage() {
               </div>
             </Reveal>
 
-            {/* 2 ảnh chi tiết dây chuyền máy móc */}
+            {/* Bộ 4 ảnh chi tiết dây chuyền máy móc & chế biến */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <Reveal delay={200}>
-                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white">
+                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white group">
                   <img 
                     src={factoryHqImg} 
                     alt="Hệ thống máy móc chế biến" 
-                    className="w-full aspect-[16/10] object-cover hover:scale-105 transition-transform duration-500" 
+                    className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-500" 
+                    loading="lazy"
                   />
-                  <div className="p-4 sm:p-5 bg-white border-t border-haq-border/60">
-                    <span className="font-heading font-bold text-xs sm:text-sm uppercase text-haq-ink block mb-0.5">
-                      Hệ thống chiết rót &amp; phối trộn tự động
-                    </span>
-                    <span className="text-[11px] text-haq-text-secondary">
-                      Vận hành theo tiêu chuẩn phòng sạch áp suất dương
-                    </span>
-                  </div>
                 </div>
               </Reveal>
 
               <Reveal delay={250}>
-                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white">
+                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white group">
                   <img 
                     src={factoryImg} 
-                    alt="Khu vực dây chuyền sản xuất" 
-                    className="w-full aspect-[16/10] object-cover hover:scale-105 transition-transform duration-500" 
+                    alt="Khu vực dây chuyền sản xuất và lưu kho" 
+                    className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-500" 
+                    loading="lazy"
                   />
-                  <div className="p-4 sm:p-5 bg-white border-t border-haq-border/60">
-                    <span className="font-heading font-bold text-xs sm:text-sm uppercase text-haq-ink block mb-0.5">
-                      Dây chuyền đóng gói thành phẩm
-                    </span>
-                    <span className="text-[11px] text-haq-text-secondary">
-                      Định lượng chính xác, kiểm soát vệ sinh nghiêm ngặt
-                    </span>
-                  </div>
+                </div>
+              </Reveal>
+
+              <Reveal delay={300}>
+                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white group">
+                  <img 
+                    src={cakeMoldingImg} 
+                    alt="Dây chuyền tạo hình và định lượng bánh tự động" 
+                    className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-500" 
+                    loading="lazy"
+                  />
+                </div>
+              </Reveal>
+
+              <Reveal delay={350}>
+                <div className="rounded-2xl overflow-hidden border border-haq-border shadow-xs bg-white group">
+                  <img 
+                    src={bakedCakesImg} 
+                    alt="Quy trình nướng và kiểm soát chất lượng mẻ bánh" 
+                    className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-500" 
+                    loading="lazy"
+                  />
                 </div>
               </Reveal>
             </div>
@@ -161,13 +176,13 @@ export default function CapabilitiesPage() {
             <div className="max-w-3xl mb-12 sm:mb-16">
               <Reveal>
                 <div className="inline-flex items-center gap-2 mb-3">
-                  <div className="h-px w-6 bg-[#C89B3C]" />
-                  <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-[0.2em]">
+                  <div className="h-px w-6 bg-white" />
+                  <span className="font-heading text-xs font-bold text-white uppercase tracking-[0.2em]">
                     {en ? 'STANDARDIZED WORKFLOW' : ko ? '표준 제조 공정' : 'QUY CHUẨN VẬN HÀNH'}
                   </span>
                 </div>
                 <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
-                  Quy trình sản xuất <span className="text-[#C89B3C]">6 công đoạn</span>
+                  Quy trình sản xuất <span className="text-white">6 công đoạn</span>
                 </h2>
                 <p className="text-sm sm:text-base text-white/60 mt-4 leading-relaxed max-w-2xl">
                   Hệ thống vận hành liên hoàn kiểm soát nhiệt ẩm và an toàn vệ sinh thực phẩm nghiêm ngặt từ khâu tiếp nhận nguyên liệu, chế biến kỹ thuật, tùy biến OEM/ODM đến đóng gói và xuất kho.
@@ -175,66 +190,42 @@ export default function CapabilitiesPage() {
               </Reveal>
             </div>
 
-            {/* VIDEO SHOWCASE FRAME (Hiện tại hiển thị ảnh sắc nét, có nút Play, sẵn sàng đổi sang video) */}
+            {/* VIDEO SHOWCASE: Phát trực tiếp tại chỗ khi bấm, không mở cửa sổ modal */}
             <Reveal delay={100} className="mb-14 sm:mb-20">
-              <div 
-                onClick={() => setShowVideoModal(true)}
-                className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black group cursor-pointer"
-              >
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black group">
                 {/* 16:9 Cinema Container */}
-                <div className="relative aspect-video max-h-[560px] w-full overflow-hidden flex items-center justify-center">
-                  <img
-                    src={factoryImg}
-                    alt="Video quy trình sản xuất HAQ FOOD"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
+                <div className="relative aspect-video max-h-[560px] w-full overflow-hidden flex items-center justify-center bg-black">
+                  <video
+                    ref={videoRef}
+                    src={processVideoSrc}
+                    poster={factoryImg}
+                    controls={isPlaying}
+                    playsInline
+                    preload="metadata"
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => {}}
+                    onEnded={() => setIsPlaying(false)}
+                    className="w-full h-full object-cover"
                   />
 
-                  {/* Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/40" />
-
-                  {/* Top Bar Badges */}
-                  <div className="absolute top-4 sm:top-6 inset-x-4 sm:inset-x-6 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/15 px-3.5 py-1.5 rounded-full text-[11px] font-heading font-bold text-white uppercase tracking-wider">
-                      <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-                      Video quy trình sản xuất
-                    </span>
-                    <span className="bg-black/60 backdrop-blur-md border border-white/15 px-3 py-1 rounded-md text-[10px] font-mono text-white/80 uppercase tracking-wider hidden sm:inline-block">
-                      Dây chuyền tự động khép kín
-                    </span>
-                  </div>
-
-                  {/* Center Play Button Overlay */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                    <div className="relative mb-3.5 group-hover:scale-110 transition-transform duration-300">
-                      {/* Outer pulse ring */}
-                      <div className="absolute -inset-3 rounded-full bg-[#16A34A]/30 animate-ping opacity-75" />
+                  {/* Khi chưa bấm Play: Hiển thị poster và nút Play tròn (đã bỏ toàn bộ các nhãn chữ theo yêu cầu) */}
+                  {!isPlaying && (
+                    <div 
+                      onClick={handleStartPlay}
+                      className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center cursor-pointer bg-black/40 hover:bg-black/25 transition-all group"
+                    >
                       {/* Play Button */}
-                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#16A34A] hover:bg-[#15803D] text-white flex items-center justify-center shadow-2xl shadow-[#16A34A]/50 transition-colors">
-                        <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-white translate-x-0.5" />
+                      <div className="relative mb-3 group-hover:scale-110 transition-transform duration-300">
+                        <div className="absolute -inset-3 rounded-full bg-[#16A34A]/30 animate-ping opacity-75" />
+                        <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#16A34A] hover:bg-[#15803D] text-white flex items-center justify-center shadow-2xl shadow-[#16A34A]/50 transition-colors">
+                          <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-white translate-x-0.5" />
+                        </div>
                       </div>
+                      <span className="font-heading font-bold text-sm sm:text-base text-white tracking-wide uppercase drop-shadow-md">
+                        {en ? 'Watch Production Process Video' : ko ? '공정 영상 시청' : 'Xem Video Quy Trình Sản Xuất'}
+                      </span>
                     </div>
-                    <span className="font-heading font-bold text-sm sm:text-base text-white tracking-wide uppercase drop-shadow-md">
-                      Xem Video Công Đoạn Sản Xuất
-                    </span>
-                    <span className="text-[11px] sm:text-xs text-white/70 mt-1 font-sans">
-                      (Bấm để xem thước phim vận hành thực tế tại nhà xưởng)
-                    </span>
-                  </div>
-
-                  {/* Bottom Bar Info */}
-                  <div className="absolute bottom-4 sm:bottom-6 inset-x-4 sm:inset-x-6 flex items-end justify-between">
-                    <div className="max-w-lg hidden sm:block">
-                      <div className="text-[11px] font-mono text-[#C89B3C] font-bold uppercase tracking-wider mb-0.5">
-                        HAQ FOOD &middot; FACTORY PROCESS
-                      </div>
-                      <div className="text-xs text-white/80">
-                        Khép kín từ khâu nguyên liệu đầu vào đến thành phẩm đóng gói xuất xưởng
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-mono text-white/50 uppercase ml-auto">
-                      ISO 22000 &middot; HACCP
-                    </span>
-                  </div>
+                  )}
                 </div>
               </div>
             </Reveal>
@@ -274,17 +265,17 @@ export default function CapabilitiesPage() {
                 },
               ].map((proc, i) => (
                 <Reveal key={proc.step} delay={i * 60}>
-                  <div className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-[#C89B3C]/40 rounded-2xl p-6 sm:p-7 h-full flex flex-col justify-between transition-all duration-300 group">
+                  <div className="bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] hover:border-white/40 rounded-2xl p-6 sm:p-7 h-full flex flex-col justify-between transition-all duration-300 group">
                     <div>
                       <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.06]">
-                        <span className="font-heading font-extrabold text-2xl sm:text-3xl text-[#C89B3C]/50 group-hover:text-[#C89B3C] transition-colors">
+                        <span className="font-heading font-extrabold text-2xl sm:text-3xl text-white/50 group-hover:text-white transition-colors">
                           {proc.step}
                         </span>
                         <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
                           STEP {proc.step}
                         </span>
                       </div>
-                      <h3 className="font-heading font-bold text-base sm:text-[17px] text-white leading-snug mb-3 group-hover:text-[#C89B3C] transition-colors">
+                      <h3 className="font-heading font-bold text-base sm:text-[17px] text-white leading-snug mb-3 group-hover:text-white transition-colors">
                         {proc.title}
                       </h3>
                       <p className="text-xs sm:text-[13px] text-white/60 leading-relaxed">
@@ -314,7 +305,7 @@ export default function CapabilitiesPage() {
 
           <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <Reveal>
-              <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-[0.2em]">
+              <span className="font-heading text-xs font-bold text-white uppercase tracking-[0.2em]">
                 {en ? 'Distribution & Export' : ko ? '유통 및 수출' : 'Phân phối & Xuất khẩu'}
               </span>
               <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-white tracking-tight mt-2 max-w-xl">
@@ -381,72 +372,6 @@ export default function CapabilitiesPage() {
             </Reveal>
           </div>
         </section>
-
-      {/* ── Video Player Modal ── */}
-      {showVideoModal && (
-        <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setShowVideoModal(false)}
-        >
-          <div
-            className="bg-[#0C1E15] border border-white/15 rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col animate-in fade-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Top Bar */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/40">
-              <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-                <span className="font-heading font-bold text-sm text-white uppercase tracking-wide">
-                  Video Quy Trình Sản Xuất &middot; HAQ FOOD
-                </span>
-              </div>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Video Container */}
-            <div className="relative aspect-video w-full bg-black flex items-center justify-center">
-              {processVideoSrc ? (
-                <video
-                  src={processVideoSrc}
-                  controls
-                  autoPlay
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-6">
-                  <img
-                    src={factoryImg}
-                    alt="Video thumbnail"
-                    className="absolute inset-0 w-full h-full object-cover opacity-30"
-                  />
-                  <div className="relative z-10 max-w-md bg-black/75 backdrop-blur-md border border-white/15 p-6 sm:p-8 rounded-2xl">
-                    <div className="w-14 h-14 rounded-full bg-[#16A34A]/20 text-[#16A34A] border border-[#16A34A]/30 flex items-center justify-center mx-auto mb-3">
-                      <Film className="w-7 h-7" />
-                    </div>
-                    <h4 className="font-heading font-bold text-base text-white uppercase mb-2">
-                      Khung phát Video sẵn sàng
-                    </h4>
-                    <p className="text-xs text-white/70 leading-relaxed mb-5">
-                      Hiện tại đang hiển thị ảnh đại diện dây chuyền sản xuất. Khi bạn có file video (.mp4) hoặc link YouTube, chỉ cần đưa link vào biến <code className="bg-white/15 text-[#C89B3C] px-1.5 py-0.5 rounded font-mono text-[11px]">processVideoSrc</code> trong code để phát trực tiếp.
-                    </p>
-                    <button
-                      onClick={() => setShowVideoModal(false)}
-                      className="px-6 py-2.5 rounded-full bg-[#16A34A] hover:bg-[#15803D] text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-lg"
-                    >
-                      Đã hiểu
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       </main>
       <Footer />

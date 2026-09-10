@@ -193,7 +193,7 @@ export default function NewsPage({ defaultTab }) {
                     </div>
                     {item.is_pinned && (
                       <div className="absolute top-2.5 right-2.5">
-                        <span className="bg-[#C89B3C] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs flex items-center gap-1">
+                        <span className="bg-[#16A34A] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs flex items-center gap-1">
                           <Bookmark className="w-2.5 h-2.5 fill-current" />
                           {activeTab === 'tuyen-dung' ? 'Gấp' : 'Tiêu điểm'}
                         </span>

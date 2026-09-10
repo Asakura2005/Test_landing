@@ -13,11 +13,11 @@ export default function PolicyPage() {
         <div className="mx-auto max-w-site px-6 md:px-12">
           <h1 className="font-heading font-extrabold text-4xl md:text-6xl tracking-tight">
             {language === 'en' ? (
-              <>Policies <span className="text-haq-gold">& Terms</span></>
+              <>Policies <span className="text-white">& Terms</span></>
             ) : language === 'ko' ? (
-              <>정책 <span className="text-haq-gold">& 약관</span></>
+              <>정책 <span className="text-white">& 약관</span></>
             ) : (
-              <>Chính Sách <span className="text-haq-gold">& Điều Khoản</span></>
+              <>Chính Sách <span className="text-white">& Điều Khoản</span></>
             )}
           </h1>
         </div>

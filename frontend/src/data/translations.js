@@ -40,7 +40,7 @@ export const translations = {
       // Section 01
       sec1_badge: '01 — TỔNG QUAN DOANH NGHIỆP',
       sec1_title: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
-      sec1_desc: 'Thành lập từ năm 2021 tại Thủ đô Hà Nội, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối thực phẩm chế biến đóng gói. Doanh nghiệp làm chủ công nghệ sấy sạch đối lưu, tập trung vào các dòng bánh tráng sấy giòn, bánh nướng truyền thống và nông sản sấy, phục vụ hệ thống siêu thị, đại lý trên toàn quốc và thị trường xuất khẩu.',
+      sec1_desc: 'Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là bánh nướng và bánh tráng. Doanh nghiệp ứng dụng dây chuyền chế biến hiện đại đạt chuẩn ISO – HACCP với cam kết khắt khe về An toàn – Minh bạch – Chất lượng cao.',
       fact_header: 'HỒ SƠ ĐĂNG KÝ DOANH NGHIỆP',
       fact_est: 'THÀNH LẬP 2021',
       fact_legal_name_label: 'Tên pháp nhân',
@@ -58,14 +58,14 @@ export const translations = {
       fact_dist_val: 'Chuỗi bán lẻ hiện đại (WinMart, Circle K, GS25, Bách Hóa Xanh, K-Market...), đại lý phân phối toàn quốc và xuất khẩu (Hàn Quốc, Đài Loan).',
       fact_coop_label: 'Mô hình hợp tác B2B',
       fact_coop_val: 'Cung ứng sỉ, Gia công sản phẩm theo đơn đặt hàng (OEM/ODM), Gia công nhãn hàng riêng (Private Label).',
-      photo_caption: 'Cơ sở sản xuất HAQ FOOD tại Hà Nội: Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đối lưu đến đóng gói bao bì màng nhôm tiệt trùng.',
+      photo_caption: 'Cơ sở sản xuất HAQ FOOD tại Hà Nội: Quy trình kiểm soát khép kín từ tuyển chọn nguyên liệu, chế biến sấy sạch đến đóng gói bao bì màng nhôm tiệt trùng.',
       coop_box_title: 'Liên hệ hợp tác phân phối & OEM',
       coop_box_desc: 'Tiếp nhận yêu cầu báo giá sỉ, hợp đồng gia công và gửi mẫu thử.',
 
       core_caps: [
         {
           num: '01 · CÔNG NGHỆ SẢN XUẤT',
-          title: 'Sấy Sạch Đối Lưu Khép Kín',
+          title: 'Sấy Sạch Khép Kín',
           desc: 'Ứng dụng công nghệ sấy tuần hoàn nhiệt kín, kiểm soát chính xác nhiệt độ và độ ẩm, giữ trọn độ giòn xốp tự nhiên mà không tồn dư dầu chiên.',
         },
         {
@@ -86,7 +86,7 @@ export const translations = {
       sec2_title_2: 'ĐỀU BẮT ĐẦU',
       sec2_title_3: 'TỪ TỰ NHIÊN',
       sec2_desc_1: 'Chúng tôi tin rằng thực phẩm ngon phải bắt đầu từ nguyên liệu tốt, quy trình đúng và con người có trách nhiệm. HAQ FOOD không ngừng đổi mới để mang đến những sản phẩm tiện lợi, an toàn và giữ trọn hương vị truyền thống Việt Nam.',
-      sec2_desc_2: 'Chúng tôi xây dựng chuỗi giá trị khép kín từ khâu tuyển chọn nguyên liệu tươi sạch tại các vùng nông nghiệp trọng điểm cho đến dây chuyền sấy giòn đối lưu và đóng gói tiệt trùng, phục vụ khách hàng tiêu dùng và xuất khẩu.',
+      sec2_desc_2: 'Chúng tôi xây dựng chuỗi giá trị khép kín từ khâu tuyển chọn nguyên liệu tươi sạch tại các vùng nông nghiệp trọng điểm cho đến dây chuyền sấy giòn khép kín và đóng gói tiệt trùng, phục vụ khách hàng tiêu dùng và xuất khẩu.',
       sec2_photo_tag: 'NGUỒN NGUYÊN LIỆU & SẢN XUẤT',
       sec2_photo_title: 'Kết Hợp Nông Sản Bản Địa & Công Nghệ Sấy Sạch',
       sec2_values_tag: 'TRIẾT LÝ VẬN HÀNH',
@@ -101,7 +101,7 @@ export const translations = {
       sec3_kcs_tag: 'TIÊU CHUẨN VẬN HÀNH & KCS',
       sec3_kcs_title_1: 'CHUẨN HÓA',
       sec3_kcs_title_2: 'CHẤT LƯỢNG ĐỒNG NHẤT.',
-      sec3_kcs_desc: 'Nhà máy sản xuất HAQ FOOD được đầu tư đồng bộ với hệ thống máy móc sấy đối lưu, phòng pha chế nguyên liệu vô trùng và kho lưu trữ tiêu chuẩn.',
+      sec3_kcs_desc: 'Nhà máy sản xuất HAQ FOOD được đầu tư đồng bộ với hệ thống máy móc sấy khép kín hiện đại, phòng pha chế nguyên liệu vô trùng và kho lưu trữ tiêu chuẩn.',
       sec3_kcs_points: [
         {
           title: 'Vệ Sinh An Toàn Thực Phẩm Tuyệt Đối',
@@ -155,7 +155,7 @@ export const translations = {
         slides: [
           {
             eyebrow: 'NHÀ SẢN XUẤT & PHÂN PHỐI THỰC PHẨM VIỆT NAM',
-            title: 'CHẤT LƯỢNG LÀ CỐT LÕI CỦA THƯƠNG HIỆU',
+            title: 'CHẤT LƯỢNG VƯỢT NIỀM TIN',
             subtext: 'HAQ FOOD — Doanh nghiệp sản xuất và phân phối thực phẩm Việt Nam, khẳng định uy tín qua từng dòng sản phẩm đạt chuẩn ISO 22000 & HACCP.',
           },
           {
@@ -294,6 +294,7 @@ export const translations = {
       breadcrumb_products: 'Sản phẩm',
       origin_label: 'Nguồn gốc vùng nguyên liệu:',
       view_map: 'Xem bản đồ →',
+      weight_label: 'Khối lượng tịnh',
       highlights_title: 'Điểm nổi bật',
       packaging_title: 'Quy cách đóng gói',
       col_weight: 'Trọng lượng',
@@ -312,9 +313,9 @@ export const translations = {
     capabilities: {
       badge: 'NĂNG LỰC SẢN XUẤT & NHÀ MÁY',
       title: 'HỆ THỐNG SẢN XUẤT TIÊU CHUẨN QUỐC TẾ',
-      subtitle: 'Dây chuyền sấy sạch đối lưu, phòng sạch vô trùng, chứng nhận ISO 22000 & HACCP đáp ứng xuất khẩu.',
+      subtitle: 'Dây chuyền sấy sạch khép kín, phòng sạch vô trùng, chứng nhận ISO 22000 & HACCP đáp ứng xuất khẩu.',
       process_title: 'QUY TRÌNH 4 BƯỚC KIỂM SOÁT CHẤT LƯỢNG',
-      cleanroom_title: 'PHÒNG SẠCH & DÂY CHUYỀN SẤY ĐỐI LƯU',
+      cleanroom_title: 'PHÒNG SẠCH & DÂY CHUYỀN SẤY KHÉP KÍN',
       cleanroom_desc: 'Nhà máy được trang bị hệ thống kiểm soát không khí, nhiệt độ và độ ẩm nghiêm ngặt, đảm bảo thực phẩm giữ trọn vẹn độ giòn tự nhiên và không nhiễm khuẩn chéo.',
       oem_title: 'DỊCH VỤ GIA CÔNG OEM / ODM & NHÃN HÀNG RIÊNG',
       oem_desc: 'HAQ FOOD cung cấp giải pháp gia công trọn gói từ R&D công thức, thiết kế bao bì đến sản xuất quy mô lớn cho chuỗi bán lẻ và đối tác quốc tế.',
@@ -420,7 +421,7 @@ export const translations = {
       core_caps: [
         {
           num: '01 · PRODUCTION TECH',
-          title: 'Closed Convection Drying',
+          title: 'Closed Clean Drying',
           desc: 'Applies circulating hot-air drying with precision temperature and humidity control, ensuring crispness without residual frying oil.',
         },
         {
@@ -649,6 +650,7 @@ export const translations = {
       breadcrumb_products: 'Products',
       origin_label: 'Raw Material Origin:',
       view_map: 'View Map →',
+      weight_label: 'Weight / Size',
       highlights_title: 'Key Highlights',
       packaging_title: 'Packaging Specifications',
       col_weight: 'Weight',
@@ -775,7 +777,7 @@ export const translations = {
       core_caps: [
         {
           num: '01 · 첨단 가공 기술',
-          title: '밀폐 순환 대류 건조',
+          title: '밀폐 순환 청정 건조',
           desc: '정밀한 온도 및 습도 제어를 통해 기름 잔여물 없이 원재료 고유의 바삭함과 영양을 완벽하게 보존합니다.',
         },
         {
@@ -1004,6 +1006,7 @@ export const translations = {
       breadcrumb_products: '제품',
       origin_label: '원자재 원산지:',
       view_map: '지도 보기 →',
+      weight_label: '중량 / 규격',
       highlights_title: '주요 특징',
       packaging_title: '포장 규격',
       col_weight: '중량',

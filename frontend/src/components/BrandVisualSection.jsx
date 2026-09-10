@@ -43,8 +43,8 @@ export default function BrandVisualSection() {
           {/* Eyebrow */}
           <Reveal>
             <div className="inline-flex items-center gap-2 mb-4 sm:mb-5">
-              <Globe2 className="w-4 h-4 text-[#C89B3C]" />
-              <span className="font-heading text-xs font-bold tracking-[0.2em] uppercase text-[#C89B3C]">
+              <Globe2 className="w-4 h-4 text-white" />
+              <span className="font-heading text-xs font-bold tracking-[0.2em] uppercase text-white">
                 {t('home.brand_visual.badge', 'Tầm nhìn quốc tế')}
               </span>
             </div>
@@ -54,7 +54,7 @@ export default function BrandVisualSection() {
           <Reveal delay={150}>
             <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight uppercase leading-[1.15] mb-4 sm:mb-5">
               {t('home.brand_visual.title_1', 'Từ nông sản Việt')} <br className="hidden sm:block" />
-              <span className="text-[#C89B3C]">{t('home.brand_visual.title_2', 'Vươn tầm Châu Á')}</span>
+              <span className="text-white">{t('home.brand_visual.title_2', 'Vươn tầm Châu Á')}</span>
             </h2>
           </Reveal>
 
@@ -87,7 +87,7 @@ export default function BrandVisualSection() {
           <Reveal delay={600}>
             <Link
               to="/gioi-thieu#phan-phoi"
-              className="inline-flex items-center gap-2.5 bg-[#C89B3C] hover:bg-[#b58b32] text-[#0C1E15] text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
+              className="inline-flex items-center gap-2.5 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <span>{t('home.brand_visual.cta', 'Tìm hiểu hệ thống phân phối')}</span>
               <ArrowRight className="w-4 h-4" />

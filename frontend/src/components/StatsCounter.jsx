@@ -73,7 +73,7 @@ export default function StatsCounter() {
       isYear: false,
       label: isEn ? 'ISO & HACCP AUDITED' : 'TIÊU CHUẨN ISO & HACCP',
       tag: '04',
-      desc: isEn ? 'Closed-loop convection drying with strict lot sample retention' : 'Quy trình sấy đối lưu khép kín, kiểm soát từ nguyên liệu đến lưu mẫu'
+      desc: isEn ? 'Closed-loop clean drying with strict lot sample retention' : 'Quy trình sấy sạch khép kín, kiểm soát từ nguyên liệu đến lưu mẫu'
     }
   ]
 

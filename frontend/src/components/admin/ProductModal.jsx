@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { 
   X, 
   Plus, 
@@ -21,6 +21,7 @@ import {
   Eye
 } from 'lucide-react'
 import { uploadProductImage, deleteProductImage, getCategories, getProvinces } from '../../services/supabase'
+import { PRODUCT_IMAGE_MAP } from '../../data/productCategories'
 
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount = 0 }) {
   const [activeModalTab, setActiveModalTab] = useState('basic') // 'basic' | 'variants' | 'specs' | 'gallery'
@@ -46,21 +47,48 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     ingredients: '',
     shelf_life: '6-12 tháng kể từ ngày sản xuất',
     certifications: 'ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP',
-    box_spec: 'Thùng carton 5 lớp (50 gói/thùng), bọc màng co',
+    box_spec: '',
     images: [],
+    shopee_url: '',
+    lazada_url: '',
+    tiktok_url: '',
+    facebook_url: '',
   })
 
-  // Variants State (Đồng bộ chuẩn với bảng product_variants trong DB: size, pack, shelf, moq)
+  // Variants State (Đồng bộ chuẩn với bảng product_variants trong DB: size, img)
   const [variants, setVariants] = useState([
-    { size: '100g', pack: 'Túi zip', shelf: '6 tháng', moq: '50' },
-    { size: '250g', pack: 'Hũ nhựa', shelf: '6 tháng', moq: '30' },
-    { size: 'Thùng 5kg (Bán sỉ)', pack: 'Thùng carton', shelf: '12 tháng', moq: '5' },
+    { size: '100g', img: '' },
+    { size: '250g', img: '' },
+    { size: '500g', img: '' },
   ])
+
+  // Variant Image Picker modal state
+  const [activeVariantImageIndex, setActiveVariantImageIndex] = useState(null)
+  const [variantCustomUrl, setVariantCustomUrl] = useState('')
+  const [isUploadingVariantImg, setIsUploadingVariantImg] = useState(false)
 
   // Gallery files state
   const [galleryFiles, setGalleryFiles] = useState([])
   const [galleryPreviews, setGalleryPreviews] = useState([])
   const [imagesToDelete, setImagesToDelete] = useState([])
+
+  // Danh sách ảnh có sẵn để gán cho biến thể (kết hợp thư viện ảnh sản phẩm + ảnh các biến thể khác + ảnh map cục bộ)
+  const availableGalleryImages = useMemo(() => {
+    const list = []
+    if (Array.isArray(formData.images)) {
+      formData.images.forEach(img => {
+        if (img && !list.includes(img)) list.push(img)
+      })
+    }
+    variants.forEach(v => {
+      if (v.img && !list.includes(v.img)) list.push(v.img)
+    })
+    if (formData.slug && PRODUCT_IMAGE_MAP[formData.slug]) {
+      const mapped = PRODUCT_IMAGE_MAP[formData.slug]
+      if (!list.includes(mapped)) list.push(mapped)
+    }
+    return list
+  }, [formData.images, variants, formData.slug])
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -80,6 +108,20 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
 
   useEffect(() => {
     if (product) {
+      let shopeeUrl = ''
+      let lazadaUrl = ''
+      let tiktokUrl = ''
+      let facebookUrl = ''
+      if (product.box_spec && typeof product.box_spec === 'string' && product.box_spec.trim().startsWith('{')) {
+        try {
+          const parsed = JSON.parse(product.box_spec)
+          shopeeUrl = parsed.shopee || ''
+          lazadaUrl = parsed.lazada || ''
+          tiktokUrl = parsed.tiktok || ''
+          facebookUrl = parsed.facebook || ''
+        } catch (e) {}
+      }
+
       setFormData({
         slug: product.slug || '',
         name: product.name || '',
@@ -96,16 +138,18 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         ingredients: product.ingredients || '',
         shelf_life: product.shelf_life || '6-12 tháng kể từ ngày sản xuất',
         certifications: product.certifications || 'ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP',
-        box_spec: product.box_spec || 'Thùng carton 5 lớp (50 gói/thùng), bọc màng co',
+        box_spec: product.box_spec || '',
         images: Array.isArray(product.images) ? product.images : [],
+        shopee_url: shopeeUrl,
+        lazada_url: lazadaUrl,
+        tiktok_url: tiktokUrl,
+        facebook_url: facebookUrl,
       })
       if (product.variants && product.variants.length > 0) {
         setVariants(product.variants.map(v => ({
           id: v.id,
           size: v.size || v.name || '',
-          pack: v.pack || v.unit || '',
-          shelf: v.shelf || '6 tháng',
-          moq: v.moq || v.min_order || '10'
+          img: v.img || ''
         })))
       }
     }
@@ -152,15 +196,13 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
 
   // Variant operations
   const handleVariantChange = (index, field, value) => {
-    const newVars = [...variants]
-    newVars[index][field] = value
-    setVariants(newVars)
+    setVariants(prev => prev.map((v, i) => i === index ? { ...v, [field]: value } : v))
   }
 
   const addVariantRow = () => {
     setVariants([
       ...variants, 
-      { size: 'Quy cách mới', pack: 'Hũ nhựa', shelf: '6 tháng', moq: '10' }
+      { size: 'Khối lượng mới', img: '' }
     ])
   }
 
@@ -251,11 +293,19 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
       const finalImages = [...formData.images, ...newlyUploadedUrls]
       const cleanedHighlights = formData.highlights.filter(h => h && h.trim() !== '')
 
+      const marketplaceObj = {
+        shopee: formData.shopee_url?.trim() || '',
+        lazada: formData.lazada_url?.trim() || '',
+        tiktok: formData.tiktok_url?.trim() || '',
+        facebook: formData.facebook_url?.trim() || ''
+      }
+
       await onSave({ 
         ...formData, 
+        box_spec: JSON.stringify(marketplaceObj),
         images: finalImages, 
         highlights: cleanedHighlights 
-      }, variants)
+      }, validVariants)
 
       onClose()
     } catch (err) {
@@ -462,6 +512,81 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                   placeholder="Giới thiệu về nguồn gốc nguyên liệu, hương vị đặc trưng và lợi thế khi kinh doanh phân phối sỉ..."
                 />
               </div>
+
+              {/* LIÊN KẾT SÀN TMĐT & MẠNG XÃ HỘI */}
+              <div className="pt-4 border-t border-[#D8E5DA] space-y-3">
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center gap-1.5">
+                    <Link className="w-3.5 h-3.5 text-[#0F5132]" />
+                    Liên Kết Sàn TMĐT & Mạng Xã Hội (Shopee, Lazada, TikTok Shop, Facebook)
+                  </h4>
+                  <p className="text-[11px] text-[#52665A] mt-0.5">
+                    Hiển thị các nút pill bên dưới mục "Khối lượng tịnh" để khách hàng bấm mua lẻ trực tiếp. (Nếu để trống hệ thống sẽ tự tìm kiếm theo tên sản phẩm)
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {/* Shopee */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold flex items-center gap-1.5 text-[#EE4D2D]">
+                      <span className="w-2 h-2 rounded-full bg-[#EE4D2D]"></span>
+                      Link Shopee
+                    </label>
+                    <input 
+                      type="url" 
+                      value={formData.shopee_url} 
+                      onChange={e => setFormData({ ...formData, shopee_url: e.target.value })} 
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#EE4D2D]"
+                      placeholder="https://shopee.vn/..." 
+                    />
+                  </div>
+
+                  {/* Lazada */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold flex items-center gap-1.5 text-[#0F146D]">
+                      <span className="w-2 h-2 rounded-full bg-[#0F146D]"></span>
+                      Link Lazada
+                    </label>
+                    <input 
+                      type="url" 
+                      value={formData.lazada_url} 
+                      onChange={e => setFormData({ ...formData, lazada_url: e.target.value })} 
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F146D]"
+                      placeholder="https://www.lazada.vn/..." 
+                    />
+                  </div>
+
+                  {/* TikTok Shop */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold flex items-center gap-1.5 text-black">
+                      <span className="w-2 h-2 rounded-full bg-black"></span>
+                      Link TikTok Shop
+                    </label>
+                    <input 
+                      type="url" 
+                      value={formData.tiktok_url} 
+                      onChange={e => setFormData({ ...formData, tiktok_url: e.target.value })} 
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-black"
+                      placeholder="https://www.tiktok.com/@haqfood..." 
+                    />
+                  </div>
+
+                  {/* Facebook */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold flex items-center gap-1.5 text-[#1877F2]">
+                      <span className="w-2 h-2 rounded-full bg-[#1877F2]"></span>
+                      Link Facebook
+                    </label>
+                    <input 
+                      type="url" 
+                      value={formData.facebook_url} 
+                      onChange={e => setFormData({ ...formData, facebook_url: e.target.value })} 
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#1877F2]"
+                      placeholder="https://facebook.com/..." 
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -470,67 +595,80 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             <div className="space-y-5 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-[#11261B]">Quy Cách Đóng Gói & Biến Thể B2B</h3>
-                  <p className="text-xs text-[#52665A]">Định nghĩa các quy cách: Túi 100g, Hũ 250g, Thùng 5kg hiển thị trên trang chi tiết sản phẩm</p>
+                  <h3 className="text-sm font-bold text-[#11261B]">Biến Thể Khối Lượng Sản Phẩm</h3>
+                  <p className="text-xs text-[#52665A]">Thêm các khối lượng (VD: 100g, 250g, 500g...) và gán ảnh riêng tương ứng</p>
                 </div>
                 <button
                   type="button"
                   onClick={addVariantRow}
                   className="px-3.5 py-2 rounded-xl bg-[#0F5132] text-white text-xs font-bold hover:bg-[#16A34A] transition-colors flex items-center gap-1.5 shadow-sm"
                 >
-                  <Plus className="w-4 h-4" /> Thêm Quy Cách
+                  <Plus className="w-4 h-4" /> Thêm Khối Lượng
                 </button>
               </div>
 
               <div className="overflow-x-auto rounded-2xl border border-[#D8E5DA]">
-                <table className="w-full text-left text-xs border-collapse min-w-[650px]">
+                <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-[#F4F8F4] border-b border-[#D8E5DA] text-[11px] uppercase tracking-wider text-[#52665A]">
-                      <th className="p-3 font-bold">Kích cỡ / Trọng lượng *</th>
-                      <th className="p-3 font-bold">Quy cách bao bì</th>
-                      <th className="p-3 font-bold">Hạn sử dụng (HSD)</th>
-                      <th className="p-3 font-bold">MOQ (Đơn tối thiểu)</th>
-                      <th className="p-3 font-bold text-center">Xóa</th>
+                      <th className="p-3 font-bold w-32">Ảnh biến thể</th>
+                      <th className="p-3 font-bold">Khối lượng / Kích cỡ *</th>
+                      <th className="p-3 font-bold text-center w-16">Xóa</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#D8E5DA]">
                     {variants.map((v, i) => (
                       <tr key={i} className="hover:bg-[#F4F8F4]/50 transition-colors">
                         <td className="p-2.5">
+                          {v.img ? (
+                            <div className="flex items-center gap-2">
+                              <div 
+                                onClick={() => setActiveVariantImageIndex(i)}
+                                className="relative group w-11 h-11 rounded-lg border border-[#D8E5DA] bg-white overflow-hidden shrink-0 cursor-pointer shadow-2xs hover:border-[#0F5132]"
+                                title="Bấm để đổi ảnh cho biến thể này"
+                              >
+                                <img src={v.img} alt={v.size} className="w-full h-full object-contain p-0.5" />
+                                <div className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-[9px] font-bold">
+                                  Đổi
+                                </div>
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveVariantImageIndex(i)}
+                                  className="text-[11px] text-[#0F5132] font-semibold hover:underline text-left cursor-pointer whitespace-nowrap"
+                                >
+                                  Đổi ảnh
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleVariantChange(i, 'img', '')}
+                                  className="text-[10px] text-red-500 hover:underline text-left cursor-pointer whitespace-nowrap"
+                                >
+                                  Xóa ảnh
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setActiveVariantImageIndex(i)}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-dashed border-[#0F5132]/40 hover:border-[#0F5132] text-[#0F5132] hover:bg-[#F4F8F4] text-xs font-semibold transition-all whitespace-nowrap cursor-pointer"
+                              title="Gán ảnh riêng cho quy cách này"
+                            >
+                              <ImageIcon className="w-3.5 h-3.5" />
+                              <span>+ Gán ảnh</span>
+                            </button>
+                          )}
+                        </td>
+                        <td className="p-2.5">
                           <input
                             type="text"
                             required
                             value={v.size || ''}
                             onChange={e => handleVariantChange(i, 'size', e.target.value)}
-                            placeholder="VD: 100g, 250g, Thùng 5kg"
-                            className="w-full p-2 rounded-lg border border-[#D8E5DA] font-semibold text-xs bg-white focus:outline-none focus:border-[#0F5132]"
-                          />
-                        </td>
-                        <td className="p-2.5">
-                          <input
-                            type="text"
-                            value={v.pack || ''}
-                            onChange={e => handleVariantChange(i, 'pack', e.target.value)}
-                            placeholder="VD: Hũ nhựa, Túi zip, Hộp giấy"
-                            className="w-full p-2 rounded-lg border border-[#D8E5DA] text-xs bg-white focus:outline-none focus:border-[#0F5132]"
-                          />
-                        </td>
-                        <td className="p-2.5">
-                          <input
-                            type="text"
-                            value={v.shelf || ''}
-                            onChange={e => handleVariantChange(i, 'shelf', e.target.value)}
-                            placeholder="VD: 6 tháng, 12 tháng"
-                            className="w-32 p-2 rounded-lg border border-[#D8E5DA] text-xs bg-white focus:outline-none focus:border-[#0F5132]"
-                          />
-                        </td>
-                        <td className="p-2.5">
-                          <input
-                            type="text"
-                            value={v.moq || ''}
-                            onChange={e => handleVariantChange(i, 'moq', e.target.value)}
-                            placeholder="VD: 10, 50 gói"
-                            className="w-28 p-2 rounded-lg border border-[#D8E5DA] font-semibold text-xs bg-white focus:outline-none focus:border-[#0F5132]"
+                            placeholder="VD: 100g, 250g, 500g, 1100g..."
+                            className="w-full p-2.5 rounded-lg border border-[#D8E5DA] font-semibold text-xs bg-white focus:outline-none focus:border-[#0F5132]"
                           />
                         </td>
                         <td className="p-2.5 text-center">
@@ -574,15 +712,6 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                   />
                 </div>
 
-                <div className="space-y-1.5 md:col-span-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Quy cách đóng thùng B2B</label>
-                  <input 
-                    type="text" 
-                    value={formData.box_spec} 
-                    onChange={e => setFormData({ ...formData, box_spec: e.target.value })} 
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
-                  />
-                </div>
 
                 <div className="space-y-1.5 md:col-span-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-[#11261B]">Hướng dẫn bảo quản & Vận chuyển</label>
@@ -726,7 +855,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-[#D8E5DA] text-xs font-bold text-[#52665A] hover:bg-[#F4F8F4] transition-colors"
+              className="px-5 py-2.5 rounded-xl border border-[#D8E5DA] text-xs font-bold text-[#52665A] hover:bg-[#F4F8F4] transition-colors cursor-pointer"
             >
               Hủy bỏ
             </button>
@@ -734,7 +863,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
             <button
               type="submit"
               disabled={isSaving}
-              className="px-6 py-2.5 rounded-xl bg-[#0F5132] hover:bg-[#16A34A] text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
+              className="px-6 py-2.5 rounded-xl bg-[#0F5132] hover:bg-[#16A34A] text-white text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {isSaving ? 'Đang lưu vào Cloud...' : 'Lưu Thông Tin Sản Phẩm'}
@@ -742,6 +871,194 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
           </div>
         </form>
       </div>
+
+      {/* Modal gán ảnh riêng cho biến thể / quy cách */}
+      {activeVariantImageIndex !== null && variants[activeVariantImageIndex] && (
+        <div 
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn"
+          onClick={() => setActiveVariantImageIndex(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-[#D8E5DA] space-y-5 animate-scaleUp font-body text-[#11261B]"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[#D8E5DA] pb-3">
+              <div>
+                <h4 className="text-sm font-bold text-[#11261B] font-heading">
+                  Gán ảnh cho quy cách: <span className="text-[#0F5132]">{variants[activeVariantImageIndex]?.size || `#${activeVariantImageIndex + 1}`}</span>
+                </h4>
+                <p className="text-[11px] text-[#52665A]">
+                  Ảnh này sẽ hiển thị khi khách chọn quy cách khối lượng tương ứng
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveVariantImageIndex(null)}
+                className="p-1.5 text-[#52665A] hover:text-[#11261B] hover:bg-[#F4F8F4] rounded-lg transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Current Selected Preview */}
+            {variants[activeVariantImageIndex]?.img && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F4F8F4] border border-[#D8E5DA]">
+                <div className="w-14 h-14 rounded-lg bg-white border border-[#D8E5DA] overflow-hidden p-1 shrink-0">
+                  <img 
+                    src={variants[activeVariantImageIndex].img} 
+                    alt="Current variant" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold text-[#11261B] block">Ảnh hiện tại</span>
+                  <span className="text-[10px] text-[#52665A] truncate block">{variants[activeVariantImageIndex].img}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleVariantChange(activeVariantImageIndex, 'img', '')
+                  }}
+                  className="px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors cursor-pointer"
+                >
+                  Gỡ ảnh
+                </button>
+              </div>
+            )}
+
+            {/* Option 1: Chọn từ thư viện Gallery đã tải */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5 text-[#0F5132]" />
+                1. Chọn từ thư viện ảnh ({availableGalleryImages.length} ảnh)
+              </label>
+              {availableGalleryImages && availableGalleryImages.length > 0 ? (
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 max-h-40 overflow-y-auto p-1 border border-[#D8E5DA] rounded-xl bg-[#F4F8F4]/40 custom-scrollbar">
+                  {availableGalleryImages.map((imgUrl, idx) => {
+                    const isSelected = variants[activeVariantImageIndex]?.img === imgUrl
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          handleVariantChange(activeVariantImageIndex, 'img', imgUrl)
+                          setActiveVariantImageIndex(null)
+                        }}
+                        className={`relative aspect-square rounded-xl border-2 overflow-hidden group transition-all p-1 bg-white hover:border-[#0F5132] cursor-pointer ${
+                          isSelected ? 'border-[#0F5132] ring-2 ring-[#0F5132]/30 shadow-xs' : 'border-[#D8E5DA]'
+                        }`}
+                        title="Bấm để chọn ảnh này cho quy cách"
+                      >
+                        <img src={imgUrl} alt={`gallery-${idx}`} className="w-full h-full object-contain" />
+                        {isSelected && (
+                          <div className="absolute top-1 right-1 bg-[#0F5132] text-white p-0.5 rounded-full shadow-xs">
+                            <Check className="w-3 h-3" />
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              ) : (
+                <p className="text-xs text-[#52665A] italic p-2 bg-[#F4F8F4] rounded-lg border border-dashed border-[#D8E5DA]">
+                  Chưa có ảnh trong thư viện. Bạn có thể tải file ảnh trực tiếp bên dưới.
+                </p>
+              )}
+            </div>
+
+            {/* Option 2: Tải file ảnh mới từ thiết bị */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center gap-1.5">
+                <Upload className="w-3.5 h-3.5 text-[#0F5132]" />
+                2. Tải file ảnh mới từ thiết bị
+              </label>
+              <label className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-[#0F5132]/40 hover:border-[#0F5132] bg-[#F4F8F4]/60 hover:bg-[#F4F8F4] cursor-pointer text-xs font-bold text-[#0F5132] transition-colors">
+                <Upload className="w-4 h-4" />
+                <span>{isUploadingVariantImg ? 'Đang tải ảnh lên...' : 'Chọn file ảnh để tải lên cho quy cách này'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={isUploadingVariantImg}
+                  onChange={async (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      const file = e.target.files[0]
+                      try {
+                        setIsUploadingVariantImg(true)
+                        const slug = formData.slug || `variant-${Date.now()}`
+                        const uploadedUrl = await uploadProductImage(file, slug)
+                        handleVariantChange(activeVariantImageIndex, 'img', uploadedUrl)
+                        // Tự động bổ sung vào formData.images để Tab 4 cũng có ảnh này
+                        if (!formData.images.includes(uploadedUrl)) {
+                          setFormData(prev => ({
+                            ...prev,
+                            images: [...prev.images, uploadedUrl]
+                          }))
+                        }
+                        setActiveVariantImageIndex(null)
+                      } catch (err) {
+                        console.error("Lỗi upload ảnh variant:", err)
+                        alert("Không thể tải ảnh: " + err.message)
+                      } finally {
+                        setIsUploadingVariantImg(false)
+                        e.target.value = ''
+                      }
+                    }
+                  }}
+                />
+              </label>
+            </div>
+
+            {/* Option 3: Nhập URL ảnh */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#11261B] flex items-center gap-1.5">
+                <Link className="w-3.5 h-3.5 text-[#0F5132]" />
+                3. Hoặc nhập trực tiếp URL ảnh
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={variantCustomUrl}
+                  onChange={e => setVariantCustomUrl(e.target.value)}
+                  placeholder="Dán link ảnh (https://...)"
+                  className="flex-1 p-2 rounded-xl border border-[#D8E5DA] text-xs bg-white focus:outline-none focus:border-[#0F5132]"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!variantCustomUrl.trim()) return
+                    const url = variantCustomUrl.trim()
+                    handleVariantChange(activeVariantImageIndex, 'img', url)
+                    if (!formData.images.includes(url)) {
+                      setFormData(prev => ({
+                        ...prev,
+                        images: [...prev.images, url]
+                      }))
+                    }
+                    setVariantCustomUrl('')
+                    setActiveVariantImageIndex(null)
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-[#0F5132] text-white text-xs font-bold hover:bg-[#16A34A] transition-colors cursor-pointer"
+                >
+                  Áp dụng
+                </button>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="pt-2 border-t border-[#D8E5DA] flex justify-end">
+              <button
+                type="button"
+                onClick={() => setActiveVariantImageIndex(null)}
+                className="px-4 py-2 text-xs font-bold text-[#52665A] hover:text-[#11261B] hover:bg-[#F4F8F4] rounded-xl transition-colors cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

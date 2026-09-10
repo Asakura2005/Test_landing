@@ -24,7 +24,7 @@ export default function BrandStorySection() {
             <div className="lg:col-span-6 space-y-6">
               <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-[1.1]">
                 DOANH NGHIỆP THỰC PHẨM VIỆT NAM, <br />
-                <span className="text-[#16A34A]">TỪ THỊ TRƯỜNG TRONG NƯỚC</span> <br />
+                <span className="text-black">TỪ THỊ TRƯỜNG TRONG NƯỚC</span> <br />
                 ĐẾN QUỐC TẾ.
               </h2>
 

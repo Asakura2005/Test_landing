@@ -127,3 +127,41 @@ export function getAlternateHreflangUrls(currentPath = '/', origin = 'https://ha
     xDefault: `${origin}${getEquivalentRoute(currentPath, 'vi')}`,
   }
 }
+
+/**
+ * Helper sinh đường dẫn chi tiết sản phẩm theo ngôn ngữ hiện tại
+ */
+export function getProductDetailUrl(slug, language = 'vi') {
+  const cleanSlug = slug || ''
+  if (language === 'en') return `/en/products/${cleanSlug}`
+  if (language === 'ko') return `/ko/products/${cleanSlug}`
+  return `/san-pham/${cleanSlug}`
+}
+
+/**
+ * Helper sinh đường dẫn trang danh mục sản phẩm theo ngôn ngữ
+ */
+export function getProductsPageUrl(language = 'vi') {
+  if (language === 'en') return '/en/products'
+  if (language === 'ko') return '/ko/products'
+  return '/san-pham'
+}
+
+/**
+ * Helper sinh đường dẫn trang chủ theo ngôn ngữ
+ */
+export function getHomeUrl(language = 'vi') {
+  if (language === 'en') return '/en'
+  if (language === 'ko') return '/ko'
+  return '/'
+}
+
+/**
+ * Helper sinh đường dẫn trang liên hệ theo ngôn ngữ
+ */
+export function getContactUrl(language = 'vi') {
+  if (language === 'en') return '/en/contact'
+  if (language === 'ko') return '/ko/contact'
+  return '/lien-he'
+}
+

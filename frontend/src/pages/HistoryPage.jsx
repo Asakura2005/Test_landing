@@ -9,11 +9,13 @@ import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
+import { useMagneticSectionScroll } from '../hooks/useMagneticSectionScroll'
 
 import factoryImg from '../assets/factory/factory_production.jpg'
-import b2bImg from '../assets/business/b2b_partnership.jpg'
+import b2bImg from '../assets/business/trung-bay-sp.jpeg'
 import exportImg from '../assets/distribution/distribution_export.jpg'
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
+import nhaXuong2021Img from '../assets/factory/nha-xuong-2021.jpg'
 import catBanhImg from '../assets/categories/category_banh.jpg'
 
 
@@ -58,38 +60,30 @@ export default function HistoryPage() {
   const { t, language } = useLanguage()
   const [activeYear, setActiveYear] = useState('2021')
 
-  // Auto-detect active chapter on scroll
   const chapters = useMemo(() => getChapters(language), [language])
 
-  useEffect(() => {
-    const observers = []
-    chapters.forEach((chap) => {
-      const el = document.getElementById(chap.id)
-      if (!el) return
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveYear(chap.year) },
-        { rootMargin: '-25% 0px -55% 0px' }
-      )
-      obs.observe(el)
-      observers.push(obs)
-    })
-    return () => observers.forEach(o => o.disconnect())
-  }, [chapters])
+  // Initialize Progressive Magnetic / Resistance Section Scroll (chuẩn như ở Home page)
+  const { activeSectionId, scrollToSectionId } = useMagneticSectionScroll({
+    headerHeight: 130,
+    headerSelector: 'header, #history-sticky-nav-bar',
+    sectionSelector: '[data-history-section]',
+    footerSelector: '[data-section="footer"]',
+  })
 
-  // Hero entrance
-  const [heroReady, setHeroReady] = useState(false)
-  useEffect(() => { setTimeout(() => setHeroReady(true), 100) }, [])
+  // Auto-sync active year pill with current snapped section
+  useEffect(() => {
+    const found = chapters.find(
+      (c) => c.id === activeSectionId || `year-${c.year}` === activeSectionId
+    )
+    if (found) {
+      setActiveYear(found.year)
+    }
+  }, [activeSectionId, chapters])
 
   const scrollToChapter = (id, year) => {
     setActiveYear(year)
-    const el = document.getElementById(id)
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.pageYOffset - 140
-      window.scrollTo({ top: y, behavior: 'smooth' })
-    }
+    scrollToSectionId(id)
   }
-
-  const credentials = useMemo(() => getCredentials(language), [language])
 
   return (
     <div className="min-h-screen bg-white text-haq-ink font-sans flex flex-col relative">
@@ -99,243 +93,179 @@ export default function HistoryPage() {
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
 
         {/* ═══════════════════════════════════════════════════════════
-            HERO — Centered, text-focused, outline year range
+            STICKY YEAR NAV & TITLE BAR — Auto-highlights on scroll
             ═══════════════════════════════════════════════════════════ */}
-        <section className="relative bg-[#0C1E15] overflow-hidden py-28 sm:py-36 lg:py-44">
-          {/* Large outline year watermark */}
-          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none" aria-hidden="true">
-            <span
-              className={`font-heading font-extrabold text-[8rem] sm:text-[12rem] lg:text-[18rem] leading-none tracking-tighter transition-all duration-[2000ms] ${heroReady ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-              style={{ WebkitTextStroke: '1.5px rgba(200,155,60,0.15)', WebkitTextFillColor: 'transparent' }}
-            >
-              2021
-            </span>
-          </div>
-
-          <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12 text-center">
-            <p className={`font-heading text-xs tracking-[0.3em] text-[#C89B3C] uppercase mb-6 transition-all duration-700 delay-300 ${heroReady ? 'opacity-100' : 'opacity-0 translate-y-4'}`}>
-              {t('history.badge', 'Lịch sử & Dấu mốc phát triển')}
-            </p>
-
-            <h1 className={`font-heading font-extrabold text-4xl sm:text-5xl lg:text-7xl text-white tracking-tight leading-[0.95] transition-all duration-700 delay-500 ${heroReady ? 'opacity-100' : 'opacity-0 translate-y-6'}`}>
-              {language === 'en' ? (
-                <>GROWTH JOURNEY<br /><span className="text-[#C89B3C]">2021 — 2026</span></>
-              ) : language === 'ko' ? (
-                <>성장의 여정<br /><span className="text-[#C89B3C]">2021 — 2026</span></>
-              ) : (
-                <>HÀNH TRÌNH TĂNG TRƯỞNG<br /><span className="text-[#C89B3C]">2021 — 2026</span></>
-              )}
-            </h1>
-
-            <p className={`mt-6 text-sm sm:text-base text-white/50 max-w-2xl mx-auto leading-relaxed transition-all duration-700 delay-700 ${heroReady ? 'opacity-100' : 'opacity-0 translate-y-4'}`}>
-              {t('history.subtitle', 'Từ xưởng sản xuất bánh tráng sấy giòn khép kín đầu tiên tại Hà Nội năm 2021, HAQ FOOD đã không ngừng đổi mới công nghệ, chuẩn hóa chất lượng quốc tế và mở rộng mạng lưới để đưa thực phẩm Việt chất lượng cao phủ sóng toàn quốc và vươn tầm xuất khẩu châu Á.')}
-            </p>
-
-            {/* Stats row */}
-            <div className={`mt-14 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto border-t border-white/10 pt-10 transition-all duration-700 delay-[900ms] ${heroReady ? 'opacity-100' : 'opacity-0'}`}>
-              {[
-                { val: '2021', label: language === 'en' ? 'Founded' : language === 'ko' ? '설립' : 'Thành lập' },
-                { val: '15+', label: language === 'en' ? 'Products' : language === 'ko' ? '제품군' : 'Sản phẩm' },
-                { val: '3,000+', label: language === 'en' ? 'Outlets' : language === 'ko' ? '매장' : 'Điểm bán' },
-                { val: '02', label: language === 'en' ? 'Export Markets' : language === 'ko' ? '수출국' : 'Nước xuất khẩu' },
-              ].map((s, i) => (
-                <div key={i}>
-                  <div className="font-heading font-extrabold text-2xl sm:text-3xl text-white">{s.val}</div>
-                  <div className="text-[11px] text-white/40 mt-1 uppercase tracking-wider">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════
-            STICKY YEAR NAV — Auto-highlights on scroll
-            ═══════════════════════════════════════════════════════════ */}
-        <div className="sticky top-[68px] sm:top-[72px] z-30 bg-white/95 backdrop-blur-md border-b border-haq-border shadow-xs">
+        <div
+          id="history-sticky-nav-bar"
+          className="sticky top-[72px] sm:top-[76px] z-30 bg-white/95 backdrop-blur-md border-b border-haq-border shadow-xs"
+        >
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="flex items-center gap-1.5 sm:gap-2 py-3 overflow-x-auto scrollbar-none">
-              <Calendar className="w-3.5 h-3.5 text-haq-text-secondary shrink-0 mr-1" />
-              {chapters.map((chap) => (
-                <button
-                  key={chap.year}
-                  onClick={() => scrollToChapter(chap.id, chap.year)}
-                  className={`px-4 py-2 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                    activeYear === chap.year
-                      ? 'bg-haq-red text-white shadow-sm'
-                      : 'text-haq-text-secondary hover:bg-haq-cream hover:text-haq-ink'
-                  }`}
-                >
-                  {chap.year}
-                </button>
-              ))}
+            <div className="flex items-center justify-between py-2.5 sm:py-3 gap-4">
+              <div className="flex items-center gap-2.5 shrink-0">
+                <span className="w-2 h-2 rounded-full bg-haq-red" />
+                <span className="font-heading font-bold text-sm sm:text-base text-haq-ink tracking-tight">
+                  {language === 'en' ? 'GROWTH JOURNEY' : language === 'ko' ? '성장의 여정' : 'HÀNH TRÌNH PHÁT TRIỂN'}
+                </span>
+                <span className="text-haq-text-secondary/40 text-xs hidden sm:inline">•</span>
+                <span className="text-xs text-haq-text-secondary font-medium hidden sm:inline">2021 — 2026</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5">
+                <Calendar className="w-3.5 h-3.5 text-haq-text-secondary shrink-0 mr-1" />
+                {chapters.map((chap) => (
+                  <button
+                    key={chap.year}
+                    type="button"
+                    onClick={() => scrollToChapter(chap.id, chap.year)}
+                    className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                      activeYear === chap.year
+                        ? 'bg-haq-red text-white shadow-sm'
+                        : 'text-haq-text-secondary hover:bg-haq-cream hover:text-haq-ink'
+                    }`}
+                  >
+                    {chap.year}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* ═══════════════════════════════════════════════════════════
-            CHAPTERS — Alternating timeline with watermark years
+            CHAPTERS — 100VH Progressive Magnetic Sections
             ═══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-28 bg-haq-cream/40">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            {chapters.map((chap, idx) => {
-              const isEven = idx % 2 === 0
-              return (
-                <div key={chap.id} id={chap.id} className={`relative scroll-mt-36 ${idx > 0 ? 'mt-28 sm:mt-40' : ''}`}>
-                  {/* Chapter divider dot */}
-                  {idx > 0 && (
-                    <div className="flex items-center gap-0 mb-16 sm:mb-20">
-                      <div className="h-px flex-1 bg-haq-border" />
-                      <div className="w-3 h-3 rounded-full bg-haq-red mx-4 shrink-0" />
-                      <div className="h-px flex-1 bg-haq-border" />
-                    </div>
-                  )}
+        {chapters.map((chap, idx) => {
+          const isEven = idx % 2 === 0
+          return (
+            <section
+              key={chap.id}
+              id={chap.id}
+              data-history-section
+              data-section={chap.id}
+              className={`min-h-[calc(100vh-130px)] lg:h-[calc(100vh-130px)] w-full relative flex flex-col justify-center py-6 lg:py-0 border-b border-haq-border/60 overflow-hidden box-border ${
+                isEven ? 'bg-white' : 'bg-haq-cream/35'
+              }`}
+            >
+              <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full relative z-10">
+                {/* Watermark year in background */}
+                <div
+                  className="absolute -top-6 sm:-top-8 right-4 lg:right-10 select-none pointer-events-none overflow-hidden"
+                  aria-hidden="true"
+                >
+                  <span className="font-heading font-extrabold text-[5.5rem] sm:text-[7.5rem] lg:text-[9.5rem] xl:text-[11rem] leading-none text-haq-border/25 tracking-tighter">
+                    {chap.year}
+                  </span>
+                </div>
 
-                  {/* Watermark year */}
-                  <div className="absolute -top-4 sm:-top-8 right-0 lg:right-8 select-none pointer-events-none overflow-hidden" aria-hidden="true">
-                    <Reveal delay={200} direction="none">
-                      <span className="font-heading font-extrabold text-[7rem] sm:text-[10rem] lg:text-[14rem] leading-none text-haq-border/20 tracking-tighter">
-                        {chap.year}
-                      </span>
-                    </Reveal>
-                  </div>
-
-                  <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-                    {/* Image */}
-                    <Reveal delay={100} direction={isEven ? 'left' : 'right'} className={isEven ? '' : 'lg:order-2'}>
-                      <div className="relative rounded-2xl overflow-hidden group">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-12 items-center">
+                  {/* Image Column */}
+                  <div className={`lg:col-span-5 ${isEven ? '' : 'lg:order-2'}`}>
+                    <Reveal delay={80} direction={isEven ? 'left' : 'right'}>
+                      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden group shadow-md border border-haq-border/80 bg-white">
                         <img
                           src={chap.image}
                           alt={chap.title}
-                          className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          className={`w-full aspect-[4/3] max-h-[38vh] sm:max-h-[44vh] lg:max-h-[48vh] object-cover ${chap.imagePosition || 'object-center'} transition-transform duration-700 group-hover:scale-[1.03]`}
+                          loading="lazy"
                         />
-                        {/* Overlay badges */}
-                        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex items-center gap-2">
-                          <span className="bg-haq-red text-white font-heading font-bold text-xs px-3 py-1.5 rounded-full shadow-md">
-                            {chap.year}
-                          </span>
-                          <span className="bg-white/90 backdrop-blur-sm text-haq-ink font-heading font-bold text-[10px] px-2.5 py-1 rounded-full hidden sm:inline">
-                            {chap.phase}
-                          </span>
-                        </div>
-                        {/* Bottom metric */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0C1E15]/80 to-transparent px-5 pb-4 pt-12">
-                          <div className="flex items-end justify-between text-white">
-                            <span className="text-[10px] uppercase tracking-wider text-white/60">{chap.metric}</span>
-                            <span className="font-heading font-extrabold text-2xl text-[#C89B3C]">{chap.metricVal}</span>
-                          </div>
-                        </div>
+
+                      </div>
+                    </Reveal>
+                  </div>
+
+                  {/* Content Column */}
+                  <div className={`lg:col-span-7 ${isEven ? '' : 'lg:order-1'}`}>
+                    <Reveal delay={120}>
+                      <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
+                        <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
+                          {chap.phase}
+                        </span>
+                        <span className="h-px w-6 bg-haq-red/40" />
+                        <span className="font-heading text-xs text-haq-text-secondary uppercase tracking-wider">
+                          {chap.theme}
+                        </span>
                       </div>
                     </Reveal>
 
-                    {/* Content */}
-                    <div className={isEven ? '' : 'lg:order-1'}>
-                      <Reveal delay={200}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
-                            {chap.phase}
-                          </span>
-                          <span className="h-px w-6 bg-haq-red/40" />
-                          <span className="font-heading text-xs text-haq-text-secondary uppercase tracking-wider">
-                            {chap.theme}
-                          </span>
-                        </div>
-                      </Reveal>
+                    <Reveal delay={200}>
+                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-[26px] xl:text-[28px] text-haq-ink leading-tight tracking-tight mb-2">
+                        {chap.title}
+                      </h3>
+                    </Reveal>
 
-                      <Reveal delay={300}>
-                        <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink leading-tight tracking-tight">
-                          {chap.title}
-                        </h3>
-                      </Reveal>
+                    <Reveal delay={280}>
+                      <p className="text-xs sm:text-sm text-haq-red font-medium leading-relaxed border-l-2 border-haq-red/40 pl-3 mb-2.5">
+                        {chap.lead}
+                      </p>
+                    </Reveal>
 
-                      <Reveal delay={400}>
-                        <p className="mt-3 text-sm text-haq-red font-medium leading-relaxed border-l-2 border-haq-red/30 pl-4">
-                          {chap.lead}
-                        </p>
-                      </Reveal>
+                    <Reveal delay={360}>
+                      <p className="text-xs sm:text-[13.5px] text-haq-text-secondary leading-relaxed mb-3.5">
+                        {chap.desc}
+                      </p>
+                    </Reveal>
 
-                      <Reveal delay={500}>
-                        <p className="mt-4 text-sm text-haq-text-secondary leading-[1.8]">
-                          {chap.desc}
-                        </p>
-                      </Reveal>
-
-                      {/* Achievements */}
-                      <div className="mt-6 space-y-2.5">
-                        {chap.achievements.map((ach, aIdx) => (
-                          <Reveal key={aIdx} delay={600 + aIdx * 80} direction={isEven ? 'left' : 'right'}>
-                            <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-haq-border/80">
-                              <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
-                              <span className="text-xs text-haq-text-secondary leading-relaxed">{ach}</span>
-                            </div>
-                          </Reveal>
-                        ))}
-                      </div>
+                    {/* Achievements: 2-column compact grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                      {chap.achievements.map((ach, aIdx) => (
+                        <Reveal key={aIdx} delay={400 + aIdx * 50} direction="up">
+                          <div className="flex items-start gap-2 bg-white/90 p-2.5 sm:p-3 rounded-xl border border-haq-border/80 shadow-2xs h-full">
+                            <CheckCircle2 className="w-4 h-4 text-haq-red shrink-0 mt-0.5" />
+                            <span className="text-xs text-haq-text-secondary leading-snug">{ach}</span>
+                          </div>
+                        </Reveal>
+                      ))}
                     </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </section>
+              </div>
+            </section>
+          )
+        })}
 
         {/* ═══════════════════════════════════════════════════════════
-            CREDENTIALS — Clean horizontal cards
+            CTA — Navigation to related pages (100VH Magnetic Section)
             ═══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-28 bg-white border-t border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+        <section
+          id="cta"
+          data-history-section
+          data-section="cta"
+          className="min-h-[calc(100vh-130px)] lg:h-[calc(100vh-130px)] w-full bg-haq-cream/40 flex flex-col justify-center py-8 lg:py-0 border-b border-haq-border overflow-hidden box-border relative"
+        >
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full">
             <Reveal>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink tracking-tight mb-4">
-                {language === 'en' ? 'Standards & Certifications' : language === 'ko' ? '품질 관리 기준 및 인증' : 'Tiêu chuẩn & Chứng nhận'}
-              </h2>
-              <p className="text-sm text-haq-text-secondary max-w-lg mb-14">
-                {language === 'en'
-                  ? 'Guaranteeing consistent quality, food safety compliance, and long-term partnership integrity.'
-                  : language === 'ko'
-                  ? '균일한 품질과 식품 안전 위생을 보증하며 신뢰할 수 있는 비즈니스 협력을 약속합니다.'
-                  : 'Bảo chứng cho chất lượng đồng nhất, an toàn vệ sinh thực phẩm và uy tín hợp tác bền vững.'}
-              </p>
+              <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+                <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider mb-1.5 block">
+                  {language === 'en' ? 'CONTINUE EXPLORING' : language === 'ko' ? '더 알아보기' : 'TIẾP TỤC KHÁM PHÁ'}
+                </span>
+                <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink tracking-tight uppercase">
+                  {language === 'en' ? 'Discover HAQ FOOD Ecosystem' : language === 'ko' ? 'HAQ FOOD 생태계 탐색' : 'Hệ Sinh Thái Thực Phẩm HAQ FOOD'}
+                </h2>
+              </div>
             </Reveal>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-haq-border rounded-2xl overflow-hidden">
-              {credentials.map((item, idx) => (
-                <Reveal key={idx} delay={idx * 100} className="bg-white p-7">
-                  <h3 className="font-heading font-bold text-lg text-haq-ink">{item.title}</h3>
-                  <div className="font-heading text-xs font-bold text-haq-red uppercase mt-1 mb-3">{item.sub}</div>
-                  <p className="text-xs text-haq-text-secondary leading-relaxed">{item.desc}</p>
-                </Reveal>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════
-            CTA — Navigation to related pages
-            ═══════════════════════════════════════════════════════════ */}
-        <section className="py-16 sm:py-20 bg-haq-cream/50 border-t border-haq-border">
-          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <Reveal direction="left">
                 <Link
                   to="/gioi-thieu"
-                  className="group bg-white p-8 rounded-2xl border border-haq-border hover:border-haq-red/50 hover:shadow-lg transition-all flex flex-col justify-between h-full"
+                  className="group bg-white p-7 sm:p-8 rounded-2xl border border-haq-border hover:border-haq-red/50 hover:shadow-lg transition-all flex flex-col justify-between h-full"
                 >
                   <div>
-                    <span className="font-heading text-xs text-[#C89B3C] uppercase tracking-wider">
+                    <span className="font-heading text-xs text-haq-text-secondary uppercase tracking-wider">
                       {language === 'en' ? 'Company Profile' : language === 'ko' ? '기업 소개' : 'Giới thiệu'}
                     </span>
-                    <h3 className="font-heading font-bold text-xl text-haq-ink group-hover:text-haq-red transition-colors mt-2">
+                    <h3 className="font-heading font-bold text-xl text-haq-ink group-hover:text-haq-red transition-colors mt-1.5">
                       {language === 'en' ? 'Corporate Overview & Mission' : language === 'ko' ? '기업 개요 및 비전' : 'Tổng quan doanh nghiệp & Sứ mệnh'}
                     </h3>
-                    <p className="text-xs text-haq-text-secondary mt-3 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed">
                       {language === 'en'
                         ? 'Discover our philosophy, vision, and core values.'
                         : language === 'ko'
-                        ? 'HAQ FOOD의 경영 철학과 핵심 가치를 확인하세요.'
-                        : 'Tìm hiểu triết lý kinh doanh và giá trị cốt lõi HAQ FOOD.'}
+                        ? 'HAQ FOOD의 경영 철학과 5대 핵심 가치를 확인하세요.'
+                        : 'Tìm hiểu triết lý kinh doanh và 5 giá trị cốt lõi HAQ FOOD.'}
                     </p>
                   </div>
-                  <div className="mt-6 inline-flex items-center gap-2 text-xs font-heading font-bold text-haq-red">
+                  <div className="mt-5 inline-flex items-center gap-2 text-xs font-heading font-bold text-haq-red group-hover:translate-x-1 transition-transform">
                     <span>{language === 'en' ? 'View profile' : language === 'ko' ? '기업 소개 보기' : 'Xem giới thiệu'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
@@ -345,16 +275,16 @@ export default function HistoryPage() {
               <Reveal direction="right">
                 <Link
                   to="/san-pham"
-                  className="group bg-white p-8 rounded-2xl border border-haq-border hover:border-haq-red/50 hover:shadow-lg transition-all flex flex-col justify-between h-full"
+                  className="group bg-white p-7 sm:p-8 rounded-2xl border border-haq-border hover:border-haq-red/50 hover:shadow-lg transition-all flex flex-col justify-between h-full"
                 >
                   <div>
-                    <span className="font-heading text-xs text-[#C89B3C] uppercase tracking-wider">
+                    <span className="font-heading text-xs text-haq-text-secondary uppercase tracking-wider">
                       {language === 'en' ? 'Products' : language === 'ko' ? '제품' : 'Sản phẩm'}
                     </span>
-                    <h3 className="font-heading font-bold text-xl text-haq-ink group-hover:text-haq-red transition-colors mt-2">
+                    <h3 className="font-heading font-bold text-xl text-haq-ink group-hover:text-haq-red transition-colors mt-1.5">
                       {language === 'en' ? 'Product Catalog & Snack Lines' : language === 'ko' ? '제품 카탈로그 및 스낵 라인업' : 'Danh mục sản phẩm & Các dòng snack'}
                     </h3>
-                    <p className="text-xs text-haq-text-secondary mt-3 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed">
                       {language === 'en'
                         ? 'Explore our full range of Vietnamese snacks and dried foods.'
                         : language === 'ko'
@@ -362,7 +292,7 @@ export default function HistoryPage() {
                         : 'Khám phá đầy đủ các dòng bánh tráng, bánh nướng và nông sản sấy.'}
                     </p>
                   </div>
-                  <div className="mt-6 inline-flex items-center gap-2 text-xs font-heading font-bold text-haq-red">
+                  <div className="mt-5 inline-flex items-center gap-2 text-xs font-heading font-bold text-haq-red group-hover:translate-x-1 transition-transform">
                     <span>{language === 'en' ? 'View products' : language === 'ko' ? '제품 보기' : 'Xem sản phẩm'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
@@ -373,7 +303,9 @@ export default function HistoryPage() {
         </section>
 
       </main>
-      <Footer />
+      <footer data-section="footer">
+        <Footer />
+      </footer>
     </div>
   )
 }
@@ -395,28 +327,29 @@ function getChapters(lang) {
       lead: en ? 'Rooted in the ambition to modernize and standardize traditional Vietnamese snacks using clean drying technology.'
         : lang === 'ko' ? '청결 건조 기술로 베트남 전통 간식을 현대화하고 표준화하겠다는 비전으로 출발했습니다.'
         : 'Bắt đầu từ khát vọng hiện đại hóa và chuẩn hóa món ăn vặt truyền thống Việt Nam bằng công nghệ sấy sạch.',
-      desc: en ? 'HAQ Hanoi Joint Stock Company was officially founded in Hanoi. The company invested in building a dedicated production plant with our first closed convection drying line, decisively solving food safety concerns and defining the HAQ FOOD brand.'
-        : lang === 'ko' ? '베트남 하노이에 HAQ Hanoi Joint Stock Company가 공식 설립되었습니다. 당사는 제1호 밀폐형 대류 건조 라인을 구축하여 식품 위생 문제를 완벽히 해결하고 시장에서 HAQ FOOD 브랜드를 정립했습니다.'
+      desc: en ? 'HAQ Hanoi Joint Stock Company was officially founded in Hanoi. The company invested in building a dedicated production plant with our first closed clean drying line, decisively solving food safety concerns and defining the HAQ FOOD brand.'
+        : lang === 'ko' ? '베트남 하노이에 HAQ Hanoi Joint Stock Company가 공식 설립되었습니다. 당사는 제1호 밀폐형 청정 건조 라인을 구축하여 식품 위생 문제를 완벽히 해결하고 시장에서 HAQ FOOD 브랜드를 정립했습니다.'
         : 'Công ty Cổ phần HAQ Hà Nội chính thức được thành lập tại Thủ đô Hà Nội. Doanh nghiệp đầu tư xây dựng nhà xưởng với dây chuyền sấy giòn khép kín đầu tiên, giải quyết triệt để bài toán an toàn vệ sinh thực phẩm và định hình thương hiệu HAQ FOOD trên thị trường.',
       achievements: en ? [
         'Officially established legal entity HAQ Hanoi Joint Stock Company.',
-        'Inaugurated clean rice paper drying facility with convection thermal system.',
+        'Inaugurated clean rice paper drying facility with closed-loop thermal heating system.',
         'Launched first flagship product line: Crispy dried rice paper in Beef, Shrimp & Sate flavors.',
         'Completed quality declaration and food safety certification under national standards.',
       ] : lang === 'ko' ? [
         'HAQ Hanoi Joint Stock Company 법인 공식 설립.',
-        '대류 열풍 가열 시스템을 갖춘 라이스페이퍼 클린 건조 공장 준공.',
+        '밀폐 순환 가열 시스템을 갖춘 라이스페이퍼 클린 건조 공장 준공.',
         '첫 핵심 라인업 출시: 소고기맛, 새우맛, 사테맛 바삭 건조 라이스페이퍼.',
         '국가 규격에 부합하는 품질 신고 및 식품 위생 안전 인증 완료.',
       ] : [
         'Chính thức thành lập pháp nhân Công ty Cổ phần HAQ Hà Nội.',
-        'Khánh thành phân xưởng sấy bánh tráng sạch với hệ thống gia nhiệt đối lưu.',
+        'Khánh thành phân xưởng sấy bánh tráng sạch với hệ thống gia nhiệt khép kín.',
         'Ra mắt dòng sản phẩm chủ lực đầu tiên: Bánh tráng sấy giòn vị Bò, Tôm & Sa tế.',
         'Hoàn thiện hồ sơ công bố chất lượng và an toàn thực phẩm theo quy chuẩn nhà nước.',
       ],
       metric: en ? 'FOUNDED' : lang === 'ko' ? '설립' : 'NĂNG KHỞI ĐẦU',
       metricVal: '2021',
-      image: heroBanner1,
+      image: nhaXuong2021Img,
+      imagePosition: 'object-[center_35%]',
     },
     {
       id: 'year-2022', year: '2022',
@@ -549,40 +482,6 @@ function getChapters(lang) {
       metric: en ? 'STANDARD' : lang === 'ko' ? '기준' : 'TIÊU CHUẨN',
       metricVal: '100% ISO',
       image: factoryImg,
-    },
-  ]
-}
-
-function getCredentials(lang) {
-  const en = lang === 'en', ko = lang === 'ko'
-  return [
-    {
-      title: 'ISO 22000:2018',
-      sub: en ? 'Food Safety System' : ko ? '식품안전경영시스템' : 'An Toàn Thực Phẩm',
-      desc: en ? 'International standard controlling the entire chain from raw agricultural commodities to packaged goods.'
-        : ko ? '농산물 원자재부터 완제품 포장까지 전체 가공 사슬을 엄격히 통제하는 국제 표준.'
-        : 'Chứng chỉ quốc tế kiểm soát toàn bộ chuỗi chế biến từ nông sản thô đến thành phẩm đóng gói.',
-    },
-    {
-      title: 'HACCP Codex',
-      sub: en ? 'Hazard Analysis' : ko ? '위해요소중점관리' : 'Phân Tích Mối Nguy',
-      desc: en ? 'Ensures elimination of all physical, chemical, and biological hazards throughout manufacturing.'
-        : ko ? '제조 전 과정에서 물리적, 화학적, 생물학적 위해 요소를 철저히 예방합니다.'
-        : 'Đảm bảo loại bỏ mọi rủi ro vật lý, hóa học và sinh học trong toàn bộ quá trình sản xuất.',
-    },
-    {
-      title: en ? '3,000+ Shelves' : ko ? '3,000+ 매장' : '3.000+ Kệ Hàng',
-      sub: en ? 'Retail Network' : ko ? '유통 파트너망' : 'Mạng Lưới Phân Phối',
-      desc: en ? 'Trusted supplier for WinMart, GO!, Circle K, GS25, K-Market, and Bach Hoa Xanh.'
-        : ko ? 'WinMart, GO!, Circle K, GS25, K-Market 및 Bach Hoa Xanh의 공식 납품 파트너.'
-        : 'Nhà cung ứng tin cậy của WinMart, GO!, Circle K, GS25, K-Market và Bách Hóa Xanh.',
-    },
-    {
-      title: en ? 'Official Export' : ko ? '해외 정식 수출' : 'Xuất Khẩu Chính Ngạch',
-      sub: en ? 'Global Standards' : ko ? '글로벌 검역 통과' : 'Chinh Phục Thị Trường',
-      desc: en ? 'Products inspected and officially exported to South Korea and Taiwan.'
-        : ko ? '한국 및 대만 시장의 정밀 검역을 통과하여 정식 수출 진행.'
-        : 'Sản phẩm đã được kiểm định và xuất khẩu sang Hàn Quốc và Đài Loan.',
     },
   ]
 }

@@ -9,7 +9,7 @@ export default function HeritagePage() {
       <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-haq-ink text-white">
         <div className="mx-auto max-w-site px-6 md:px-12">
           <h1 className="font-heading font-extrabold text-4xl md:text-6xl tracking-tight">
-            HAQ <span className="text-haq-gold">Heritage</span>
+            HAQ <span className="text-white">Heritage</span>
           </h1>
           <p className="mt-6 text-xl text-white/70 max-w-2xl">
             Di sản và giá trị văn hóa truyền thống của HAQ Food.

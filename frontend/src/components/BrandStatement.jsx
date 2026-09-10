@@ -33,7 +33,7 @@ export default function BrandStatement() {
               <div className="font-heading font-extrabold text-7xl sm:text-8xl lg:text-[10rem] text-haq-border/40 leading-none select-none tracking-tighter">
                 2021
               </div>
-              <div className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#C89B3C] mt-3">
+              <div className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#16A34A] mt-3">
                 {t('home.brand_statement.est', 'Thành lập tại Hà Nội')}
               </div>
             </Reveal>
@@ -42,7 +42,7 @@ export default function BrandStatement() {
           {/* Right: Statement */}
           <div className="lg:col-span-8">
             <Reveal delay={150}>
-              <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#C89B3C] uppercase mb-4">
+              <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#16A34A] uppercase mb-4">
                 {t('home.brand_statement.badge', 'Về HAQ Food · Giới thiệu')}
               </p>
             </Reveal>

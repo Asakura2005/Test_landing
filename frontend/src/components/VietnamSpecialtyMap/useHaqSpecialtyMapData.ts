@@ -154,7 +154,7 @@ export function useHaqSpecialtyMapData(
           slug: locItem.slug,
           is_pinned: Boolean(locItem.is_pinned),
           views: Number(locItem.views || locItem.view_count || 0),
-          href: `/san-pham/${locItem.slug || locItem.id}`,
+          href: language === 'en' ? `/en/products/${locItem.slug || locItem.id}` : language === 'ko' ? `/ko/products/${locItem.slug || locItem.id}` : `/san-pham/${locItem.slug || locItem.id}`,
         };
 
         // If pinned, unshift to first position; else push

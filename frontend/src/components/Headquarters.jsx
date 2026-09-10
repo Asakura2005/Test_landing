@@ -33,7 +33,7 @@ export default function Headquarters() {
               </span>
               <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-tight mb-6">
                 TRỤ SỞ CHÍNH & <br/>
-                <span className="text-[#16A34A]">NHÀ MÁY HAQ FOOD</span>
+                <span className="text-black">NHÀ MÁY HAQ FOOD</span>
               </h2>
               
               <div className="flex items-start gap-4 mb-8 text-haq-text-secondary">

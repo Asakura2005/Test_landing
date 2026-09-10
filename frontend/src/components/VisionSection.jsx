@@ -66,8 +66,8 @@ export default function VisionSection({ className = '' }) {
           <div className="bg-[#F4F8F4] text-haq-ink px-6 sm:px-10 lg:px-14 py-12 sm:py-16 lg:py-20 flex flex-col justify-between">
             <div className="max-w-xl mx-auto lg:mx-0 w-full">
               <div className="inline-flex items-center gap-2 mb-5">
-                <div className="h-px w-6 bg-[#C89B3C]" />
-                <span className="font-heading text-[11px] font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+                <div className="h-px w-6 bg-[#16A34A]" />
+                <span className="font-heading text-[11px] font-bold tracking-[0.2em] text-[#16A34A] uppercase">
                   Sứ mệnh
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default function VisionSection({ className = '' }) {
                   },
                 ].map((point, idx) => (
                   <div key={idx} className="flex items-start gap-3 text-sm">
-                    <span className="text-[#C89B3C] font-bold shrink-0 mt-0.5">&mdash;</span>
+                    <span className="text-[#16A34A] font-bold shrink-0 mt-0.5">&mdash;</span>
                     <p className="text-haq-text-secondary leading-relaxed text-sm">
                       <strong className="font-heading font-bold text-haq-ink mr-1.5">{point.title}:</strong>
                       {point.desc}
@@ -114,11 +114,11 @@ export default function VisionSection({ className = '' }) {
 
             <div className="text-center mb-12 sm:mb-16">
               <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-px w-6 bg-[#C89B3C]" />
-                <span className="font-heading text-[11px] font-bold tracking-[0.2em] text-[#C89B3C] uppercase">
+                <div className="h-px w-6 bg-[#16A34A]" />
+                <span className="font-heading text-[11px] font-bold tracking-[0.2em] text-[#16A34A] uppercase">
                   Nền tảng văn hóa doanh nghiệp
                 </span>
-                <div className="h-px w-6 bg-[#C89B3C]" />
+                <div className="h-px w-6 bg-[#16A34A]" />
               </div>
               <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase tracking-tight">
                 5 giá trị cốt lõi

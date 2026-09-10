@@ -35,7 +35,7 @@ export default function FeaturedProduct() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/85 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
                 <div>
-                  <span className="font-heading text-xs font-bold text-[#C89B3C] uppercase tracking-wider">
+                  <span className="font-heading text-xs font-bold text-white uppercase tracking-wider">
                     CÔNG THỨC ĐỘC QUYỀN HAQ FOOD
                   </span>
                   <h3 className="font-heading font-extrabold text-2xl sm:text-3xl uppercase mt-1">
@@ -43,7 +43,7 @@ export default function FeaturedProduct() {
                   </h3>
                 </div>
                 <div className="hidden sm:flex items-center gap-2 font-heading text-xs bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30">
-                  <ShieldCheck className="w-4 h-4 text-[#C89B3C]" />
+                  <ShieldCheck className="w-4 h-4 text-white" />
                   <span>ISO 22000 & HACCP</span>
                 </div>
               </div>

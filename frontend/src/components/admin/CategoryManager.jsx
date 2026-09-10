@@ -130,6 +130,17 @@ export default function CategoryManager({ products = [] }) {
         return
       }
 
+      if (isSubCategory) {
+        if (!formData.parent_id) {
+          alert("Vui lòng chọn danh mục cha cho mục nhỏ!")
+          return
+        }
+        if (isEditing && formData.parent_id === isEditing) {
+          alert("Một danh mục không thể chọn chính nó làm danh mục cha!")
+          return
+        }
+      }
+
       setIsSaving(true)
       const finalSlug = ensureUniqueSlug(formData.slug || formData.name, isEditing)
 
@@ -203,13 +214,23 @@ export default function CategoryManager({ products = [] }) {
     }))
   }
 
-  const parentCategories = categories.filter(c => !c.parent_id)
+  // Các danh mục gốc: không có parent_id, hoặc trỏ vào chính nó, hoặc trỏ vào id không tồn tại
+  const parentCategories = useMemo(() => {
+    return categories.filter(c => {
+      if (!c.parent_id) return true
+      if (c.parent_id === c.id) return true
+      const hasValidParent = categories.some(p => p.id !== c.id && String(p.id) === String(c.parent_id))
+      return !hasValidParent
+    })
+  }, [categories])
   
   // Tree building with search filter
   const categoryTree = useMemo(() => {
     return parentCategories
       .map(parent => {
-        const children = categories.filter(c => c.parent_id === parent.id).sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+        const children = categories
+          .filter(c => c.parent_id && c.parent_id !== c.id && String(c.parent_id) === String(parent.id))
+          .sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
         const parentMatches = !searchQuery || parent.name.toLowerCase().includes(searchQuery.toLowerCase()) || parent.slug.toLowerCase().includes(searchQuery.toLowerCase())
         const filteredChildren = children.filter(child => 
           !searchQuery || child.name.toLowerCase().includes(searchQuery.toLowerCase()) || child.slug.toLowerCase().includes(searchQuery.toLowerCase())
@@ -714,8 +735,9 @@ export default function CategoryManager({ products = [] }) {
                     type="button"
                     onClick={() => {
                       setIsSubCategory(true)
-                      if (!formData.parent_id && parentCategories.length > 0) {
-                        setFormData(prev => ({ ...prev, parent_id: parentCategories[0].id }))
+                      const availableParents = parentCategories.filter(p => p.id !== isEditing)
+                      if (!formData.parent_id && availableParents.length > 0) {
+                        setFormData(prev => ({ ...prev, parent_id: availableParents[0].id }))
                       }
                     }}
                     className={`py-1.5 text-xs font-semibold rounded transition-colors cursor-pointer ${
@@ -740,7 +762,7 @@ export default function CategoryManager({ products = [] }) {
                     className="w-full h-9 px-3 rounded-md border border-[#E2E8E4] bg-white text-gray-900 focus:outline-none focus:border-[#0F5132] cursor-pointer"
                   >
                     <option value="">-- Chọn danh mục cha --</option>
-                    {parentCategories.map(p => (
+                    {parentCategories.filter(p => p.id !== isEditing).map(p => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
                   </select>

@@ -413,9 +413,9 @@ export default function ContactPage() {
 
                 <a
                   href="mailto:info@haq.com.vn"
-                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#C89B3C] hover:text-[#C89B3C] hover:-translate-y-0.5 hover:shadow-xs transition-all text-xs sm:text-sm font-semibold cursor-pointer"
+                  className="inline-flex items-center gap-2.5 bg-white text-haq-ink px-4 sm:px-5 py-2.5 rounded-full border border-haq-border shadow-2xs hover:border-[#16A34A] hover:text-[#16A34A] hover:-translate-y-0.5 hover:shadow-xs transition-all text-xs sm:text-sm font-semibold cursor-pointer"
                 >
-                  <Mail className="w-4 h-4 text-[#C89B3C]" />
+                  <Mail className="w-4 h-4 text-[#16A34A]" />
                   <span>info@haq.com.vn</span>
                 </a>
               </div>

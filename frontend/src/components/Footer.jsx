@@ -28,13 +28,13 @@ export default function Footer() {
               <div>
                 <div className="flex items-baseline gap-2">
                   <span className="font-heading font-extrabold text-2xl tracking-tight text-white leading-none">
-                    HAQ <span className="text-[#16A34A]">FOOD</span>
+                    HAQ FOOD
                   </span>
                 </div>
-                <p className="text-xs font-heading font-semibold tracking-wider text-[#C89B3C] uppercase mt-1">
+                <p className="text-xs font-heading font-semibold tracking-wider text-white/80 uppercase mt-1">
                   {t('home.footer.sub', 'Vietnamese Food Manufacturer & Exporter')}
                 </p>
-                <p className="text-xs text-[#9BB3A3] mt-0.5 font-normal">
+                <p className="text-xs text-white/70 mt-0.5 font-normal">
                   {t('home.footer.desc', 'Nông sản sạch & Thực phẩm Việt Nam vươn tầm thế giới.')}
                 </p>
               </div>
@@ -60,11 +60,11 @@ export default function Footer() {
           
           {/* CỘT 1: VỀ HAQ FOOD (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col1_title', 'VỀ HAQ FOOD')}</span>
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-[#9BB3A3]">
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
                 <Link to="/gioi-thieu" className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link1', 'Giới thiệu Tổng quan Công ty')}
@@ -100,11 +100,11 @@ export default function Footer() {
 
           {/* CỘT 2: SẢN PHẨM (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col2_title', 'SẢN PHẨM TIÊU BIỂU')}</span>
             </h4>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-[#9BB3A3]">
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
                 <Link to="/san-pham" className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
                   {t('home.footer.col2_link1', 'Tất cả sản phẩm (HAQ Catalog) →')}
@@ -135,36 +135,36 @@ export default function Footer() {
 
           {/* CỘT 3: LIÊN HỆ (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#C89B3C] flex items-center gap-2">
+            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col3_title', 'LIÊN HỆ CHÍNH THỨC')}</span>
             </h4>
-            <ul className="space-y-3 text-xs sm:text-sm text-[#9BB3A3]">
+            <ul className="space-y-3 text-xs sm:text-sm text-white/75">
               <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-white">{t('home.footer.address_label', 'Địa chỉ:')}</strong>{' '}
                   <a
                     href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white hover:text-[#C89B3C] transition-colors"
+                    className="text-white hover:text-white/80 transition-colors"
                   >
                     30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội, Việt Nam
                   </a>
                   </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-[#16A34A] shrink-0" />
+                <Phone className="w-4 h-4 text-white/70 shrink-0" />
                 <span>
                   <strong className="text-white">{t('home.footer.hotline_label', 'Hotline / Zalo:')}</strong>{' '}
-                  <a href="tel:02423235656" className="text-white font-semibold hover:text-[#C89B3C] transition-colors">
+                  <a href="tel:02423235656" className="text-white font-semibold hover:text-white/80 transition-colors">
                     024 23 23 56 56
                   </a>
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <span className="w-4 h-4 text-[#16A34A] shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">
+                <span className="w-4 h-4 text-white/70 shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">
                   Z
                 </span>
                 <span>
@@ -173,17 +173,17 @@ export default function Footer() {
                     href="https://zalo.me/1361851474644984696"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white font-semibold hover:text-[#C89B3C] transition-colors"
+                    className="text-white font-semibold hover:text-white/80 transition-colors"
                   >
                     HAQ Hà Nội
                   </a>
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#16A34A] shrink-0" />
+                <Mail className="w-4 h-4 text-white/70 shrink-0" />
                 <span>
                   <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
-                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-[#C89B3C] transition-colors">
+                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors">
                     info@haq.com.vn
                   </a>
                 </span>
@@ -199,16 +199,16 @@ export default function Footer() {
         <div className="py-10 border-b border-white/10">
           <div className="bg-white/5 rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase">
-                <Building2 className="w-4 h-4 text-[#16A34A]" />
+              <div className="inline-flex items-center gap-2 text-xs font-heading font-bold tracking-wider text-white uppercase">
+                <Building2 className="w-4 h-4 text-white/70" />
                 <span>{t('home.footer.legal_badge', 'THÔNG TIN PHÁP LÝ DOANH NGHIỆP')}</span>
               </div>
               <h3 className="font-heading font-bold text-lg sm:text-xl text-white tracking-wide">
                 {t('home.footer.legal_company', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
               </h3>
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-[#9BB3A3]">
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-white/70">
                 <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#16A34A] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-white/70 shrink-0" />
                   <span>{t('home.footer.legal_cert', 'GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP')}</span>
                 </div>
                 <span className="text-white/30 hidden sm:inline">•</span>
@@ -236,15 +236,15 @@ export default function Footer() {
         ========================================================================= */}
         <div className="py-8 border-b border-white/10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="text-xs font-heading font-bold tracking-wider text-[#C89B3C] uppercase flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-[#16A34A]" />
+            <div className="text-xs font-heading font-bold tracking-wider text-white uppercase flex items-center gap-2">
+              <FileCheck className="w-4 h-4 text-white/70" />
               <span>{t('home.footer.policy_label', 'CHÍNH SÁCH & PHÁP LÝ:')}</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-xs sm:text-sm font-heading font-medium text-white/80">
               <Link
                 to="/chinh-sach-doi-tra-hoan-tien"
-                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
+                className="hover:text-white transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">01</span>
                 <span>{t('home.footer.policy_refund', 'Chính sách đổi trả & hoàn tiền')}</span>
@@ -253,7 +253,7 @@ export default function Footer() {
               <span className="text-white/20 hidden md:inline">|</span>
               <Link
                 to="/chinh-sach-bao-mat"
-                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
+                className="hover:text-white transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">02</span>
                 <span>{t('home.footer.policy_privacy', 'Chính sách bảo mật')}</span>
@@ -262,7 +262,7 @@ export default function Footer() {
               <span className="text-white/20 hidden md:inline">|</span>
               <Link
                 to="/dieu-khoan-su-dung"
-                className="hover:text-[#C89B3C] transition-colors flex items-center gap-1.5"
+                className="hover:text-white transition-colors flex items-center gap-1.5"
               >
                 <span className="text-white/40 text-[11px]">03</span>
                 <span>{t('home.footer.policy_terms', 'Điều khoản sử dụng')}</span>
@@ -275,7 +275,7 @@ export default function Footer() {
         {/* =========================================================================
             5. COPYRIGHT & SOCIAL MEDIA BAR
         ========================================================================= */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#9BB3A3]">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/70">
           <div>
             © {currentYear} {t('home.footer.copyright_line', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.')}
           </div>
@@ -285,7 +285,7 @@ export default function Footer() {
               href="https://zalo.me/1361851474644984696"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#16A34A] transition-colors"
+              className="hover:text-white/80 transition-colors"
               aria-label="Liên hệ Zalo OA HAQ Hà Nội"
             >
               Zalo OA (HAQ Hà Nội)
@@ -295,7 +295,7 @@ export default function Footer() {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#16A34A] transition-colors"
+              className="hover:text-white/80 transition-colors"
               aria-label="Trang Facebook HAQ FOOD"
             >
               Facebook
@@ -305,7 +305,7 @@ export default function Footer() {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#16A34A] transition-colors"
+              className="hover:text-white/80 transition-colors"
               aria-label="Trang LinkedIn HAQ FOOD"
             >
               LinkedIn
