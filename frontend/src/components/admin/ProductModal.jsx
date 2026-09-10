@@ -53,9 +53,9 @@ const DEFAULT_STORAGE_GUIDE_RECOMMENDATIONS = [
   'Bảo quản ở nhiệt độ thường (dưới 30°C)'
 ]
 
-export default function ProductModal({ product, onClose, onSave, currentPinnedCount = 0 }) {
+export default function ProductModal({ product, onClose, onSave, currentPinnedCount = 0, categories: initialCategories = [] }) {
   const [activeModalTab, setActiveModalTab] = useState('basic') // 'basic' | 'variants' | 'specs' | 'gallery'
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState(initialCategories || [])
   const [provinces, setProvinces] = useState([])
   const [isSaving, setIsSaving] = useState(false)
   const [customImageUrl, setCustomImageUrl] = useState('')
@@ -318,20 +318,26 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   }, [formData.images, variants, formData.slug])
 
   useEffect(() => {
+    if (initialCategories && initialCategories.length > 0) {
+      setCategories(initialCategories)
+    }
+  }, [initialCategories])
+
+  useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const [catsData, provsData] = await Promise.all([
-          getCategories().catch(() => []),
+          initialCategories?.length ? Promise.resolve(initialCategories) : getCategories().catch(() => []),
           getProvinces(true).catch(() => [])
         ])
-        setCategories(catsData || [])
+        if (catsData?.length) setCategories(catsData)
         setProvinces(provsData || [])
       } catch (err) {
         console.error("Lỗi tải danh mục/tỉnh thành:", err)
       }
     }
     fetchInitialData()
-  }, [])
+  }, [initialCategories])
 
   useEffect(() => {
     if (product) {
@@ -349,14 +355,17 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         } catch (e) {}
       }
 
+      const resolvedCatId = product.category_id || (categories.find(c => c.name?.trim().toLowerCase() === product.category?.trim().toLowerCase())?.id) || ''
+      const resolvedCatName = product.category || (categories.find(c => c.id === resolvedCatId)?.name) || ''
+
       setFormData({
         slug: product.slug || '',
         name: product.name || '',
         en_name: product.en_name || '',
         description: product.description || '',
         tag: product.tag || '',
-        category: product.category || '',
-        category_id: product.category_id || '',
+        category: resolvedCatName,
+        category_id: resolvedCatId,
         province_id: product.province_id || '',
         highlights: product.highlights?.length ? product.highlights : [''],
         is_pinned: product.is_pinned || false,
@@ -380,7 +389,17 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         })))
       }
     }
-  }, [product])
+  }, [product, categories])
+
+  // Đảm bảo đồng bộ category_id nếu categories tải sau formData
+  useEffect(() => {
+    if (categories.length > 0 && !formData.category_id && formData.category) {
+      const match = categories.find(c => c.name?.trim().toLowerCase() === formData.category?.trim().toLowerCase())
+      if (match) {
+        setFormData(prev => ({ ...prev, category_id: match.id }))
+      }
+    }
+  }, [categories, formData.category, formData.category_id])
 
   const generateSlug = (text) => {
     if (!text) return ''
@@ -675,13 +694,31 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs font-semibold focus:outline-none focus:border-[#0F5132]"
                   >
                     <option value="">-- Chọn Danh mục Phân Loại --</option>
-                    {categories.filter(c => !c.parent_id).map(parent => (
-                      <optgroup key={parent.id} label={parent.name}>
-                        {categories.filter(child => child.parent_id === parent.id).map(child => (
-                          <option key={child.id} value={child.id}>{child.name}</option>
+                    {categories.filter(c => !c.parent_id).map(parent => {
+                      const children = categories.filter(child => child.parent_id === parent.id)
+                      if (children.length === 0) {
+                        return (
+                          <option key={parent.id} value={parent.id}>
+                            {parent.name}
+                          </option>
+                        )
+                      }
+                      return (
+                        <optgroup key={parent.id} label={parent.name}>
+                          <option value={parent.id}>{parent.name} (Tất cả / Chung)</option>
+                          {children.map(child => (
+                            <option key={child.id} value={child.id}>{child.name}</option>
+                          ))}
+                        </optgroup>
+                      )
+                    })}
+                    {categories.filter(c => c.parent_id && !categories.some(p => p.id === c.parent_id)).length > 0 && (
+                      <optgroup label="Danh mục khác">
+                        {categories.filter(c => c.parent_id && !categories.some(p => p.id === c.parent_id)).map(orphan => (
+                          <option key={orphan.id} value={orphan.id}>{orphan.name}</option>
                         ))}
                       </optgroup>
-                    ))}
+                    )}
                   </select>
                 </div>
 

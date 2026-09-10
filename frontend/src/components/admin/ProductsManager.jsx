@@ -26,9 +26,11 @@ import {
   Flame
 } from 'lucide-react'
 import { getProductViewsMap } from '../../services/posthog'
+import { getCategories } from '../../services/supabase'
 
 export default function ProductsManager({
   products = [],
+  categories = [],
   isLoading = false,
   onRefresh,
   onOpenCreateModal,
@@ -46,6 +48,25 @@ export default function ProductsManager({
   const [selectedProvince, setSelectedProvince] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all') // 'all' | 'in_stock' | 'out_of_stock' | 'pinned'
 
+  // Internal categories fallback in case categories prop is loading/empty
+  const [internalCategories, setInternalCategories] = useState(categories || [])
+
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setInternalCategories(categories)
+    } else {
+      getCategories()
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) setInternalCategories(data)
+        })
+        .catch(err => console.warn('ProductsManager getCategories error:', err))
+    }
+  }, [categories])
+
+  const allCategories = useMemo(() => {
+    return internalCategories.length > 0 ? internalCategories : categories
+  }, [internalCategories, categories])
+
   // Batch Select State
   const [selectedProductIds, setSelectedProductIds] = useState([])
 
@@ -53,11 +74,85 @@ export default function ProductsManager({
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
 
-  // Derived filter lists
-  const categoryOptions = useMemo(() => {
-    const cats = new Set(products.map(p => p.category).filter(Boolean))
-    return ['all', ...Array.from(cats)]
-  }, [products])
+  // Helper checking if a product matches a category node
+  const doesProductMatchCategory = (product, cat) => {
+    if (!product || !cat) return false
+    const catId = cat.id
+    const catNameLower = cat.name?.trim().toLowerCase()
+    
+    // Match by ID
+    if (product.category_id && catId && product.category_id === catId) return true
+    if (product.categories?.id && catId && product.categories.id === catId) return true
+    
+    // Match by Name
+    const pCatLower = product.category?.trim().toLowerCase()
+    const pRelCatLower = product.categories?.name?.trim().toLowerCase()
+    if (pCatLower && catNameLower && pCatLower === catNameLower) return true
+    if (pRelCatLower && catNameLower && pRelCatLower === catNameLower) return true
+
+    return false
+  }
+
+  // Structured category tree with live product counts
+  const categoryStructure = useMemo(() => {
+    const parents = allCategories.filter(c => !c.parent_id)
+    
+    // For each parent, find its children and calculate product counts
+    const parentGroups = parents.map(parent => {
+      const children = allCategories.filter(c => c.parent_id === parent.id)
+      const childIds = new Set(children.map(c => c.id))
+      const childNames = new Set(children.map(c => c.name.trim().toLowerCase()))
+
+      const childrenWithCounts = children.map(child => {
+        const count = products.filter(p => doesProductMatchCategory(p, child)).length
+        return {
+          ...child,
+          count
+        }
+      })
+
+      // Count for parent: products matching parent directly OR matching any child
+      const totalParentCount = products.filter(p => {
+        if (doesProductMatchCategory(p, parent)) return true
+        if (p.category_id && childIds.has(p.category_id)) return true
+        if (p.categories?.id && childIds.has(p.categories.id)) return true
+        if (p.categories?.parent_id && p.categories.parent_id === parent.id) return true
+        const pCatLower = p.category?.trim().toLowerCase()
+        if (pCatLower && childNames.has(pCatLower)) return true
+        const pRelCatLower = p.categories?.name?.trim().toLowerCase()
+        if (pRelCatLower && childNames.has(pRelCatLower)) return true
+        return false
+      }).length
+
+      return {
+        ...parent,
+        count: totalParentCount,
+        children: childrenWithCounts
+      }
+    })
+
+    // Orphan categories (has parent_id but parent not in parents list)
+    const orphans = allCategories.filter(c => c.parent_id && !parents.some(p => p.id === c.parent_id)).map(orphan => {
+      const count = products.filter(p => doesProductMatchCategory(p, orphan)).length
+      return { ...orphan, count }
+    })
+
+    // Extra categories found in existing products that don't match any allCategories
+    const knownNames = new Set(allCategories.map(c => c.name.trim().toLowerCase()))
+    const extraCategoryNames = Array.from(new Set(products.map(p => p.category?.trim()).filter(Boolean)))
+      .filter(name => !knownNames.has(name.toLowerCase()))
+
+    const extraCategories = extraCategoryNames.map(name => {
+      const count = products.filter(p => p.category?.trim().toLowerCase() === name.toLowerCase()).length
+      return { id: `custom_${name}`, name, count, isCustom: true }
+    })
+
+    return {
+      parents: parentGroups,
+      orphans,
+      extraCategories
+    }
+  }, [allCategories, products])
 
   const provinceOptions = useMemo(() => {
     const provs = new Set(products.map(p => p.provinces?.name).filter(Boolean))
@@ -77,7 +172,36 @@ export default function ProductsManager({
         p.variants?.some(v => v.sku?.toLowerCase().includes(searchQuery.toLowerCase()))
 
       // 2. Category Filter
-      const matchCategory = selectedCategory === 'all' || p.category === selectedCategory
+      let matchCategory = true
+      if (selectedCategory && selectedCategory !== 'all') {
+        const selectedCat = allCategories.find(c => c.id === selectedCategory || c.name === selectedCategory)
+        
+        if (selectedCat) {
+          const children = allCategories.filter(c => c.parent_id === selectedCat.id)
+          if (children.length > 0) {
+            // Parent category: match product if in parent OR in any of its children
+            const childIds = new Set(children.map(c => c.id))
+            const childNames = new Set(children.map(c => c.name.trim().toLowerCase()))
+
+            matchCategory = 
+              doesProductMatchCategory(p, selectedCat) ||
+              (p.category_id && childIds.has(p.category_id)) ||
+              (p.categories?.id && childIds.has(p.categories.id)) ||
+              (p.categories?.parent_id === selectedCat.id) ||
+              (p.category && childNames.has(p.category.trim().toLowerCase())) ||
+              (p.categories?.name && childNames.has(p.categories.name.trim().toLowerCase()))
+          } else {
+            // Leaf category or single category
+            matchCategory = doesProductMatchCategory(p, selectedCat)
+          }
+        } else {
+          // Custom / raw string fallback matching
+          const targetLower = selectedCategory.trim().toLowerCase()
+          const pCatLower = p.category?.trim().toLowerCase()
+          const pRelCatLower = p.categories?.name?.trim().toLowerCase()
+          matchCategory = (pCatLower === targetLower) || (pRelCatLower === targetLower)
+        }
+      }
 
       // 3. Province Filter
       const matchProvince = selectedProvince === 'all' || p.provinces?.name === selectedProvince
@@ -105,7 +229,7 @@ export default function ProductsManager({
     }
 
     return list
-  }, [products, searchQuery, selectedCategory, selectedProvince, selectedStatus, viewsMap])
+  }, [products, allCategories, searchQuery, selectedCategory, selectedProvince, selectedStatus, viewsMap])
 
   // Pagination Slice
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / itemsPerPage))
@@ -229,10 +353,49 @@ export default function ProductsManager({
               onChange={e => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
               className="w-full h-10 px-3 text-xs rounded-md border border-[#E2E8E4] bg-gray-50/50 text-gray-800 font-medium focus:outline-none focus:border-[#0F5132] focus:bg-white transition-colors cursor-pointer"
             >
-              <option value="all">Tất cả danh mục ({products.length})</option>
-              {categoryOptions.filter(c => c !== 'all').map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
+              <option value="all">Tất cả danh mục ({products.length} sản phẩm)</option>
+
+              {categoryStructure.parents.map(parent => {
+                if (parent.children && parent.children.length > 0) {
+                  return (
+                    <optgroup key={parent.id} label={parent.name}>
+                      <option value={parent.id}>
+                        {parent.name} (Tất cả - {parent.count})
+                      </option>
+                      {parent.children.map(child => (
+                        <option key={child.id} value={child.id}>
+                          {child.name} ({child.count})
+                        </option>
+                      ))}
+                    </optgroup>
+                  )
+                }
+                return (
+                  <option key={parent.id} value={parent.id}>
+                    {parent.name} ({parent.count})
+                  </option>
+                )
+              })}
+
+              {categoryStructure.orphans.length > 0 && (
+                <optgroup label="Danh mục phụ khác">
+                  {categoryStructure.orphans.map(orphan => (
+                    <option key={orphan.id} value={orphan.id}>
+                      {orphan.name} ({orphan.count})
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+
+              {categoryStructure.extraCategories.length > 0 && (
+                <optgroup label="Danh mục tự do">
+                  {categoryStructure.extraCategories.map(extra => (
+                    <option key={extra.id} value={extra.name}>
+                      {extra.name} ({extra.count})
+                    </option>
+                  ))}
+                </optgroup>
+              )}
             </select>
           </div>
 

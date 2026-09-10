@@ -11,7 +11,8 @@ import {
   updateProduct, 
   getLeads, 
   getOrders, 
-  subscribeToLeads 
+  subscribeToLeads,
+  getCategories
 } from '../services/supabase'
 import { loginUser, getCurrentUser, getCurrentUserSync, logoutUser, getLoginLockoutRemaining } from '../services/auth'
 import AdminLayout from '../components/admin/AdminLayout'
@@ -106,8 +107,9 @@ export default function Admin() {
     return () => clearInterval(timer)
   }, [lockoutSeconds])
   
-  // Products, Leads & Orders Data State
+  // Products, Categories, Leads & Orders Data State
   const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
   const [leads, setLeads] = useState([])
   const [orders, setOrders] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -230,20 +232,26 @@ export default function Admin() {
     }
   }
 
-  // Fetch all products, leads, and orders
+  // Fetch all products, leads, categories and orders
   const fetchData = async () => {
     try {
       setIsLoading(true)
-      const [productsData, leadsData, ordersData] = await Promise.allSettled([
+      const [productsData, leadsData, ordersData, categoriesData] = await Promise.allSettled([
         getProducts(),
         getLeads(),
-        getOrders()
+        getOrders(),
+        getCategories()
       ])
       
       if (productsData.status === 'fulfilled' && Array.isArray(productsData.value)) {
         setProducts(productsData.value)
       } else {
         setProducts([])
+      }
+      if (categoriesData.status === 'fulfilled' && Array.isArray(categoriesData.value)) {
+        setCategories(categoriesData.value)
+      } else {
+        setCategories([])
       }
       if (leadsData.status === 'fulfilled' && Array.isArray(leadsData.value)) {
         setLeads(leadsData.value)
@@ -534,6 +542,7 @@ export default function Admin() {
         {activeTab === 'products' && canViewProducts && (
           <ProductsManager
             products={products}
+            categories={categories}
             isLoading={isLoading}
             onRefresh={fetchData}
             onOpenCreateModal={canCreateProduct ? openNewModal : undefined}
@@ -589,6 +598,7 @@ export default function Admin() {
       {isModalOpen && (canCreateProduct || canEditProduct) && (
         <ProductModal 
           product={editingProduct}
+          categories={categories}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
           currentPinnedCount={currentPinnedCount}
