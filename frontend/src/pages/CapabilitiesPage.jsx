@@ -15,7 +15,7 @@ import distributionImg from '../assets/distribution/distribution_export.jpg'
 
 import winmartLogo from '../assets/pictures_doitac/winmart.png'
 import goLogo from '../assets/pictures_doitac/go!.png'
-import circleKLogo from '../assets/pictures_doitac/Circle_K.png'
+import circleKLogo from '../assets/pictures_doitac/circle_k.png'
 import gs25Logo from '../assets/pictures_doitac/gs25.png'
 import kmartLogo from '../assets/pictures_doitac/k-market.webp'
 import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
