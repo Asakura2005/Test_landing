@@ -18,10 +18,30 @@ import {
   Package,
   Save,
   HelpCircle,
-  Eye
+  Eye,
+  Pencil
 } from 'lucide-react'
 import { uploadProductImage, deleteProductImage, getCategories, getProvinces } from '../../services/supabase'
 import { PRODUCT_IMAGE_MAP } from '../../data/productCategories'
+
+const DEFAULT_SHELF_LIFE_RECOMMENDATIONS = [
+  '6 tháng',
+  '9 tháng',
+  '12 tháng',
+  '180 ngày kể từ ngày sản xuất',
+  '6-12 tháng kể từ ngày sản xuất',
+  '24 tháng'
+]
+
+const DEFAULT_CERT_RECOMMENDATIONS = [
+  'ISO 22000:2018',
+  'HACCP',
+  'OCOP 4 Sao',
+  'OCOP 3 Sao',
+  'VSATTP',
+  'Halal',
+  'FDA'
+]
 
 export default function ProductModal({ product, onClose, onSave, currentPinnedCount = 0 }) {
   const [activeModalTab, setActiveModalTab] = useState('basic') // 'basic' | 'variants' | 'specs' | 'gallery'
@@ -71,6 +91,127 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const [galleryFiles, setGalleryFiles] = useState([])
   const [galleryPreviews, setGalleryPreviews] = useState([])
   const [imagesToDelete, setImagesToDelete] = useState([])
+
+  // Recommended Shelf Life State (Lưu localStorage, cho phép thêm, sửa, xoá)
+  const [shelfLifeOptions, setShelfLifeOptions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('haq_shelf_life_recommendations')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {}
+    return DEFAULT_SHELF_LIFE_RECOMMENDATIONS
+  })
+  const [isAddingShelfLife, setIsAddingShelfLife] = useState(false)
+  const [newShelfLifeInput, setNewShelfLifeInput] = useState('')
+  const [editingShelfLifeIdx, setEditingShelfLifeIdx] = useState(null)
+  const [editingShelfLifeText, setEditingShelfLifeText] = useState('')
+
+  // Recommended Certifications State (Lưu localStorage, cho phép thêm, sửa, xoá)
+  const [certOptions, setCertOptions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('haq_cert_recommendations')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {}
+    return DEFAULT_CERT_RECOMMENDATIONS
+  })
+  const [isAddingCert, setIsAddingCert] = useState(false)
+  const [newCertInput, setNewCertInput] = useState('')
+  const [editingCertIdx, setEditingCertIdx] = useState(null)
+  const [editingCertText, setEditingCertText] = useState('')
+
+  const saveShelfLifeOptions = (newList) => {
+    setShelfLifeOptions(newList)
+    try {
+      localStorage.setItem('haq_shelf_life_recommendations', JSON.stringify(newList))
+    } catch (e) {}
+  }
+
+  const addShelfLifeOption = (val) => {
+    const text = (typeof val === 'string' ? val : newShelfLifeInput).trim()
+    if (!text) return
+    if (!shelfLifeOptions.includes(text)) {
+      const updated = [...shelfLifeOptions, text]
+      saveShelfLifeOptions(updated)
+    }
+    setFormData(prev => ({ ...prev, shelf_life: text }))
+    setNewShelfLifeInput('')
+    setIsAddingShelfLife(false)
+  }
+
+  const updateShelfLifeOption = (index) => {
+    const text = editingShelfLifeText.trim()
+    if (!text) return
+    const oldVal = shelfLifeOptions[index]
+    const updated = [...shelfLifeOptions]
+    updated[index] = text
+    saveShelfLifeOptions(updated)
+    setFormData(prev => ({
+      ...prev,
+      shelf_life: prev.shelf_life === oldVal ? text : prev.shelf_life
+    }))
+    setEditingShelfLifeIdx(null)
+  }
+
+  const removeShelfLifeOption = (itemToRemove) => {
+    const updated = shelfLifeOptions.filter(item => item !== itemToRemove)
+    saveShelfLifeOptions(updated)
+  }
+
+  const saveCertOptions = (newList) => {
+    setCertOptions(newList)
+    try {
+      localStorage.setItem('haq_cert_recommendations', JSON.stringify(newList))
+    } catch (e) {}
+  }
+
+  const addCertOption = (val) => {
+    const text = (typeof val === 'string' ? val : newCertInput).trim()
+    if (!text) return
+    if (!certOptions.includes(text)) {
+      const updated = [...certOptions, text]
+      saveCertOptions(updated)
+    }
+    setFormData(prev => {
+      const current = (prev.certifications || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+      if (!current.includes(text)) {
+        return { ...prev, certifications: [...current, text].join(', ') }
+      }
+      return prev
+    })
+    setNewCertInput('')
+    setIsAddingCert(false)
+  }
+
+  const updateCertOption = (index) => {
+    const text = editingCertText.trim()
+    if (!text) return
+    const oldVal = certOptions[index]
+    const updated = [...certOptions]
+    updated[index] = text
+    saveCertOptions(updated)
+    setFormData(prev => {
+      const current = (prev.certifications || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+      const mapped = current.map(c => c === oldVal ? text : c)
+      return { ...prev, certifications: mapped.join(', ') }
+    })
+    setEditingCertIdx(null)
+  }
+
+  const removeCertOption = (itemToRemove) => {
+    const updated = certOptions.filter(item => item !== itemToRemove)
+    saveCertOptions(updated)
+  }
 
   // Danh sách ảnh có sẵn để gán cho biến thể (kết hợp thư viện ảnh sản phẩm + ảnh các biến thể khác + ảnh map cục bộ)
   const availableGalleryImages = useMemo(() => {
@@ -712,43 +853,161 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     placeholder="VD: ISO 22000:2018, HACCP, OCOP 4 Sao, VSATTP"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
                   />
-                  {/* Quick Select Chips */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['ISO 22000:2018', 'HACCP', 'OCOP 4 Sao', 'OCOP 3 Sao', 'VSATTP', 'Halal', 'FDA'].map(cert => {
+                  {/* Quick Select & Editable Chips */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {certOptions.map((cert, idx) => {
                       const currentList = (formData.certifications || '')
                         .split(',')
                         .map(s => s.trim())
                         .filter(Boolean)
                       const isSelected = currentList.includes(cert)
+
+                      if (editingCertIdx === idx) {
+                        return (
+                          <div key={idx} className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                            <input
+                              type="text"
+                              autoFocus
+                              value={editingCertText}
+                              onChange={e => setEditingCertText(e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  updateCertOption(idx)
+                                } else if (e.key === 'Escape') {
+                                  setEditingCertIdx(null)
+                                }
+                              }}
+                              className="px-2 py-0.5 text-[11px] w-28 focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => updateCertOption(idx)}
+                              className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                            >
+                              Lưu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingCertIdx(null)}
+                              className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )
+                      }
+
                       return (
-                        <button
-                          key={cert}
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => {
-                              const current = (prev.certifications || '')
-                                .split(',')
-                                .map(s => s.trim())
-                                .filter(Boolean)
-                              let updated
-                              if (current.includes(cert)) {
-                                updated = current.filter(c => c !== cert)
-                              } else {
-                                updated = [...current, cert]
-                              }
-                              return { ...prev, certifications: updated.join(', ') }
-                            })
-                          }}
-                          className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
+                        <div 
+                          key={idx}
+                          className={`group inline-flex items-center text-[11px] rounded-lg border transition-all ${
                             isSelected 
                               ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-xs' 
                               : 'bg-white text-[#52665A] border-[#D8E5DA] hover:border-[#0F5132] hover:text-[#0F5132]'
                           }`}
                         >
-                          {isSelected ? `✓ ${cert}` : `+ ${cert}`}
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormData(prev => {
+                                const current = (prev.certifications || '')
+                                  .split(',')
+                                  .map(s => s.trim())
+                                  .filter(Boolean)
+                                let updated
+                                if (current.includes(cert)) {
+                                  updated = current.filter(c => c !== cert)
+                                } else {
+                                  updated = [...current, cert]
+                                }
+                                return { ...prev, certifications: updated.join(', ') }
+                              })
+                            }}
+                            className="px-2.5 py-1 font-medium cursor-pointer"
+                            title={`Bấm để ${isSelected ? 'bỏ chọn' : 'thêm'} "${cert}"`}
+                          >
+                            {isSelected ? `✓ ${cert}` : `+ ${cert}`}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setEditingCertIdx(idx)
+                              setEditingCertText(cert)
+                            }}
+                            className={`px-1 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-[#0F5132]'
+                            }`}
+                            title="Sửa tên chứng nhận này"
+                          >
+                            <Pencil className="w-2.5 h-2.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeCertOption(cert)
+                            }}
+                            className={`pr-1.5 pl-0.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-red-600'
+                            }`}
+                            title="Xóa chứng nhận này khỏi danh sách gợi ý"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
                       )
                     })}
+
+                    {/* Form thêm gợi ý chứng nhận mới */}
+                    {isAddingCert ? (
+                      <div className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                        <input
+                          type="text"
+                          autoFocus
+                          value={newCertInput}
+                          onChange={e => setNewCertInput(e.target.value)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                              addCertOption()
+                            } else if (e.key === 'Escape') {
+                              setIsAddingCert(false)
+                              setNewCertInput('')
+                            }
+                          }}
+                          placeholder="VD: VietGAP, FDA..."
+                          className="px-2 py-0.5 text-[11px] w-28 focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => addCertOption()}
+                          className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                        >
+                          Lưu
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAddingCert(false)
+                            setNewCertInput('')
+                          }}
+                          className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingCert(true)}
+                        className="text-[11px] px-2.5 py-1 rounded-lg border border-dashed border-[#0F5132]/60 text-[#0F5132] bg-[#F4F8F4]/60 hover:bg-[#F4F8F4] font-semibold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Thêm chứng nhận mới vào danh sách gợi ý"
+                      >
+                        <Plus className="w-3 h-3" /> Thêm gợi ý
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -772,27 +1031,155 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     placeholder="VD: 6-12 tháng kể từ ngày sản xuất"
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs focus:outline-none focus:border-[#0F5132]"
                   />
-                  {/* Quick Select Chips */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['6 tháng', '9 tháng', '12 tháng', '6-12 tháng kể từ ngày sản xuất', '24 tháng'].map(item => {
+                  {/* Quick Select & Editable Chips */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {shelfLifeOptions.map((item, idx) => {
                       const isSelected = formData.shelf_life === item
+
+                      if (editingShelfLifeIdx === idx) {
+                        return (
+                          <div key={idx} className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                            <input
+                              type="text"
+                              autoFocus
+                              value={editingShelfLifeText}
+                              onChange={e => setEditingShelfLifeText(e.target.value)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  updateShelfLifeOption(idx)
+                                } else if (e.key === 'Escape') {
+                                  setEditingShelfLifeIdx(null)
+                                }
+                              }}
+                              className="px-2 py-0.5 text-[11px] w-28 focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => updateShelfLifeOption(idx)}
+                              className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                            >
+                              Lưu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingShelfLifeIdx(null)}
+                              className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )
+                      }
+
                       return (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, shelf_life: item }))
-                          }}
-                          className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-medium ${
+                        <div 
+                          key={idx}
+                          className={`group inline-flex items-center text-[11px] rounded-lg border transition-all ${
                             isSelected 
                               ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-xs' 
                               : 'bg-white text-[#52665A] border-[#D8E5DA] hover:border-[#0F5132] hover:text-[#0F5132]'
                           }`}
                         >
-                          {isSelected ? `✓ ${item}` : item}
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, shelf_life: item }))}
+                            className="px-2.5 py-1 font-medium cursor-pointer"
+                            title={`Bấm để chọn "${item}"`}
+                          >
+                            {isSelected ? `✓ ${item}` : item}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setEditingShelfLifeIdx(idx)
+                              setEditingShelfLifeText(item)
+                            }}
+                            className={`px-1 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-[#0F5132]'
+                            }`}
+                            title="Sửa mốc gợi ý này"
+                          >
+                            <Pencil className="w-2.5 h-2.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeShelfLifeOption(item)
+                            }}
+                            className={`pr-1.5 pl-0.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${
+                              isSelected ? 'text-emerald-200 hover:text-white' : 'text-gray-400 hover:text-red-600'
+                            }`}
+                            title="Xóa mốc này khỏi danh sách gợi ý"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
                       )
                     })}
+
+                    {/* Form thêm gợi ý hạn sử dụng mới */}
+                    {isAddingShelfLife ? (
+                      <div className="inline-flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#0F5132] shadow-xs">
+                        <input
+                          type="text"
+                          autoFocus
+                          value={newShelfLifeInput}
+                          onChange={e => setNewShelfLifeInput(e.target.value)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                              addShelfLifeOption()
+                            } else if (e.key === 'Escape') {
+                              setIsAddingShelfLife(false)
+                              setNewShelfLifeInput('')
+                            }
+                          }}
+                          placeholder="VD: 180 ngày..."
+                          className="px-2 py-0.5 text-[11px] w-24 focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => addShelfLifeOption()}
+                          className="px-2 py-0.5 bg-[#0F5132] text-white text-[10px] font-bold rounded hover:bg-[#16A34A] cursor-pointer"
+                        >
+                          Lưu
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAddingShelfLife(false)
+                            setNewShelfLifeInput('')
+                          }}
+                          className="p-1 text-gray-400 hover:text-gray-600 cursor-pointer"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingShelfLife(true)}
+                        className="text-[11px] px-2.5 py-1 rounded-lg border border-dashed border-[#0F5132]/60 text-[#0F5132] bg-[#F4F8F4]/60 hover:bg-[#F4F8F4] font-semibold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Thêm mốc mới vào danh sách gợi ý"
+                      >
+                        <Plus className="w-3 h-3" /> Thêm gợi ý
+                      </button>
+                    )}
+
+                    {/* Nút lưu nhanh giá trị đang gõ vào danh sách gợi ý */}
+                    {formData.shelf_life && !shelfLifeOptions.includes(formData.shelf_life.trim()) && (
+                      <button
+                        type="button"
+                        onClick={() => addShelfLifeOption(formData.shelf_life.trim())}
+                        className="text-[10px] px-2 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 font-medium transition-all flex items-center gap-1 cursor-pointer"
+                        title="Lưu giá trị đang nhập vào danh sách gợi ý"
+                      >
+                        <Plus className="w-2.5 h-2.5" /> Lưu "{formData.shelf_life.length > 15 ? formData.shelf_life.slice(0, 15) + '...' : formData.shelf_life}" vào gợi ý
+                      </button>
+                    )}
                   </div>
                 </div>
 
