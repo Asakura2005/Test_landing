@@ -142,10 +142,28 @@ export default function HistoryPage() {
               id={chap.id}
               data-history-section
               data-section={chap.id}
-              className={`min-h-[calc(100vh-130px)] lg:h-[calc(100vh-130px)] w-full relative flex flex-col justify-center py-6 lg:py-0 border-b border-haq-border/60 overflow-hidden box-border ${
+              className={`min-h-[calc(100vh-130px)] lg:h-[calc(100vh-130px)] w-full relative flex flex-col justify-center py-8 lg:py-0 border-b border-haq-border/60 overflow-hidden box-border ${
                 isEven ? 'bg-white' : 'bg-haq-cream/35'
               }`}
             >
+              {/* Ambient Faint Background Image on Mobile — Chìm thật chìm vào nền từng năm */}
+              <div className="absolute inset-0 z-0 select-none pointer-events-none block lg:hidden overflow-hidden">
+                <img
+                  src={chap.image}
+                  alt=""
+                  aria-hidden="true"
+                  className={`w-full h-full object-cover ${chap.imagePosition || 'object-center'} opacity-[0.08] filter grayscale-[40%] contrast-110`}
+                  loading="lazy"
+                />
+                <div
+                  className={`absolute inset-0 ${
+                    isEven
+                      ? 'bg-gradient-to-b from-white/30 via-white/60 to-white/90'
+                      : 'bg-gradient-to-b from-haq-cream/30 via-haq-cream/60 to-haq-cream/90'
+                  }`}
+                />
+              </div>
+
               <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full relative z-10">
                 {/* Watermark year in background */}
                 <div
@@ -158,7 +176,7 @@ export default function HistoryPage() {
                 </div>
 
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-12 items-center">
-                  {/* Image Column (Hidden on Mobile) */}
+                  {/* Image Column (Visible on Desktop only) */}
                   <div className={`hidden lg:block lg:col-span-5 ${isEven ? '' : 'lg:order-2'}`}>
                     <Reveal delay={80} direction={isEven ? 'left' : 'right'}>
                       <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden group shadow-md border border-haq-border/80 bg-white">
