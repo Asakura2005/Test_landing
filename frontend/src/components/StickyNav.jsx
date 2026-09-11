@@ -273,7 +273,7 @@ export default function StickyNav() {
         {/* 1. Corporate Brand Logo */}
         <Link
           to={language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'}
-          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg"
+          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
           title="HAQ FOOD"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
@@ -283,8 +283,8 @@ export default function StickyNav() {
               className="h-full w-full object-contain"
             />
           </div>
-          <div className="flex flex-col">
-            <span className={`font-heading font-extrabold text-xl sm:text-2xl tracking-tight leading-none transition-colors ${
+          <div className="flex flex-col shrink-0">
+            <span className={`font-heading font-extrabold text-xl sm:text-2xl tracking-tight leading-none transition-colors whitespace-nowrap ${
               isTransparent ? 'text-white' : 'text-haq-ink'
             }`}>
               HAQ FOOD
@@ -617,28 +617,7 @@ export default function StickyNav() {
         </nav>
 
         {/* 3. CTA & Header B2B Language Switcher (Desktop) */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* Quick Search Button */}
-          <button
-            type="button"
-            onClick={() => setIsSearchOpen(true)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-heading font-semibold transition-all cursor-pointer ${
-              isTransparent
-                ? 'bg-black/30 hover:bg-black/50 border border-white/20 text-white'
-                : 'bg-haq-soft/80 hover:bg-haq-sage/30 border border-haq-border text-haq-ink hover:text-haq-green-dark'
-            }`}
-            title="Tìm kiếm sản phẩm (Ctrl + K)"
-            aria-label="Tìm kiếm sản phẩm"
-          >
-            <Search className="w-3.5 h-3.5 text-[#16A34A]" />
-            <span className="hidden lg:inline">{language === 'en' ? 'Search' : language === 'ko' ? '검색' : 'Tìm kiếm'}</span>
-            <kbd className={`hidden xl:inline-block text-[9px] font-mono px-1 py-0.2 rounded border ${
-              isTransparent ? 'border-white/30 text-white/70 bg-white/10' : 'border-haq-border bg-white text-haq-text-secondary'
-            }`}>
-              ⌘K
-            </kbd>
-          </button>
-
+        <div className="hidden md:flex items-center gap-3.5 shrink-0">
           {/* Minimal B2B Segmented Switcher */}
           <div
             className={`inline-flex items-center p-0.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors ${
@@ -673,26 +652,15 @@ export default function StickyNav() {
 
           <Link
             to={language === 'en' ? '/en/contact' : language === 'ko' ? '/ko/contact' : '/lien-he'}
-            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none"
+            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none shrink-0"
           >
             <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        {/* Mobile Header: Search + Compact Switcher + Menu Trigger */}
-        <div className="flex md:hidden items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setIsSearchOpen(true)}
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
-              isTransparent ? 'text-white hover:bg-white/10' : 'text-haq-ink hover:bg-haq-soft'
-            }`}
-            aria-label="Tìm kiếm sản phẩm"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-
+        {/* Mobile Header: Compact Switcher + Menu Trigger */}
+        <div className="flex md:hidden items-center gap-2 shrink-0">
           <div
             className="inline-flex items-center p-0.5 rounded-full bg-haq-soft border border-haq-border text-[10px] font-mono font-bold tracking-wider"
             role="group"
@@ -738,7 +706,19 @@ export default function StickyNav() {
           mobileOpen ? 'max-h-[85vh] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="px-6 py-8 space-y-5 overflow-y-auto max-h-[85vh] scrollbar-thin font-sans">
+        <div className="px-6 py-6 space-y-4 overflow-y-auto max-h-[85vh] scrollbar-thin font-sans">
+          {/* Thanh tìm kiếm bên trong Mobile Drawer */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false)
+              setIsSearchOpen(true)
+            }}
+            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-haq-soft border border-haq-border text-haq-text-secondary text-xs font-heading font-medium hover:border-[#16A34A] transition-colors text-left cursor-pointer shadow-2xs"
+          >
+            <Search className="w-4 h-4 text-[#16A34A] shrink-0" />
+            <span>{language === 'en' ? 'Search products...' : language === 'ko' ? '제품 검색...' : 'Tìm kiếm sản phẩm HAQ...'}</span>
+          </button>
           {/* VỀ CHÚNG TÔI */}
           <div className="border-b border-haq-border pb-3">
             <button
