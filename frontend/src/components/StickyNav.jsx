@@ -285,7 +285,7 @@ export default function StickyNav() {
         {/* 1. Corporate Brand Logo */}
         <Link
           to={language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'}
-          className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
+          className="hidden md:flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
           title="HAQ FOOD"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
@@ -671,38 +671,39 @@ export default function StickyNav() {
           </Link>
         </div>
 
-        {/* Mobile Header: Compact Switcher + Menu Trigger */}
-        <div className="flex md:hidden items-center gap-2 shrink-0">
-          <div
-            className="inline-flex items-center p-0.5 rounded-full bg-haq-soft border border-haq-border text-[10px] font-mono font-bold tracking-wider"
-            role="group"
-            aria-label="Mobile Language selection"
+        {/* Mobile Header: Simple — Search left, Logo center, Hamburger right */}
+        <div className="flex md:hidden items-center justify-between w-full">
+          {/* Left: Search */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false)
+              setIsSearchOpen(true)
+            }}
+            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg cursor-pointer"
+            aria-label="Tìm kiếm"
           >
-            {LANGUAGES.map((lang, idx) => {
-              const isActive = language === lang.code
-              return (
-                <React.Fragment key={lang.code}>
-                  {idx > 0 && <span className="text-haq-border select-none text-[9px] px-0.5">|</span>}
-                  <button
-                    type="button"
-                    onClick={() => switchLanguage(lang.code, navigate, location.pathname)}
-                    className={`px-1.5 py-0.5 rounded-full text-[10px] transition-all cursor-pointer ${
-                      isActive
-                        ? 'bg-haq-green-dark text-white font-bold'
-                        : 'text-haq-text-secondary'
-                    }`}
-                    aria-pressed={isActive}
-                  >
-                    {lang.label}
-                  </button>
-                </React.Fragment>
-              )
-            })}
-          </div>
+            <Search className="w-5 h-5" />
+          </button>
 
+          {/* Center: Logo only */}
+          <Link
+            to={language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'}
+            className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 focus:outline-none"
+            title="HAQ FOOD"
+          >
+            <div className="h-9 w-9 rounded-lg overflow-hidden border border-haq-border bg-white p-0.5 shadow-2xs">
+              <img src={logoImg} alt="HAQ FOOD Logo" className="h-full w-full object-contain" />
+            </div>
+            <span className="font-heading font-extrabold text-lg tracking-tight text-haq-ink whitespace-nowrap">
+              HAQ FOOD
+            </span>
+          </Link>
+
+          {/* Right: Hamburger / Close */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`p-2 ${isTransparent ? 'text-white' : 'text-haq-ink'} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg cursor-pointer`}
+            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg cursor-pointer"
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
             aria-expanded={mobileOpen}
           >
