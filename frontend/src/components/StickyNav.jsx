@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ArrowRight,
   Sparkles,
+  Search,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
@@ -13,6 +14,15 @@ import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
+import SearchOverlay from './SearchOverlay'
+
+// Bộ đệm bộ nhớ (in-memory cache) cho danh mục và sản phẩm trên Header nhằm tăng tốc độ tải trang
+let cachedNavData = {
+  categories: null,
+  products: null,
+  timestamp: 0,
+}
+const NAV_CACHE_TTL = 5 * 60 * 1000 // 5 phút
 
 export default function StickyNav() {
   const { t, language, setLanguage, switchLanguage } = useLanguage()
@@ -20,14 +30,24 @@ export default function StickyNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   const location = useLocation()
   const isHomePage = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/ko'
-  const isTransparent = isHomePage && !isScrolled
+  // Khi mở drawer mobile hoặc mở tìm kiếm, header luôn có nền trắng đồng bộ
+  const isTransparent = isHomePage && !isScrolled && !mobileOpen
 
+  // Tối ưu hóa lắng nghe thanh cuộn với requestAnimationFrame và passive listener
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20)
+          ticking = false
+        })
+        ticking = true
+      }
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
@@ -109,19 +129,36 @@ export default function StickyNav() {
   }, [language])
 
   useEffect(() => {
+    let isMounted = true
+    const now = Date.now()
+    if (cachedNavData.categories && cachedNavData.products && (now - cachedNavData.timestamp < NAV_CACHE_TTL)) {
+      setDbCategories(cachedNavData.categories)
+      setAllProducts(cachedNavData.products)
+      return
+    }
+
     const fetchAll = async () => {
       try {
         const [cats, prods] = await Promise.all([
           getCategories().catch(() => []),
           getProducts().catch(() => [])
         ])
-        if (cats && cats.length > 0) setDbCategories(cats)
-        if (prods && prods.length > 0) setAllProducts(prods)
+        if (!isMounted) return
+        if (cats && cats.length > 0) {
+          setDbCategories(cats)
+          cachedNavData.categories = cats
+        }
+        if (prods && prods.length > 0) {
+          setAllProducts(prods)
+          cachedNavData.products = prods
+        }
+        cachedNavData.timestamp = Date.now()
       } catch (err) {
         console.warn('Lỗi lấy data cho Header:', err)
       }
     }
     fetchAll()
+    return () => { isMounted = false }
   }, [])
 
   const categoryTree = useMemo(() => {
@@ -141,13 +178,17 @@ export default function StickyNav() {
     }
   }, [categoryTree, hoveredCategory])
 
+  // Khóa cuộn trang nền khi mở mobile drawer
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [mobileOpen])
 
   useEffect(() => {
     setMobileOpen(false)
@@ -159,6 +200,10 @@ export default function StickyNav() {
       if (e.key === 'Escape') {
         setActiveMenu(null)
         setMobileOpen(false)
+        setIsSearchOpen(false)
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setIsSearchOpen(prev => !prev)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -569,7 +614,28 @@ export default function StickyNav() {
         </nav>
 
         {/* 3. CTA & Header B2B Language Switcher (Desktop) */}
-        <div className="hidden md:flex items-center gap-3.5">
+        <div className="hidden md:flex items-center gap-3">
+          {/* Quick Search Button */}
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(true)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-heading font-semibold transition-all cursor-pointer ${
+              isTransparent
+                ? 'bg-black/30 hover:bg-black/50 border border-white/20 text-white'
+                : 'bg-haq-soft/80 hover:bg-haq-sage/30 border border-haq-border text-haq-ink hover:text-haq-green-dark'
+            }`}
+            title="Tìm kiếm sản phẩm (Ctrl + K)"
+            aria-label="Tìm kiếm sản phẩm"
+          >
+            <Search className="w-3.5 h-3.5 text-[#16A34A]" />
+            <span className="hidden lg:inline">{language === 'en' ? 'Search' : language === 'ko' ? '검색' : 'Tìm kiếm'}</span>
+            <kbd className={`hidden xl:inline-block text-[9px] font-mono px-1 py-0.2 rounded border ${
+              isTransparent ? 'border-white/30 text-white/70 bg-white/10' : 'border-haq-border bg-white text-haq-text-secondary'
+            }`}>
+              ⌘K
+            </kbd>
+          </button>
+
           {/* Minimal B2B Segmented Switcher */}
           <div
             className={`inline-flex items-center p-0.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors ${
@@ -611,8 +677,19 @@ export default function StickyNav() {
           </Link>
         </div>
 
-        {/* Mobile Header: Compact Switcher + Menu Trigger */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile Header: Search + Compact Switcher + Menu Trigger */}
+        <div className="flex md:hidden items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(true)}
+            className={`p-2 rounded-lg transition-colors cursor-pointer ${
+              isTransparent ? 'text-white hover:bg-white/10' : 'text-haq-ink hover:bg-haq-soft'
+            }`}
+            aria-label="Tìm kiếm sản phẩm"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
           <div
             className="inline-flex items-center p-0.5 rounded-full bg-haq-soft border border-haq-border text-[10px] font-mono font-bold tracking-wider"
             role="group"
@@ -642,13 +719,14 @@ export default function StickyNav() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`p-2 ${isTransparent ? 'text-white' : 'text-haq-ink'} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg`}
+            className={`p-2 ${isTransparent ? 'text-white' : 'text-haq-ink'} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg cursor-pointer`}
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
             aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
+
       </div>
 
       {/* Mobile Drawer (Accordion) */}
@@ -808,6 +886,17 @@ export default function StickyNav() {
         </div>
       </div>
 
+      {/* Mobile Drawer Backdrop */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-20 transition-opacity"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Global Search Overlay */}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   )
 }
