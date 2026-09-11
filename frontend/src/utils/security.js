@@ -82,20 +82,33 @@ export function validateVietnamesePhone(phone) {
 }
 
 /**
- * Làm sạch chuỗi văn bản chống XSS — escape HTML entities + loại bỏ patterns nguy hiểm
+ * Giải mã các HTML entities đã bị encode trước đó (chống lỗi hiển thị &amp;, &#x27;...)
+ */
+export function decodeHtml(str) {
+  if (!str || typeof str !== 'string') return ''
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, '/')
+}
+
+/**
+ * Làm sạch chuỗi văn bản chống XSS — loại bỏ thẻ HTML và patterns nguy hiểm, giữ nguyên ký tự văn bản thật (&, ', ", /)
  */
 export function sanitizeInput(input) {
   if (typeof input !== 'string') return ''
-  return input
+  // 1. Giải mã trước nếu chuỗi đã bị escape entity
+  const raw = decodeHtml(input)
+  return raw
     .trim()
     .substring(0, 1000)                              // Giới hạn độ dài
-    .replace(/&/g, '&amp;')                           // & phải escape trước
-    .replace(/</g, '&lt;')                            // <script>, <img>
-    .replace(/>/g, '&gt;')                            // Đóng tag
-    .replace(/"/g, '&quot;')                          // Attribute injection
-    .replace(/'/g, '&#x27;')                          // Attribute injection (single quote)
-    .replace(/\//g, '&#x2F;')                         // Closing tag </
-    .replace(/javascript\s*:/gi, '')                  // javascript: URI
-    .replace(/on\w+\s*=/gi, '')                       // onclick=, onerror=, onload=, ...
-    .replace(/data\s*:\s*text\/html/gi, '')           // data:text/html
+    .replace(/<[^>]*>/g, '')                         // Loại bỏ tất cả HTML tags (<script>, <img>, ...)
+    .replace(/[<>]/g, '')                            // Loại bỏ triệt để ký tự < >
+    .replace(/javascript\s*:/gi, '')                  // Chống javascript: URI
+    .replace(/on\w+\s*=/gi, '')                       // Chống onclick=, onerror=, onload=...
+    .replace(/data\s*:\s*text\/html/gi, '')           // Chống data:text/html
 }
+

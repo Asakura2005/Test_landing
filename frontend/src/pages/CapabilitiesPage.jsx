@@ -19,6 +19,7 @@ import circleKLogo from '../assets/pictures_doitac/circle_k.png'
 import gs25Logo from '../assets/pictures_doitac/gs25.png'
 import kmartLogo from '../assets/pictures_doitac/k-market.webp'
 import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
+import lotteLogo from '../assets/pictures_doitac/lotte.png'
 
 /* ─── Reveal ─────────────────────────────────────── */
 function Reveal({ children, delay = 0, className = '' }) {
@@ -41,6 +42,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 const PARTNERS = [
   { name: 'WinMart', logo: winmartLogo },
   { name: 'GO!', logo: goLogo },
+  { name: 'Lotte Mart', logo: lotteLogo },
   { name: 'Circle K', logo: circleKLogo },
   { name: 'GS25', logo: gs25Logo },
   { name: 'K-Market', logo: kmartLogo },

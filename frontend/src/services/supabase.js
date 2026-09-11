@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { checkSubmissionRateLimit, recordSubmission, validateVietnamesePhone, sanitizeInput } from '../utils/security.js'
+import { checkSubmissionRateLimit, recordSubmission, validateVietnamesePhone, sanitizeInput, decodeHtml } from '../utils/security.js'
 import { 
   encryptData, 
   decryptData, 
@@ -214,7 +214,14 @@ export async function getLeads() {
           rawLeads.map(async (lead) => {
             const decrypted = await decryptObject(lead, LEAD_SENSITIVE_FIELDS)
             const parsedEmail = decrypted.email || extractEmailFromNote(decrypted.note) || ''
-            return { ...decrypted, email: parsedEmail }
+            return {
+              ...decrypted,
+              email: parsedEmail,
+              need: decodeHtml(decrypted.need),
+              note: decodeHtml(decrypted.note),
+              full_name: decodeHtml(decrypted.full_name || decrypted.name),
+              company: decodeHtml(decrypted.company),
+            }
           })
         )
       }
@@ -252,7 +259,14 @@ export async function getLeads() {
       rawLeads.map(async (lead) => {
         const decrypted = await decryptObject(lead, LEAD_SENSITIVE_FIELDS)
         const parsedEmail = decrypted.email || extractEmailFromNote(decrypted.note) || ''
-        return { ...decrypted, email: parsedEmail }
+        return {
+          ...decrypted,
+          email: parsedEmail,
+          need: decodeHtml(decrypted.need),
+          note: decodeHtml(decrypted.note),
+          full_name: decodeHtml(decrypted.full_name || decrypted.name),
+          company: decodeHtml(decrypted.company),
+        }
       })
     )
 

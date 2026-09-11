@@ -7,10 +7,12 @@ import circleKLogo from '../assets/pictures_doitac/circle_k.png'
 import gs25Logo from '../assets/pictures_doitac/gs25.png'
 import kmartLogo from '../assets/pictures_doitac/k-market.webp'
 import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
+import lotteLogo from '../assets/pictures_doitac/lotte.png'
 
 const RETAIL_PARTNERS = [
   { name: 'WinMart & WinMart+', logo: winmartLogo, note: 'Hệ thống siêu thị toàn quốc' },
   { name: 'GO! & Tops Market', logo: goLogo, note: 'Đại siêu thị & chuỗi bán lẻ' },
+  { name: 'Lotte Mart', logo: lotteLogo, note: 'Chuỗi đại siêu thị quốc tế' },
   { name: 'Circle K', logo: circleKLogo, note: 'Chuỗi cửa hàng tiện lợi 24/7' },
   { name: 'GS25', logo: gs25Logo, note: 'Chuỗi tiện lợi chuẩn Hàn Quốc' },
   { name: 'K-Market', logo: kmartLogo, note: 'Hệ thống thực phẩm xuất nhập khẩu' },
@@ -29,7 +31,7 @@ export default function Partners() {
           Đối tác bán lẻ & chuỗi tiện lợi chiến lược
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
           {RETAIL_PARTNERS.map((partner, idx) => (
             <div
               key={idx}

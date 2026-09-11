@@ -4,17 +4,28 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 /**
- * L2: Escape HTML entities để chống injection trong email template
+ * L2: Escape HTML entities để chống injection trong email template (chống double-escaping)
  */
 function escapeHtml(str) {
   if (!str || typeof str !== 'string') return ''
-  return str
+  // 1. Decode trước nếu chuỗi đã từng bị encode để tránh lỗi double-escaping (&amp; -> &amp;amp;)
+  const clean = str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, '/')
+
+  // 2. Escape chuẩn an toàn cho email HTML
+  return clean
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
 }
+
 
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10)
