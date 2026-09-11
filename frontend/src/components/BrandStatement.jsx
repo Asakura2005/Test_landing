@@ -27,20 +27,8 @@ export default function BrandStatement() {
     <section id="gioi-thieu" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-white border-b border-haq-border relative overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-0">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-center">
-          {/* Left: Large 2021 */}
-          <div className="lg:col-span-4">
-            <Reveal>
-              <div className="font-heading font-extrabold text-7xl sm:text-8xl lg:text-[10rem] text-haq-border/40 leading-none select-none tracking-tighter">
-                2021
-              </div>
-              <div className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#16A34A] mt-3">
-                {t('home.brand_statement.est', 'Thành lập tại Hà Nội')}
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Right: Statement */}
-          <div className="lg:col-span-8">
+          {/* Statement */}
+          <div className="lg:col-span-10 lg:col-start-2">
             <Reveal delay={150}>
               <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#16A34A] uppercase mb-4">
                 {t('home.brand_statement.badge', 'Về HAQ Food · Giới thiệu')}
