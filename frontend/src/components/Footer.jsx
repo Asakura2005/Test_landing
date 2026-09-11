@@ -181,26 +181,17 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <div>
-                    <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
-                    <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors font-semibold">
-                      info@haq.com.vn
-                    </a>
-                  </div>
-                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-white/60 pt-0.5">
-                    <a href="mailto:sales01@haq.com.vn" className="hover:text-white transition-colors" title="Bán hàng & Báo giá">
-                      Sales: <span className="underline decoration-white/30">sales01@haq.com.vn</span>
-                    </a>
-                    <a href="mailto:cskh@haq.com.vn" className="hover:text-white transition-colors" title="Chăm sóc Khách hàng">
-                      CSKH: <span className="underline decoration-white/30">cskh@haq.com.vn</span>
-                    </a>
-                    <a href="mailto:support@haq.com.vn" className="hover:text-white transition-colors" title="Hỗ trợ Kỹ thuật">
-                      Support: <span className="underline decoration-white/30">support@haq.com.vn</span>
-                    </a>
-                    <a href="mailto:tuyendung@haq.com.vn" className="hover:text-white transition-colors" title="Tuyển dụng & HR">
-                      Tuyển dụng: <span className="underline decoration-white/30">tuyendung@haq.com.vn</span>
-                    </a>
+                <div>
+                  <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
+                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors font-semibold">
+                    info@haq.com.vn
+                  </a>
+                  <div className="text-[11px] text-white/60 mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
+                    <span>B2B: <a href="mailto:sales01@haq.com.vn" className="hover:text-white transition-colors">sales01@haq.com.vn</a></span>
+                    <span className="opacity-40">·</span>
+                    <span>CSKH: <a href="mailto:cskh@haq.com.vn" className="hover:text-white transition-colors">cskh@haq.com.vn</a></span>
+                    <span className="opacity-40">·</span>
+                    <span>Tuyển dụng: <a href="mailto:tuyendung@haq.com.vn" className="hover:text-white transition-colors">tuyendung@haq.com.vn</a></span>
                   </div>
                 </div>
               </li>
