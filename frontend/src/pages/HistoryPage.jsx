@@ -146,20 +146,20 @@ export default function HistoryPage() {
                 isEven ? 'bg-white' : 'bg-haq-cream/35'
               }`}
             >
-              {/* Ambient Faint Background Image on Mobile — Chìm thật chìm vào nền từng năm */}
+              {/* Ambient Faint Background Image on Mobile — Rõ hơn, nhìn thấy được nhưng vẫn chìm ở nền */}
               <div className="absolute inset-0 z-0 select-none pointer-events-none block lg:hidden overflow-hidden">
                 <img
                   src={chap.image}
                   alt=""
                   aria-hidden="true"
-                  className={`w-full h-full object-cover ${chap.imagePosition || 'object-center'} opacity-[0.08] filter grayscale-[40%] contrast-110`}
+                  className={`w-full h-full object-cover ${chap.imagePosition || 'object-center'} opacity-[0.22] contrast-[1.05]`}
                   loading="lazy"
                 />
                 <div
                   className={`absolute inset-0 ${
                     isEven
-                      ? 'bg-gradient-to-b from-white/30 via-white/60 to-white/90'
-                      : 'bg-gradient-to-b from-haq-cream/30 via-haq-cream/60 to-haq-cream/90'
+                      ? 'bg-gradient-to-b from-white/15 via-white/40 to-white/80'
+                      : 'bg-gradient-to-b from-haq-cream/15 via-haq-cream/40 to-haq-cream/80'
                   }`}
                 />
               </div>
