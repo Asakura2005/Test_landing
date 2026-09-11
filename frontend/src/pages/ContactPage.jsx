@@ -37,53 +37,59 @@ import { useLanguage } from '../context/LanguageContext'
 const DEPARTMENT_EMAILS = [
   {
     id: 'sales',
-    deptVi: 'Phòng Bán hàng & Kinh doanh B2B',
+    deptVi: 'Phòng Bán Hàng & Kinh Doanh B2B',
     deptEn: 'B2B Sales & Commercial Dept',
     deptKo: 'B2B 영업 및 유통 사업부',
     roleVi: 'Báo giá sỉ, chính sách đại lý & NPP, đơn hàng xuất khẩu, hợp đồng gia công OEM/ODM.',
     roleEn: 'Wholesale pricing, distributor & dealer policies, export trade, OEM/ODM contracts.',
     roleKo: '도매 단가표, 대리점 공급 정책, 해외 수출 및 OEM/ODM 위탁 제조 문의.',
+    badgeVi: 'BÁO GIÁ & ĐẠI LÝ',
+    badgeEn: 'SALES & QUOTES',
+    badgeKo: '영업 & 견적',
     email: 'sales01@haq.com.vn',
+    icon: ShoppingBag,
   },
   {
     id: 'cskh',
-    deptVi: 'Bộ phận Chăm sóc Khách hàng',
+    deptVi: 'Bộ Phận Chăm Sóc Khách Hàng',
     deptEn: 'Customer Care & Service Dept',
     deptKo: '고객 만족 및 서비스 센터',
-    roleVi: 'Tiếp nhận phản hồi chất lượng sản phẩm, chính sách bảo hành & quyền lợi đối tác.',
+    roleVi: 'Tiếp nhận phản hồi chất lượng sản phẩm, chính sách bảo hành, đổi trả & hỗ trợ đối tác.',
     roleEn: 'Product quality feedback, warranty/exchange policies, partner assistance.',
     roleKo: '제품 품질 피드백, 교환 및 반품 정책, 고객 만족 서비스 지원.',
+    badgeVi: 'HẬU MÃI & CSKH',
+    badgeEn: 'CUSTOMER CARE',
+    badgeKo: '고객 만족',
     email: 'cskh@haq.com.vn',
+    icon: Headphones,
   },
   {
     id: 'support',
-    deptVi: 'Hỗ trợ Kỹ thuật & Vận đơn',
+    deptVi: 'Hỗ Trợ Kỹ Thuật & Vận Đơn',
     deptEn: 'Technical & Order Support',
     deptKo: '물류 운영 및 기술 지원팀',
     roleVi: 'Tiến độ giao nhận hàng hóa, chứng từ vận chuyển, thông số kỹ thuật & kiểm nghiệm ISO/HACCP.',
     roleEn: 'Order tracking, shipping documents, technical specifications & ISO/HACCP records.',
     roleKo: '주문 배송 추적, 통관 및 수출 서류, 제품 기술 규격 및 ISO/HACCP 인증 확인.',
+    badgeVi: 'KỸ THUẬT & ĐƠN HÀNG',
+    badgeEn: 'OPERATIONS & DOCS',
+    badgeKo: '기술 & 서류',
     email: 'support@haq.com.vn',
+    icon: LifeBuoy,
   },
   {
     id: 'tuyendung',
-    deptVi: 'Ban Nhân sự & Tuyển dụng',
+    deptVi: 'Ban Nhân Sự & Tuyển Dụng',
     deptEn: 'Human Resources & Recruitment',
     deptKo: '인사 및 인재 채용팀',
     roleVi: 'Tiếp nhận hồ sơ ứng viên (CV), lịch phỏng vấn & cơ hội việc làm tại HAQ FOOD.',
     roleEn: 'CV submissions, interview schedules, career opportunities across factories & offices.',
     roleKo: '입사 지원서(CV) 접수, 면접 일정 조율 및 HAQ FOOD 채용 공고 안내.',
+    badgeVi: 'TUYỂN DỤNG & CV',
+    badgeEn: 'CAREERS & HR',
+    badgeKo: '채용 & 인사',
     email: 'tuyendung@haq.com.vn',
-  },
-  {
-    id: 'info',
-    deptVi: 'Văn phòng Công ty (Chung)',
-    deptEn: 'Corporate Head Office (General)',
-    deptKo: '본사 대표 (일반 문의)',
-    roleVi: 'Tiếp nhận hồ sơ năng lực doanh nghiệp, chào giá nhà cung cấp & thông tin hành chính.',
-    roleEn: 'Company capability profile, supplier proposals, and general corporate inquiries.',
-    roleKo: '기업 소개서 접수, 협력업체 제안 및 일반 행정 문의.',
-    email: 'info@haq.com.vn',
+    icon: Briefcase,
   },
 ]
 
@@ -740,135 +746,151 @@ export default function ContactPage() {
         </section>
 
         {/* =========================================================================
-            DANH BẠ EMAIL TIẾP NHẬN THEO BỘ PHẬN (ĐƠN GIẢN, RÕ RÀNG, CHUẨN DOANH NGHIỆP)
+            DANH BẠ HÒM THƯ ĐIỆN TỬ DOANH NGHIỆP THEO BỘ PHẬN
             ========================================================================= */}
-        <section id="email-directory" className="py-12 sm:py-16 bg-white border-t border-haq-border">
+        <section id="email-directory" className="py-14 sm:py-20 bg-haq-soft/40 border-t border-haq-border relative">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <Reveal direction="up">
-              <div className="mb-6 sm:mb-8">
-                <h2 className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl text-haq-ink uppercase">
+              {/* Section Header */}
+              <div className="max-w-3xl mb-8 sm:mb-10">
+                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                  {language === 'en' ? 'CORPORATE INBOX DIRECTORY' : language === 'ko' ? '기업 공식 이메일 안내' : 'HỆ THỐNG EMAIL CHUYÊN TRÁCH DOANH NGHIỆP'}
+                </span>
+                <h2 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl text-haq-ink uppercase mt-1.5 leading-snug">
                   {language === 'en'
-                    ? 'Departmental Email Directory'
+                    ? 'OFFICIAL INBOXES BY DEPARTMENT'
                     : language === 'ko'
-                    ? '부서별 공식 이메일 안내'
-                    : 'Danh Bạ Email Tiếp Nhận Theo Bộ Phận'}
+                    ? '부서별 직통 이메일 소통 창구'
+                    : 'KẾT NỐI TRỰC TIẾP TỪNG BỘ PHẬN CHUYÊN TRÁCH'}
                 </h2>
-                <p className="text-xs sm:text-sm text-haq-text-secondary mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
                   {language === 'en'
-                    ? 'Please reach out to the appropriate department directly for prompt assistance:'
+                    ? 'Inquiries sent to dedicated departmental inboxes are prioritized and routed directly to the specialists in charge.'
                     : language === 'ko'
-                    ? '문의 목적에 맞는 해당 부서로 직접 연락해 주시면 신속하게 회신드리겠습니다:'
-                    : 'Quý đối tác và khách hàng có thể liên hệ trực tiếp với các bộ phận phụ trách để được hỗ trợ nhanh nhất:'}
+                    ? '문의 목적에 맞는 해당 부서의 공식 이메일로 보내주시면 전담 인력이 신속하고 정확하게 검토 후 회신드립니다.'
+                    : 'Gửi thư trực tiếp đến từng hòm thư chuyên trách giúp yêu cầu của Quý đối tác được bảo mật, phân luồng chính xác và ưu tiên xử lý.'}
                 </p>
               </div>
 
-              {/* Bảng danh bạ đơn giản, trực quan */}
-              <div className="border border-haq-border rounded-2xl overflow-hidden bg-white shadow-2xs">
-                {/* Desktop Table View */}
-                <div className="hidden md:block overflow-x-auto">
-                  <table className="w-full text-left text-sm border-collapse">
-                    <thead className="bg-haq-soft/80 border-b border-haq-border text-haq-ink font-heading font-bold text-xs uppercase tracking-wider">
-                      <tr>
-                        <th className="py-3.5 px-6 w-[28%]">
-                          {language === 'en' ? 'Department' : language === 'ko' ? '담당 부서' : 'Bộ phận'}
-                        </th>
-                        <th className="py-3.5 px-6 w-[48%]">
-                          {language === 'en' ? 'Scope of Responsibility' : language === 'ko' ? '업무 내용' : 'Nội dung phụ trách'}
-                        </th>
-                        <th className="py-3.5 px-6 w-[24%]">
-                          {language === 'en' ? 'Official Email' : language === 'ko' ? '공식 이메일' : 'Email tiếp nhận'}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-haq-border">
-                      {DEPARTMENT_EMAILS.map((item) => {
-                        const isCopied = copiedEmail === item.email
-                        const dept = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
-                        const role = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
-
-                        return (
-                          <tr key={item.email} className="hover:bg-haq-soft/40 transition-colors">
-                            <td className="py-4 px-6 font-heading font-bold text-haq-ink text-sm">
-                              {dept}
-                            </td>
-                            <td className="py-4 px-6 text-haq-text-secondary text-sm leading-relaxed">
-                              {role}
-                            </td>
-                            <td className="py-4 px-6">
-                              <div className="flex items-center gap-2">
-                                <a
-                                  href={`mailto:${item.email}`}
-                                  className="font-mono text-sm font-semibold text-[#16A34A] hover:underline"
-                                  title={`Gửi thư tới ${item.email}`}
-                                >
-                                  {item.email}
-                                </a>
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopyEmail(item.email)}
-                                  className="inline-flex items-center justify-center p-1.5 text-haq-text-secondary hover:text-haq-ink rounded-md hover:bg-haq-soft transition-colors cursor-pointer"
-                                  title={isCopied ? 'Đã sao chép' : 'Sao chép email'}
-                                  aria-label={`Sao chép ${item.email}`}
-                                >
-                                  {isCopied ? (
-                                    <Check className="w-3.5 h-3.5 text-[#16A34A]" />
-                                  ) : (
-                                    <Copy className="w-3.5 h-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
+              {/* Head Office Banner Card */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-white border border-haq-border shadow-2xs mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#16A34A]/40 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-[#0F5132] text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Building2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-heading font-extrabold text-base sm:text-lg text-haq-ink uppercase">
+                        {language === 'en' ? 'Corporate Head Office' : language === 'ko' ? '본사 대표 공식 이메일' : 'Hòm Thư Đại Diện Tổng Công Ty'}
+                      </h3>
+                      <span className="text-[10px] font-heading font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-haq-sage/40 text-[#16A34A] border border-haq-border">
+                        {language === 'en' ? 'GENERAL INQUIRIES' : language === 'ko' ? '일반 문의' : 'LIÊN HỆ CHUNG'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-haq-text-secondary mt-1">
+                      {language === 'en'
+                        ? 'Receiving capability profiles, strategic partnerships, and general administration.'
+                        : language === 'ko'
+                        ? '기업 소개서 접수, 전략적 파트너십 및 일반 행정 업무 문의.'
+                        : 'Tiếp nhận hồ sơ năng lực doanh nghiệp, đề xuất hợp tác & văn thư hành chính.'}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Mobile Stacked List View */}
-                <div className="divide-y divide-haq-border md:hidden">
-                  {DEPARTMENT_EMAILS.map((item) => {
-                    const isCopied = copiedEmail === item.email
-                    const dept = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
-                    const role = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
+                <div className="flex items-center gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-haq-border/60">
+                  <a
+                    href="mailto:info@haq.com.vn"
+                    className="inline-flex items-center gap-2 font-mono text-sm font-bold text-haq-ink hover:text-[#16A34A] bg-haq-soft/80 hover:bg-haq-soft px-3.5 py-2 rounded-xl border border-haq-border transition-colors"
+                    title="Gửi thư tới info@haq.com.vn"
+                  >
+                    <Mail className="w-4 h-4 text-[#16A34A]" />
+                    <span>info@haq.com.vn</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-haq-text-secondary" />
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyEmail('info@haq.com.vn')}
+                    className="p-2 rounded-xl border border-haq-border bg-haq-soft/80 hover:bg-white text-haq-text-secondary hover:text-haq-ink transition-all cursor-pointer shrink-0"
+                    title={copiedEmail === 'info@haq.com.vn' ? 'Đã sao chép' : 'Sao chép email'}
+                    aria-label="Sao chép info@haq.com.vn"
+                  >
+                    {copiedEmail === 'info@haq.com.vn' ? (
+                      <Check className="w-4 h-4 text-[#16A34A]" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
 
-                    return (
-                      <div key={item.email} className="p-4 space-y-1.5">
-                        <div className="font-heading font-bold text-sm text-haq-ink">
-                          {dept}
+              {/* 4 Departmental Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {DEPARTMENT_EMAILS.map((item, idx) => {
+                  const Icon = item.icon
+                  const isCopied = copiedEmail === item.email
+                  const deptName = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
+                  const roleDesc = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
+                  const badgeText = language === 'en' ? item.badgeEn : language === 'ko' ? item.badgeKo : item.badgeVi
+
+                  return (
+                    <Reveal key={item.id} delay={idx * 60} direction="up">
+                      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-haq-border shadow-2xs hover:shadow-md hover:border-[#16A34A]/40 transition-all duration-300 flex flex-col justify-between h-full group hover:-translate-y-1">
+                        <div>
+                          {/* Card Top: Icon & Badge */}
+                          <div className="flex items-center justify-between gap-2 mb-3.5">
+                            <div className="w-11 h-11 rounded-2xl bg-haq-soft border border-haq-border flex items-center justify-center shrink-0 text-[#16A34A] group-hover:bg-[#16A34A] group-hover:text-white transition-colors duration-300">
+                              <Icon className="w-5 h-5" strokeWidth={1.8} />
+                            </div>
+                            <span className="text-[10px] font-heading font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-haq-sage/40 text-[#16A34A] border border-haq-border">
+                              {badgeText}
+                            </span>
+                          </div>
+
+                          {/* Title */}
+                          <h3 className="font-heading font-extrabold text-sm sm:text-base text-haq-ink uppercase group-hover:text-[#16A34A] transition-colors leading-snug">
+                            {deptName}
+                          </h3>
+
+                          {/* Role Description */}
+                          <p className="text-xs text-haq-text-secondary mt-2 leading-relaxed font-normal min-h-[44px]">
+                            {roleDesc}
+                          </p>
                         </div>
-                        <div className="text-xs text-haq-text-secondary leading-relaxed">
-                          {role}
-                        </div>
-                        <div className="pt-1.5 flex items-center justify-between gap-2">
-                          <a
-                            href={`mailto:${item.email}`}
-                            className="font-mono text-xs font-semibold text-[#16A34A] hover:underline truncate"
-                          >
-                            {item.email}
-                          </a>
-                          <button
-                            type="button"
-                            onClick={() => handleCopyEmail(item.email)}
-                            className="inline-flex items-center gap-1 text-[11px] font-heading font-medium text-haq-text-secondary hover:text-haq-ink px-2 py-1 rounded bg-haq-soft border border-haq-border cursor-pointer shrink-0"
-                          >
-                            {isCopied ? (
-                              <>
-                                <Check className="w-3 h-3 text-[#16A34A]" />
-                                <span className="text-[#16A34A]">Đã chép</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3 h-3" />
-                                <span>Sao chép</span>
-                              </>
-                            )}
-                          </button>
+
+                        {/* Email Bar at Bottom */}
+                        <div className="mt-5 pt-3.5 border-t border-haq-border/80">
+                          <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-haq-soft/80 border border-haq-border/70 group-hover:border-[#16A34A]/30 transition-colors">
+                            <a
+                              href={`mailto:${item.email}`}
+                              className="font-mono text-xs font-bold text-haq-ink hover:text-[#16A34A] transition-colors truncate flex items-center gap-1.5"
+                              title={`Gửi thư tới ${item.email}`}
+                            >
+                              <Mail className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                              <span className="truncate">{item.email}</span>
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => handleCopyEmail(item.email)}
+                              className={`p-1.5 rounded-lg transition-all shrink-0 cursor-pointer flex items-center justify-center ${
+                                isCopied
+                                  ? 'bg-emerald-100 text-emerald-700'
+                                  : 'hover:bg-white text-haq-text-secondary hover:text-haq-ink'
+                              }`}
+                              title={isCopied ? 'Đã sao chép' : 'Sao chép email'}
+                              aria-label={`Sao chép ${item.email}`}
+                            >
+                              {isCopied ? (
+                                <Check className="w-3.5 h-3.5 text-[#16A34A]" />
+                              ) : (
+                                <Copy className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    )
-                  })}
-                </div>
+                    </Reveal>
+                  )
+                })}
               </div>
             </Reveal>
           </div>
