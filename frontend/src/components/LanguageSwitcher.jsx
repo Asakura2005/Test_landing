@@ -126,7 +126,7 @@ export function FloatingLanguageSwitcher() {
   return (
     <div
       ref={containerRef}
-      className="fixed bottom-6 right-6 z-[9990] select-none font-sans"
+      className="fixed bottom-6 right-6 z-[9990] select-none font-sans hidden lg:block"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -243,7 +243,7 @@ export default function NewsDetailPage() {
 
           {/* Content Body (Rich Text - N-H1: Sanitized with DOMPurify) */}
           <div 
-            className="prose prose-base sm:prose-lg max-w-none text-[#11261B] leading-relaxed bg-white p-6 sm:p-10 md:p-12 rounded-2xl border border-[#E2E8E4] shadow-2xs font-light text-left"
+            className="prose prose-base sm:prose-lg max-w-none text-[#11261B] leading-relaxed bg-white p-6 sm:p-10 md:p-12 rounded-2xl border border-[#E2E8E4] shadow-2xs font-light text-left overflow-x-auto prose-img:max-w-full prose-table:block prose-table:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto [&_table]:block [&_table]:overflow-x-auto [&_iframe]:max-w-full"
             dangerouslySetInnerHTML={{ 
               __html: DOMPurify.sanitize(news.content || '', {
                 USE_PROFILES: { html: true },

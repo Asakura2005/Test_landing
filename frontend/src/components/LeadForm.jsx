@@ -84,7 +84,7 @@ export default function LeadForm() {
   }
 
   return (
-    <section id="lead" className="bg-[#0C1E15] py-24 md:py-32 relative overflow-hidden font-sans border-t border-[#16A34A]/20">
+    <section id="lead" className="bg-[#0C1E15] py-14 sm:py-24 md:py-32 relative overflow-hidden font-sans border-t border-[#16A34A]/20">
       {/* Subtle green ambient lighting */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#16A34A]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#0F5132]/30 rounded-full blur-3xl pointer-events-none" />
@@ -168,7 +168,7 @@ export default function LeadForm() {
           </div>
 
           {/* Right — form */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-7 order-first lg:order-none">
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 md:p-10 rounded-3xl shadow-2xl">
               {status === 'done' ? (
                 /* Success state */
@@ -210,7 +210,7 @@ export default function LeadForm() {
                         required
                         value={form.full_name}
                         onChange={update('full_name')}
-                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-base"
                         placeholder="Nguyễn Văn A"
                       />
                     </Field>
@@ -218,7 +218,7 @@ export default function LeadForm() {
                       <input
                         value={form.company}
                         onChange={update('company')}
-                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-base"
                         placeholder="Công ty TNHH ABC"
                       />
                     </Field>
@@ -231,7 +231,7 @@ export default function LeadForm() {
                         type="tel"
                         value={form.phone}
                         onChange={update('phone')}
-                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-base"
                         placeholder="09xx xxx xxx"
                       />
                     </Field>
@@ -239,7 +239,7 @@ export default function LeadForm() {
                       <select
                         value={form.need}
                         onChange={update('need')}
-                        className="w-full px-4 py-3.5 rounded-xl bg-[#0C1E15] border border-white/15 text-white focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm"
+                        className="w-full px-4 py-3.5 rounded-xl bg-[#0C1E15] border border-white/15 text-white focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-base"
                       >
                         {NEED_OPTIONS.map((opt) => (
                           <option key={opt} value={opt} className="bg-[#0C1E15] text-white">
@@ -269,7 +269,7 @@ export default function LeadForm() {
                       value={form.note}
                       onChange={update('note')}
                       rows={3}
-                      className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-sm resize-none"
+                      className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white placeholder-white/40 focus:outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] text-base resize-none"
                       placeholder="VD: Cần báo giá sỉ 5 SKU bánh, số lượng xuất buôn tại Hà Nội..."
                     />
                   </Field>

@@ -80,11 +80,13 @@ export default function ProductsManager({
     const catId = cat.id
     const catNameLower = cat.name?.trim().toLowerCase()
     
-    // Match by ID
-    if (product.category_id && catId && product.category_id === catId) return true
-    if (product.categories?.id && catId && product.categories.id === catId) return true
+    // Prioritize ID matching
+    const pCatId = product.category_id || product.categories?.id
+    if (pCatId) {
+      return catId ? pCatId === catId : false
+    }
     
-    // Match by Name
+    // Match by Name ONLY if product has NO category_id
     const pCatLower = product.category?.trim().toLowerCase()
     const pRelCatLower = product.categories?.name?.trim().toLowerCase()
     if (pCatLower && catNameLower && pCatLower === catNameLower) return true
@@ -95,13 +97,14 @@ export default function ProductsManager({
 
   // Structured category tree with live product counts
   const categoryStructure = useMemo(() => {
-    const parents = allCategories.filter(c => !c.parent_id)
+    const activeCategories = allCategories.filter(c => c.is_active !== false)
+    const parents = activeCategories.filter(c => !c.parent_id)
     
     // For each parent, find its children and calculate product counts
     const parentGroups = parents.map(parent => {
-      const children = allCategories.filter(c => c.parent_id === parent.id)
+      const children = activeCategories.filter(c => c.parent_id === parent.id)
       const childIds = new Set(children.map(c => c.id))
-      const childNames = new Set(children.map(c => c.name.trim().toLowerCase()))
+      const childNames = new Set(children.map(c => c.name?.trim().toLowerCase()).filter(Boolean))
 
       const childrenWithCounts = children.map(child => {
         const count = products.filter(p => doesProductMatchCategory(p, child)).length
@@ -117,10 +120,15 @@ export default function ProductsManager({
         if (p.category_id && childIds.has(p.category_id)) return true
         if (p.categories?.id && childIds.has(p.categories.id)) return true
         if (p.categories?.parent_id && p.categories.parent_id === parent.id) return true
-        const pCatLower = p.category?.trim().toLowerCase()
-        if (pCatLower && childNames.has(pCatLower)) return true
-        const pRelCatLower = p.categories?.name?.trim().toLowerCase()
-        if (pRelCatLower && childNames.has(pRelCatLower)) return true
+        
+        // Avoid matching child products by name if the product already has a category_id
+        const hasId = Boolean(p.category_id || p.categories?.id)
+        if (!hasId) {
+          const pCatLower = p.category?.trim().toLowerCase()
+          if (pCatLower && childNames.has(pCatLower)) return true
+          const pRelCatLower = p.categories?.name?.trim().toLowerCase()
+          if (pRelCatLower && childNames.has(pRelCatLower)) return true
+        }
         return false
       }).length
 
@@ -132,13 +140,13 @@ export default function ProductsManager({
     })
 
     // Orphan categories (has parent_id but parent not in parents list)
-    const orphans = allCategories.filter(c => c.parent_id && !parents.some(p => p.id === c.parent_id)).map(orphan => {
+    const orphans = activeCategories.filter(c => c.parent_id && !parents.some(p => p.id === c.parent_id)).map(orphan => {
       const count = products.filter(p => doesProductMatchCategory(p, orphan)).length
       return { ...orphan, count }
     })
 
     // Extra categories found in existing products that don't match any allCategories
-    const knownNames = new Set(allCategories.map(c => c.name.trim().toLowerCase()))
+    const knownNames = new Set(allCategories.map(c => c.name?.trim().toLowerCase()).filter(Boolean))
     const extraCategoryNames = Array.from(new Set(products.map(p => p.category?.trim()).filter(Boolean)))
       .filter(name => !knownNames.has(name.toLowerCase()))
 
@@ -177,19 +185,20 @@ export default function ProductsManager({
         const selectedCat = allCategories.find(c => c.id === selectedCategory || c.name === selectedCategory)
         
         if (selectedCat) {
-          const children = allCategories.filter(c => c.parent_id === selectedCat.id)
+          const children = allCategories.filter(c => c.is_active !== false && c.parent_id === selectedCat.id)
           if (children.length > 0) {
             // Parent category: match product if in parent OR in any of its children
             const childIds = new Set(children.map(c => c.id))
-            const childNames = new Set(children.map(c => c.name.trim().toLowerCase()))
+            const childNames = new Set(children.map(c => c.name?.trim().toLowerCase()).filter(Boolean))
+            const hasId = Boolean(p.category_id || p.categories?.id)
 
             matchCategory = 
               doesProductMatchCategory(p, selectedCat) ||
               (p.category_id && childIds.has(p.category_id)) ||
               (p.categories?.id && childIds.has(p.categories.id)) ||
               (p.categories?.parent_id === selectedCat.id) ||
-              (p.category && childNames.has(p.category.trim().toLowerCase())) ||
-              (p.categories?.name && childNames.has(p.categories.name.trim().toLowerCase()))
+              (!hasId && p.category && childNames.has(p.category.trim().toLowerCase())) ||
+              (!hasId && p.categories?.name && childNames.has(p.categories.name.trim().toLowerCase()))
           } else {
             // Leaf category or single category
             matchCategory = doesProductMatchCategory(p, selectedCat)

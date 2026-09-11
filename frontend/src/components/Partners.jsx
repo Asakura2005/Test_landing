@@ -39,14 +39,14 @@ export default function Partners() {
                 <img
                   src={partner.logo}
                   alt={partner.name}
-                  className="max-h-10 max-w-[100px] object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                  className="max-h-10 max-w-[100px] object-contain filter grayscale-0 sm:grayscale sm:group-hover:grayscale-0 transition-all duration-300"
                   loading="lazy"
                 />
               </div>
               <span className="text-[11px] font-heading font-bold text-haq-ink uppercase line-clamp-1">
                 {partner.name}
               </span>
-              <span className="text-[9px] font-sans text-haq-text-secondary mt-0.5 line-clamp-1">
+              <span className="text-[11px] sm:text-[9px] font-sans text-haq-text-secondary mt-0.5 line-clamp-1">
                 {partner.note}
               </span>
             </div>

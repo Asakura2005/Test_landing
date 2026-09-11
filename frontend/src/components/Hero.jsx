@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
@@ -15,6 +15,38 @@ export default function Hero() {
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const touchStartX = useRef(0)
+  const touchDeltaX = useRef(0)
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.touches[0].clientX
+    touchDeltaX.current = 0
+    setIsPaused(true)
+  }, [])
+
+  const handleTouchMove = useCallback((e) => {
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current
+  }, [])
+
+  const handleTouchEnd = useCallback(() => {
+    const threshold = 50
+    if (touchDeltaX.current > threshold) {
+      // Swiped right → previous slide
+      setCurrent((curr) => {
+        setPrev(curr)
+        return (curr - 1 + SLIDES.length) % SLIDES.length
+      })
+    } else if (touchDeltaX.current < -threshold) {
+      // Swiped left → next slide
+      setCurrent((curr) => {
+        setPrev(curr)
+        return (curr + 1) % SLIDES.length
+      })
+    }
+    // Resume autoplay after brief delay
+    setTimeout(() => setIsPaused(false), 3000)
+  }, [])
 
   const goTo = useCallback((nextIdx, e) => {
     if (e) {
@@ -66,6 +98,9 @@ export default function Hero() {
       aria-label="HAQ FOOD Hero Banner"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       className="relative w-full h-[100dvh] bg-black overflow-hidden select-none"
     >
       {/* Seamless Direct Cross-Fade Slides (No background flash) */}
@@ -107,7 +142,7 @@ export default function Hero() {
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
         aria-label="Previous banner"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -117,7 +152,7 @@ export default function Hero() {
       <button
         type="button"
         onClick={next}
-        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
         aria-label="Next banner"
       >
         <ChevronRight className="w-6 h-6" />

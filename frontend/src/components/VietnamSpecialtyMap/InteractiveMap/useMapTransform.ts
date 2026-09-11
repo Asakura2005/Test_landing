@@ -387,12 +387,20 @@ export function useMapTransform({
       const touches = e.touches;
 
       if (touches.length === 1 && touchSessionRef.current.type === "single") {
-        // Single finger pan: Allow native touch pan
+        // Single finger: Only pan map if zoomed in, otherwise allow native page scroll
+        const currentScale = transformRef.current.scale;
+        if (currentScale <= 1.05) {
+          // Not zoomed in — let the browser handle native scroll
+          touchSessionRef.current = null;
+          setIsDragging(false);
+          return;
+        }
         const t = touches[0];
         const session = touchSessionRef.current;
         const deltaX = (t.clientX - session.startX) / session.scaleRatio;
         const deltaY = (t.clientY - session.startY) / session.scaleRatio;
 
+        if (e.cancelable) e.preventDefault();
         const next = clampBounds(
           transformRef.current.scale,
           session.startTx + deltaX,

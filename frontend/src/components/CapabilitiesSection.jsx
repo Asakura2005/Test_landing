@@ -30,7 +30,7 @@ export default function CapabilitiesSection() {
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15]/80 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 flex flex-col sm:flex-row items-start sm:items-end gap-2 text-white">
                 <div>
                   <span className="font-heading text-xs font-bold text-white uppercase tracking-wider">
                     QUY CHUẨN AN TOÀN QUỐC TẾ
@@ -46,16 +46,16 @@ export default function CapabilitiesSection() {
             </div>
 
             {/* Micro Stats Grid */}
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mt-4">
+              <div className="p-2.5 sm:p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-[#16A34A]">KHÉP KÍN</div>
                 <div className="text-[11px] font-heading font-medium text-haq-text-secondary uppercase mt-0.5">Dây chuyền tự động</div>
               </div>
-              <div className="p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
+              <div className="p-2.5 sm:p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-haq-ink">100%</div>
                 <div className="text-[11px] font-heading font-medium text-haq-text-secondary uppercase mt-0.5">Kiểm soát từng lô</div>
               </div>
-              <div className="p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
+              <div className="p-2.5 sm:p-4 rounded-2xl bg-haq-sage border border-haq-border text-center">
                 <div className="font-heading font-black text-lg sm:text-xl text-[#16A34A]">OEM/ODM</div>
                 <div className="text-[11px] font-heading font-medium text-haq-text-secondary uppercase mt-0.5">Đáp ứng đơn lớn</div>
               </div>

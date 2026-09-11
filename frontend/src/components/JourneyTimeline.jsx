@@ -65,7 +65,7 @@ export default function JourneyTimeline() {
         </div>
 
         {/* 5-Step Horizontal Timeline Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative">
           {MILESTONES.map((item, idx) => {
             const Icon = item.icon
             return (

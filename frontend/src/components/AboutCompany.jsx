@@ -41,12 +41,12 @@ export default function AboutCompany() {
             <h3 className="font-heading font-bold text-lg md:text-xl text-[#0F5132] mb-4">
               Chất lượng vượt niềm tin
             </h3>
-            <p className="text-haq-text-secondary leading-relaxed mb-8 text-justify text-sm sm:text-base font-normal">
+            <p className="text-haq-text-secondary leading-relaxed mb-8 text-left sm:text-justify text-sm sm:text-base font-normal">
               Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là bánh nướng và bánh tráng đạt chuẩn ISO – HACCP.
             </p>
 
             {/* Badges / Value Stats */}
-            <div className="grid grid-cols-3 gap-3 w-full mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full mb-8">
               <div className="p-3 bg-haq-sage/20 rounded-2xl border border-haq-border text-center">
                 <span className="block font-heading font-extrabold text-lg text-[#16A34A]">ISO 22000</span>
                 <span className="text-[11px] text-haq-text-secondary">Chuẩn Quốc Tế</span>
@@ -73,7 +73,7 @@ export default function AboutCompany() {
           </div>
 
           {/* Right Column: Image Composition */}
-          <div className="relative h-[380px] md:h-[500px] w-full mt-6 lg:mt-0 flex items-center justify-center">
+          <div className="relative h-[280px] sm:h-[380px] md:h-[500px] w-full mt-6 lg:mt-0 flex items-center justify-center">
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-[#16A34A]/10 rounded-full blur-3xl z-0"></div>
              
              <div className="relative z-10 w-full h-full rounded-3xl overflow-hidden shadow-2xl border border-haq-border">

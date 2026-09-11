@@ -22,7 +22,6 @@ import {
   Pencil
 } from 'lucide-react'
 import { uploadProductImage, deleteProductImage, getCategories, getProvinces } from '../../services/supabase'
-import { PRODUCT_IMAGE_MAP } from '../../data/productCategories'
 
 const DEFAULT_SHELF_LIFE_RECOMMENDATIONS = [
   '6 tháng',
@@ -101,6 +100,8 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   const [galleryFiles, setGalleryFiles] = useState([])
   const [galleryPreviews, setGalleryPreviews] = useState([])
   const [imagesToDelete, setImagesToDelete] = useState([])
+  const [newUploadAvatarIdx, setNewUploadAvatarIdx] = useState(null)
+  const [draggedImageIndex, setDraggedImageIndex] = useState(null)
 
   // Recommended Shelf Life State (Lưu localStorage, cho phép thêm, sửa, xoá)
   const [shelfLifeOptions, setShelfLifeOptions] = useState(() => {
@@ -310,12 +311,19 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     variants.forEach(v => {
       if (v.img && !list.includes(v.img)) list.push(v.img)
     })
-    if (formData.slug && PRODUCT_IMAGE_MAP[formData.slug]) {
-      const mapped = PRODUCT_IMAGE_MAP[formData.slug]
-      if (!list.includes(mapped)) list.push(mapped)
-    }
     return list
-  }, [formData.images, variants, formData.slug])
+  }, [formData.images, variants])
+
+  // Lọc chỉ hiển thị các danh mục đang hoạt động (kèm danh mục hiện tại của sản phẩm nếu đang sửa)
+  const activeCategories = useMemo(() => {
+    const selectedCat = categories.find(c => c.id === formData.category_id)
+    const selectedParentId = selectedCat?.parent_id
+    return categories.filter(c => 
+      c.is_active !== false || 
+      c.id === formData.category_id || 
+      (selectedParentId && c.id === selectedParentId)
+    )
+  }, [categories, formData.category_id])
 
   useEffect(() => {
     if (initialCategories && initialCategories.length > 0) {
@@ -355,8 +363,10 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         } catch (e) {}
       }
 
-      const resolvedCatId = product.category_id || (categories.find(c => c.name?.trim().toLowerCase() === product.category?.trim().toLowerCase())?.id) || ''
-      const resolvedCatName = product.category || (categories.find(c => c.id === resolvedCatId)?.name) || ''
+      // Do not override or scramble category_id if the product already has a valid category_id
+      const resolvedCatId = product.category_id || (categories.find(c => c.is_active !== false && c.name?.trim().toLowerCase() === product.category?.trim().toLowerCase())?.id) || ''
+      const matchedCat = categories.find(c => c.id === resolvedCatId)
+      const resolvedCatName = matchedCat ? matchedCat.name : (product.category || '')
 
       setFormData({
         slug: product.slug || '',
@@ -388,15 +398,35 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
           img: v.img || ''
         })))
       }
+      setGalleryFiles([])
+      setGalleryPreviews([])
+      setImagesToDelete([])
+      setNewUploadAvatarIdx(null)
+    } else {
+      setGalleryFiles([])
+      setGalleryPreviews([])
+      setImagesToDelete([])
+      setNewUploadAvatarIdx(null)
     }
-  }, [product, categories])
+  }, [product])
 
-  // Đảm bảo đồng bộ category_id nếu categories tải sau formData
+  // Đảm bảo đồng bộ category_id nếu categories tải sau formData (không ghi đè nếu đã có)
   useEffect(() => {
-    if (categories.length > 0 && !formData.category_id && formData.category) {
-      const match = categories.find(c => c.name?.trim().toLowerCase() === formData.category?.trim().toLowerCase())
+    if (formData.category_id) return
+    if (categories.length > 0 && formData.category) {
+      const match = categories.find(c => c.is_active !== false && c.name?.trim().toLowerCase() === formData.category?.trim().toLowerCase())
       if (match) {
-        setFormData(prev => ({ ...prev, category_id: match.id }))
+        setFormData(prev => prev.category_id ? prev : { ...prev, category_id: match.id, category: prev.category || match.name })
+      }
+    }
+  }, [categories, formData.category, formData.category_id])
+
+  // Đảm bảo đồng bộ tên category nếu có category_id nhưng chưa có tên hiển thị
+  useEffect(() => {
+    if (!formData.category && formData.category_id && categories.length > 0) {
+      const match = categories.find(c => c.id === formData.category_id)
+      if (match) {
+        setFormData(prev => prev.category ? prev : { ...prev, category: match.name })
       }
     }
   }, [categories, formData.category, formData.category_id])
@@ -488,6 +518,12 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     const newPreviews = [...galleryPreviews]
     newPreviews.splice(index, 1)
     setGalleryPreviews(newPreviews)
+
+    if (newUploadAvatarIdx === index) {
+      setNewUploadAvatarIdx(null)
+    } else if (newUploadAvatarIdx !== null && newUploadAvatarIdx > index) {
+      setNewUploadAvatarIdx(newUploadAvatarIdx - 1)
+    }
   }
 
   const removeExistingGalleryImage = (index) => {
@@ -498,10 +534,41 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
   }
 
   const setAsThumbnail = (index) => {
+    setNewUploadAvatarIdx(null)
     const newImages = [...formData.images]
     const [selected] = newImages.splice(index, 1)
     newImages.unshift(selected)
     setFormData({ ...formData, images: newImages })
+  }
+
+  const setNewPreviewAsThumbnail = (index) => {
+    setNewUploadAvatarIdx(index)
+  }
+
+  const moveImage = (fromIdx, toIdx) => {
+    if (toIdx < 0 || toIdx >= formData.images.length) return
+    setNewUploadAvatarIdx(null)
+    const newImages = [...formData.images]
+    const [moved] = newImages.splice(fromIdx, 1)
+    newImages.splice(toIdx, 0, moved)
+    setFormData({ ...formData, images: newImages })
+  }
+
+  const handleDragStart = (e, index) => {
+    setDraggedImageIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault()
+    if (draggedImageIndex === null || draggedImageIndex === targetIndex) return
+    moveImage(draggedImageIndex, targetIndex)
+    setDraggedImageIndex(null)
   }
 
   const handleSubmit = async (e) => {
@@ -536,7 +603,16 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         newlyUploadedUrls.push(newUrl)
       }
 
-      const finalImages = [...formData.images, ...newlyUploadedUrls]
+      let finalImages = [...formData.images]
+      if (newUploadAvatarIdx !== null && newlyUploadedUrls[newUploadAvatarIdx]) {
+        const avatarUrl = newlyUploadedUrls[newUploadAvatarIdx]
+        const remainingNewUrls = newlyUploadedUrls.filter((_, i) => i !== newUploadAvatarIdx)
+        finalImages = [avatarUrl, ...finalImages, ...remainingNewUrls]
+      } else if (finalImages.length === 0 && newlyUploadedUrls.length > 0) {
+        finalImages = [...newlyUploadedUrls]
+      } else {
+        finalImages = [...finalImages, ...newlyUploadedUrls]
+      }
       const cleanedHighlights = formData.highlights.filter(h => h && h.trim() !== '')
 
       const marketplaceObj = {
@@ -694,8 +770,8 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                     className="w-full px-4 py-2.5 rounded-xl border border-[#D8E5DA] bg-[#F4F8F4]/40 text-xs font-semibold focus:outline-none focus:border-[#0F5132]"
                   >
                     <option value="">-- Chọn Danh mục Phân Loại --</option>
-                    {categories.filter(c => !c.parent_id).map(parent => {
-                      const children = categories.filter(child => child.parent_id === parent.id)
+                    {activeCategories.filter(c => !c.parent_id).map(parent => {
+                      const children = activeCategories.filter(child => child.parent_id === parent.id)
                       if (children.length === 0) {
                         return (
                           <option key={parent.id} value={parent.id}>
@@ -712,9 +788,9 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
                         </optgroup>
                       )
                     })}
-                    {categories.filter(c => c.parent_id && !categories.some(p => p.id === c.parent_id)).length > 0 && (
+                    {activeCategories.filter(c => c.parent_id && !activeCategories.some(p => p.id === c.parent_id)).length > 0 && (
                       <optgroup label="Danh mục khác">
-                        {categories.filter(c => c.parent_id && !categories.some(p => p.id === c.parent_id)).map(orphan => (
+                        {activeCategories.filter(c => c.parent_id && !activeCategories.some(p => p.id === c.parent_id)).map(orphan => (
                           <option key={orphan.id} value={orphan.id}>{orphan.name}</option>
                         ))}
                       </optgroup>
@@ -1545,59 +1621,200 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
               </div>
 
               {/* Image list preview */}
-              <div className="space-y-2">
-                <div className="text-xs font-bold text-[#11261B]">Danh sách ảnh sản phẩm (Kéo hoặc bấm để chọn ảnh đại diện)</div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {formData.images.map((imgUrl, idx) => (
-                    <div key={idx} className="relative group rounded-2xl border border-[#D8E5DA] overflow-hidden bg-white aspect-square shadow-sm">
-                      <img src={imgUrl} alt={`Product ${idx}`} className="w-full h-full object-cover" />
-                      {idx === 0 && (
-                        <span className="absolute top-2 left-2 bg-[#0F5132] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md">
-                          Ảnh Đại Diện
-                        </span>
-                      )}
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        {idx !== 0 && (
-                          <button
-                            type="button"
-                            onClick={() => setAsThumbnail(idx)}
-                            className="p-2 bg-white text-[#0F5132] rounded-lg text-xs font-bold hover:bg-emerald-50"
-                            title="Đặt làm ảnh chính"
-                          >
-                            <Sparkles className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeExistingGalleryImage(idx)}
-                          className="p-2 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600"
-                          title="Xóa ảnh"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="text-xs font-bold text-[#11261B] flex items-center gap-1.5">
+                    <span>Danh sách ảnh sản phẩm ({formData.images.length + galleryPreviews.length} ảnh)</span>
+                    <span className="text-[11px] font-normal text-[#52665A]">(Bấm trực tiếp hoặc kéo thả để chọn ảnh đại diện)</span>
+                  </div>
+                  <div className="text-[11px] text-[#0F5132] font-semibold flex items-center gap-1 bg-[#F4F8F4] px-2.5 py-1 rounded-full border border-[#D8E5DA]">
+                    <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
+                    <span>Ảnh có huy hiệu xanh lá là Ảnh Đại Diện</span>
+                  </div>
+                </div>
 
-                  {galleryPreviews.map((previewUrl, idx) => (
-                    <div key={`new-${idx}`} className="relative group rounded-2xl border border-emerald-300 overflow-hidden bg-white aspect-square shadow-sm">
-                      <img src={previewUrl} alt={`New upload ${idx}`} className="w-full h-full object-cover" />
-                      <span className="absolute top-2 left-2 bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
-                        Ảnh Mới Tải
-                      </span>
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <button
-                          type="button"
-                          onClick={() => removeNewGalleryImage(idx)}
-                          className="p-2 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {/* Danh sách ảnh đã lưu trên Cloud */}
+                  {formData.images.map((imgUrl, idx) => {
+                    const isAvatar = idx === 0 && newUploadAvatarIdx === null
+                    return (
+                      <div
+                        key={imgUrl}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, idx)}
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop(e, idx)}
+                        onClick={() => {
+                          if (!isAvatar) setAsThumbnail(idx)
+                        }}
+                        className={`relative group rounded-2xl border-2 overflow-hidden bg-white aspect-square shadow-xs transition-all cursor-pointer ${
+                          isAvatar
+                            ? 'border-[#0F5132] ring-4 ring-[#0F5132]/20 shadow-md'
+                            : 'border-[#D8E5DA] hover:border-[#0F5132]/60 hover:shadow-md'
+                        }`}
+                        title={isAvatar ? 'Ảnh đại diện hiện tại của sản phẩm' : 'Nhấp để đặt ảnh này làm ảnh đại diện'}
+                      >
+                        <img src={imgUrl} alt={`Product ${idx}`} className="w-full h-full object-cover" />
+
+                        {/* Badges */}
+                        {isAvatar ? (
+                          <span className="absolute top-2 left-2 bg-[#0F5132] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1 z-10">
+                            <Sparkles className="w-2.5 h-2.5 text-amber-300 fill-amber-300" />
+                            Ảnh Đại Diện
+                          </span>
+                        ) : (
+                          <span className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[9px] font-semibold px-2 py-0.5 rounded-full z-10">
+                            Ảnh #{idx + 1}
+                          </span>
+                        )}
+
+                        {/* Action Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2.5 z-20">
+                          {/* Top: Delete */}
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeExistingGalleryImage(idx)
+                              }}
+                              className="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm transition-colors cursor-pointer"
+                              title="Xóa ảnh này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {/* Bottom: Select Avatar & Reorder */}
+                          <div className="space-y-1.5">
+                            {!isAvatar ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setAsThumbnail(idx)
+                                }}
+                                className="w-full py-1.5 px-2 bg-[#0F5132] hover:bg-[#16A34A] text-white text-[11px] font-bold rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                              >
+                                <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                                <span>Chọn làm ảnh đại diện</span>
+                              </button>
+                            ) : (
+                              <div className="w-full py-1 text-center bg-white/95 text-[#0F5132] text-[11px] font-bold rounded-lg shadow-xs flex items-center justify-center gap-1">
+                                <Check className="w-3.5 h-3.5 text-[#0F5132]" />
+                                <span>Đang là ảnh đại diện</span>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/20">
+                              <button
+                                type="button"
+                                disabled={idx === 0}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  moveImage(idx, idx - 1)
+                                }}
+                                className="px-2 py-0.5 bg-white/20 hover:bg-white/40 disabled:opacity-25 text-white text-[10px] font-bold rounded transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                title="Đưa lên trước"
+                              >
+                                ← Trước
+                              </button>
+                              <span className="text-[10px] text-white/80 font-mono">Vị trí {idx + 1}</span>
+                              <button
+                                type="button"
+                                disabled={idx === formData.images.length - 1}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  moveImage(idx, idx + 1)
+                                }}
+                                className="px-2 py-0.5 bg-white/20 hover:bg-white/40 disabled:opacity-25 text-white text-[10px] font-bold rounded transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                title="Đưa ra sau"
+                              >
+                                Sau →
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
+
+                  {/* Danh sách ảnh mới tải từ thiết bị (chờ lưu) */}
+                  {galleryPreviews.map((previewUrl, idx) => {
+                    const isAvatar = (newUploadAvatarIdx === idx) || (formData.images.length === 0 && (newUploadAvatarIdx === null ? idx === 0 : newUploadAvatarIdx === idx))
+                    return (
+                      <div
+                        key={`new-${idx}`}
+                        onClick={() => {
+                          if (!isAvatar) setNewUploadAvatarIdx(idx)
+                        }}
+                        className={`relative group rounded-2xl border-2 overflow-hidden bg-white aspect-square shadow-xs transition-all cursor-pointer ${
+                          isAvatar
+                            ? 'border-[#0F5132] ring-4 ring-[#0F5132]/20 shadow-md'
+                            : 'border-amber-400 hover:border-[#0F5132]/60 hover:shadow-md'
+                        }`}
+                        title={isAvatar ? 'Ảnh đại diện được chọn (Mới tải)' : 'Nhấp để chọn làm ảnh đại diện'}
+                      >
+                        <img src={previewUrl} alt={`New upload ${idx}`} className="w-full h-full object-cover" />
+
+                        {/* Badges */}
+                        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+                          <span className="bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                            Ảnh Mới Tải
+                          </span>
+                          {isAvatar && (
+                            <span className="bg-[#0F5132] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                              <Sparkles className="w-2.5 h-2.5 text-amber-300 fill-amber-300" />
+                              Ảnh Đại Diện
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Action Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2.5 z-20">
+                          {/* Top: Delete */}
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeNewGalleryImage(idx)
+                              }}
+                              className="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-sm transition-colors cursor-pointer"
+                              title="Hủy ảnh này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {/* Bottom: Select as avatar */}
+                          <div>
+                            {!isAvatar ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setNewUploadAvatarIdx(idx)
+                                }}
+                                className="w-full py-1.5 px-2 bg-[#0F5132] hover:bg-[#16A34A] text-white text-[11px] font-bold rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                              >
+                                <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
+                                <span>Chọn làm ảnh đại diện</span>
+                              </button>
+                            ) : (
+                              <div className="w-full py-1 text-center bg-white/95 text-[#0F5132] text-[11px] font-bold rounded-lg shadow-xs flex items-center justify-center gap-1">
+                                <Check className="w-3.5 h-3.5 text-[#0F5132]" />
+                                <span>Đang là ảnh đại diện</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
+
             </div>
           )}
 

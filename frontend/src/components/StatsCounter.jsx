@@ -78,11 +78,11 @@ export default function StatsCounter() {
   ]
 
   return (
-    <section className="py-20 sm:py-28 bg-[#FAFAF8] border-t border-haq-border font-sans">
+    <section className="py-14 sm:py-20 lg:py-28 bg-[#FAFAF8] border-t border-haq-border font-sans">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         <div ref={ref} className="reveal">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-14 gap-6">
             <div>
               <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-[0.25em] block mb-3">
                 {isEn ? 'OPERATIONAL CAPABILITY · SOCIAL PROOF' : 'QUY MÔ VẬN HÀNH · NĂNG LỰC DOANH NGHIỆP'}
@@ -102,7 +102,7 @@ export default function StatsCounter() {
             {STATS.map((stat, i) => (
               <div
                 key={i}
-                className="bg-white p-8 sm:p-10 flex flex-col justify-between hover:bg-[#FAFAF8] transition-colors"
+                className="bg-white p-5 sm:p-8 lg:p-10 flex flex-col justify-between hover:bg-[#FAFAF8] transition-colors"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">

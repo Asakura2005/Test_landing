@@ -60,18 +60,6 @@ export default function CategoryManager({ products = [] }) {
       .replace(/^-+|-+$/g, '')
   }
 
-  const ensureUniqueSlug = (baseSlug, currentId = null) => {
-    let cleanSlug = generateSlug(baseSlug) || 'danh-muc'
-    let uniqueSlug = cleanSlug
-    let counter = 1
-    
-    while (categories.some(c => c.slug === uniqueSlug && c.id !== currentId)) {
-      uniqueSlug = `${cleanSlug}-${counter}`
-      counter++
-    }
-    return uniqueSlug
-  }
-
   const handleNameChange = (e) => {
     const name = e.target.value
     setFormData(prev => ({
@@ -139,13 +127,40 @@ export default function CategoryManager({ products = [] }) {
           alert("Một danh mục không thể chọn chính nó làm danh mục cha!")
           return
         }
+        if (isEditing && categories.some(c => c.parent_id === isEditing)) {
+          alert("Danh mục này hiện đang có các mục nhỏ trực thuộc. Bạn không thể chuyển nó thành mục nhỏ!")
+          return
+        }
+      }
+
+      const trimmedName = formData.name.trim()
+
+      // Kiểm tra trùng tên danh mục (toàn cục hoặc cùng danh mục cha)
+      const duplicateName = categories.find(c => 
+        c.id !== isEditing && 
+        c.name && c.name.trim().toLowerCase() === trimmedName.toLowerCase()
+      )
+      if (duplicateName) {
+        const parentName = categories.find(p => p.id === duplicateName.parent_id)?.name
+        const locationText = parentName ? `danh mục cha "${parentName}"` : 'danh mục lớn'
+        alert(`Tên danh mục "${trimmedName}" đã tồn tại trong hệ thống (thuộc ${locationText}). Vui lòng chọn tên khác để tránh trùng lặp!`)
+        return
+      }
+
+      const finalSlug = generateSlug(formData.slug || trimmedName) || 'danh-muc'
+      const duplicateSlug = categories.find(c => 
+        c.id !== isEditing && 
+        c.slug && c.slug.toLowerCase() === finalSlug.toLowerCase()
+      )
+      if (duplicateSlug) {
+        alert(`Đường dẫn slug "${finalSlug}" đã được sử dụng bởi danh mục "${duplicateSlug.name}". Vui lòng chọn đường dẫn khác!`)
+        return
       }
 
       setIsSaving(true)
-      const finalSlug = ensureUniqueSlug(formData.slug || formData.name, isEditing)
 
       const payload = {
-        name: formData.name.trim(),
+        name: trimmedName,
         slug: finalSlug,
         sort_order: Number(formData.sort_order) || 0,
         is_active: formData.is_active,
@@ -181,7 +196,11 @@ export default function CategoryManager({ products = [] }) {
       }
     }
 
-    const productsInCat = products.filter(p => p.category_id === id || p.category === name)
+    const productsInCat = products.filter(p => {
+      const pCatId = p.category_id || p.categories?.id
+      if (pCatId) return pCatId === id
+      return Boolean(p.category && name && p.category.trim().toLowerCase() === name.trim().toLowerCase())
+    })
     if (productsInCat.length > 0) {
       alert(`Danh mục "${name}" đang có ${productsInCat.length} sản phẩm liên kết.\n\nVui lòng chuyển sản phẩm sang danh mục khác hoặc TẮT TRẠNG THÁI (Ngừng hiển thị) thay vì xóa.`)
       return
@@ -268,7 +287,11 @@ export default function CategoryManager({ products = [] }) {
 
   // Count total products in category
   const getProductCountForCat = (catId, catName) => {
-    return products.filter(p => p.category_id === catId || p.category === catName).length
+    return products.filter(p => {
+      const pCatId = p.category_id || p.categories?.id
+      if (pCatId) return pCatId === catId
+      return Boolean(p.category && catName && p.category.trim().toLowerCase() === catName.trim().toLowerCase())
+    }).length
   }
 
   const getProductCountForParent = (parent) => {

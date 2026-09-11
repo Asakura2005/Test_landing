@@ -5,7 +5,6 @@ import { getProducts } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
-import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 
 export default function SearchOverlay({ isOpen, onClose }) {
   const { t, language } = useLanguage()
@@ -77,11 +76,11 @@ export default function SearchOverlay({ isOpen, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Tìm kiếm sản phẩm HAQ FOOD"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 sm:px-6 bg-black/60 backdrop-blur-sm transition-opacity font-sans"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/60 backdrop-blur-sm transition-opacity font-sans"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-haq-border overflow-hidden"
+        className="w-full max-w-2xl bg-white rounded-none sm:rounded-2xl md:rounded-3xl shadow-2xl border border-haq-border overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
@@ -106,14 +105,15 @@ export default function SearchOverlay({ isOpen, onClose }) {
           )}
           <button
             onClick={onClose}
-            className="px-3 py-1.5 rounded-full bg-haq-sage/40 hover:bg-[#16A34A] hover:text-white text-xs font-heading font-bold uppercase text-haq-green-dark transition-colors cursor-pointer"
+            className="min-w-10 min-h-10 flex items-center justify-center px-3 py-1.5 rounded-full bg-haq-sage/40 hover:bg-[#16A34A] hover:text-white text-xs font-heading font-bold uppercase text-haq-green-dark transition-colors cursor-pointer"
           >
-            ESC
+            <X className="w-5 h-5 md:hidden" />
+            <span className="hidden md:inline">ESC</span>
           </button>
         </div>
 
         {/* Search Results / Suggestions */}
-        <div className="max-h-[60vh] overflow-y-auto p-6">
+        <div className="max-h-[40vh] md:max-h-[60vh] overflow-y-auto p-4 sm:p-6">
           {query.trim() ? (
             <div>
               <div className="text-xs font-heading font-bold tracking-wider text-haq-text-secondary uppercase mb-3">
@@ -123,7 +123,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
                 <div className="divide-y divide-haq-border">
                   {results.map((item) => {
                     const locItem = getLocalizedProduct(item, language)
-                    const itemImg = item.image_url || locItem.images?.[0] || locItem.variants?.[0]?.img || PRODUCT_IMAGE_MAP[locItem.slug] || ''
+                    const itemImg = item.image_url || locItem.images?.[0] || locItem.variants?.[0]?.img || locItem.image || ''
                     return (
                       <div
                         key={item.id}

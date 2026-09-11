@@ -642,7 +642,7 @@ export default function StickyNav() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-haq-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg"
+            className={`p-2 ${isTransparent ? 'text-white' : 'text-haq-ink'} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-lg`}
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
             aria-expanded={mobileOpen}
           >

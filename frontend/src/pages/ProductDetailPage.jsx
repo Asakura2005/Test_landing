@@ -7,25 +7,16 @@ import Footer from '../components/Footer'
 import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedCategory } from '../utils/i18nData'
-import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl, getContactUrl } from '../utils/routeI18n'
 
 /**
  * Trợ giúp giải quyết đường dẫn ảnh sản phẩm / variant an toàn
- * Sửa triệt để các đường dẫn thô chưa bundle (/src/assets/...) từ database
  */
-function resolveSafeProductImage(imgUrl, slug) {
+function resolveSafeProductImage(imgUrl) {
   if (imgUrl && typeof imgUrl === 'string') {
-    if (imgUrl.startsWith('http') || imgUrl.startsWith('data:') || imgUrl.startsWith('blob:')) {
-      return imgUrl
-    }
-    // Chỉ fallback sang PRODUCT_IMAGE_MAP nếu chuỗi ảnh là đường dẫn thô chưa bundle từ DB
-    if (imgUrl.startsWith('/src/assets/') || imgUrl.startsWith('src/assets/')) {
-      return (slug && PRODUCT_IMAGE_MAP[slug]) || imgUrl
-    }
     return imgUrl
   }
-  return (slug && PRODUCT_IMAGE_MAP[slug]) || ''
+  return ''
 }
 
 export default function ProductDetailPage() {
@@ -68,9 +59,10 @@ export default function ProductDetailPage() {
 
           // Khởi tạo ảnh active an toàn
           const initialImg = 
-            resolveSafeProductImage(data.variants?.[0]?.img, data.slug) ||
-            resolveSafeProductImage(data.images?.[0], data.slug) ||
-            PRODUCT_IMAGE_MAP[data.slug] || ''
+            resolveSafeProductImage(data.variants?.[0]?.img) ||
+            resolveSafeProductImage(data.images?.[0]) ||
+            resolveSafeProductImage(data.image_url) ||
+            resolveSafeProductImage(data.image) || ''
           setActiveImage(initialImg)
 
           // Lấy danh sách sản phẩm tương tự (tối đa 4 sản phẩm)
@@ -138,9 +130,10 @@ export default function ProductDetailPage() {
     setSelectedVariantIndex(idx)
     const targetVariant = localizedProduct?.variants?.[idx]
     const targetImg = 
-      resolveSafeProductImage(targetVariant?.img, localizedProduct?.slug) ||
-      resolveSafeProductImage(localizedProduct?.images?.[0], localizedProduct?.slug) ||
-      PRODUCT_IMAGE_MAP[localizedProduct?.slug]
+      resolveSafeProductImage(targetVariant?.img) ||
+      resolveSafeProductImage(localizedProduct?.images?.[0]) ||
+      resolveSafeProductImage(localizedProduct?.image_url) ||
+      resolveSafeProductImage(localizedProduct?.image) || ''
     if (targetImg) {
       setActiveImage(targetImg)
     }
@@ -173,29 +166,35 @@ export default function ProductDetailPage() {
     return Boolean(marketplaceLinks.shopee || marketplaceLinks.lazada || marketplaceLinks.tiktok || marketplaceLinks.facebook)
   }, [marketplaceLinks])
 
-  // Combined gallery images (product images + variant images + fallback)
+  // Combined gallery images (product images + variant images)
   const galleryImages = useMemo(() => {
     if (!localizedProduct) return []
     const list = []
-    const baseFallback = PRODUCT_IMAGE_MAP[localizedProduct.slug]
-    if (baseFallback) list.push(baseFallback)
 
     if (Array.isArray(localizedProduct.images)) {
       for (const raw of localizedProduct.images) {
-        const safe = resolveSafeProductImage(raw, localizedProduct.slug)
+        const safe = resolveSafeProductImage(raw)
         if (safe && !list.includes(safe)) list.push(safe)
       }
     }
     if (Array.isArray(localizedProduct.variants)) {
       for (const v of localizedProduct.variants) {
-        const safe = resolveSafeProductImage(v.img, localizedProduct.slug)
+        const safe = resolveSafeProductImage(v.img)
         if (safe && !list.includes(safe)) list.push(safe)
       }
     }
-    return list.length > 0 ? list : (baseFallback ? [baseFallback] : [])
+    if (localizedProduct.image_url) {
+      const safe = resolveSafeProductImage(localizedProduct.image_url)
+      if (safe && !list.includes(safe)) list.push(safe)
+    }
+    if (localizedProduct.image) {
+      const safe = resolveSafeProductImage(localizedProduct.image)
+      if (safe && !list.includes(safe)) list.push(safe)
+    }
+    return list
   }, [localizedProduct])
 
-  const currentDisplayImage = activeImage || galleryImages[0] || (localizedProduct ? PRODUCT_IMAGE_MAP[localizedProduct.slug] : '') || ''
+  const currentDisplayImage = activeImage || galleryImages[0] || resolveSafeProductImage(localizedProduct?.image_url) || resolveSafeProductImage(localizedProduct?.image) || ''
 
   // Trạng thái đang tải: Hiển thị khung Skeleton sang trọng trên nền haq-cream, không giật màn hình
   if (isLoading) {
@@ -255,7 +254,7 @@ export default function ProductDetailPage() {
       <StickyNav />
       {/* Breadcrumbs */}
       <div className="bg-white/90 border-b border-haq-border">
-        <div className="max-w-site mx-auto px-6 md:px-12 py-3.5 flex items-center gap-2 text-xs sm:text-sm text-haq-text-secondary">
+        <div className="max-w-site mx-auto px-6 md:px-12 py-3.5 flex items-center gap-2 text-xs sm:text-sm text-haq-text-secondary overflow-x-auto whitespace-nowrap">
           <Link to={getHomeUrl(language)} className="hover:text-haq-green-dark flex items-center gap-1">
             <Home className="w-4 h-4"/> {t('product_detail.breadcrumb_home', 'Trang chủ')}
           </Link>
@@ -683,9 +682,9 @@ export default function ProductDetailPage() {
               <div className="w-12 h-1 bg-[#16A34A] mx-auto rounded-full"></div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
               {localizedRecommended.map(p => {
-                const recImg = resolveSafeProductImage(p.images?.[0] || p.variants?.[0]?.img, p.slug) || PRODUCT_IMAGE_MAP[p.slug] || ''
+                const recImg = resolveSafeProductImage(p.images?.[0] || p.variants?.[0]?.img || p.image_url || p.image)
                 return (
                   <Link to={getProductDetailUrl(p.slug || p.id, language)} key={p.id} className="bg-white group overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 relative border border-haq-border hover:border-[#16A34A] flex flex-col h-full rounded-2xl">
                     {p.tag && (
@@ -699,13 +698,6 @@ export default function ProductDetailPage() {
                         <img 
                           src={recImg} 
                           alt={p.name} 
-                          onError={(e) => {
-                            e.currentTarget.onerror = null
-                            const fallback = PRODUCT_IMAGE_MAP[p.slug]
-                            if (fallback && e.currentTarget.src !== fallback) {
-                              e.currentTarget.src = fallback
-                            }
-                          }}
                           className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" 
                         />
                       ) : (

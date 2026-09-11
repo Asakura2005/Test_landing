@@ -8,11 +8,11 @@ export default function WhyChooseUs() {
     <section
       id="hop-tac"
       aria-label="Nền tảng hợp tác B2B & Gia công OEM / ODM"
-      className="relative bg-white py-20 sm:py-28 border-b border-haq-border overflow-hidden font-sans"
+      className="relative bg-white py-14 sm:py-20 lg:py-28 border-b border-haq-border overflow-hidden font-sans"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
@@ -32,7 +32,7 @@ export default function WhyChooseUs() {
           <div className="shrink-0">
             <Link
               to="/lien-he"
-              className="inline-flex items-center gap-2 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
+              className="w-full sm:w-auto text-center justify-center inline-flex items-center gap-2 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <span>TRAO ĐỔI VỚI HAQ FOOD →</span>
             </Link>

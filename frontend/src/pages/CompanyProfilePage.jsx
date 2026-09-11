@@ -262,7 +262,7 @@ export default function CompanyProfilePage() {
         <section
           data-profile-section
           data-section="vision-mission"
-          className="min-h-[calc(100vh-76px)] lg:h-[calc(100vh-76px)] relative overflow-hidden border-b border-[#0F5132]/10 flex flex-col justify-center py-6 lg:py-0 lg:overflow-hidden box-border"
+          className="min-h-[calc(100vh-76px)] lg:h-[calc(100vh-76px)] relative overflow-hidden border-b border-[#0F5132]/10 flex flex-col justify-center py-4 sm:py-6 lg:py-0 lg:overflow-hidden box-border"
         >
           {/* Background image — watercolor texture */}
           <img
@@ -342,7 +342,7 @@ export default function CompanyProfilePage() {
         <section
           data-profile-section
           data-section="core-values"
-          className="min-h-[calc(100vh-76px)] lg:h-[calc(100vh-76px)] bg-white border-b border-haq-border flex flex-col justify-start pt-5 sm:pt-7 lg:pt-8 pb-4 lg:pb-6 lg:overflow-hidden box-border"
+          className="min-h-[calc(100vh-76px)] lg:h-[calc(100vh-76px)] bg-white border-b border-haq-border flex flex-col justify-start pt-3 sm:pt-5 md:pt-7 lg:pt-8 pb-2 sm:pb-4 lg:pb-6 lg:overflow-hidden box-border"
         >
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full flex-1 flex flex-col">
             <Reveal>
@@ -390,7 +390,7 @@ export default function CompanyProfilePage() {
             </div>
 
             {/* Cột chữ (7 cột) với nền giấy thảo mộc xanh tự nhiên */}
-            <div className="order-1 lg:order-2 lg:col-span-7 relative overflow-hidden px-6 sm:px-10 lg:px-14 xl:px-20 py-8 lg:py-0 flex flex-col justify-center">
+            <div className="order-1 lg:order-2 lg:col-span-7 relative overflow-hidden px-6 sm:px-10 lg:px-14 xl:px-20 py-5 sm:py-8 lg:py-0 flex flex-col justify-center">
               {/* Background texture thảo mộc xanh */}
               <img
                 src={loiTheBgImg}
@@ -408,7 +408,7 @@ export default function CompanyProfilePage() {
                     <p className="text-xs sm:text-[13px] font-heading font-extrabold tracking-widest text-[#0B3B24] uppercase mb-1.5">
                       Tầm nhìn dài hạn
                     </p>
-                    <h2 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0C1E15] tracking-tight uppercase leading-tight mb-4 sm:mb-5">
+                    <h2 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0C1E15] tracking-tight uppercase leading-tight mb-3 sm:mb-5">
                       Cam kết & Định hướng
                     </h2>
                     <div className="space-y-2.5 sm:space-y-3">

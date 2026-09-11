@@ -108,7 +108,7 @@ export default function Certifications({ className = '' }) {
                 className="bg-white rounded-2xl border border-haq-border overflow-hidden hover:border-[#16A34A]/50 hover:shadow-lg transition-all duration-300 flex flex-col group"
               >
                 {/* ── Document Frame Preview (Aspect Ratio 3:4 cho giấy chứng nhận) ── */}
-                <div className="relative aspect-[3/4] bg-[#F8FAF8] border-b border-haq-border overflow-hidden flex items-center justify-center p-3">
+                <div className="relative aspect-[4/3] sm:aspect-[3/4] bg-[#F8FAF8] border-b border-haq-border overflow-hidden flex items-center justify-center p-3">
                   {c.image ? (
                     /* Khi đã có ảnh chứng nhận */
                     <div 
@@ -161,7 +161,7 @@ export default function Certifications({ className = '' }) {
 
                       {/* Bottom status watermark */}
                       <div className="text-center pt-2 border-t border-haq-border/60">
-                        <span className="text-[9px] font-mono text-haq-text-secondary uppercase">
+                        <span className="text-[11px] sm:text-[9px] font-mono text-haq-text-secondary uppercase">
                           {c.issuer}
                         </span>
                       </div>
@@ -222,7 +222,7 @@ export default function Certifications({ className = '' }) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-haq-border flex items-center justify-between bg-[#FAFAF8]">
+            <div className="px-6 py-4 border-b border-haq-border flex items-center justify-between gap-2 bg-[#FAFAF8]">
               <div>
                 <span className="text-[10px] font-heading font-bold text-[#16A34A] uppercase tracking-wider block">
                   {activeCert.tag} &middot; {activeCert.issuer}

@@ -290,3 +290,38 @@ html[lang="ko"] .font-heading {
     transform: none;
   }
 }
+
+/* ── Mobile-Safe Global Rules ────────────────────────── */
+
+/* Prevent embedded HTML content (tables, images, iframes) from breaking mobile layout */
+.prose img,
+.prose video {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.prose iframe {
+  max-width: 100%;
+}
+
+/* Reduce GPU-intensive blur effects on low-powered mobile devices */
+@media (max-width: 768px) {
+  .ambient-blob {
+    filter: blur(40px);
+  }
+}
+
+/* Scrollbar hiding utility for horizontal scroll tabs */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -36,11 +36,11 @@ export default function NewsSection() {
     <section
       id="tin-tuc"
       aria-label="Tin tức hoạt động HAQ FOOD"
-      className="relative bg-white py-20 sm:py-28 border-b border-haq-border overflow-hidden"
+      className="relative bg-white py-14 sm:py-20 lg:py-28 border-b border-haq-border overflow-hidden"
     >
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="font-heading text-xs font-bold tracking-wider text-[#16A34A] uppercase">
@@ -59,7 +59,7 @@ export default function NewsSection() {
           <div>
             <Link
               to="/tin-tuc"
-              className="inline-flex items-center gap-2 bg-white hover:bg-haq-sage text-haq-green-dark text-xs font-heading font-bold uppercase tracking-wider px-6 py-3 rounded-full transition-all border border-haq-border shadow-2xs"
+              className="w-full sm:w-auto text-center justify-center inline-flex items-center gap-2 bg-white hover:bg-haq-sage text-haq-green-dark text-xs font-heading font-bold uppercase tracking-wider px-6 py-3 rounded-full transition-all border border-haq-border shadow-2xs"
             >
               <span>XEM TẤT CẢ TIN TỨC</span>
               <ArrowRight className="w-4 h-4" />

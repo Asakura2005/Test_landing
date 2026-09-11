@@ -38,7 +38,7 @@ export default function BrandStorySection() {
               </div>
 
               {/* Verified Badges */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-haq-border">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-haq-border">
                 <div className="p-4 rounded-2xl bg-haq-sage border border-haq-border">
                   <div className="flex items-center gap-2 text-[#16A34A] font-heading font-bold text-xs uppercase mb-1">
                     <ShieldCheck className="w-4 h-4 text-[#16A34A]" />
@@ -82,7 +82,7 @@ export default function BrandStorySection() {
                   loading="lazy"
                 />
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-haq-border shadow-lg">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
                     <div>
                       <div className="text-xs font-heading font-bold text-haq-ink uppercase">
                         HỆ THỐNG DÂY CHUYỀN KHÉP KÍN

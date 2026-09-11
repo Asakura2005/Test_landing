@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { X, CheckCircle, Package, Calendar, Truck, ArrowRight } from 'lucide-react'
 import { useAnalytics } from '../hooks/useAnalytics'
-import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct } from '../utils/i18nData'
 
@@ -22,9 +21,10 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
       trackProductView(product)
       setSelectedVariantIndex(0)
       const safeInitImg = 
-        (product.variants && product.variants[0]?.img && !product.variants[0].img.includes('src/assets/') ? product.variants[0].img : null) ||
-        PRODUCT_IMAGE_MAP[product.slug] ||
-        (product.images && product.images[0] && !product.images[0].includes('src/assets/') ? product.images[0] : null) || ''
+        product.variants?.[0]?.img ||
+        product.images?.[0] ||
+        product.image_url ||
+        product.image || ''
       setActiveImage(safeInitImg)
     }
     return () => {
@@ -48,8 +48,11 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
         }
       }
     }
-    if (list.length === 0 && PRODUCT_IMAGE_MAP[product.slug]) {
-      list.push(PRODUCT_IMAGE_MAP[product.slug])
+    if (product.image_url && !list.includes(product.image_url)) {
+      list.push(product.image_url)
+    }
+    if (product.image && !list.includes(product.image)) {
+      list.push(product.image)
     }
     return list
   }, [product])
@@ -97,7 +100,7 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-12">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -110,13 +113,13 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 w-10 h-10 bg-haq-sage/40 hover:bg-[#16A34A] hover:text-white rounded-full flex items-center justify-center transition-colors text-haq-ink border border-haq-border cursor-pointer"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-10 h-10 bg-black/30 md:bg-haq-sage/40 backdrop-blur-sm hover:bg-[#16A34A] hover:text-white rounded-full flex items-center justify-center transition-colors text-white md:text-haq-ink border border-white/30 md:border-haq-border cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Left: Image Gallery */}
-        <div className="w-full md:w-2/5 lg:w-1/2 bg-white p-6 md:p-8 flex flex-col items-center justify-center relative min-h-[300px] md:min-h-0 border-b md:border-b-0 md:border-r border-haq-border">
+        <div className="w-full md:w-2/5 lg:w-1/2 bg-white p-4 md:p-8 flex flex-col items-center justify-center relative min-h-[200px] md:min-h-0 border-b md:border-b-0 md:border-r border-haq-border">
           {/* Tag */}
           {product.tag && (
             <div className="absolute top-4 left-4 z-20 bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-sm">
@@ -128,14 +131,7 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
             <img 
               src={activeImage} 
               alt={product.name} 
-              onError={(e) => {
-                e.currentTarget.onerror = null
-                const fallback = PRODUCT_IMAGE_MAP[product.slug]
-                if (fallback && e.currentTarget.src !== fallback) {
-                  e.currentTarget.src = fallback
-                }
-              }}
-              className="relative z-10 w-full max-h-[38vh] md:max-h-[50vh] object-contain drop-shadow-xl transition-all duration-200" 
+              className="relative z-10 w-full max-h-[28vh] md:max-h-[50vh] object-contain drop-shadow-xl transition-all duration-200" 
             />
           ) : (
             <div className="relative z-10 text-haq-text-secondary font-bold border-2 border-dashed border-haq-border p-8 rounded-xl flex items-center justify-center w-full h-48">
@@ -156,7 +152,7 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
                       const matchedIdx = product.variants.findIndex(v => v.img === img)
                       if (matchedIdx !== -1) {
                         setSelectedVariantIndex(matchedIdx)
-                      } else if (img === (product.images?.[0] || PRODUCT_IMAGE_MAP[product.slug])) {
+                      } else if (img === (product.images?.[0] || product.image_url || product.image)) {
                         const v0Img = product.variants[0]?.img
                         if (!v0Img || v0Img === img) {
                           setSelectedVariantIndex(0)
@@ -172,13 +168,6 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
                     src={img} 
                     alt={`thumb-${idx}`} 
                     className="w-full h-full object-cover" 
-                    onError={(e) => {
-                      e.currentTarget.onerror = null
-                      const fallback = PRODUCT_IMAGE_MAP[product.slug]
-                      if (fallback && e.currentTarget.src !== fallback) {
-                        e.currentTarget.src = fallback
-                      }
-                    }}
                   />
                 </button>
               ))}

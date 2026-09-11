@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { Sparkles, ShieldCheck, Flame, ArrowRight, CheckCircle2 } from 'lucide-react'
 
 import signatureImg from '../assets/categories/category_banh_trang.jpg'
-import packImg1 from '../assets/products/banh_trang_soi_sa_te_tom_100g.jpg'
-import packImg2 from '../assets/products/banh_trang_say_tom_50g.jpg'
-import packImg3 from '../assets/products/banh_trang_say_bo_50g.jpg'
+const packImg1 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg'
+const packImg2 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg'
+const packImg3 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg'
 
 export default function FeaturedProduct() {
   return (
@@ -50,22 +50,22 @@ export default function FeaturedProduct() {
             </div>
 
             {/* Packaging Mini Carousel / Thumbnails */}
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="bg-haq-sage rounded-2xl p-3 border border-haq-border flex items-center gap-3">
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-4">
+              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
                 <img src={packImg1} alt="Bánh tráng sợi sa tế" className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
                 <div className="text-xs font-heading leading-tight">
                   <strong className="block text-haq-ink font-bold">Sợi sa tế tôm</strong>
                   <span className="text-haq-text-secondary text-[11px]">Hũ 100g</span>
                 </div>
               </div>
-              <div className="bg-haq-sage rounded-2xl p-3 border border-haq-border flex items-center gap-3">
+              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
                 <img src={packImg2} alt="Sấy giòn vị tôm" className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
                 <div className="text-xs font-heading leading-tight">
                   <strong className="block text-haq-ink font-bold">Sấy giòn tôm</strong>
                   <span className="text-haq-text-secondary text-[11px]">Gói 50g</span>
                 </div>
               </div>
-              <div className="bg-haq-sage rounded-2xl p-3 border border-haq-border flex items-center gap-3">
+              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
                 <img src={packImg3} alt="Sấy giòn vị bò" className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
                 <div className="text-xs font-heading leading-tight">
                   <strong className="block text-haq-ink font-bold">Sấy giòn bò</strong>
@@ -115,17 +115,17 @@ export default function FeaturedProduct() {
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-4 flex items-center gap-4">
+            <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <Link
                 to="/san-pham?category=banh-trang"
-                className="inline-flex items-center gap-2 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
+                className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 bg-[#16A34A] hover:bg-[#13863d] text-white text-xs font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <span>XEM DÒNG BÁNH TRÁNG</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/lien-he"
-                className="inline-flex items-center gap-2 bg-haq-sage hover:bg-haq-soft text-haq-green-dark text-xs font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 border border-haq-border"
+                className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 bg-haq-sage hover:bg-haq-soft text-haq-green-dark text-xs font-heading font-bold uppercase tracking-wider px-6 py-3.5 rounded-full transition-all duration-200 border border-haq-border"
               >
                 <span>ĐẶT MẪU B2B</span>
               </Link>

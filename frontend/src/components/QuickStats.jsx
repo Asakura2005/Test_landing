@@ -33,10 +33,10 @@ export default function QuickStats() {
   const pillars = (Array.isArray(rawPillars) && rawPillars.length > 0) ? rawPillars : DEFAULT_PILLARS
 
   return (
-    <section id="nang-luc" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/40 border-b border-haq-border flex items-center justify-center py-14 sm:py-18 lg:py-0">
+    <section id="nang-luc" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/40 border-b border-haq-border flex items-center justify-center py-10 sm:py-14 lg:py-0">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 w-full">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 lg:mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 sm:mb-10 lg:mb-12">
           <div>
             <Reveal>
               <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#16A34A] uppercase mb-2">
@@ -64,7 +64,7 @@ export default function QuickStats() {
             <Reveal key={pillar.num} delay={idx * 120}>
               <Link
                 to="/nang-luc"
-                className="group bg-white p-7 sm:p-8 lg:p-10 flex flex-col h-full hover:bg-haq-cream/30 transition-colors"
+                className="group bg-white p-5 sm:p-7 lg:p-8 flex flex-col h-full hover:bg-haq-cream/30 transition-colors"
               >
                 <div className="flex items-baseline justify-between mb-6">
                   <span className="font-heading font-extrabold text-4xl sm:text-5xl text-haq-red">
