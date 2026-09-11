@@ -12,7 +12,7 @@ import lotteLogo from '../assets/pictures_doitac/lotte.png'
 const RETAIL_PARTNERS = [
   { name: 'WinMart & WinMart+', logo: winmartLogo, note: 'Hệ thống siêu thị toàn quốc' },
   { name: 'GO! & Tops Market', logo: goLogo, note: 'Đại siêu thị & chuỗi bán lẻ' },
-  { name: 'Lotte Mart', logo: lotteLogo, note: 'Chuỗi đại siêu thị quốc tế' },
+  { name: 'Lotte Mart', logo: lotteLogo, note: 'Chuỗi đại siêu thị quốc tế', className: 'max-h-12 scale-110' },
   { name: 'Circle K', logo: circleKLogo, note: 'Chuỗi cửa hàng tiện lợi 24/7' },
   { name: 'GS25', logo: gs25Logo, note: 'Chuỗi tiện lợi chuẩn Hàn Quốc' },
   { name: 'K-Market', logo: kmartLogo, note: 'Hệ thống thực phẩm xuất nhập khẩu' },
@@ -41,7 +41,7 @@ export default function Partners() {
                 <img
                   src={partner.logo}
                   alt={partner.name}
-                  className="max-h-10 max-w-[100px] object-contain filter grayscale-0 sm:grayscale sm:group-hover:grayscale-0 transition-all duration-300"
+                  className={`${partner.className || 'max-h-10'} max-w-[100px] object-contain filter grayscale-0 sm:grayscale sm:group-hover:grayscale-0 transition-all duration-300`}
                   loading="lazy"
                 />
               </div>

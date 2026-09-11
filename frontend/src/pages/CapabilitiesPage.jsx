@@ -40,13 +40,13 @@ function Reveal({ children, delay = 0, className = '' }) {
 }
 
 const PARTNERS = [
-  { name: 'WinMart', logo: winmartLogo },
-  { name: 'GO!', logo: goLogo },
-  { name: 'Lotte Mart', logo: lotteLogo },
-  { name: 'Circle K', logo: circleKLogo },
-  { name: 'GS25', logo: gs25Logo },
-  { name: 'K-Market', logo: kmartLogo },
-  { name: 'Bách Hóa Xanh', logo: bachHoaXanhLogo },
+  { name: 'WinMart', logo: winmartLogo, className: 'max-h-10 sm:max-h-12' },
+  { name: 'GO!', logo: goLogo, className: 'max-h-11 sm:max-h-13' },
+  { name: 'Lotte Mart', logo: lotteLogo, className: 'max-h-14 sm:max-h-18 scale-115' },
+  { name: 'Circle K', logo: circleKLogo, className: 'max-h-10 sm:max-h-12' },
+  { name: 'GS25', logo: gs25Logo, className: 'max-h-10 sm:max-h-12' },
+  { name: 'K-Market', logo: kmartLogo, className: 'max-h-11 sm:max-h-13' },
+  { name: 'Bách Hóa Xanh', logo: bachHoaXanhLogo, className: 'max-h-9 sm:max-h-11' },
 ]
 
 /* ═══════════════════════════════════════════════════ */
@@ -349,7 +349,7 @@ export default function CapabilitiesPage() {
                       <img
                         src={p.logo}
                         alt={p.name}
-                        className="max-h-10 sm:max-h-13 max-w-full object-contain"
+                        className={`${p.className || 'max-h-10 sm:max-h-13'} max-w-full object-contain`}
                       />
                     </div>
                   ))}
