@@ -76,7 +76,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Tìm kiếm sản phẩm HAQ FOOD"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/60 backdrop-blur-sm transition-opacity font-sans"
+      className="fixed inset-0 z-[60] flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/60 backdrop-blur-sm transition-opacity font-sans"
       onClick={onClose}
     >
       <div
