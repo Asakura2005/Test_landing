@@ -243,8 +243,8 @@ export const translations = {
         cta_explore: 'KHÁM PHÁ SẢN PHẨM',
       },
       footer: {
-        sub: 'Vietnamese Food Manufacturer & Exporter',
-        desc: 'Nông sản sạch & Thực phẩm Việt Nam vươn tầm thế giới.',
+        sub: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
+        desc: 'Sản xuất & phân phối đồ ăn vặt đóng gói mang hương vị Việt Nam vươn tầm thế giới.',
         b2b_cta: 'LIÊN HỆ HỢP TÁC B2B',
         col1_title: 'VỀ HAQ FOOD',
         col1_link1: 'Giới thiệu Tổng quan Công ty',
@@ -602,8 +602,8 @@ export const translations = {
         cta_explore: 'EXPLORE PRODUCTS',
       },
       footer: {
-        sub: 'Vietnamese Food Manufacturer & Exporter',
-        desc: 'Bringing clean Vietnamese agriculture and food to the world.',
+        sub: 'HAQ HANOI JOINT STOCK COMPANY',
+        desc: 'Manufacturer & exporter of packaged snacks and authentic Vietnamese foods.',
         b2b_cta: 'B2B PARTNERSHIP INQUIRY',
         col1_title: 'ABOUT HAQ FOOD',
         col1_link1: 'Corporate Overview',
@@ -961,8 +961,8 @@ export const translations = {
         cta_explore: '제품 살펴보기',
       },
       footer: {
-        sub: '베트남 식품 제조 및 수출 전문 기업',
-        desc: '깨끗한 농산물과 베트남 식품의 글로벌 도약.',
+        sub: 'HAQ 하노이 주식회사',
+        desc: '베트남 전통 스낵 및 포장 가공식품 제조·수출 전문 기업.',
         b2b_cta: 'B2B 제휴 및 견적 문의',
         col1_title: 'HAQ FOOD 소개',
         col1_link1: '기업 개요',
