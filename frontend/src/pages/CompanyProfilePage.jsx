@@ -380,13 +380,26 @@ export default function CompanyProfilePage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 h-full items-stretch">
             {/* Cột ảnh (5 cột) */}
-            <div className="order-2 lg:order-1 lg:col-span-5 relative min-h-[260px] lg:min-h-0 h-full">
-              <img
-                src={b2bPartnershipImg}
-                alt="Hợp tác đối tác HAQ FOOD"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+            <div className="order-2 lg:order-1 lg:col-span-5 relative px-5 pb-6 sm:px-8 sm:pb-8 lg:p-0 flex items-center justify-center">
+              <Reveal delay={80} className="w-full h-full">
+                <div
+                  onClick={() => setSelectedImgIndex(1)}
+                  className="w-full h-[280px] sm:h-[340px] lg:h-full rounded-2xl sm:rounded-3xl lg:rounded-none overflow-hidden shadow-xl lg:shadow-none border border-haq-border lg:border-none relative group cursor-pointer"
+                  title="Nhấn để xem ảnh phóng to"
+                >
+                  <img
+                    src={b2bPartnershipImg}
+                    alt="Hợp tác đối tác HAQ FOOD"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/75 text-white text-xs px-3.5 py-1.5 rounded-full font-medium backdrop-blur-xs flex items-center gap-1.5 shadow-md">
+                      <span>⤢</span> Nhấn để xem ảnh lớn
+                    </span>
+                  </div>
+                </div>
+              </Reveal>
             </div>
 
             {/* Cột chữ (7 cột) với nền giấy thảo mộc xanh tự nhiên */}
