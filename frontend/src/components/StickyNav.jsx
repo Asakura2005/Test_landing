@@ -165,10 +165,13 @@ export default function StickyNav() {
     const raw = buildCategoryTree(dbCategories)
     return raw.map(root => {
       const locRoot = getLocalizedCategory(root, language)
-      if (locRoot.children && locRoot.children.length > 0) {
-        locRoot.children = locRoot.children.map(c => getLocalizedCategory(c, language))
+      const children = Array.isArray(locRoot?.children)
+        ? locRoot.children.map(c => getLocalizedCategory(c, language))
+        : []
+      return {
+        ...locRoot,
+        children,
       }
-      return locRoot
     })
   }, [dbCategories, language])
 
@@ -201,7 +204,7 @@ export default function StickyNav() {
         setActiveMenu(null)
         setMobileOpen(false)
         setIsSearchOpen(false)
-      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      } else if ((e.metaKey || e.ctrlKey) && e.key?.toLowerCase() === 'k') {
         e.preventDefault()
         setIsSearchOpen(prev => !prev)
       }

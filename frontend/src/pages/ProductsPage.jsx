@@ -273,7 +273,8 @@ export default function ProductsPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
                 {filteredProducts.map((prod, idx) => {
-                  const productImg = resolveProductImage(prod, selectedCat?.slug) || prod.images?.[0] || prod.image_url || prod.image || heroBanner1
+                  const currentCatSlug = activeCategoryNode?.slug || activeRootCategory?.slug || 'all'
+                  const productImg = resolveProductImage(prod, currentCatSlug) || prod.images?.[0] || prod.image_url || prod.image || heroBanner1
                   const detailSlug = prod.slug || prod.id
 
                   return (

@@ -313,16 +313,32 @@ export function getCurrentTrackingContext() {
     return { utm_source: 'direct', session_id: 'ssr_session' }
   }
 
-  const savedUTMs = JSON.parse(localStorage.getItem('haq_utm_data') || '{}')
-  const sessionUTMs = JSON.parse(sessionStorage.getItem('haq_current_session_utm') || '{}')
-  const sessionId = sessionStorage.getItem('haq_session_id') || ('sess_' + Date.now())
-  const lastProduct = JSON.parse(sessionStorage.getItem('haq_last_viewed_product') || 'null')
+  let savedUTMs = {}
+  let sessionUTMs = {}
+  let sessionId = 'sess_' + Date.now()
+  let lastProduct = null
+
+  try {
+    const rawSaved = localStorage.getItem('haq_utm_data')
+    if (rawSaved && rawSaved !== 'undefined') savedUTMs = JSON.parse(rawSaved)
+  } catch (e) {}
+
+  try {
+    const rawSession = sessionStorage.getItem('haq_current_session_utm')
+    if (rawSession && rawSession !== 'undefined') sessionUTMs = JSON.parse(rawSession)
+  } catch (e) {}
+
+  try {
+    sessionId = sessionStorage.getItem('haq_session_id') || ('sess_' + Date.now())
+    const rawLastProd = sessionStorage.getItem('haq_last_viewed_product')
+    if (rawLastProd && rawLastProd !== 'undefined') lastProduct = JSON.parse(rawLastProd)
+  } catch (e) {}
 
   return {
-    utm_source: sessionUTMs.utm_source || savedUTMs.utm_source || (document.referrer ? 'referral' : 'direct'),
-    utm_medium: sessionUTMs.utm_medium || savedUTMs.utm_medium || '',
-    utm_campaign: sessionUTMs.utm_campaign || savedUTMs.utm_campaign || '',
-    utm_content: sessionUTMs.utm_content || savedUTMs.utm_content || '',
+    utm_source: sessionUTMs?.utm_source || savedUTMs?.utm_source || (document.referrer ? 'referral' : 'direct'),
+    utm_medium: sessionUTMs?.utm_medium || savedUTMs?.utm_medium || '',
+    utm_campaign: sessionUTMs?.utm_campaign || savedUTMs?.utm_campaign || '',
+    utm_content: sessionUTMs?.utm_content || savedUTMs?.utm_content || '',
     session_id: sessionId,
     referrer: document.referrer || 'direct',
     last_product_id: lastProduct?.id || null,

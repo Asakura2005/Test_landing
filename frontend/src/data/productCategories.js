@@ -121,7 +121,9 @@ export const DEFAULT_DB_CATEGORIES = [
  * Xây dựng cây danh mục phân cấp (Parent - Children Tree) từ danh sách Database phẳng
  */
 export function buildCategoryTree(rawCategories = []) {
-  const cats = (rawCategories && rawCategories.length > 0) ? rawCategories : DEFAULT_DB_CATEGORIES
+  const cats = (Array.isArray(rawCategories) && rawCategories.length > 0)
+    ? rawCategories.filter((c) => c && typeof c === 'object')
+    : DEFAULT_DB_CATEGORIES
 
   // 1. Tạo node gốc "Tất cả sản phẩm"
   const allNode = {
@@ -131,39 +133,39 @@ export function buildCategoryTree(rawCategories = []) {
     slug: 'all',
     parent_id: null,
     children: [],
-    ...CATEGORY_VISUALS['all'],
+    ...(CATEGORY_VISUALS['all'] || {}),
   }
 
   // 2. Tìm các root categories (parent_id === null hoặc undefined)
   const rootCats = cats
-    .filter((c) => !c.parent_id)
+    .filter((c) => c && !c.parent_id)
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
     .map((root) => {
-      const visual = CATEGORY_VISUALS[root.slug] || CATEGORY_VISUALS['all']
+      const visual = (root.slug && CATEGORY_VISUALS[root.slug]) || CATEGORY_VISUALS['all'] || {}
       // Tìm các con của root
       const children = cats
-        .filter((c) => c.parent_id === root.id)
+        .filter((c) => c && c.parent_id === root.id)
         .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
         .map((child) => {
-          const childVisual = CATEGORY_VISUALS[child.slug] || visual
+          const childVisual = (child.slug && CATEGORY_VISUALS[child.slug]) || visual || {}
           return {
             ...child,
-            shortName: child.name,
+            shortName: child.name || '',
             image: childVisual.image,
-            desc: child.description || childVisual.desc,
-            featured: childVisual.featured,
-            featuredDesc: childVisual.featuredDesc,
+            desc: child.description || childVisual.desc || '',
+            featured: childVisual.featured || '',
+            featuredDesc: childVisual.featuredDesc || '',
           }
         })
 
       return {
         ...root,
-        shortName: root.name,
+        shortName: root.name || '',
         children,
         image: visual.image,
-        desc: root.description || visual.desc,
-        featured: visual.featured,
-        featuredDesc: visual.featuredDesc,
+        desc: root.description || visual.desc || '',
+        featured: visual.featured || '',
+        featuredDesc: visual.featuredDesc || '',
       }
     })
 
@@ -173,19 +175,20 @@ export function buildCategoryTree(rawCategories = []) {
 /**
  * Lấy tất cả category IDs (bao gồm cả con) thuộc về 1 slug hoặc ID
  */
-export function getCategoryAndChildrenIds(categoryTree, targetSlugOrId) {
-  if (!targetSlugOrId || targetSlugOrId === 'all') return null
+export function getCategoryAndChildrenIds(categoryTree = [], targetSlugOrId) {
+  if (!targetSlugOrId || targetSlugOrId === 'all' || !Array.isArray(categoryTree)) return null
 
   for (const root of categoryTree) {
+    if (!root) continue
     if (root.slug === targetSlugOrId || root.id === targetSlugOrId) {
       const ids = [root.id]
       if (root.children && root.children.length > 0) {
-        root.children.forEach((c) => ids.push(c.id))
+        root.children.forEach((c) => c?.id && ids.push(c.id))
       }
       return ids
     }
     if (root.children && root.children.length > 0) {
-      const child = root.children.find((c) => c.slug === targetSlugOrId || c.id === targetSlugOrId)
+      const child = root.children.find((c) => c && (c.slug === targetSlugOrId || c.id === targetSlugOrId))
       if (child) return [child.id]
     }
   }
@@ -196,18 +199,29 @@ export function getCategoryAndChildrenIds(categoryTree, targetSlugOrId) {
 /**
  * Tìm category node theo slug (tìm trong cả root và children)
  */
-export function findCategoryBySlug(categoryTree, slug) {
-  if (!slug || slug === 'all') return categoryTree[0]
+export function findCategoryBySlug(categoryTree = [], slug) {
+  const fallback = {
+    id: 'all',
+    name: 'Tất cả sản phẩm',
+    shortName: 'Tất cả',
+    slug: 'all',
+    children: [],
+    ...(CATEGORY_VISUALS['all'] || {}),
+  }
+
+  if (!Array.isArray(categoryTree) || categoryTree.length === 0) return fallback
+  if (!slug || slug === 'all') return categoryTree[0] || fallback
 
   for (const root of categoryTree) {
+    if (!root) continue
     if (root.slug === slug || root.id === slug) return root
     if (root.children && root.children.length > 0) {
-      const child = root.children.find((c) => c.slug === slug || c.id === slug)
+      const child = root.children.find((c) => c && (c.slug === slug || c.id === slug))
       if (child) return child
     }
   }
 
-  return categoryTree[0]
+  return categoryTree[0] || fallback
 }
 
 /**
