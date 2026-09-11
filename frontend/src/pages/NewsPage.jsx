@@ -142,9 +142,9 @@ export default function NewsPage({ defaultTab }) {
               <p className="text-[#52665A] text-xs leading-relaxed max-w-md mx-auto mb-6 font-light">
                 {activeTab === 'tuyen-dung'
                   ? (language === 'en'
-                    ? 'HAQ FOOD currently has no active recruitment postings. Interested candidates are welcome to send CV to hr@haqfood.com.'
+                    ? 'HAQ FOOD currently has no active recruitment postings. Interested candidates are welcome to send CV to tuyendung@haq.com.vn.'
                     : language === 'ko'
-                    ? '현재 채용 중인 직무가 없습니다. 입사를 희망하시는 분은 hr@haqfood.com으로 이력서를 보내주시기 바랍니다.'
+                    ? '현재 채용 중인 직무가 없습니다. 입사를 희망하시는 분은 tuyendung@haq.com.vn으로 이력서를 보내주시기 바랍니다.'
                     : 'Hiện tại HAQ FOOD chưa có đợt tuyển dụng mới. Quý ứng viên quan tâm có thể gửi CV về email phòng Nhân sự để được lưu hồ sơ ưu tiên.')
                   : (language === 'en'
                     ? 'Content is currently being updated. Please check back soon.'
@@ -154,11 +154,11 @@ export default function NewsPage({ defaultTab }) {
               </p>
               {activeTab === 'tuyen-dung' ? (
                 <a 
-                  href="mailto:hr@haqfood.com?subject=Hồ sơ ứng tuyển nhân sự HAQ FOOD"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F5132] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#14532D] transition-colors shadow-2xs"
+                  href="mailto:tuyendung@haq.com.vn?subject=Hồ sơ ứng tuyển nhân sự HAQ FOOD"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F5132] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#14532D] transition-colors shadow-2xs font-mono"
                 >
                   <Mail className="w-4 h-4" />
-                  <span>{language === 'en' ? 'Email CV to hr@haqfood.com' : language === 'ko' ? '이메일로 이력서 보내기' : 'Gửi CV về: hr@haqfood.com'}</span>
+                  <span>{language === 'en' ? 'Email CV to tuyendung@haq.com.vn' : language === 'ko' ? '이메일로 이력서 보내기: tuyendung@haq.com.vn' : 'Gửi CV về: tuyendung@haq.com.vn'}</span>
                 </a>
               ) : (
                 <Link to="/" className="inline-flex items-center gap-1.5 text-[#0F5132] text-xs font-bold uppercase tracking-wider hover:underline">

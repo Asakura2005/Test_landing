@@ -179,14 +179,30 @@ export default function Footer() {
                   </a>
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-white/70 shrink-0" />
-                <span>
-                  <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
-                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors">
-                    info@haq.com.vn
-                  </a>
-                </span>
+              <li className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <div>
+                    <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
+                    <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors font-semibold">
+                      info@haq.com.vn
+                    </a>
+                  </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-white/60 pt-0.5">
+                    <a href="mailto:sales01@haq.com.vn" className="hover:text-white transition-colors" title="Bán hàng & Báo giá">
+                      Sales: <span className="underline decoration-white/30">sales01@haq.com.vn</span>
+                    </a>
+                    <a href="mailto:cskh@haq.com.vn" className="hover:text-white transition-colors" title="Chăm sóc Khách hàng">
+                      CSKH: <span className="underline decoration-white/30">cskh@haq.com.vn</span>
+                    </a>
+                    <a href="mailto:support@haq.com.vn" className="hover:text-white transition-colors" title="Hỗ trợ Kỹ thuật">
+                      Support: <span className="underline decoration-white/30">support@haq.com.vn</span>
+                    </a>
+                    <a href="mailto:tuyendung@haq.com.vn" className="hover:text-white transition-colors" title="Tuyển dụng & HR">
+                      Tuyển dụng: <span className="underline decoration-white/30">tuyendung@haq.com.vn</span>
+                    </a>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

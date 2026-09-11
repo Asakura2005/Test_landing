@@ -17,10 +17,14 @@ import {
   Clock,
   ShieldCheck,
   Check,
+  Copy,
   MessageSquare,
   HelpCircle,
   ExternalLink,
   ChevronDown,
+  ShoppingBag,
+  Briefcase,
+  LifeBuoy,
 } from 'lucide-react'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
@@ -28,12 +32,80 @@ import FloatingContactBar from '../components/FloatingContactBar'
 import { submitLead } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 
+// Danh mục các hòm thư điện tử chính thức theo từng bộ phận chuyên trách tại HAQ FOOD
+const DEPARTMENT_EMAILS = [
+  {
+    id: 'sales',
+    email: 'sales01@haq.com.vn',
+    deptVi: 'Phòng Bán Hàng & Kinh Doanh B2B',
+    deptEn: 'B2B Sales & Commercial Dept',
+    deptKo: 'B2B 영업 및 유통 사업부',
+    roleVi: 'Báo giá sỉ, chính sách đại lý & NPP, đơn hàng xuất khẩu & hợp đồng gia công OEM/ODM.',
+    roleEn: 'Wholesale pricing, distributor & dealer policies, export trade, OEM/ODM contracts.',
+    roleKo: '도매 단가표, 대리점 공급 정책, 해외 수출 및 OEM/ODM 위탁 제조 문의.',
+    badgeVi: 'BÁO GIÁ & ĐẠI LÝ',
+    badgeEn: 'SALES & QUOTES',
+    badgeKo: '영업 & 견적',
+    icon: ShoppingBag,
+    iconBg: 'bg-emerald-50 text-[#16A34A] border border-emerald-200/80',
+    iconColor: 'text-[#16A34A]',
+  },
+  {
+    id: 'cskh',
+    email: 'cskh@haq.com.vn',
+    deptVi: 'Bộ Phận Chăm Sóc Khách Hàng',
+    deptEn: 'Customer Care & Service Dept',
+    deptKo: '고객 만족 및 서비스 센터',
+    roleVi: 'Tiếp nhận phản hồi chất lượng sản phẩm, chính sách hậu mãi & quyền lợi đối tác.',
+    roleEn: 'Product quality feedback, warranty/exchange policies, partner assistance.',
+    roleKo: '제품 품질 피드백, 교환 및 반품 정책, 고객 만족 서비스 지원.',
+    badgeVi: 'HẬU MÃI & CSKH',
+    badgeEn: 'CUSTOMER CARE',
+    badgeKo: '고객 만족',
+    icon: Headphones,
+    iconBg: 'bg-blue-50 text-[#0068FF] border border-blue-200/80',
+    iconColor: 'text-[#0068FF]',
+  },
+  {
+    id: 'support',
+    email: 'support@haq.com.vn',
+    deptVi: 'Hỗ Trợ Kỹ Thuật & Vận Đơn',
+    deptEn: 'Technical & Order Support',
+    deptKo: '기술 지원 및 물류 운영',
+    roleVi: 'Hỗ trợ tiến độ đơn hàng, chứng từ vận chuyển, thông số kỹ thuật & kiểm nghiệm ISO/HACCP.',
+    roleEn: 'Order tracking, shipping documents, technical specifications & ISO/HACCP records.',
+    roleKo: '주문 배송 추적, 통관 및 수출 서류, 제품 기술 규격 및 ISO/HACCP 인증 확인.',
+    badgeVi: 'HỖ TRỢ & KỸ THUẬT',
+    badgeEn: 'OPERATIONS & DOCS',
+    badgeKo: '기술 & 서류',
+    icon: LifeBuoy,
+    iconBg: 'bg-amber-50 text-amber-600 border border-amber-200/80',
+    iconColor: 'text-amber-600',
+  },
+  {
+    id: 'tuyendung',
+    email: 'tuyendung@haq.com.vn',
+    deptVi: 'Ban Nhân Sự & Tuyển Dụng',
+    deptEn: 'Human Resources & Recruitment',
+    deptKo: '인사 및 인재 채용팀',
+    roleVi: 'Tiếp nhận hồ sơ ứng viên (CV), lịch phỏng vấn & cơ hội nghề nghiệp tại HAQ FOOD.',
+    roleEn: 'CV submissions, interview schedules, career opportunities across factories & offices.',
+    roleKo: '입사 지원서(CV) 접수, 면접 일정 조율 및 HAQ FOOD 채용 공고 안내.',
+    badgeVi: 'TUYỂN DỤNG & CV',
+    badgeEn: 'CAREERS & HR',
+    badgeKo: '채용 & 인사',
+    icon: Briefcase,
+    iconBg: 'bg-purple-50 text-purple-600 border border-purple-200/80',
+    iconColor: 'text-purple-600',
+  },
+]
+
 const TOPIC_TEMPLATES = [
-  { id: 'partnership', aliases: ['daily', 'npp', 'partner', 'distribution'], icon: Handshake, hotline: '024 23 23 56 56 (Ext 102)' },
-  { id: 'products', aliases: ['mua-hang', 'don-hang', 'ban-buon', 'wholesale'], icon: Package, hotline: '024 23 23 56 56 (Ext 101)' },
-  { id: 'export', aliases: ['international', 'global', 'thi-truong-moi'], icon: Globe2, hotline: '024 23 23 56 56 (Ext 103)' },
-  { id: 'oem', aliases: ['private-label', 'giacong', 'san-xuat'], icon: Building2, hotline: '024 23 23 56 56 (Ext 104)' },
-  { id: 'general', aliases: ['support', 'contact', 'other', 'cham-soc'], icon: Headphones, hotline: '024 23 23 56 56' },
+  { id: 'partnership', aliases: ['daily', 'npp', 'partner', 'distribution'], icon: Handshake, hotline: '024 23 23 56 56 (Ext 102)', email: 'sales01@haq.com.vn' },
+  { id: 'products', aliases: ['mua-hang', 'don-hang', 'ban-buon', 'wholesale'], icon: Package, hotline: '024 23 23 56 56 (Ext 101)', email: 'sales01@haq.com.vn' },
+  { id: 'export', aliases: ['international', 'global', 'thi-truong-moi'], icon: Globe2, hotline: '024 23 23 56 56 (Ext 103)', email: 'sales01@haq.com.vn' },
+  { id: 'oem', aliases: ['private-label', 'giacong', 'san-xuat'], icon: Building2, hotline: '024 23 23 56 56 (Ext 104)', email: 'sales01@haq.com.vn' },
+  { id: 'general', aliases: ['support', 'contact', 'other', 'cham-soc'], icon: Headphones, hotline: '024 23 23 56 56', email: 'cskh@haq.com.vn' },
 ]
 
 /* ───────────────────────────────────────────────────────────────────
@@ -100,6 +172,7 @@ export default function ContactPage() {
       dept: language === 'en' ? 'Dealer & Distribution Development Dept' : language === 'ko' ? '대리점·유통 개발 부서' : 'Phòng Phát triển Đại lý & NPP',
       icon: Handshake,
       hotline: '024 23 23 56 56 (Ext 102)',
+      email: 'sales01@haq.com.vn',
       leadNeed: language === 'en' ? 'Distributor & Dealer Partnership' : language === 'ko' ? '대리점 및 유통 파트너십' : 'Hợp tác Đại lý & Nhà phân phối',
     },
     {
@@ -116,6 +189,7 @@ export default function ContactPage() {
       dept: language === 'en' ? 'Sales & Commercial Dept' : language === 'ko' ? '영업·유통 사업부' : 'Phòng Kinh doanh & Bán lẻ',
       icon: Package,
       hotline: '024 23 23 56 56 (Ext 101)',
+      email: 'sales01@haq.com.vn',
       leadNeed: language === 'en' ? 'Wholesale & Product Inquiries' : language === 'ko' ? '도매 구매 및 제품 문의' : 'Mua sỉ & Tìm hiểu sản phẩm',
     },
     {
@@ -132,6 +206,7 @@ export default function ContactPage() {
       dept: language === 'en' ? 'International Trade Dept' : language === 'ko' ? '해외무역사업팀' : 'Phòng Thương mại Quốc tế',
       icon: Globe2,
       hotline: '024 23 23 56 56 (Ext 103)',
+      email: 'sales01@haq.com.vn',
       leadNeed: language === 'en' ? 'Export Trade Partnership' : language === 'ko' ? '해외 수출 무역 협력' : 'Đối tác Thương mại Xuất khẩu',
     },
     {
@@ -148,6 +223,7 @@ export default function ContactPage() {
       dept: language === 'en' ? 'R&D & OEM Manufacturing Center' : language === 'ko' ? 'R&D 및 OEM 제조센터' : 'Trung tâm R&D & Gia công OEM',
       icon: Building2,
       hotline: '024 23 23 56 56 (Ext 104)',
+      email: 'sales01@haq.com.vn',
       leadNeed: language === 'en' ? 'Private Label & OEM Manufacturing' : language === 'ko' ? 'PB 및 OEM 위탁 제조' : 'Sản xuất Private Label & Gia công OEM',
     },
     {
@@ -164,6 +240,7 @@ export default function ContactPage() {
       dept: language === 'en' ? 'Customer Care Dept' : language === 'ko' ? '고객지원센터' : 'Bộ phận Chăm sóc Khách hàng',
       icon: Headphones,
       hotline: '024 23 23 56 56',
+      email: 'cskh@haq.com.vn',
       leadNeed: language === 'en' ? 'General Support & Contact' : language === 'ko' ? '일반 문의 및 고객 지원' : 'Liên hệ & Hỗ trợ chung',
     },
   ], [language])
@@ -183,6 +260,15 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [copiedEmail, setCopiedEmail] = useState(null)
+
+  const handleCopyEmail = (email) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(email)
+      setCopiedEmail(email)
+      setTimeout(() => setCopiedEmail(null), 2000)
+    }
+  }
 
   // Form states
   const [formData, setFormData] = useState({
@@ -375,10 +461,27 @@ export default function ContactPage() {
                         >
                           <div className="overflow-hidden">
                             <div className="px-4 sm:px-4.5 pb-4 sm:pb-4.5 pt-0">
-                              <div className="pt-3 border-t border-[#16A34A]/15">
+                              <div className="pt-3 border-t border-[#16A34A]/15 space-y-2">
                                 <p className="text-xs sm:text-sm text-haq-text-secondary leading-relaxed font-normal">
                                   {topic.desc}
                                 </p>
+                                <div className="flex items-center gap-3.5 pt-1 text-xs font-mono font-medium flex-wrap text-haq-text-secondary">
+                                  <span className="flex items-center gap-1.5">
+                                    <Phone className="w-3.5 h-3.5 text-[#16A34A]" />
+                                    <strong className="text-haq-ink font-bold">{topic.hotline}</strong>
+                                  </span>
+                                  {topic.email && (
+                                    <a
+                                      href={`mailto:${topic.email}`}
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="flex items-center gap-1.5 text-[#16A34A] hover:underline font-bold"
+                                      title={`Gửi thư đến ${topic.email}`}
+                                    >
+                                      <Mail className="w-3.5 h-3.5" />
+                                      <span>{topic.email}</span>
+                                    </a>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -650,6 +753,110 @@ export default function ContactPage() {
         </section>
 
         {/* =========================================================================
+            DEPARTMENTAL EMAIL DIRECTORY (HỆ THỐNG EMAIL CHUYÊN TRÁCH THEO PHÒNG BAN)
+            ========================================================================= */}
+        <section id="email-directory" className="py-14 sm:py-20 bg-haq-soft/40 border-t border-haq-border relative">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <Reveal direction="up">
+              <div className="max-w-3xl mb-8 sm:mb-12">
+                <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                  {language === 'en' ? 'DEPARTMENTAL EMAIL INBOXES' : language === 'ko' ? '부서별 직통 이메일' : 'HỆ THỐNG EMAIL THEO PHÒNG BAN'}
+                </span>
+                <h2 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl text-haq-ink uppercase mt-1.5 leading-snug">
+                  {language === 'en'
+                    ? 'OFFICIAL INBOXES BY DEPARTMENT'
+                    : language === 'ko'
+                    ? '담당 부서별 공식 이메일 접수처'
+                    : 'KẾT NỐI TRỰC TIẾP TỪNG BỘ PHẬN CHUYÊN TRÁCH'}
+                </h2>
+                <p className="text-xs sm:text-sm text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
+                  {language === 'en'
+                    ? 'Select the appropriate departmental inbox below for faster routing, priority review, and timely corporate feedback.'
+                    : language === 'ko'
+                    ? '문의 목적에 맞는 해당 부서의 이메일로 보내주시면 전담 인력이 신속하고 정확하게 검토 후 회신드립니다.'
+                    : 'Gửi thư trực tiếp đến hòm thư chuyên trách giúp yêu cầu của Quý khách được phân luồng xử lý nhanh chóng, ưu tiên phản hồi trong vòng 4 – 24 giờ.'}
+                </p>
+              </div>
+            </Reveal>
+
+            {/* 4 Departmental Email Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {DEPARTMENT_EMAILS.map((item, idx) => {
+                const Icon = item.icon
+                const isCopied = copiedEmail === item.email
+                const deptName = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
+                const roleDesc = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
+                const badgeText = language === 'en' ? item.badgeEn : language === 'ko' ? item.badgeKo : item.badgeVi
+
+                return (
+                  <Reveal key={item.id} delay={idx * 80} direction="up">
+                    <div className="bg-white rounded-3xl p-5 sm:p-6 border border-haq-border shadow-2xs hover:shadow-md hover:border-[#16A34A]/40 transition-all duration-300 flex flex-col justify-between h-full group hover:-translate-y-1">
+                      <div>
+                        {/* Card Header: Icon & Badge */}
+                        <div className="flex items-center justify-between gap-2 mb-4">
+                          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ${item.iconBg}`}>
+                            <Icon className={`w-5 h-5 ${item.iconColor}`} strokeWidth={2} />
+                          </div>
+                          <span className="text-[10px] font-heading font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-haq-sage/40 text-[#16A34A] border border-haq-border">
+                            {badgeText}
+                          </span>
+                        </div>
+
+                        {/* Title & Description */}
+                        <h3 className="font-heading font-extrabold text-sm sm:text-base text-haq-ink uppercase group-hover:text-[#16A34A] transition-colors leading-snug">
+                          {deptName}
+                        </h3>
+                        <p className="text-xs text-haq-text-secondary mt-2 leading-relaxed font-normal min-h-[44px]">
+                          {roleDesc}
+                        </p>
+                      </div>
+
+                      {/* Email Address & Actions */}
+                      <div className="mt-5 pt-3.5 border-t border-haq-border/80 space-y-2.5">
+                        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-haq-soft/80 border border-haq-border/70 group-hover:border-[#16A34A]/30 transition-colors">
+                          <a
+                            href={`mailto:${item.email}`}
+                            className="font-mono text-xs font-bold text-haq-ink hover:text-[#16A34A] transition-colors truncate"
+                            title={`Gửi thư đến ${item.email}`}
+                          >
+                            {item.email}
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyEmail(item.email)}
+                            className={`p-1.5 rounded-lg transition-all shrink-0 cursor-pointer flex items-center justify-center ${
+                              isCopied
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'hover:bg-white text-haq-text-secondary hover:text-haq-ink'
+                            }`}
+                            title={isCopied ? 'Đã sao chép' : 'Sao chép email'}
+                            aria-label={`Sao chép ${item.email}`}
+                          >
+                            {isCopied ? (
+                              <Check className="w-3.5 h-3.5" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        </div>
+
+                        <a
+                          href={`mailto:${item.email}`}
+                          className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#16A34A] hover:bg-[#13863d] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all shadow-2xs hover:shadow-xs active:scale-98"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                          <span>{language === 'en' ? 'Send Email' : language === 'ko' ? '메일 보내기' : 'Gửi thư trực tiếp'}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </Reveal>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
             DIRECT CHANNELS & HEADQUARTERS LOCATION MAP
             ========================================================================= */}
         <section className="py-16 sm:py-24 bg-white relative border-t border-haq-border">
@@ -717,21 +924,69 @@ export default function ContactPage() {
                           </div>
                         </div>
 
-                        {/* Email */}
-                        <div className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs hover:border-[#16A34A]/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-300">
-                          <div className="w-10 h-10 rounded-xl bg-[#0C1E15] text-white flex items-center justify-center shrink-0">
-                            <Mail className="w-5 h-5" />
+                        {/* Email Hòm thư chung & theo phòng ban */}
+                        <div className="p-4 rounded-2xl bg-white border border-haq-border/80 shadow-2xs hover:border-[#16A34A]/40 transition-all duration-300 space-y-3">
+                          <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-[#0C1E15] text-white flex items-center justify-center shrink-0">
+                              <Mail className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
+                                {language === 'en' ? 'Corporate Official Mailbox' : language === 'ko' ? '대표 공식 이메일' : 'Hòm thư Chung Doanh Nghiệp'}
+                              </span>
+                              <a href="mailto:info@haq.com.vn" className="font-mono font-bold text-sm text-haq-ink hover:text-[#16A34A] transition-colors truncate block">
+                                info@haq.com.vn
+                              </a>
+                              <p className="text-[11px] text-haq-text-secondary mt-0.5">
+                                {language === 'en' ? 'Receiving capability dossiers & RFQs' : language === 'ko' ? '기업 소개서 및 견적 요청 접수' : 'Tiếp nhận hồ sơ năng lực & chào giá'}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                              {language === 'en' ? 'Partnership & Quotes Inbox' : language === 'ko' ? '제휴 및 견적 공식 메일' : 'Hòm thư Hợp tác & Báo giá'}
-                            </span>
-                            <a href="mailto:info@haq.com.vn" className="font-sans font-bold text-sm text-haq-ink hover:text-[#16A34A] transition-colors">
-                              info@haq.com.vn
-                            </a>
-                            <p className="text-[11px] text-haq-text-secondary">
-                              {language === 'en' ? 'Receiving capability dossiers & RFQs' : language === 'ko' ? '기업 소개서 및 견적 요청 접수' : 'Tiếp nhận hồ sơ năng lực & chào giá'}
-                            </p>
+
+                          {/* Departmental Email Quick Links */}
+                          <div className="pt-2.5 border-t border-haq-border/60">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-haq-text-secondary">
+                                {language === 'en' ? 'Departmental Inboxes:' : language === 'ko' ? '부서별 직통 이메일:' : 'Email theo phòng ban chuyên trách:'}
+                              </span>
+                              <a href="#email-directory" className="text-[10px] text-[#16A34A] font-bold hover:underline">
+                                {language === 'en' ? 'View all details ↓' : language === 'ko' ? '상세보기 ↓' : 'Xem chi tiết ↓'}
+                              </a>
+                            </div>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <a
+                                href="mailto:sales01@haq.com.vn"
+                                className="p-2 rounded-xl bg-haq-soft/80 hover:bg-[#16A34A]/10 border border-haq-border/60 hover:border-[#16A34A]/30 text-[11px] font-mono text-haq-ink hover:text-[#16A34A] transition-all truncate block"
+                                title="Bán hàng & Báo giá B2B: sales01@haq.com.vn"
+                              >
+                                <span className="font-heading font-bold text-[10px] text-[#16A34A] uppercase block">Bán hàng (Sales)</span>
+                                sales01@haq.com.vn
+                              </a>
+                              <a
+                                href="mailto:cskh@haq.com.vn"
+                                className="p-2 rounded-xl bg-haq-soft/80 hover:bg-[#0068FF]/10 border border-haq-border/60 hover:border-[#0068FF]/30 text-[11px] font-mono text-haq-ink hover:text-[#0068FF] transition-all truncate block"
+                                title="Chăm sóc Khách hàng: cskh@haq.com.vn"
+                              >
+                                <span className="font-heading font-bold text-[10px] text-[#0068FF] uppercase block">Chăm sóc KH</span>
+                                cskh@haq.com.vn
+                              </a>
+                              <a
+                                href="mailto:support@haq.com.vn"
+                                className="p-2 rounded-xl bg-haq-soft/80 hover:bg-amber-50 border border-haq-border/60 hover:border-amber-300 text-[11px] font-mono text-haq-ink hover:text-amber-700 transition-all truncate block"
+                                title="Hỗ trợ Kỹ thuật & Đơn hàng: support@haq.com.vn"
+                              >
+                                <span className="font-heading font-bold text-[10px] text-amber-700 uppercase block">Kỹ thuật & Vận đơn</span>
+                                support@haq.com.vn
+                              </a>
+                              <a
+                                href="mailto:tuyendung@haq.com.vn"
+                                className="p-2 rounded-xl bg-haq-soft/80 hover:bg-purple-50 border border-haq-border/60 hover:border-purple-300 text-[11px] font-mono text-haq-ink hover:text-purple-700 transition-all truncate block"
+                                title="Tuyển dụng & Nhân sự: tuyendung@haq.com.vn"
+                              >
+                                <span className="font-heading font-bold text-[10px] text-purple-700 uppercase block">Tuyển dụng (HR)</span>
+                                tuyendung@haq.com.vn
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
