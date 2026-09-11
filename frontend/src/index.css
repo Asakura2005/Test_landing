@@ -52,6 +52,12 @@ html[lang="ko"] .font-heading {
   color: #FFFFFF;
 }
 
+/* Vietnamese diacritics safety — prevent clipping on bold headings */
+h1, h2, h3 {
+  overflow: visible !important;
+  -webkit-text-stroke: 0;
+}
+
 ::-webkit-scrollbar {
   background: #F4F8F4;
   width: 10px;

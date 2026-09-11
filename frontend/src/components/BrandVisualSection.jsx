@@ -52,7 +52,7 @@ export default function BrandVisualSection() {
 
           {/* Headline */}
           <Reveal delay={150}>
-            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-5xl text-white uppercase leading-normal mb-4 sm:mb-5">
+            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white uppercase leading-relaxed pt-1 mb-4 sm:mb-5">
               {t('home.brand_visual.title_1', 'Từ nông sản Việt')} <br className="hidden sm:block" />
               <span className="text-white">{t('home.brand_visual.title_2', 'Vươn tầm Châu Á')}</span>
             </h2>
