@@ -65,18 +65,44 @@ export default function StickyNav() {
     setMobileLangOpen(false)
   }, [location.pathname])
 
-  // Khóa cuộn trang và gán attribute ẩn floating contact bar khi drawer mở
+  // Khóa cuộn trang hoàn toàn trên mobile khi mobile drawer mở (chống lướt nền trên iOS/Android)
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden'
-      document.body.setAttribute('data-mobile-nav-open', 'true')
-    } else {
-      document.body.style.overflow = ''
-      document.body.removeAttribute('data-mobile-nav-open')
-    }
+    if (!mobileOpen) return
+
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyPosition = document.body.style.position
+    const originalBodyTop = document.body.style.top
+    const originalBodyWidth = document.body.style.width
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior
+
+    // Khóa chặt body và html, cố định tại vị trí scroll hiện tại
+    document.body.style.overflow = 'hidden'
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.left = '0'
+    document.body.style.right = '0'
+    document.body.style.width = '100%'
+    document.body.setAttribute('data-mobile-nav-open', 'true')
+
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.style.overscrollBehavior = 'none'
+
     return () => {
-      document.body.style.overflow = ''
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.position = originalBodyPosition
+      document.body.style.top = originalBodyTop
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = originalBodyWidth
       document.body.removeAttribute('data-mobile-nav-open')
+
+      document.documentElement.style.overflow = originalHtmlOverflow
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll
+
+      // Khôi phục chính xác vị trí cuộn trang trước khi mở drawer
+      window.scrollTo(0, scrollY)
     }
   }, [mobileOpen])
 
@@ -792,16 +818,17 @@ export default function StickyNav() {
       <>
         {/* Backdrop on tablet/desktop */}
         <div
-          className={`fixed inset-0 bg-black/70 backdrop-blur-xs z-[9998] transition-opacity duration-300 md:hidden ${
+          className={`fixed inset-0 bg-black/70 backdrop-blur-xs z-[9998] transition-opacity duration-300 md:hidden touch-none ${
             mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           onClick={() => setMobileOpen(false)}
+          onTouchMove={(e) => e.preventDefault()}
           aria-hidden="true"
         />
 
         {/* Full-Screen Branded Panel */}
         <div
-          className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:w-[420px] h-screen h-[100dvh] w-full z-[9999] shadow-2xl flex flex-col transition-all duration-300 ease-out md:hidden select-none ${
+          className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:w-[420px] h-screen h-[100dvh] w-full z-[9999] shadow-2xl flex flex-col transition-all duration-300 ease-out md:hidden select-none overscroll-contain ${
             mobileOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
           }`}
           style={{
@@ -812,26 +839,31 @@ export default function StickyNav() {
           aria-modal="true"
           aria-label="Mobile Navigation Menu"
         >
-          {/* 1. Header Bar: X Close on Left, Circular Emblem in Center, Search & Hotline on Right */}
-          <div className="px-4 pt-3 pb-2.5 flex items-center justify-between shrink-0 relative">
-            {/* Left: Close Button */}
-            <button
-              type="button"
-              onClick={() => setMobileOpen(false)}
-              className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10 cursor-pointer"
-              aria-label="Đóng menu"
-            >
-              <X className="w-6 h-6" />
-            </button>
+          {/* 1. Header Bar: Hotline on Left, Circular Emblem in Center, Search & Close 'X' on Right */}
+          <div 
+            className="px-4 sm:px-6 h-[72px] sm:h-[76px] flex items-center justify-between shrink-0 relative touch-none"
+            onTouchMove={(e) => e.preventDefault()}
+          >
+            {/* Left: Quick Phone Hotline */}
+            <div className="flex items-center gap-1 z-10">
+              <a
+                href="tel:02423235656"
+                className="w-10 h-10 flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/15 border border-amber-400/30 cursor-pointer"
+                aria-label="Gọi hotline 024 2323 5656"
+                title="024 2323 5656"
+              >
+                <Phone className="w-4 h-4" />
+              </a>
+            </div>
 
             {/* Center: Prominent Circular Brand Emblem */}
             <Link
               to={homePath}
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center focus:outline-none group -mb-1"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center focus:outline-none group z-10"
               title="HAQ FOOD"
             >
-              <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-white p-1 shadow-2xl border-2 border-amber-400/80 flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white p-1 shadow-2xl border-2 border-amber-400/80 flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105">
                 <img
                   src={logoImg}
                   alt="HAQ FOOD Logo"
@@ -840,26 +872,28 @@ export default function StickyNav() {
               </div>
             </Link>
 
-            {/* Right: Search & Phone Hotline */}
-            <div className="flex items-center gap-0.5">
+            {/* Right: Search & Close Button 'X' (placed at exact same coordinates as closed hamburger) */}
+            <div className="flex items-center gap-1 z-10">
               <button
                 type="button"
                 onClick={() => {
                   setMobileOpen(false)
                   setIsSearchOpen(true)
                 }}
-                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10 cursor-pointer"
-                aria-label="Tìm kiếm"
+                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-xl hover:bg-white/10 cursor-pointer"
+                aria-label={language === 'en' ? 'Search' : language === 'ko' ? '검색' : 'Tìm kiếm'}
               >
                 <Search className="w-5 h-5" />
               </button>
-              <a
-                href="tel:02423235656"
-                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10"
-                aria-label="Gọi hotline"
+
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="w-10 h-10 flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/20 border border-amber-400/40 cursor-pointer"
+                aria-label="Đóng menu"
               >
-                <Phone className="w-4 h-4" />
-              </a>
+                <X className="w-6 h-6" />
+              </button>
             </div>
           </div>
 
@@ -867,7 +901,10 @@ export default function StickyNav() {
           <div className="h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/70 to-transparent shrink-0" />
 
           {/* 2. Scrollable Menu Body (Heritage Category Accordions) */}
-          <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-1 custom-scrollbar text-white">
+          <div 
+            className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-1 custom-scrollbar text-white overscroll-contain touch-pan-y"
+            data-mobile-menu-scrollable="true"
+          >
             {/* TRANG CHỦ */}
             <div className="border-b border-amber-400/20 pb-1">
               <Link

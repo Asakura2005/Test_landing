@@ -338,3 +338,16 @@ body[data-mobile-nav-open="true"] aside[aria-label] {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ── Mobile Menu Scroll Lock & Isolation ─────────────────── */
+body[data-mobile-nav-open="true"],
+html:has(body[data-mobile-nav-open="true"]) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
+body[data-mobile-nav-open="true"] aside {
+  display: none !important;
+}
+
