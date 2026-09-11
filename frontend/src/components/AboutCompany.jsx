@@ -34,7 +34,7 @@ export default function AboutCompany() {
             </div>
 
             {/* Main Headline from HAQ */}
-            <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-[1.15] mb-3 uppercase">
+            <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-normal mb-3 uppercase">
               CÔNG TY CỔ PHẦN <br/>
               <span className="text-black">HAQ HÀ NỘI</span>
             </h2>

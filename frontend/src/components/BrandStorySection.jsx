@@ -22,7 +22,7 @@ export default function BrandStorySection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             {/* Left: Editorial Narrative (Spans 6 cols) */}
             <div className="lg:col-span-6 space-y-6">
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight uppercase leading-[1.1]">
+              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink uppercase leading-normal">
                 DOANH NGHIỆP THỰC PHẨM VIỆT NAM, <br />
                 <span className="text-black">TỪ THỊ TRƯỜNG TRONG NƯỚC</span> <br />
                 ĐẾN QUỐC TẾ.
