@@ -188,7 +188,7 @@ export default function HistoryPage() {
                     </Reveal>
 
                     <Reveal delay={200}>
-                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-[26px] xl:text-[28px] text-haq-ink leading-tight tracking-tight mb-2">
+                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-[26px] xl:text-[28px] text-haq-ink leading-snug mb-2">
                         {chap.title}
                       </h3>
                     </Reveal>

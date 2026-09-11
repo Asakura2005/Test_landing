@@ -183,7 +183,7 @@ export default function NewsDetailPage() {
               </span>
             </div>
 
-            <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-[#11261B] leading-tight mb-4">
+            <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-[#11261B] leading-snug mb-4">
               {news.title}
             </h1>
 

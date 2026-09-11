@@ -114,7 +114,7 @@ export default function CompanyProfilePage() {
                     Công ty Cổ phần HAQ Hà Nội
                   </div>
 
-                  <h1 className="font-heading font-black text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-haq-ink uppercase tracking-tight leading-[1.15] mb-2">
+                  <h1 className="font-heading font-black text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-haq-ink uppercase leading-snug mb-2">
                     Chất lượng<br />vượt niềm tin
                   </h1>
 
@@ -408,7 +408,7 @@ export default function CompanyProfilePage() {
                     <p className="text-xs sm:text-[13px] font-heading font-extrabold tracking-widest text-[#0B3B24] uppercase mb-1.5">
                       Tầm nhìn dài hạn
                     </p>
-                    <h2 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0C1E15] tracking-tight uppercase leading-tight mb-3 sm:mb-5">
+                    <h2 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0C1E15] uppercase leading-snug mb-3 sm:mb-5">
                       Cam kết & Định hướng
                     </h2>
                     <div className="space-y-2.5 sm:space-y-3">

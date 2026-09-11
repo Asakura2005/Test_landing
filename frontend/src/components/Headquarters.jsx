@@ -31,7 +31,7 @@ export default function Headquarters() {
               <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider mb-2">
                 HỆ THỐNG CƠ SỞ VẬT CHẤT
               </span>
-              <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-tight mb-6">
+              <h2 className="font-heading font-extrabold text-3xl md:text-5xl text-haq-ink leading-snug mb-6">
                 TRỤ SỞ CHÍNH & <br/>
                 <span className="text-black">NHÀ MÁY HAQ FOOD</span>
               </h2>

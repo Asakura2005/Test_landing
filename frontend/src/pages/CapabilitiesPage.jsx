@@ -88,7 +88,7 @@ export default function CapabilitiesPage() {
                     {en ? 'MANUFACTURING & QUALITY' : ko ? '생산 및 품질 관리' : 'NĂNG LỰC SẢN XUẤT · HAQ FOOD'}
                   </span>
                 </div>
-                <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight leading-tight mb-5">
+                <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug mb-5">
                   {en 
                     ? 'Advanced Production Technology & Quality Control' 
                     : ko 
@@ -181,7 +181,7 @@ export default function CapabilitiesPage() {
                     {en ? 'STANDARDIZED WORKFLOW' : ko ? '표준 제조 공정' : 'QUY CHUẨN VẬN HÀNH'}
                   </span>
                 </div>
-                <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
+                <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white leading-snug">
                   Quy trình sản xuất <span className="text-white">6 công đoạn</span>
                 </h2>
                 <p className="text-sm sm:text-base text-white/60 mt-4 leading-relaxed max-w-2xl">

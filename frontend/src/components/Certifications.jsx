@@ -87,7 +87,7 @@ export default function Certifications({ className = '' }) {
           <p className="font-heading text-xs tracking-[0.25em] uppercase text-[#16A34A] font-bold mb-3">
             {isEn ? 'QUALITY ASSURANCE · CERTIFICATIONS' : 'TIÊU CHUẨN XƯỞNG & BẢO CHỨNG CHẤT LƯỢNG'}
           </p>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase tracking-tight leading-tight">
+          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase leading-snug">
             {isEn ? 'ISO & HACCP COMPLIANCE ACROSS ALL LINES' : 'HỒ SƠ CHỨNG NHẬN & BẰNG CHỨNG KIỂM ĐỊNH'}
           </h2>
           <div className="mt-3 h-0.5 w-16 bg-[#16A34A]" />

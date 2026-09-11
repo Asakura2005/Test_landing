@@ -33,7 +33,7 @@ export default function CtaBanner() {
         </Reveal>
 
         <Reveal delay={150}>
-          <h2 className="mt-3 font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink uppercase tracking-tight leading-tight">
+          <h2 className="mt-3 font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink uppercase leading-snug">
             {t('home.cta_banner.title', 'Cùng kiến tạo những giá trị bền vững')}
           </h2>
         </Reveal>

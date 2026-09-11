@@ -313,7 +313,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
       <div className="w-full lg:w-[43%] h-auto lg:h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-visible lg:overflow-hidden bg-white shrink-0">
         <div className="flex flex-col flex-1 min-h-0">
           {/* 1. MAIN HEADING ONLY */}
-          <h2 className="font-heading font-bold text-lg sm:text-xl lg:text-[21px] text-haq-ink uppercase tracking-tight leading-tight mb-2.5 shrink-0">
+          <h2 className="font-heading font-bold text-lg sm:text-xl lg:text-[21px] text-haq-ink uppercase leading-snug mb-2.5 shrink-0">
             {t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}
           </h2>
 

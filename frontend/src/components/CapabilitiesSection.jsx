@@ -68,7 +68,7 @@ export default function CapabilitiesSection() {
               <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
                 CHUẨN MỰC CÔNG NGHIỆP THỰC PHẨM
               </span>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase tracking-tight leading-tight mt-1.5">
+              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase leading-snug mt-1.5">
                 CÔNG NGHỆ CHẾ BIẾN & SẤY TỰ ĐỘNG
               </h2>
             </div>

@@ -41,7 +41,7 @@ export default function RefundPolicyPage() {
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{data.badge}</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-heading font-black tracking-tight text-haq-ink uppercase leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-heading font-black text-haq-ink uppercase leading-snug">
               {data.title}
             </h1>
             <p className="mt-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed">

@@ -163,7 +163,7 @@ export default function ProductsPage() {
               <p className="font-heading text-xs tracking-[0.2em] text-haq-ink uppercase mb-3">
                 {t('products_page.eyebrow', 'HAQ FOOD · Danh mục sản phẩm')}
               </p>
-              <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink tracking-tight leading-tight">
+              <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug">
                 {activeCategoryNode.slug === 'all'
                   ? (en ? 'All Products' : ko ? '전체 제품' : 'Tất cả sản phẩm')
                   : activeCategoryNode.name}

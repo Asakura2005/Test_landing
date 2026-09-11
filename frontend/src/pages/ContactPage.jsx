@@ -293,7 +293,7 @@ export default function ContactPage() {
             {/* Section Header */}
             <Reveal direction="up">
               <div className="max-w-4xl mb-10 sm:mb-14">
-                <h1 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-5xl text-haq-ink uppercase tracking-tight leading-tight">
+                <h1 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-5xl text-haq-ink uppercase leading-snug">
                   {language === 'en' ? (
                     <>PARTNER WITH <span className="whitespace-nowrap">HAQ FOOD</span></>
                   ) : language === 'ko' ? (

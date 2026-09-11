@@ -99,7 +99,7 @@ export default function LeadForm() {
               </span>
               <span className="h-px w-10 bg-[#16A34A]" />
             </div>
-            <h2 className="font-heading font-extrabold text-3xl md:text-5xl uppercase tracking-tight leading-tight">
+            <h2 className="font-heading font-extrabold text-3xl md:text-5xl uppercase leading-snug">
               TRỞ THÀNH ĐỐI TÁC <br />
               <span className="text-[#16A34A]">HAQ HÀ NỘI</span>
             </h2>
