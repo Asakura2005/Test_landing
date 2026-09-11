@@ -394,8 +394,8 @@ export default function ContactPage() {
             {/* Main 2-Column Balanced Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
               
-              {/* Left Column: 5 B2B Business Solution Cards with Smooth Accordion UI */}
-              <div className="lg:col-span-5 space-y-2.5">
+              {/* Left Column: 5 B2B Business Solution Cards with Smooth Accordion UI (Hidden on Mobile) */}
+              <div className="hidden lg:block lg:col-span-5 space-y-2.5">
                 {topics.map((topic, idx) => {
                   const isExpanded = activeTopicId === topic.id
                   const Icon = topic.icon
@@ -526,7 +526,7 @@ export default function ContactPage() {
               </div>
 
               {/* Right Column: Streamlined & Frictionless Business Inquiry Form */}
-              <div ref={formRef} className="lg:col-span-7">
+              <div ref={formRef} className="w-full lg:col-span-7">
                 <Reveal direction="up" delay={150}>
                   <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
                   
