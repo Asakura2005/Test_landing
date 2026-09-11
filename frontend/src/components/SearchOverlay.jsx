@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, X, ArrowRight, Package, Sparkles } from 'lucide-react'
 import { getProducts } from '../services/supabase'
@@ -71,12 +72,12 @@ export default function SearchOverlay({ isOpen, onClose }) {
     { label: language === 'en' ? 'Distribution Network' : language === 'ko' ? '유통 네트워크' : 'Hệ thống phân phối', path: `${getHomeUrl(language)}#thi-truong` },
   ]
 
-  return (
+  const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Tìm kiếm sản phẩm HAQ FOOD"
-      className="fixed inset-0 z-[60] flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/60 backdrop-blur-sm transition-opacity font-sans"
+      className="fixed inset-0 z-[10000] flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/70 backdrop-blur-sm transition-opacity font-sans"
       onClick={onClose}
     >
       <div
@@ -188,4 +189,6 @@ export default function SearchOverlay({ isOpen, onClose }) {
       </div>
     </div>
   )
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent
 }

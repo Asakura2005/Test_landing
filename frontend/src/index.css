@@ -58,6 +58,13 @@ h1, h2, h3 {
   -webkit-text-stroke: 0;
 }
 
+/* Hide floating contact buttons when mobile navigation drawer is open to prevent any UI overlap */
+body[data-mobile-nav-open="true"] aside[aria-label] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
 ::-webkit-scrollbar {
   background: #F4F8F4;
   width: 10px;

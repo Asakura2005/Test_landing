@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Menu,
@@ -10,6 +11,7 @@ import {
   Search,
   Phone,
   MessageCircle,
+  Globe,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
@@ -32,6 +34,8 @@ export default function StickyNav() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
+  const [mobileProductSubAccordion, setMobileProductSubAccordion] = useState(null)
+  const [mobileLangOpen, setMobileLangOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => {
@@ -52,6 +56,29 @@ export default function StickyNav() {
     mql.addEventListener('change', handler)
     return () => mql.removeEventListener('change', handler)
   }, [])
+
+  // Tự động đóng mobile drawer khi chuyển trang
+  useEffect(() => {
+    setMobileOpen(false)
+    setMobileAccordion(null)
+    setMobileProductSubAccordion(null)
+    setMobileLangOpen(false)
+  }, [location.pathname])
+
+  // Khóa cuộn trang và gán attribute ẩn floating contact bar khi drawer mở
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.setAttribute('data-mobile-nav-open', 'true')
+    } else {
+      document.body.style.overflow = ''
+      document.body.removeAttribute('data-mobile-nav-open')
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.removeAttribute('data-mobile-nav-open')
+    }
+  }, [mobileOpen])
 
   // Khi mở drawer mobile hoặc mở tìm kiếm, header luôn có nền trắng đồng bộ
   // Trên mobile, header luôn solid (không trong suốt) để banner nằm bên dưới
@@ -311,8 +338,9 @@ export default function StickyNav() {
   const activePreviewCat = hoveredCategory || categoryTree[1] || categoryTree[0]
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+    <>
+      <header
+      className={`fixed top-0 left-0 right-0 ${mobileOpen ? 'z-[100]' : 'z-40'} transition-all duration-300 ${
         isTransparent
           ? 'bg-gradient-to-b from-black/80 via-black/35 to-transparent h-[72px] sm:h-[76px] flex items-center border-none shadow-none'
           : isScrolled
@@ -710,26 +738,13 @@ export default function StickyNav() {
           </Link>
         </div>
 
-        {/* Mobile Header: Simple — Search left, Logo center, Hamburger right */}
-        <div className="flex md:hidden items-center justify-between w-full h-full relative">
-          {/* Left: Search button */}
-          <button
-            type="button"
-            onClick={() => {
-              setMobileOpen(false)
-              setIsSearchOpen(true)
-            }}
-            className="w-10 h-10 flex items-center justify-center text-haq-ink hover:text-haq-green-dark active:scale-95 transition-all rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer"
-            aria-label={language === 'en' ? 'Search' : language === 'ko' ? '검색' : 'Tìm kiếm'}
-          >
-            <Search className="w-5 h-5" />
-          </button>
-
-          {/* Center: Brand Logo & Title */}
+        {/* Mobile Header: Logo + Brand on left, Search & Hamburger on right */}
+        <div className="flex md:hidden items-center justify-between w-full h-full">
+          {/* Left: Brand Logo & Title */}
           <Link
             to={homePath}
             onClick={() => setMobileOpen(false)}
-            className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 focus:outline-none py-1"
+            className="flex items-center gap-2.5 focus:outline-none py-1 shrink-0"
             title="HAQ FOOD"
           >
             <div className="h-9 w-9 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
@@ -740,315 +755,399 @@ export default function StickyNav() {
             </span>
           </Link>
 
-          {/* Right: Hamburger / Close Toggle */}
-          <button
-            type="button"
-            onClick={() => setMobileOpen(prev => !prev)}
-            className={`w-10 h-10 flex items-center justify-center rounded-xl active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer ${
-              mobileOpen ? 'bg-haq-sage/40 text-haq-green-dark' : 'text-haq-ink hover:text-haq-green-dark'
-            }`}
-            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-      </div>
-
-      {/* Mobile Drawer (Slide-down Sheet) */}
-      <div
-        className={`md:hidden fixed inset-x-0 top-[72px] sm:top-[76px] bg-white border-b border-haq-border shadow-2xl transition-all duration-300 ease-in-out z-30 flex flex-col ${
-          mobileOpen
-            ? 'max-h-[calc(100dvh-72px)] sm:max-h-[calc(100dvh-76px)] opacity-100 visible'
-            : 'max-h-0 opacity-0 invisible pointer-events-none'
-        } overflow-hidden`}
-      >
-        {/* Top Header inside Drawer: Quick Language & Search */}
-        <div className="p-3.5 bg-haq-soft/60 border-b border-haq-border shrink-0 space-y-2.5">
-          {/* B2B Language Selector */}
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-haq-text-secondary">
-              {t('common.switch_language', 'Ngôn ngữ')}
-            </span>
-            <div
-              className="inline-flex items-center p-0.5 rounded-full bg-white border border-haq-border text-xs font-mono font-bold tracking-wider shadow-2xs"
-              role="group"
-              aria-label="Mobile Drawer Language selection"
+          {/* Right: Search & Hamburger Actions */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false)
+                setIsSearchOpen(true)
+              }}
+              className="w-10 h-10 flex items-center justify-center text-haq-ink hover:text-haq-green-dark hover:bg-haq-sage/30 active:scale-95 transition-all rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer"
+              aria-label={language === 'en' ? 'Search' : language === 'ko' ? '검색' : 'Tìm kiếm'}
             >
-              {LANGUAGES.map((item, idx) => {
-                const isActive = language === item.code
-                return (
-                  <React.Fragment key={item.code}>
-                    {idx > 0 && <span className="text-haq-border select-none text-[10px] px-0.5">|</span>}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        switchLanguage(item.code, navigate, location.pathname)
-                        setMobileOpen(false)
-                      }}
-                      className={`px-3 py-1 rounded-full text-xs font-heading font-bold uppercase transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-haq-green-dark text-white shadow-2xs font-bold'
-                          : 'text-haq-text-secondary hover:text-haq-ink'
-                      }`}
-                      aria-pressed={isActive}
-                    >
-                      {item.label}
-                    </button>
-                  </React.Fragment>
-                )
-              })}
-            </div>
+              <Search className="w-5 h-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen(prev => !prev)}
+              className={`w-10 h-10 flex items-center justify-center rounded-xl active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer ${
+                mobileOpen
+                  ? 'bg-haq-sage/60 text-haq-green-dark'
+                  : 'text-haq-ink hover:text-haq-green-dark hover:bg-haq-sage/30'
+              }`}
+              aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
-
-          {/* Quick Search Trigger */}
-          <button
-            type="button"
-            onClick={() => {
-              setMobileOpen(false)
-              setIsSearchOpen(true)
-            }}
-            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white border border-haq-border text-haq-text-secondary text-xs font-medium hover:border-[#16A34A] transition-all text-left cursor-pointer shadow-2xs active:scale-[0.99]"
-          >
-            <Search className="w-4 h-4 text-haq-green-dark shrink-0" />
-            <span className="truncate">
-              {language === 'en' ? 'Search products, ingredients...' : language === 'ko' ? '제품 또는 재료 검색...' : 'Tìm kiếm sản phẩm HAQ...'}
-            </span>
-          </button>
         </div>
+      </div>
+    </header>
 
-        {/* Scrollable Navigation Body */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1 divide-y divide-haq-border/60">
-          {/* TRANG CHỦ */}
-          <div className="py-1.5">
+    {/* Mobile Full-Screen Menu (Bao Minh Heritage Reference Style) */}
+    {typeof document !== 'undefined' && createPortal(
+      <>
+        {/* Backdrop on tablet/desktop */}
+        <div
+          className={`fixed inset-0 bg-black/70 backdrop-blur-xs z-[9998] transition-opacity duration-300 md:hidden ${
+            mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Full-Screen Branded Panel */}
+        <div
+          className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:w-[420px] h-screen h-[100dvh] w-full z-[9999] shadow-2xl flex flex-col transition-all duration-300 ease-out md:hidden select-none ${
+            mobileOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
+          }`}
+          style={{
+            backgroundColor: '#0C1E15',
+            backgroundImage: 'radial-gradient(ellipse at 50% 0%, #164027 0%, #0C1E15 75%)',
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile Navigation Menu"
+        >
+          {/* 1. Header Bar: X Close on Left, Circular Emblem in Center, Search & Hotline on Right */}
+          <div className="px-4 pt-3 pb-2.5 flex items-center justify-between shrink-0 relative">
+            {/* Left: Close Button */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10 cursor-pointer"
+              aria-label="Đóng menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Center: Prominent Circular Brand Emblem */}
             <Link
               to={homePath}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight transition-colors ${
-                isHomePage ? 'text-haq-green-dark bg-haq-sage/30' : 'text-haq-ink hover:text-haq-green-dark'
-              }`}
+              className="flex flex-col items-center justify-center focus:outline-none group -mb-1"
+              title="HAQ FOOD"
             >
-              <span>{t('nav.home', 'Trang chủ')}</span>
-              <ChevronRight className="w-4 h-4 text-haq-text-secondary" />
+              <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-white p-1 shadow-2xl border-2 border-amber-400/80 flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105">
+                <img
+                  src={logoImg}
+                  alt="HAQ FOOD Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
             </Link>
+
+            {/* Right: Search & Phone Hotline */}
+            <div className="flex items-center gap-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false)
+                  setIsSearchOpen(true)
+                }}
+                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10 cursor-pointer"
+                aria-label="Tìm kiếm"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+              <a
+                href="tel:02423235656"
+                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-full hover:bg-white/10"
+                aria-label="Gọi hotline"
+              >
+                <Phone className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
-          {/* VỀ CHÚNG TÔI */}
-          <div className="py-1.5">
-            <button
-              type="button"
-              onClick={() => toggleMobileAccordion('ve-chung-toi')}
-              className={`w-full flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight transition-colors cursor-pointer ${
-                isAboutActive || mobileAccordion === 've-chung-toi' ? 'text-haq-green-dark' : 'text-haq-ink'
-              }`}
-            >
-              <span>{t('nav.about', 'Về chúng tôi')}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileAccordion === 've-chung-toi' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                mobileAccordion === 've-chung-toi' ? 'max-h-72 mt-1 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <div className="pl-2 pr-1 py-1 space-y-1">
-                {aboutSubpages.map((sub, idx) => {
-                  const isSubActive = location.pathname === sub.path
-                  return (
+          {/* Gold Accent Divider Line */}
+          <div className="h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/70 to-transparent shrink-0" />
+
+          {/* 2. Scrollable Menu Body (Heritage Category Accordions) */}
+          <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-1 custom-scrollbar text-white">
+            {/* TRANG CHỦ */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <Link
+                to={homePath}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between py-2.5 text-base font-heading font-bold uppercase tracking-wide transition-colors ${
+                  isHomePage ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-300'
+                }`}
+              >
+                <span>{t('nav.home', 'Trang Chủ')}</span>
+              </Link>
+            </div>
+
+            {/* GIỚI THIỆU ▾ */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <button
+                type="button"
+                onClick={() => toggleMobileAccordion('gioi-thieu')}
+                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+              >
+                <span>{language === 'en' ? 'About Us' : language === 'ko' ? '회사 소개' : 'Giới Thiệu'}</span>
+                <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'gioi-thieu' ? 'rotate-180' : ''}`}>
+                  ▼
+                </span>
+              </button>
+
+              {/* Sub-items */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  mobileAccordion === 'gioi-thieu' ? 'max-h-72 opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="pl-3 space-y-1.5 border-l border-amber-400/30 ml-1">
+                  {aboutSubpages.map((sub, idx) => (
                     <Link
                       key={idx}
                       to={sub.path}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-start justify-between p-2.5 rounded-xl transition-all ${
-                        isSubActive ? 'bg-haq-sage/40 text-haq-green-dark font-bold' : 'hover:bg-haq-soft text-haq-ink'
-                      }`}
+                      className="block py-1.5 text-sm text-white/85 hover:text-white font-medium transition-colors"
                     >
-                      <div className="pr-2">
-                        <div className="text-xs font-heading font-bold uppercase">{sub.title}</div>
-                        <div className="text-[11px] text-haq-text-secondary line-clamp-1 mt-0.5 font-normal">{sub.desc}</div>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 text-haq-text-secondary" />
+                      {sub.title}
                     </Link>
-                  )
-                })}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* SẢN PHẨM */}
-          <div className="py-1.5">
-            <button
-              type="button"
-              onClick={() => toggleMobileAccordion('san-pham')}
-              className={`w-full flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight transition-colors cursor-pointer ${
-                isProductsActive || mobileAccordion === 'san-pham' ? 'text-haq-green-dark' : 'text-haq-ink'
-              }`}
-            >
-              <span>{t('nav.products', 'Sản phẩm')}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                mobileAccordion === 'san-pham' ? 'max-h-[500px] mt-1 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <div className="pl-2 pr-1 py-1 space-y-2">
-                {/* Xem tất cả */}
-                <Link
-                  to={getProductsPath('all')}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-haq-sage/30 text-xs font-heading font-bold text-haq-green-dark hover:bg-haq-sage/50 transition-colors"
-                >
-                  <span>{language === 'en' ? 'Explore all products' : language === 'ko' ? '모든 제품 둘러보기' : 'Xem toàn bộ danh mục sản phẩm'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+            {/* SẢN PHẨM ▾ */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <button
+                type="button"
+                onClick={() => toggleMobileAccordion('san-pham')}
+                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+              >
+                <span>{language === 'en' ? 'Products' : language === 'ko' ? '제품 소개' : 'Sản Phẩm'}</span>
+                <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180' : ''}`}>
+                  ▼
+                </span>
+              </button>
 
-                {/* Categories */}
-                {categoryTree.filter(c => c.slug !== 'all').map((cat) => (
-                  <div key={cat.id} className="p-2.5 rounded-xl bg-haq-soft/60 space-y-2 border border-haq-border/60">
-                    <Link
-                      to={getProductsPath(cat.slug)}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between text-xs font-heading font-bold text-haq-ink hover:text-haq-green-dark uppercase tracking-tight"
-                    >
-                      <span>{cat.name}</span>
-                      <ChevronRight className="w-3.5 h-3.5 text-haq-text-secondary" />
-                    </Link>
-                    {cat.children && cat.children.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-0.5">
-                        {cat.children.map((child) => (
+              {/* Product categories sub-accordion */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  mobileAccordion === 'san-pham' ? 'max-h-[680px] opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="pl-3 space-y-1.5 border-l border-amber-400/30 ml-1">
+                  {/* Link all */}
+                  <Link
+                    to={getProductsPath('all')}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between py-1.5 text-sm text-emerald-300 hover:text-emerald-200 font-bold transition-colors"
+                  >
+                    <span>{language === 'en' ? 'Explore all products →' : language === 'ko' ? '모든 제품 둘러보기 →' : 'Xem tất cả sản phẩm →'}</span>
+                  </Link>
+
+                  {categoryTree.filter(c => c.slug !== 'all').map((cat) => {
+                    const isCatOpen = mobileProductSubAccordion === cat.slug
+                    const hasChildren = cat.children && cat.children.length > 0
+
+                    return (
+                      <div key={cat.id} className="py-1">
+                        {hasChildren ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setMobileProductSubAccordion(isCatOpen ? null : cat.slug)}
+                              className="w-full flex items-center justify-between py-1 text-sm font-semibold text-white/95 hover:text-amber-200 cursor-pointer text-left"
+                            >
+                              <span>{cat.name}</span>
+                              <span className={`text-[10px] text-white/60 transition-transform duration-200 ${isCatOpen ? 'rotate-180 text-amber-300' : ''}`}>
+                                ▼
+                              </span>
+                            </button>
+                            <div
+                              className={`overflow-hidden transition-all duration-200 ${
+                                isCatOpen ? 'max-h-48 opacity-100 mt-1' : 'max-h-0 opacity-0'
+                              }`}
+                            >
+                              <div className="pl-3 space-y-1 border-l border-white/20 ml-1 py-1">
+                                <Link
+                                  to={getProductsPath(cat.slug)}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block py-1 text-xs text-amber-200/90 hover:text-white font-medium"
+                                >
+                                  {language === 'en' ? `All in ${cat.name}` : `Toàn bộ ${cat.name}`}
+                                </Link>
+                                {cat.children.map((child) => (
+                                  <Link
+                                    key={child.id}
+                                    to={getProductsPath(cat.slug, child.slug)}
+                                    onClick={() => setMobileOpen(false)}
+                                    className="block py-1 text-xs text-white/75 hover:text-white font-normal"
+                                  >
+                                    {child.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
                           <Link
-                            key={child.id}
-                            to={getProductsPath(cat.slug, child.slug)}
+                            to={getProductsPath(cat.slug)}
                             onClick={() => setMobileOpen(false)}
-                            className="px-2.5 py-1 rounded-lg bg-white border border-haq-border text-[11px] text-haq-text-secondary hover:text-haq-green-dark hover:border-haq-green-dark transition-all"
+                            className="block py-1 text-sm text-white/85 hover:text-white font-medium"
                           >
-                            {child.name}
+                            {cat.name}
                           </Link>
-                        ))}
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
+                    )
+                  })}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* BẢN ĐỒ ĐẶC SẢN 34 VÙNG */}
-          <div className="py-1.5">
-            <a
-              href={`${homePath}#specialty-map`}
-              onClick={handleMapClick}
-              className="flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight text-haq-ink hover:text-haq-green-dark transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <span>{language === 'en' ? 'Vietnam Specialty Map' : language === 'ko' ? '베트남 특산물 지도' : 'Bản đồ đặc sản 34 vùng'}</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#16A34A]/15 text-[#16A34A] font-bold">
+            {/* BẢN ĐỒ ĐẶC SẢN 34 VÙNG */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <a
+                href={`${homePath}#specialty-map`}
+                onClick={handleMapClick}
+                className="flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide cursor-pointer"
+              >
+                <span>{language === 'en' ? 'Vietnam Specialty Map' : language === 'ko' ? '베트남 특산물 지도' : 'Bản Đồ Đặc Sản 34 Vùng'}</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
                   34 VÙNG
                 </span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-haq-text-secondary" />
-            </a>
-          </div>
+              </a>
+            </div>
 
-          {/* TIN TỨC & TUYỂN DỤNG */}
-          <div className="py-1.5">
-            <button
-              type="button"
-              onClick={() => toggleMobileAccordion('tin-tuc-tuyen-dung')}
-              className={`w-full flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight transition-colors cursor-pointer ${
-                isNewsActive || mobileAccordion === 'tin-tuc-tuyen-dung' ? 'text-haq-green-dark' : 'text-haq-ink'
-              }`}
-            >
-              <span>{language === 'en' ? 'News & Careers' : language === 'ko' ? '뉴스 & 채용' : 'Tin tức & Tuyển dụng'}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileAccordion === 'tin-tuc-tuyen-dung' ? 'rotate-180 text-haq-green-dark' : 'text-haq-text-secondary'}`} />
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                mobileAccordion === 'tin-tuc-tuyen-dung' ? 'max-h-36 mt-1 opacity-100' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <div className="pl-2 pr-1 py-1 space-y-1">
-                <Link
-                  to={newsPath}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-haq-soft text-xs font-heading font-bold text-haq-ink hover:text-haq-green-dark uppercase"
-                >
-                  <span>{language === 'en' ? 'News & Media' : language === 'ko' ? '뉴스' : 'Tin tức'}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-haq-text-secondary" />
-                </Link>
-                <Link
-                  to={careersPath}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-haq-soft text-xs font-heading font-bold text-haq-ink hover:text-haq-green-dark uppercase"
-                >
-                  <span>{language === 'en' ? 'Careers & Recruitment' : language === 'ko' ? '채용 정보' : 'Tuyển dụng'}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-haq-text-secondary" />
-                </Link>
+            {/* TIN TỨC & TUYỂN DỤNG ▾ */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <button
+                type="button"
+                onClick={() => toggleMobileAccordion('tin-tuc-tuyen-dung')}
+                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+              >
+                <span>{language === 'en' ? 'News & Careers' : language === 'ko' ? '뉴스 & 채용' : 'Tin Tức & Tuyển Dụng'}</span>
+                <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'tin-tuc-tuyen-dung' ? 'rotate-180' : ''}`}>
+                  ▼
+                </span>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  mobileAccordion === 'tin-tuc-tuyen-dung' ? 'max-h-36 opacity-100 mt-1 mb-2' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <div className="pl-3 space-y-1.5 border-l border-amber-400/30 ml-1">
+                  <Link
+                    to={newsPath}
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-1.5 text-sm text-white/85 hover:text-white font-medium transition-colors"
+                  >
+                    {language === 'en' ? 'News & Media' : language === 'ko' ? '뉴스 & 미디어' : 'Tin tức & Hoạt động'}
+                  </Link>
+                  <Link
+                    to={careersPath}
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-1.5 text-sm text-white/85 hover:text-white font-medium transition-colors"
+                  >
+                    {language === 'en' ? 'Careers & Recruitment' : language === 'ko' ? '채용 정보' : 'Cơ hội nghề nghiệp & Tuyển dụng'}
+                  </Link>
+                </div>
               </div>
+            </div>
+
+            {/* LIÊN HỆ */}
+            <div className="border-b border-amber-400/20 pb-1">
+              <Link
+                to={contactPath}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide"
+              >
+                <span>{t('nav.contact', 'Liên Hệ')}</span>
+              </Link>
+            </div>
+
+            {/* Bottom Quick Contact Row */}
+            <div className="pt-6 pb-24 space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="tel:02423235656"
+                  className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
+                >
+                  <Phone className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                  <span>024 23 23 56 56</span>
+                </a>
+                <a
+                  href="https://zalo.me/1361851474644984696"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-white border border-[#0068FF]/40 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
+                  <span>Chat Zalo OA</span>
+                </a>
+              </div>
+
+              <Link
+                to={contactPath}
+                onClick={() => setMobileOpen(false)}
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3.5 rounded-xl text-xs font-heading font-extrabold uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all"
+              >
+                <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <p className="text-[10px] text-center text-white/50 font-mono tracking-tight pt-1">
+                ISO 22000:2018 • HACCP • FDA EXPORT STANDARD
+              </p>
             </div>
           </div>
 
-          {/* LIÊN HỆ */}
-          <div className="py-1.5">
-            <Link
-              to={contactPath}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center justify-between py-2 px-2.5 rounded-xl text-sm font-heading font-bold uppercase tracking-tight transition-colors ${
-                isContactActive ? 'text-haq-green-dark bg-haq-sage/30' : 'text-haq-ink hover:text-haq-green-dark'
-              }`}
+          {/* 3. Floating Language Selector Pill (Bottom Right - Exactly Like Reference Image) */}
+          <div className="fixed right-4 bottom-5 z-30">
+            {mobileLangOpen && (
+              <div className="absolute bottom-full right-0 mb-2 w-44 bg-white text-haq-ink rounded-2xl shadow-2xl border border-haq-border p-1.5 space-y-1 animate-in fade-in slide-in-from-bottom-2">
+                {LANGUAGES.map((item) => (
+                  <button
+                    key={item.code}
+                    type="button"
+                    onClick={() => {
+                      switchLanguage(item.code, navigate, location.pathname)
+                      setMobileLangOpen(false)
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-bold text-left transition-all cursor-pointer ${
+                      language === item.code
+                        ? 'bg-[#16A34A] text-white'
+                        : 'text-haq-ink hover:bg-haq-soft'
+                    }`}
+                  >
+                    <span className="text-base">{item.code === 'vi' ? '🇻🇳' : item.code === 'en' ? '🇬🇧' : '🇰🇷'}</span>
+                    <span>{item.nativeName}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setMobileLangOpen(prev => !prev)}
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white text-haq-ink font-heading font-bold text-xs shadow-2xl border border-haq-border hover:bg-haq-soft active:scale-95 transition-all cursor-pointer"
+              aria-label="Chọn ngôn ngữ"
             >
-              <span>{t('nav.contact', 'Liên hệ')}</span>
-              <ChevronRight className="w-4 h-4 text-haq-text-secondary" />
-            </Link>
+              <span className="text-base">
+                {language === 'vi' ? '🇻🇳' : language === 'en' ? '🇬🇧' : '🇰🇷'}
+              </span>
+              <span>
+                {language === 'vi' ? 'Vietnamese' : language === 'en' ? 'English' : 'Korean'}
+              </span>
+              <ChevronDown className={`w-3.5 h-3.5 text-haq-text-secondary transition-transform duration-200 ${mobileLangOpen ? 'rotate-180' : ''}`} />
+            </button>
           </div>
         </div>
+      </>,
+      document.body
+    )}
 
-        {/* Bottom Drawer Actions: Hotline, Zalo & B2B Quote CTA */}
-        <div className="p-4 bg-white border-t border-haq-border shrink-0 space-y-2.5 shadow-lg">
-          {/* Quick contact buttons: Hotline & Zalo */}
-          <div className="grid grid-cols-2 gap-2.5">
-            <a
-              href="tel:02423235656"
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-haq-sage/50 hover:bg-haq-sage text-haq-green-dark border border-[#16A34A]/25 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
-            >
-              <Phone className="w-3.5 h-3.5 shrink-0" />
-              <span>024 23 23 56 56</span>
-            </a>
-            <a
-              href="https://zalo.me/1361851474644984696"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#0068FF]/10 hover:bg-[#0068FF]/20 text-[#0068FF] border border-[#0068FF]/30 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
-            >
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>Chat Zalo OA</span>
-            </a>
-          </div>
-
-          {/* Primary CTA */}
-          <Link
-            to={contactPath}
-            onClick={() => setMobileOpen(false)}
-            className="w-full flex items-center justify-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white py-3.5 rounded-xl text-xs font-heading font-bold uppercase tracking-wider shadow-sm active:scale-98 transition-all"
-          >
-            <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Mobile Drawer Backdrop */}
-      {mobileOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-20 transition-opacity animate-in fade-in duration-200"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Global Search Overlay */}
-      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-    </header>
+    {/* Global Search Overlay */}
+    <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    </>
   )
 }
