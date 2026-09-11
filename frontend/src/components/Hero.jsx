@@ -101,7 +101,7 @@ export default function Hero() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full aspect-[12/5] lg:aspect-auto lg:h-[100dvh] bg-black overflow-hidden select-none"
+      className="relative w-full aspect-[16/9] sm:aspect-[2/1] lg:aspect-auto lg:h-[100dvh] bg-black overflow-hidden select-none"
     >
       {/* Seamless Direct Cross-Fade Slides (No background flash) */}
       {SLIDES.map((slide, idx) => {
@@ -158,15 +158,15 @@ export default function Hero() {
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Clean Bottom Indicator Dots */}
-      <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg pointer-events-auto">
+      {/* Clean Bottom Indicator Dots — Delicate & low-profile on mobile */}
+      <div className="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/30 sm:bg-black/40 backdrop-blur-xs sm:backdrop-blur-md px-2.5 py-1 sm:px-4 sm:py-2 rounded-full border border-white/15 sm:border-white/20 shadow-md sm:shadow-lg pointer-events-auto">
         {SLIDES.map((_, i) => (
           <button
             key={i}
             type="button"
             onClick={(e) => goTo(i, e)}
-            className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              i === current ? 'w-8 bg-[#16A34A]' : 'w-2.5 bg-white/50 hover:bg-white/90'
+            className={`h-1.5 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+              i === current ? 'w-5 sm:w-8 bg-[#16A34A]' : 'w-1.5 sm:w-2.5 bg-white/60 hover:bg-white/90'
             }`}
             aria-label={`Banner ${i + 1}`}
           />

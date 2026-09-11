@@ -24,7 +24,7 @@ export default function CtaBanner() {
   const { t } = useLanguage()
 
   return (
-    <section className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/50 border-b border-haq-border flex items-center justify-center py-16 sm:py-20 lg:py-0">
+    <section className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/50 border-b border-haq-border flex items-center justify-center py-10 sm:py-14 lg:py-0">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center w-full">
         <Reveal>
           <span className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-[#16A34A]">

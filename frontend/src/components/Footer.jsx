@@ -9,16 +9,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0C1E15] text-white pt-16 pb-12 border-t border-[#1B4D3E]/40 select-none-text">
+    <footer className="bg-[#0C1E15] text-white pt-10 sm:pt-16 pb-8 sm:pb-12 border-t border-[#1B4D3E]/40 select-none-text">
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         
         {/* =========================================================================
             1. BRAND AREA
         ========================================================================= */}
-        <div className="pb-10 border-b border-white/10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <Link to="/" className="shrink-0 flex items-center justify-center h-14 w-14 rounded-2xl bg-white p-1.5 shadow-sm">
+        <div className="pb-6 sm:pb-10 border-b border-white/10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+            <div className="flex items-center gap-3.5 sm:gap-4">
+              <Link to="/" className="shrink-0 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white p-1.5 shadow-sm">
                 <img
                   src={logoImg}
                   alt="HAQ FOOD Logo"
@@ -27,24 +27,24 @@ export default function Footer() {
               </Link>
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-heading font-extrabold text-2xl tracking-tight text-white leading-none">
+                  <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-white leading-none">
                     HAQ FOOD
                   </span>
                 </div>
-                <p className="text-xs font-heading font-bold tracking-wider text-white/90 uppercase mt-1">
+                <p className="text-[11px] sm:text-xs font-heading font-bold tracking-wider text-white/90 uppercase mt-1">
                   {t('home.footer.sub', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
                 </p>
-                <p className="text-xs text-white/70 mt-0.5 font-normal">
+                <p className="text-[11px] sm:text-xs text-white/70 mt-0.5 font-normal">
                   {t('home.footer.desc', 'Sản xuất & phân phối đồ ăn vặt đóng gói mang hương vị Việt Nam vươn tầm thế giới.')}
                 </p>
               </div>
             </div>
 
             {/* Quick Contact Badge */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               <Link
                 to="/lien-he"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#13863d] transition-all shadow-xs hover:shadow-md"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#13863d] transition-all shadow-xs hover:shadow-md text-center"
               >
                 <span>{t('home.footer.b2b_cta', 'LIÊN HỆ HỢP TÁC B2B')}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -56,7 +56,7 @@ export default function Footer() {
         {/* =========================================================================
             2. THREE COLUMNS NAVIGATION: VỀ HAQ FOOD | SẢN PHẨM | LIÊN HỆ
         ========================================================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 py-8 sm:py-12 border-b border-white/10">
           
           {/* CỘT 1: VỀ HAQ FOOD (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">

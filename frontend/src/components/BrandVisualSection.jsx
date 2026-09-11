@@ -25,7 +25,7 @@ export default function BrandVisualSection() {
   const { t } = useLanguage()
 
   return (
-    <section className="relative w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-0">
+    <section className="relative w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center py-10 sm:py-14 lg:py-0">
       {/* Background Cinematic Visual */}
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <img
@@ -42,7 +42,7 @@ export default function BrandVisualSection() {
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <Reveal>
-            <div className="inline-flex items-center gap-2 mb-4 sm:mb-5">
+            <div className="inline-flex items-center gap-2 mb-3 sm:mb-5">
               <Globe2 className="w-4 h-4 text-white" />
               <span className="font-heading text-xs font-bold tracking-[0.2em] uppercase text-white">
                 {t('home.brand_visual.badge', 'Tầm nhìn quốc tế')}
@@ -52,7 +52,7 @@ export default function BrandVisualSection() {
 
           {/* Headline */}
           <Reveal delay={150}>
-            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white uppercase leading-snug pt-1 mb-4 sm:mb-5">
+            <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-white uppercase leading-snug pt-1 mb-3 sm:mb-5">
               {t('home.brand_visual.title_1', 'Từ nông sản Việt')} <br className="hidden sm:block" />
               <span className="text-white">{t('home.brand_visual.title_2', 'Vươn tầm Châu Á')}</span>
             </h2>
@@ -60,7 +60,7 @@ export default function BrandVisualSection() {
 
           {/* Markets Badge Row */}
           <Reveal delay={300}>
-            <div className="flex flex-wrap items-center gap-2 mb-6">
+            <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-6">
               {[
                 { flag: '🇻🇳', name: 'Việt Nam' },
                 { flag: '🇰🇷', name: 'Hàn Quốc' },
@@ -68,7 +68,7 @@ export default function BrandVisualSection() {
               ].map((m, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 rounded-full px-3.5 py-1 text-xs font-heading font-medium text-white/90"
+                  className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 rounded-full px-3 sm:px-3.5 py-1 text-xs font-heading font-medium text-white/90"
                 >
                   <span>{m.flag}</span>
                   <span>{m.name}</span>
@@ -79,7 +79,7 @@ export default function BrandVisualSection() {
 
           {/* Editorial Description */}
           <Reveal delay={450}>
-            <p className="text-sm sm:text-base text-white/80 leading-relaxed max-w-2xl mb-8 font-normal">
+            <p className="text-sm sm:text-base text-white/80 leading-relaxed max-w-2xl mb-6 sm:mb-8 font-normal">
               {t('home.brand_visual.desc', 'Không ngừng nâng cao chất lượng và quy chuẩn chế biến khép kín, HAQ FOOD tự hào mang hương vị thực phẩm truyền thống Việt Nam chất lượng cao tiếp cận các thị trường tiêu chuẩn khắt khe tại khu vực châu Á.')}
             </p>
           </Reveal>
@@ -87,7 +87,7 @@ export default function BrandVisualSection() {
           <Reveal delay={600}>
             <Link
               to="/gioi-thieu#phan-phoi"
-              className="inline-flex items-center gap-2.5 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg text-center"
             >
               <span>{t('home.brand_visual.cta', 'Tìm hiểu hệ thống phân phối')}</span>
               <ArrowRight className="w-4 h-4" />

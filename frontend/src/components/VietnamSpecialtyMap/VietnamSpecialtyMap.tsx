@@ -259,7 +259,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
       {/* =========================================================================
           LEFT SIDE: 55–58% Width — LARGE VIETNAM INTERACTIVE MAP (Primary Visual)
           ========================================================================= */}
-      <div className="w-full lg:w-[57%] h-[440px] sm:h-[500px] lg:h-full relative flex items-center justify-center p-2 sm:p-4 lg:p-6 bg-[#FAF9F6] border-b lg:border-b-0 lg:border-r border-haq-border/70 overflow-hidden shrink-0">
+      <div className="w-full lg:w-[57%] h-[340px] sm:h-[480px] lg:h-full relative flex items-center justify-center p-2 sm:p-4 lg:p-6 bg-[#FAF9F6] border-b lg:border-b-0 lg:border-r border-haq-border/70 overflow-hidden shrink-0">
         {/* Subtle Map Atlas Watermark Hint */}
         <div className="absolute top-3 left-3 z-10 hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-haq-border/60 text-[10px] font-heading font-medium text-haq-text-secondary shadow-2xs pointer-events-none">
           <Navigation className="w-3 h-3 text-[#0F5132]" />
@@ -393,18 +393,18 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="grid grid-cols-12 gap-3 sm:gap-3.5 flex-1 min-h-0"
+                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-3.5 flex-1 min-h-0"
                 >
                   {/* LEFT: FEATURED PRODUCT */}
                   <Link
                     to={resolveProductLink(featuredProduct)}
                     className={`${
                       supportingProducts.length === 2
-                        ? "col-span-7"
+                        ? "col-span-1 sm:col-span-7"
                         : supportingProducts.length === 1
-                        ? "col-span-6"
-                        : "col-span-12"
-                    } flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0`}
+                        ? "col-span-1 sm:col-span-6"
+                        : "col-span-1 sm:col-span-12"
+                    } flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-[160px] sm:min-h-0`}
                   >
                     {/* Large Featured Product Image */}
                     <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
@@ -418,7 +418,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         <img
                           src={featuredProduct.image}
                           alt={featuredProduct.name}
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 max-h-[140px] sm:max-h-none"
                           loading="lazy"
                         />
                       ) : (
@@ -442,7 +442,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 
                   {/* RIGHT: SUPPORTING PRODUCTS */}
                   {supportingProducts.length === 2 ? (
-                    <div className="col-span-5 flex flex-col gap-2.5 sm:gap-3 flex-1 min-h-0 justify-between">
+                    <div className="col-span-1 sm:col-span-5 grid grid-cols-2 sm:flex sm:flex-col gap-2.5 sm:gap-3 flex-1 min-h-0 justify-between">
                       {supportingProducts.map((prod, idx) => (
                         <Link
                           key={prod.productId || prod.slug || `${prod.name}-${idx}`}

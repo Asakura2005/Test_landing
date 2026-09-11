@@ -50,7 +50,7 @@ export default function FloatingContactBar() {
   return (
     <aside
       aria-label={language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : 'Liên hệ nhanh'}
-      className="fixed right-3 sm:right-5 bottom-6 z-50 flex flex-col items-end gap-2.5 pointer-events-none"
+      className="fixed right-3 sm:right-5 bottom-5 sm:bottom-6 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-2.5 pointer-events-none"
     >
       {/* Collapsible Contact Items */}
       <div
