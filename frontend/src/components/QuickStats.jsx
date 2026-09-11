@@ -42,7 +42,7 @@ export default function QuickStats() {
               <p className="font-heading text-xs font-bold tracking-[0.2em] text-[#16A34A] uppercase mb-2">
                 {t('home.quick_stats.badge', 'Tiêu chuẩn & Năng lực')}
               </p>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink leading-snug">
+              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink leading-snug">
                 {t('home.quick_stats.title', 'Nền tảng sản xuất vững chắc')}
               </h2>
             </Reveal>

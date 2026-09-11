@@ -459,10 +459,17 @@ export default function ContactPage() {
                                   {topic.desc}
                                 </p>
                                 <div className="flex items-center gap-3.5 pt-1 text-xs font-mono font-medium flex-wrap text-haq-text-secondary">
-                                  <span className="flex items-center gap-1.5">
-                                    <Phone className="w-3.5 h-3.5 text-[#16A34A]" />
-                                    <strong className="text-haq-ink font-bold">{topic.hotline}</strong>
-                                  </span>
+                                  {topic.hotline && (
+                                    <a
+                                      href={`tel:${topic.hotline.split('(')[0].replace(/[^0-9+]/g, '')}`}
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="flex items-center gap-1.5 text-haq-ink hover:text-[#16A34A] hover:underline font-bold transition-colors"
+                                      title={`Gọi hotline: ${topic.hotline}`}
+                                    >
+                                      <Phone className="w-3.5 h-3.5 text-[#16A34A]" />
+                                      <span>{topic.hotline}</span>
+                                    </a>
+                                  )}
                                   {topic.email && (
                                     <a
                                       href={`mailto:${topic.email}`}
@@ -496,12 +503,19 @@ export default function ContactPage() {
                           {language === 'en' ? 'Need instant consultation?' : language === 'ko' ? '즉시 전문가 상담이 필요하신가요?' : 'Cần kết nối chuyên viên ngay?'}
                         </span>
                         <span className="text-xs text-haq-text-secondary">
-                          Hotline: <strong className="text-haq-ink font-mono font-bold">024 23 23 56 56</strong>
+                          Hotline:{' '}
+                          <a
+                            href="tel:0993308319"
+                            className="text-haq-ink hover:text-[#16A34A] font-mono font-bold hover:underline"
+                            title="Gọi hotline 0993 308 319"
+                          >
+                            0993 308 319
+                          </a>
                         </span>
                       </div>
                     </div>
                     <a
-                      href="tel:02423235656"
+                      href="tel:0993308319"
                       className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
                     >
                       <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : 'Gọi trực tiếp'}</span>
