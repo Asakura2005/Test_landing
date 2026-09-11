@@ -24,7 +24,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* 1. Hero Section (Cinematic Visual Impact) */}
-        <section data-section="hero">
+        <section data-section="hero" className="pt-[72px] lg:pt-0">
           <Hero />
         </section>
 

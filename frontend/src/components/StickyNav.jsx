@@ -31,11 +31,23 @@ export default function StickyNav() {
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const location = useLocation()
   const isHomePage = location.pathname === '/' || location.pathname === '/en' || location.pathname === '/ko'
+
+  // Detect mobile viewport for header transparency
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)')
+    setIsMobile(mql.matches)
+    const handler = (e) => setIsMobile(e.matches)
+    mql.addEventListener('change', handler)
+    return () => mql.removeEventListener('change', handler)
+  }, [])
+
   // Khi mở drawer mobile hoặc mở tìm kiếm, header luôn có nền trắng đồng bộ
-  const isTransparent = isHomePage && !isScrolled && !mobileOpen
+  // Trên mobile, header luôn solid (không trong suốt) để banner nằm bên dưới
+  const isTransparent = isHomePage && !isScrolled && !mobileOpen && !isMobile
 
   // Tối ưu hóa lắng nghe thanh cuộn với requestAnimationFrame và passive listener
   useEffect(() => {
