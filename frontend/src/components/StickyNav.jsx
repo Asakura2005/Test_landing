@@ -35,7 +35,6 @@ export default function StickyNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
   const [mobileProductSubAccordion, setMobileProductSubAccordion] = useState(null)
-  const [mobileLangOpen, setMobileLangOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(() => {
@@ -378,7 +377,7 @@ export default function StickyNav() {
         {/* 1. Corporate Brand Logo */}
         <Link
           to={language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'}
-          className="hidden md:flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
+          className="hidden lg:flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
           title="HAQ FOOD"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
@@ -401,7 +400,7 @@ export default function StickyNav() {
         {/* 2. Desktop Navigation (Standard Corporate Architecture) */}
         <nav
           aria-label="Thanh điều hướng chính"
-          className="hidden md:flex items-center gap-7 lg:gap-9"
+          className="hidden lg:flex items-center gap-6 xl:gap-8"
           onMouseLeave={handleMouseLeave}
         >
           {/* VỀ CHÚNG TÔI (Mega Dropdown 3 Chuyên Mục Con) */}
@@ -722,7 +721,7 @@ export default function StickyNav() {
         </nav>
 
         {/* 3. CTA & Header B2B Language Switcher (Desktop) */}
-        <div className="hidden md:flex items-center gap-3.5 shrink-0">
+        <div className="hidden lg:flex items-center gap-3.5 shrink-0">
           {/* Minimal B2B Segmented Switcher */}
           <div
             className={`inline-flex items-center p-0.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors ${
@@ -765,7 +764,7 @@ export default function StickyNav() {
         </div>
 
         {/* Mobile Header: Logo + Brand on left, Search & Hamburger on right */}
-        <div className="flex md:hidden items-center justify-between w-full h-full">
+        <div className="flex lg:hidden items-center justify-between w-full h-full">
           {/* Left: Brand Logo & Title */}
           <Link
             to={homePath}
@@ -818,7 +817,7 @@ export default function StickyNav() {
       <>
         {/* Backdrop on tablet/desktop */}
         <div
-          className={`fixed inset-0 bg-black/70 backdrop-blur-xs z-[9998] transition-opacity duration-300 md:hidden touch-none ${
+          className={`fixed inset-0 bg-black/70 backdrop-blur-xs z-[9998] transition-opacity duration-300 lg:hidden touch-none ${
             mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           onClick={() => setMobileOpen(false)}
@@ -828,7 +827,7 @@ export default function StickyNav() {
 
         {/* Full-Screen Branded Panel */}
         <div
-          className={`fixed inset-0 sm:inset-y-0 sm:right-0 sm:w-[420px] h-screen h-[100dvh] w-full z-[9999] shadow-2xl flex flex-col transition-all duration-300 ease-out md:hidden select-none overscroll-contain ${
+          className={`fixed inset-0 h-screen h-[100dvh] w-full z-[9999] shadow-2xl flex flex-col transition-all duration-300 ease-out lg:hidden select-none overscroll-contain ${
             mobileOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
           }`}
           style={{
@@ -906,11 +905,11 @@ export default function StickyNav() {
             data-mobile-menu-scrollable="true"
           >
             {/* TRANG CHỦ */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <Link
                 to={homePath}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-between py-2.5 text-base font-heading font-bold uppercase tracking-wide transition-colors ${
+                className={`flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold uppercase tracking-wide transition-colors ${
                   isHomePage ? 'text-amber-300' : 'text-amber-200/90 hover:text-amber-300'
                 }`}
               >
@@ -919,11 +918,11 @@ export default function StickyNav() {
             </div>
 
             {/* GIỚI THIỆU ▾ */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <button
                 type="button"
                 onClick={() => toggleMobileAccordion('gioi-thieu')}
-                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+                className="w-full flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
               >
                 <span>{language === 'en' ? 'About Us' : language === 'ko' ? '회사 소개' : 'Giới Thiệu'}</span>
                 <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'gioi-thieu' ? 'rotate-180' : ''}`}>
@@ -953,11 +952,11 @@ export default function StickyNav() {
             </div>
 
             {/* SẢN PHẨM ▾ */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <button
                 type="button"
                 onClick={() => toggleMobileAccordion('san-pham')}
-                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+                className="w-full flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
               >
                 <span>{language === 'en' ? 'Products' : language === 'ko' ? '제품 소개' : 'Sản Phẩm'}</span>
                 <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'san-pham' ? 'rotate-180' : ''}`}>
@@ -1042,11 +1041,11 @@ export default function StickyNav() {
             </div>
 
             {/* BẢN ĐỒ ĐẶC SẢN 34 VÙNG */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <a
                 href={`${homePath}#specialty-map`}
                 onClick={handleMapClick}
-                className="flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide cursor-pointer"
+                className="flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide cursor-pointer"
               >
                 <span>{language === 'en' ? 'Vietnam Specialty Map' : language === 'ko' ? '베트남 특산물 지도' : 'Bản Đồ Đặc Sản 34 Vùng'}</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
@@ -1056,11 +1055,11 @@ export default function StickyNav() {
             </div>
 
             {/* TIN TỨC & TUYỂN DỤNG ▾ */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <button
                 type="button"
                 onClick={() => toggleMobileAccordion('tin-tuc-tuyen-dung')}
-                className="w-full flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
+                className="w-full flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer text-left uppercase tracking-wide"
               >
                 <span>{language === 'en' ? 'News & Careers' : language === 'ko' ? '뉴스 & 채용' : 'Tin Tức & Tuyển Dụng'}</span>
                 <span className={`text-xs transition-transform duration-300 ${mobileAccordion === 'tin-tuc-tuyen-dung' ? 'rotate-180' : ''}`}>
@@ -1092,18 +1091,43 @@ export default function StickyNav() {
             </div>
 
             {/* LIÊN HỆ */}
-            <div className="border-b border-amber-400/20 pb-1">
+            <div className="border-b border-amber-400/20 pb-0.5">
               <Link
                 to={contactPath}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-between py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide"
+                className="flex items-center justify-between py-2 sm:py-2.5 text-base font-heading font-bold text-amber-300 hover:text-amber-200 transition-colors uppercase tracking-wide"
               >
                 <span>{t('nav.contact', 'Liên Hệ')}</span>
               </Link>
             </div>
 
-            {/* Bottom Quick Contact Row */}
-            <div className="pt-6 pb-24 space-y-3">
+            {/* Bottom Quick Contact & Actions */}
+            <div className="pt-5 pb-8 space-y-3">
+              {/* Language Switcher Bar */}
+              <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-white/10 border border-white/15">
+                <div className="flex items-center gap-2 text-white/80 text-xs font-heading font-semibold">
+                  <Globe className="w-4 h-4 text-amber-300 shrink-0" />
+                  <span>{language === 'vi' ? 'Ngôn ngữ' : language === 'en' ? 'Language' : '언어'}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {LANGUAGES.map((item) => (
+                    <button
+                      key={item.code}
+                      type="button"
+                      onClick={() => switchLanguage(item.code, navigate, location.pathname)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer ${
+                        language === item.code
+                          ? 'bg-amber-400 text-[#0C1E15] shadow-xs'
+                          : 'text-white/70 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <span>{item.code === 'vi' ? '🇻🇳 VN' : item.code === 'en' ? '🇬🇧 EN' : '🇰🇷 KO'}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Phone + Zalo */}
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="tel:02423235656"
@@ -1123,10 +1147,11 @@ export default function StickyNav() {
                 </a>
               </div>
 
+              {/* CTA Button */}
               <Link
                 to={contactPath}
                 onClick={() => setMobileOpen(false)}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3.5 rounded-xl text-xs font-heading font-extrabold uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 rounded-xl text-xs font-heading font-extrabold uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all"
               >
                 <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -1136,47 +1161,6 @@ export default function StickyNav() {
                 ISO 22000:2018 • HACCP • FDA EXPORT STANDARD
               </p>
             </div>
-          </div>
-
-          {/* 3. Floating Language Selector Pill (Bottom Right - Exactly Like Reference Image) */}
-          <div className="fixed right-4 bottom-5 z-30">
-            {mobileLangOpen && (
-              <div className="absolute bottom-full right-0 mb-2 w-44 bg-white text-haq-ink rounded-2xl shadow-2xl border border-haq-border p-1.5 space-y-1 animate-in fade-in slide-in-from-bottom-2">
-                {LANGUAGES.map((item) => (
-                  <button
-                    key={item.code}
-                    type="button"
-                    onClick={() => {
-                      switchLanguage(item.code, navigate, location.pathname)
-                      setMobileLangOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-bold text-left transition-all cursor-pointer ${
-                      language === item.code
-                        ? 'bg-[#16A34A] text-white'
-                        : 'text-haq-ink hover:bg-haq-soft'
-                    }`}
-                  >
-                    <span className="text-base">{item.code === 'vi' ? '🇻🇳' : item.code === 'en' ? '🇬🇧' : '🇰🇷'}</span>
-                    <span>{item.nativeName}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={() => setMobileLangOpen(prev => !prev)}
-              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white text-haq-ink font-heading font-bold text-xs shadow-2xl border border-haq-border hover:bg-haq-soft active:scale-95 transition-all cursor-pointer"
-              aria-label="Chọn ngôn ngữ"
-            >
-              <span className="text-base">
-                {language === 'vi' ? '🇻🇳' : language === 'en' ? '🇬🇧' : '🇰🇷'}
-              </span>
-              <span>
-                {language === 'vi' ? 'Vietnamese' : language === 'en' ? 'English' : 'Korean'}
-              </span>
-              <ChevronDown className={`w-3.5 h-3.5 text-haq-text-secondary transition-transform duration-200 ${mobileLangOpen ? 'rotate-180' : ''}`} />
-            </button>
           </div>
         </div>
       </>,
