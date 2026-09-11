@@ -379,12 +379,12 @@ export default function CompanyProfilePage() {
           className="min-h-[calc(100vh-76px)] lg:h-[calc(100vh-76px)] bg-white overflow-hidden flex flex-col justify-center border-b border-haq-border box-border"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 h-full items-stretch">
-            {/* Cột ảnh (5 cột) */}
-            <div className="order-2 lg:order-1 lg:col-span-5 relative px-5 pb-6 sm:px-8 sm:pb-8 lg:p-0 flex items-center justify-center">
+            {/* Cột ảnh (5 cột) - Chỉ hiển thị trên Desktop (lg:) */}
+            <div className="hidden lg:flex lg:order-1 lg:col-span-5 relative lg:p-0 items-center justify-center">
               <Reveal delay={80} className="w-full h-full">
                 <div
                   onClick={() => setSelectedImgIndex(1)}
-                  className="w-full h-[280px] sm:h-[340px] lg:h-full rounded-2xl sm:rounded-3xl lg:rounded-none overflow-hidden shadow-xl lg:shadow-none border border-haq-border lg:border-none relative group cursor-pointer"
+                  className="w-full h-full relative group cursor-pointer"
                   title="Nhấn để xem ảnh phóng to"
                 >
                   <img
@@ -402,18 +402,26 @@ export default function CompanyProfilePage() {
               </Reveal>
             </div>
 
-            {/* Cột chữ (7 cột) với nền giấy thảo mộc xanh tự nhiên */}
-            <div className="order-1 lg:order-2 lg:col-span-7 relative overflow-hidden px-6 sm:px-10 lg:px-14 xl:px-20 py-5 sm:py-8 lg:py-0 flex flex-col justify-center">
-              {/* Background texture thảo mộc xanh */}
+            {/* Cột chữ (7 cột) - Mobile dùng ảnh b2bPartnershipImg làm background chìm mờ, Desktop dùng nền giấy loiTheBgImg */}
+            <div className="order-1 lg:order-2 lg:col-span-7 relative overflow-hidden px-6 sm:px-10 lg:px-14 xl:px-20 py-8 sm:py-12 lg:py-0 flex flex-col justify-center min-h-[calc(100vh-76px)] lg:min-h-0">
+              {/* Background texture thảo mộc xanh (Desktop) */}
               <img
                 src={loiTheBgImg}
                 alt=""
                 aria-hidden="true"
-                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                className="hidden lg:block absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
                 loading="lazy"
               />
-              {/* Lớp phủ sáng nhẹ (35%) làm dịu vân giấy, giúp chữ mực than nổi sắc nét và êm mắt */}
-              <div className="absolute inset-0 bg-white/35 backdrop-blur-[0.5px] pointer-events-none" />
+              {/* Background ảnh hợp tác đối tác chìm mờ (Mobile) */}
+              <img
+                src={b2bPartnershipImg}
+                alt=""
+                aria-hidden="true"
+                className="lg:hidden absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
+                loading="lazy"
+              />
+              {/* Lớp phủ sáng làm dịu nền, giúp chữ nổi sắc nét và đọc êm mắt */}
+              <div className="absolute inset-0 bg-white/85 lg:bg-white/35 backdrop-blur-[0.5px] pointer-events-none" />
 
               <div className="relative z-10 max-w-xl">
                 <Reveal delay={60}>
