@@ -158,8 +158,8 @@ export default function HistoryPage() {
                 </div>
 
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-12 items-center">
-                  {/* Image Column */}
-                  <div className={`lg:col-span-5 ${isEven ? '' : 'lg:order-2'}`}>
+                  {/* Image Column (Hidden on Mobile) */}
+                  <div className={`hidden lg:block lg:col-span-5 ${isEven ? '' : 'lg:order-2'}`}>
                     <Reveal delay={80} direction={isEven ? 'left' : 'right'}>
                       <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden group shadow-md border border-haq-border/80 bg-white">
                         <img
@@ -168,13 +168,12 @@ export default function HistoryPage() {
                           className={`w-full aspect-[4/3] max-h-[38vh] sm:max-h-[44vh] lg:max-h-[48vh] object-cover ${chap.imagePosition || 'object-center'} transition-transform duration-700 group-hover:scale-[1.03]`}
                           loading="lazy"
                         />
-
                       </div>
                     </Reveal>
                   </div>
 
                   {/* Content Column */}
-                  <div className={`lg:col-span-7 ${isEven ? '' : 'lg:order-1'}`}>
+                  <div className={`w-full lg:col-span-7 ${isEven ? '' : 'lg:order-1'}`}>
                     <Reveal delay={120}>
                       <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
                         <span className="font-heading text-xs font-bold text-haq-red uppercase tracking-wider">
