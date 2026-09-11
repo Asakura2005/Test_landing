@@ -439,56 +439,158 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                   transition={{ duration: 0.15 }}
                   className="flex-1 min-h-0 flex flex-col"
                 >
-                  {/* MOBILE VIEW (< lg): Horizontal Swipe / Compact Cards (Never blows up or over-stretches) */}
-                  <div className="block lg:hidden">
-                    <div className="flex gap-2.5 overflow-x-auto snap-x scrollbar-none pb-2 pt-0.5">
-                      {showcaseProducts.map((prod, idx) => (
+                  {/* MOBILE & TABLET VIEW (< lg): Responsive Grid that fills 100% width evenly without blank space */}
+                  <div className="block lg:hidden w-full">
+                    {showcaseProducts.length === 2 ? (
+                      /* 2 PRODUCTS: 2 equal-width columns filling 100% width */
+                      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full">
+                        {showcaseProducts.map((prod, idx) => (
+                          <Link
+                            key={prod.productId || prod.slug || `${prod.name}-${idx}`}
+                            to={resolveProductLink(prod)}
+                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
+                          >
+                            {/* Image Box */}
+                            <div className="w-full h-[120px] sm:h-[160px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
+                              {prod.is_pinned && (
+                                <span className="absolute top-1.5 left-1.5 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
+                                  <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
+                                  Chủ lực
+                                </span>
+                              )}
+                              {prod.image ? (
+                                <img
+                                  src={prod.image}
+                                  alt={prod.name}
+                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <span className="text-2xl opacity-60">🌾</span>
+                              )}
+                            </div>
+
+                            {/* Info */}
+                            <div className="pt-2 flex flex-col flex-1 justify-between">
+                              <div>
+                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                                  {prod.category || "Sản phẩm"}
+                                </span>
+                                <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                                  {prod.name}
+                                </h4>
+                                <p className="text-[11px] text-haq-text-secondary line-clamp-2 font-light mt-0.5 hidden sm:block">
+                                  {prod.description || "Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương."}
+                                </p>
+                              </div>
+                              <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
+                                <span>Xem chi tiết</span>
+                                <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : showcaseProducts.length === 3 ? (
+                      /* 3 PRODUCTS: 1 Featured top + 2 Supporting below on mobile, 3 equal cols on tablet */
+                      <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4">
+                        {/* Featured (Card 1) */}
                         <Link
-                          key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                          to={resolveProductLink(prod)}
-                          className="w-[190px] sm:w-[210px] shrink-0 snap-start flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 transition-all shadow-2xs group"
+                          to={resolveProductLink(showcaseProducts[0])}
+                          className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
                         >
-                          {/* Image Box */}
-                          <div className="w-full h-[120px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
-                            {prod.is_pinned && (
-                              <span className="absolute top-1.5 left-1.5 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
+                          <div className="w-24 h-24 sm:w-full sm:h-[150px] shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
+                            {showcaseProducts[0].is_pinned && (
+                              <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
                                 <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
                                 Chủ lực
                               </span>
                             )}
-                            {prod.image ? (
-                              <img
-                                src={prod.image}
-                                alt={prod.name}
-                                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <span className="text-2xl opacity-60">🌾</span>
-                            )}
+                            <img
+                              src={showcaseProducts[0].image}
+                              alt={showcaseProducts[0].name}
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
                           </div>
-
-                          {/* Info */}
-                          <div className="pt-2 flex flex-col flex-1 justify-between">
+                          <div className="flex-1 min-w-0 sm:pt-2 flex flex-col justify-between">
                             <div>
                               <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {prod.category || "Sản phẩm"}
+                                {showcaseProducts[0].category || "Sản phẩm chủ lực"}
                               </span>
-                              <h4 className="font-heading font-bold text-xs text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 mt-0.5 leading-snug">
-                                {prod.name}
+                              <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                                {showcaseProducts[0].name}
                               </h4>
-                              <p className="text-[10.5px] text-haq-text-secondary line-clamp-1 font-light mt-0.5">
-                                {prod.description || "Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương."}
-                              </p>
                             </div>
-                            <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] font-heading font-bold text-[#0F5132]">
+                            <div className="mt-1 sm:mt-2 pt-1 sm:pt-1.5 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
                               <span>Xem chi tiết</span>
-                              <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                              <span>→</span>
                             </div>
                           </div>
                         </Link>
-                      ))}
-                    </div>
+
+                        {/* Supporting (Cards 2 & 3) — 2 cols on mobile */}
+                        <div className="grid grid-cols-2 gap-2.5 sm:contents">
+                          {showcaseProducts.slice(1).map((prod, idx) => (
+                            <Link
+                              key={prod.productId || prod.slug || `${prod.name}-${idx}`}
+                              to={resolveProductLink(prod)}
+                              className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
+                            >
+                              <div className="w-full h-[110px] sm:h-[150px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
+                                <img
+                                  src={prod.image}
+                                  alt={prod.name}
+                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                  loading="lazy"
+                                />
+                              </div>
+                              <div className="pt-2 flex flex-col flex-1 justify-between">
+                                <div>
+                                  <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                                    {prod.category || "Sản phẩm"}
+                                  </span>
+                                  <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                                    {prod.name}
+                                  </h4>
+                                </div>
+                                <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
+                                  <span>Xem chi tiết</span>
+                                  <span>→</span>
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      /* 1 PRODUCT */
+                      <Link
+                        to={resolveProductLink(showcaseProducts[0])}
+                        className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-3 transition-all shadow-2xs group max-w-md"
+                      >
+                        <div className="w-24 h-24 shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden">
+                          <img
+                            src={showcaseProducts[0].image}
+                            alt={showcaseProducts[0].name}
+                            className="w-full h-full object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block">
+                            {showcaseProducts[0].category || "Sản phẩm"}
+                          </span>
+                          <h4 className="font-heading font-bold text-sm text-haq-ink line-clamp-2 leading-snug mt-0.5">
+                            {showcaseProducts[0].name}
+                          </h4>
+                          <span className="inline-flex items-center gap-1 text-xs font-heading font-bold text-[#0F5132] mt-2">
+                            <span>Xem chi tiết</span>
+                            <span>→</span>
+                          </span>
+                        </div>
+                      </Link>
+                    )}
                   </div>
 
                   {/* DESKTOP VIEW (≥ lg): Curated Editorial 7/5 Grid */}
