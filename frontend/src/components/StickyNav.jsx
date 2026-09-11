@@ -61,7 +61,6 @@ export default function StickyNav() {
     setMobileOpen(false)
     setMobileAccordion(null)
     setMobileProductSubAccordion(null)
-    setMobileLangOpen(false)
   }, [location.pathname])
 
   // Khóa cuộn trang hoàn toàn trên mobile khi mobile drawer mở (chống lướt nền trên iOS/Android)
