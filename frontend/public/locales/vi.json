@@ -332,10 +332,13 @@
       "legal_cert": "GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP",
       "legal_authority": "Cơ quan cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội",
       "legal_lookup": "Tra cứu thông tin doanh nghiệp",
+      "legal_license_label": "Giấy phép đăng ký kinh doanh:",
+      "legal_license_detail": "Ngày cấp: 11/03/2021 Sở KHĐT TP Hà Nội",
       "policy_label": "CHÍNH SÁCH & PHÁP LÝ:",
-      "policy_refund": "Chính sách đổi trả & hoàn tiền",
+      "policy_refund": "Chính sách đổi trả hàng và hoàn tiền",
       "policy_privacy": "Chính sách bảo mật",
       "policy_terms": "Điều khoản sử dụng",
+      "policy_compliance": "Công bố sản phẩm",
       "copyright_line": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). BẢO LƯU MỌI QUYỀN."
     }
   },

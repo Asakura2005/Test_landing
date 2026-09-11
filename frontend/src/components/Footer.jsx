@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, Phone, Mail, ExternalLink, ArrowRight, ShieldCheck, Building2, FileCheck } from 'lucide-react'
+import { MapPin, Phone, Mail, ExternalLink, ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import logoImg from '../assets/logo-haq.jpg'
 
@@ -194,81 +194,53 @@ export default function Footer() {
         </div>
 
         {/* =========================================================================
-            3. THÔNG TIN DOANH NGHIỆP (CORPORATE REGISTRY & VNTAX VERIFICATION)
+            3. THÔNG TIN PHÁP LÝ & CHÍNH SÁCH (COMPACT LEGAL & POLICIES)
         ========================================================================= */}
-        <div className="py-10 border-b border-white/10">
-          <div className="bg-white/5 rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 text-xs font-heading font-bold tracking-wider text-white uppercase">
-                <Building2 className="w-4 h-4 text-white/70" />
-                <span>{t('home.footer.legal_badge', 'THÔNG TIN PHÁP LÝ DOANH NGHIỆP')}</span>
-              </div>
-              <h3 className="font-heading font-bold text-lg sm:text-xl text-white tracking-wide">
-                {t('home.footer.legal_company', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
-              </h3>
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-white/70">
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-white/70 shrink-0" />
-                  <span>{t('home.footer.legal_cert', 'GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP')}</span>
-                </div>
-                <span className="text-white/30 hidden sm:inline">•</span>
-                <span>{t('home.footer.legal_authority', 'Cơ quan cấp: Sở Kế hoạch và Đầu tư Thành phố Hà Nội')}</span>
-              </div>
-            </div>
+        <div className="py-6 border-b border-white/10 text-xs sm:text-sm text-white/80 space-y-2">
+          <p>
+            {t('home.footer.legal_license_label', 'Giấy phép đăng ký kinh doanh:')}{' '}
+            <a
+              href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi#goog_fullscreen_ad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-white hover:text-[#16A34A] hover:underline inline-flex items-center gap-1 transition-colors"
+              title={t('home.footer.legal_lookup', 'Tra cứu thông tin doanh nghiệp')}
+            >
+              0109547016
+              <ExternalLink className="w-3 h-3 text-white/50" />
+            </a>
+            {'. '}
+            {t('home.footer.legal_license_detail', 'Ngày cấp: 11/03/2021 Sở KHĐT TP Hà Nội')}
+          </p>
 
-            {/* Official Tax and Corporate Registry Verification Link */}
-            <div className="shrink-0">
-              <a
-                href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi#goog_fullscreen_ad"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all border border-white/15 hover:border-[#16A34A] shadow-xs"
-              >
-                <span>{t('home.footer.legal_lookup', 'Tra cứu thông tin doanh nghiệp')}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* =========================================================================
-            4. CHÍNH SÁCH & PHÁP LÝ (LEGAL & COMPLIANCE LINKS)
-        ========================================================================= */}
-        <div className="py-8 border-b border-white/10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="text-xs font-heading font-bold tracking-wider text-white uppercase flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-white/70" />
-              <span>{t('home.footer.policy_label', 'CHÍNH SÁCH & PHÁP LÝ:')}</span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-xs sm:text-sm font-heading font-medium text-white/80">
-              <Link
-                to="/chinh-sach-doi-tra-hoan-tien"
-                className="hover:text-white transition-colors flex items-center gap-1.5"
-              >
-                <span className="text-white/40 text-[11px]">01</span>
-                <span>{t('home.footer.policy_refund', 'Chính sách đổi trả & hoàn tiền')}</span>
-                <span className="text-white/40">→</span>
-              </Link>
-              <span className="text-white/20 hidden md:inline">|</span>
-              <Link
-                to="/chinh-sach-bao-mat"
-                className="hover:text-white transition-colors flex items-center gap-1.5"
-              >
-                <span className="text-white/40 text-[11px]">02</span>
-                <span>{t('home.footer.policy_privacy', 'Chính sách bảo mật')}</span>
-                <span className="text-white/40">→</span>
-              </Link>
-              <span className="text-white/20 hidden md:inline">|</span>
-              <Link
-                to="/dieu-khoan-su-dung"
-                className="hover:text-white transition-colors flex items-center gap-1.5"
-              >
-                <span className="text-white/40 text-[11px]">03</span>
-                <span>{t('home.footer.policy_terms', 'Điều khoản sử dụng')}</span>
-                <span className="text-white/40">→</span>
-              </Link>
-            </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80">
+            <Link
+              to="/chinh-sach-doi-tra-hoan-tien"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_refund', 'Chính sách đổi trả hàng và hoàn tiền')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              to="/chinh-sach-bao-mat"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_privacy', 'Chính sách bảo mật')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              to="/dieu-khoan-su-dung"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_terms', 'Điều khoản sử dụng')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              to="/chinh-sach"
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_compliance', 'Công bố sản phẩm')}
+            </Link>
           </div>
         </div>
 

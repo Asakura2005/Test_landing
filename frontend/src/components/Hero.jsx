@@ -101,7 +101,7 @@ export default function Hero() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full h-[100dvh] bg-black overflow-hidden select-none"
+      className="relative w-full aspect-[12/5] lg:aspect-auto lg:h-[100dvh] bg-black overflow-hidden select-none"
     >
       {/* Seamless Direct Cross-Fade Slides (No background flash) */}
       {SLIDES.map((slide, idx) => {

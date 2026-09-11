@@ -332,10 +332,13 @@
       "legal_cert": "사업자등록증",
       "legal_authority": "발급 기관: 하노이 기획투자국",
       "legal_lookup": "기업 정보 조회",
+      "legal_license_label": "사업자 등록증:",
+      "legal_license_detail": "발급일: 2021년 3월 11일 하노이 기획투자국",
       "policy_label": "정책 및 법률:",
       "policy_refund": "반품 및 환불 정책",
       "policy_privacy": "개인정보 처리방침",
       "policy_terms": "이용약관",
+      "policy_compliance": "제품 공시",
       "copyright_line": "HAQ 하노이 주식회사 (HAQ FOOD). 모든 권리 보유."
     }
   },

@@ -335,10 +335,13 @@
       "legal_cert": "BUSINESS REGISTRATION CERTIFICATE",
       "legal_authority": "Issuing Authority: Hanoi Department of Planning and Investment",
       "legal_lookup": "Corporate Registry Verification",
+      "legal_license_label": "Business Registration License:",
+      "legal_license_detail": "Issued on: 11/03/2021 by Hanoi DPI",
       "policy_label": "POLICIES & LEGAL:",
       "policy_refund": "Return & Refund Policy",
       "policy_privacy": "Privacy Policy",
       "policy_terms": "Terms of Service",
+      "policy_compliance": "Product Compliance",
       "copyright_line": "HAQ HANOI JOINT STOCK COMPANY (HAQ FOOD). ALL RIGHTS RESERVED."
     }
   },
