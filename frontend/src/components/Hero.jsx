@@ -158,7 +158,7 @@ export default function Hero() {
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Clean Bottom Indicator Dots — Tiny solid round dots (Green active, Red inactive) matching reference */}
+      {/* Clean Bottom Indicator Dots — Tiny solid round dots (Green active, White inactive) */}
       <div className="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 sm:gap-1.5 pointer-events-auto">
         {SLIDES.map((_, i) => (
           <button
@@ -171,8 +171,8 @@ export default function Hero() {
             <span
               className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 block ${
                 i === current
-                  ? 'bg-[#0F5132]'
-                  : 'bg-[#991B1B]'
+                  ? 'bg-[#16A34A] ring-1 ring-white/60'
+                  : 'bg-white/75 hover:bg-white shadow-xs'
               }`}
             />
           </button>
