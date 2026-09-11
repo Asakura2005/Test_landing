@@ -257,6 +257,50 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
       className={`w-full h-full lg:h-[calc(100vh-72px)] flex flex-col lg:flex-row overflow-hidden bg-[#FAF9F5]/40 select-none ${className}`}
     >
       {/* =========================================================================
+          MOBILE-ONLY HEADER: Placed at the top above the map
+          ========================================================================= */}
+      <div className="block lg:hidden px-4 pt-4 pb-2.5 bg-white border-b border-haq-border/70 shrink-0">
+        <h2 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase leading-snug mb-2">
+          {t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}
+        </h2>
+
+        {/* Region tabs on mobile */}
+        <div
+          className="flex items-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-1"
+          role="tablist"
+          aria-label="Khu vực"
+        >
+          {[
+            { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
+            { id: "Miền Bắc", label: t('home.specialty_map.regions.north', 'MIỀN BẮC') },
+            { id: "Miền Trung", label: t('home.specialty_map.regions.central', 'MIỀN TRUNG') },
+            { id: "Miền Nam", label: t('home.specialty_map.regions.south', 'MIỀN NAM') },
+          ].map((r) => {
+            const isActive = selectedRegion === r.id;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => handleSelectRegion(r.id as any)}
+                className={`relative text-[11px] tracking-[0.12em] uppercase transition-colors whitespace-nowrap cursor-pointer pb-1 ${
+                  isActive
+                    ? "text-[#0F5132] font-bold"
+                    : "text-haq-text-secondary hover:text-haq-ink font-normal"
+                }`}
+              >
+                {r.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#0F5132]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* =========================================================================
           LEFT SIDE: 55–58% Width — LARGE VIETNAM INTERACTIVE MAP (Primary Visual)
           ========================================================================= */}
       <div className="w-full lg:w-[57%] h-[340px] sm:h-[480px] lg:h-full relative flex items-center justify-center p-2 sm:p-4 lg:p-6 bg-[#FAF9F6] border-b lg:border-b-0 lg:border-r border-haq-border/70 overflow-hidden shrink-0">
@@ -312,14 +356,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
           ========================================================================= */}
       <div className="w-full lg:w-[43%] h-auto lg:h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-visible lg:overflow-hidden bg-white shrink-0">
         <div className="flex flex-col flex-1 min-h-0">
-          {/* 1. MAIN HEADING ONLY */}
-          <h2 className="font-heading font-bold text-lg sm:text-xl lg:text-[21px] text-haq-ink uppercase leading-snug mb-2.5 shrink-0">
+          {/* 1. MAIN HEADING (Desktop only — on mobile it sits above the map) */}
+          <h2 className="hidden lg:block font-heading font-bold text-lg sm:text-xl lg:text-[21px] text-haq-ink uppercase leading-snug mb-2.5 shrink-0">
             {t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}
           </h2>
 
-          {/* 2. REGION NAVIGATION (Minimal Editorial Tab Navigation) */}
+          {/* 2. REGION NAVIGATION (Desktop only — on mobile it sits above the map) */}
           <div
-            className="flex items-center gap-6 sm:gap-7 border-b border-haq-border/60 pb-2 mb-3 shrink-0"
+            className="hidden lg:flex items-center gap-6 sm:gap-7 border-b border-haq-border/60 pb-2 mb-3 shrink-0"
             role="tablist"
             aria-label="Khu vực"
           >
