@@ -36,7 +36,7 @@ export default function BrandStatement() {
             </Reveal>
 
             <Reveal delay={300}>
-              <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-[2.75rem] text-haq-ink tracking-tight leading-[1.15]">
+              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-[2.75rem] text-haq-ink tracking-tight leading-[1.2]">
                 {t('home.brand_statement.title', 'Sản xuất & Phân phối Thực phẩm Đạt Chuẩn An Toàn Quốc Tế')}
               </h2>
             </Reveal>

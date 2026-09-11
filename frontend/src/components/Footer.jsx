@@ -31,11 +31,11 @@ export default function Footer() {
                     HAQ FOOD
                   </span>
                 </div>
-                <p className="text-xs font-heading font-semibold tracking-wider text-white/80 uppercase mt-1">
-                  {t('home.footer.sub', 'Vietnamese Food Manufacturer & Exporter')}
+                <p className="text-xs font-heading font-bold tracking-wider text-white/90 uppercase mt-1">
+                  {t('home.footer.sub', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
                 </p>
                 <p className="text-xs text-white/70 mt-0.5 font-normal">
-                  {t('home.footer.desc', 'Nông sản sạch & Thực phẩm Việt Nam vươn tầm thế giới.')}
+                  {t('home.footer.desc', 'Sản xuất & phân phối đồ ăn vặt đóng gói mang hương vị Việt Nam vươn tầm thế giới.')}
                 </p>
               </div>
             </div>
