@@ -158,20 +158,24 @@ export default function Hero() {
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Clean Bottom Indicator Dots — Bare round dots • • • matching Bao Minh style */}
-      <div className="absolute bottom-2.5 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-2.5 pointer-events-auto sm:bg-black/40 sm:backdrop-blur-md sm:px-4 sm:py-2 sm:rounded-full sm:border sm:border-white/20 sm:shadow-lg">
+      {/* Clean Bottom Indicator Dots — Tiny solid round dots (Green active, Red inactive) matching reference */}
+      <div className="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 sm:gap-1.5 pointer-events-auto">
         {SLIDES.map((_, i) => (
           <button
             key={i}
             type="button"
             onClick={(e) => goTo(i, e)}
-            className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              i === current
-                ? 'bg-[#16A34A] ring-2 ring-white/80 scale-110 shadow-sm'
-                : 'bg-black/45 hover:bg-black/70 border border-white/60 shadow-xs'
-            }`}
+            className="p-1 flex items-center justify-center cursor-pointer transition-transform hover:scale-125"
             aria-label={`Banner ${i + 1}`}
-          />
+          >
+            <span
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 block ${
+                i === current
+                  ? 'bg-[#0F5132]'
+                  : 'bg-[#991B1B]'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>
