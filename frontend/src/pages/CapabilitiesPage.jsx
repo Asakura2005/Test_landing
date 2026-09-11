@@ -338,18 +338,18 @@ export default function CapabilitiesPage() {
                 }}
               >
                 <div
-                  className="flex w-max gap-8 group-hover:[animation-play-state:paused]"
-                  style={{ animation: 'marquee-scroll 18s linear infinite' }}
+                  className="flex w-max gap-8 sm:gap-12 group-hover:[animation-play-state:paused]"
+                  style={{ animation: 'marquee-scroll 24s linear infinite' }}
                 >
                   {[...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
                     <div
                       key={i}
-                      className="h-20 w-44 shrink-0 flex items-center justify-center p-3 bg-white/95 rounded-xl shadow-xs"
+                      className="h-16 sm:h-20 w-36 sm:w-48 shrink-0 flex items-center justify-center px-3 sm:px-4"
                     >
                       <img
                         src={p.logo}
                         alt={p.name}
-                        className="max-h-12 max-w-full object-contain"
+                        className="max-h-10 sm:max-h-13 max-w-full object-contain"
                       />
                     </div>
                   ))}
