@@ -33,79 +33,57 @@ import FloatingContactBar from '../components/FloatingContactBar'
 import { submitLead } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 
-// Danh mục các hòm thư điện tử chính thức theo từng bộ phận chuyên trách tại HAQ FOOD
+// Danh mục các hòm thư điện tử chính thức theo từng bộ phận tại HAQ FOOD
 const DEPARTMENT_EMAILS = [
   {
     id: 'sales',
-    code: '01',
-    categoryVi: 'B2B & PHÁT TRIỂN THƯƠNG MẠI',
-    categoryEn: 'B2B & COMMERCIAL SALES',
-    categoryKo: 'B2B 영업 및 유통 사업',
-    email: 'sales01@haq.com.vn',
-    deptVi: 'Phòng Bán Hàng & Hợp Tác Phân Phối',
-    deptEn: 'B2B Sales & Distribution Dept',
+    deptVi: 'Phòng Bán hàng & Kinh doanh B2B',
+    deptEn: 'B2B Sales & Commercial Dept',
     deptKo: 'B2B 영업 및 유통 사업부',
-    roleVi: 'Báo giá sỉ, chính sách đại lý & NPP, đơn hàng xuất khẩu quốc tế và hợp đồng gia công OEM/ODM.',
-    roleEn: 'Wholesale pricing, distributor & dealer policies, international export, and OEM/ODM private-label contracts.',
-    roleKo: '도매 단가표, 대리점 및 총판 정책, 해외 수출 무역, OEM/ODM 위탁 제조 파트너십.',
-    responseTimeVi: 'Phản hồi trong 2 – 4 giờ',
-    responseTimeEn: 'Reply in 2 – 4 hours',
-    responseTimeKo: '2 – 4시간 내 회신',
-    icon: ShoppingBag,
+    roleVi: 'Báo giá sỉ, chính sách đại lý & NPP, đơn hàng xuất khẩu, hợp đồng gia công OEM/ODM.',
+    roleEn: 'Wholesale pricing, distributor & dealer policies, export trade, OEM/ODM contracts.',
+    roleKo: '도매 단가표, 대리점 공급 정책, 해외 수출 및 OEM/ODM 위탁 제조 문의.',
+    email: 'sales01@haq.com.vn',
   },
   {
     id: 'cskh',
-    code: '02',
-    categoryVi: 'DỊCH VỤ & CHĂM SÓC KHÁCH HÀNG',
-    categoryEn: 'CUSTOMER EXPERIENCE & CARE',
-    categoryKo: '고객 만족 및 서비스 센터',
+    deptVi: 'Bộ phận Chăm sóc Khách hàng',
+    deptEn: 'Customer Care & Service Dept',
+    deptKo: '고객 만족 및 서비스 센터',
+    roleVi: 'Tiếp nhận phản hồi chất lượng sản phẩm, chính sách bảo hành & quyền lợi đối tác.',
+    roleEn: 'Product quality feedback, warranty/exchange policies, partner assistance.',
+    roleKo: '제품 품질 피드백, 교환 및 반품 정책, 고객 만족 서비스 지원.',
     email: 'cskh@haq.com.vn',
-    deptVi: 'Ban Chăm Sóc Khách Hàng & Đối Tác',
-    deptEn: 'Customer & Partner Care Dept',
-    deptKo: '고객 만족 및 사후 관리팀',
-    roleVi: 'Tiếp nhận ý kiến đóng góp, thẩm định chất lượng sản phẩm, chính sách bảo hành & quyền lợi người tiêu dùng.',
-    roleEn: 'Product quality feedback, warranty/exchange policies, partner assistance, and consumer rights.',
-    roleKo: '고객 의견 수렴, 제품 품질 모니터링, 교환/반품 정책 및 고객 만족 지원.',
-    responseTimeVi: 'Phản hồi trong 4 – 12 giờ',
-    responseTimeEn: 'Reply in 4 – 12 hours',
-    responseTimeKo: '4 – 12시간 내 회신',
-    icon: Headphones,
   },
   {
     id: 'support',
-    code: '03',
-    categoryVi: 'VẬN HÀNH & HỖ TRỢ KỸ THUẬT',
-    categoryEn: 'OPERATIONS & TECHNICAL SUPPORT',
-    categoryKo: '운영 지원 및 품질 인증',
+    deptVi: 'Hỗ trợ Kỹ thuật & Vận đơn',
+    deptEn: 'Technical & Order Support',
+    deptKo: '물류 운영 및 기술 지원팀',
+    roleVi: 'Tiến độ giao nhận hàng hóa, chứng từ vận chuyển, thông số kỹ thuật & kiểm nghiệm ISO/HACCP.',
+    roleEn: 'Order tracking, shipping documents, technical specifications & ISO/HACCP records.',
+    roleKo: '주문 배송 추적, 통관 및 수출 서류, 제품 기술 규격 및 ISO/HACCP 인증 확인.',
     email: 'support@haq.com.vn',
-    deptVi: 'Bộ Phận Vận Đơn & Tiêu Chuẩn Kỹ Thuật',
-    deptEn: 'Order Logistics & Technical Standards',
-    deptKo: '물류 운영 및 기술 표준팀',
-    roleVi: 'Theo dõi tiến độ đơn hàng, chứng từ vận chuyển, thông số kỹ thuật (COA) & chứng nhận ISO 22000 / HACCP.',
-    roleEn: 'Order shipment tracking, transport documents, technical specifications (COA), and ISO 22000 / HACCP records.',
-    roleKo: '주문 배송 추적, 운송 서류, 제품 기술 규격(COA) 및 ISO 22000 / HACCP 인증 자료 확인.',
-    responseTimeVi: 'Phản hồi trong ngày làm việc',
-    responseTimeEn: 'Reply within business day',
-    responseTimeKo: '당일 업무 시간 내 회신',
-    icon: LifeBuoy,
   },
   {
     id: 'tuyendung',
-    code: '04',
-    categoryVi: 'NHÂN SỰ & THU HÚT NHÂN TÀI',
-    categoryEn: 'HUMAN RESOURCES & RECRUITMENT',
-    categoryKo: '인사 관리 및 인재 채용',
-    email: 'tuyendung@haq.com.vn',
-    deptVi: 'Ban Nhân Sự & Tuyển Dụng',
-    deptEn: 'Human Resources & Talent Acquisition',
+    deptVi: 'Ban Nhân sự & Tuyển dụng',
+    deptEn: 'Human Resources & Recruitment',
     deptKo: '인사 및 인재 채용팀',
-    roleVi: 'Tiếp nhận hồ sơ ứng viên (CV), lịch phỏng vấn, liên hệ hợp tác nhân sự và cơ hội nghề nghiệp tại HAQ FOOD.',
-    roleEn: 'CV submissions, interview schedules, talent partnerships, and open career opportunities at HAQ FOOD.',
-    roleKo: '입사 지원서(CV) 접수, 면접 일정 조율, 채용 협력 및 HAQ FOOD 인재 채용 정보 안내.',
-    responseTimeVi: 'Phản hồi trong 24 giờ',
-    responseTimeEn: 'Reply within 24 hours',
-    responseTimeKo: '24시간 내 회신',
-    icon: Briefcase,
+    roleVi: 'Tiếp nhận hồ sơ ứng viên (CV), lịch phỏng vấn & cơ hội việc làm tại HAQ FOOD.',
+    roleEn: 'CV submissions, interview schedules, career opportunities across factories & offices.',
+    roleKo: '입사 지원서(CV) 접수, 면접 일정 조율 및 HAQ FOOD 채용 공고 안내.',
+    email: 'tuyendung@haq.com.vn',
+  },
+  {
+    id: 'info',
+    deptVi: 'Văn phòng Công ty (Chung)',
+    deptEn: 'Corporate Head Office (General)',
+    deptKo: '본사 대표 (일반 문의)',
+    roleVi: 'Tiếp nhận hồ sơ năng lực doanh nghiệp, chào giá nhà cung cấp & thông tin hành chính.',
+    roleEn: 'Company capability profile, supplier proposals, and general corporate inquiries.',
+    roleKo: '기업 소개서 접수, 협력업체 제안 및 일반 행정 문의.',
+    email: 'info@haq.com.vn',
   },
 ]
 
@@ -762,140 +740,137 @@ export default function ContactPage() {
         </section>
 
         {/* =========================================================================
-            DEPARTMENTAL EMAIL DIRECTORY (HỆ THỐNG EMAIL CHUYÊN TRÁCH THEO PHÒNG BAN)
+            DANH BẠ EMAIL TIẾP NHẬN THEO BỘ PHẬN (ĐƠN GIẢN, RÕ RÀNG, CHUẨN DOANH NGHIỆP)
             ========================================================================= */}
-        <section id="email-directory" className="py-16 sm:py-24 bg-haq-soft/30 border-t border-haq-border relative">
+        <section id="email-directory" className="py-12 sm:py-16 bg-white border-t border-haq-border">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <Reveal direction="up">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-haq-border mb-10">
-                <div className="max-w-2xl">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-haq-border text-xs font-heading font-bold uppercase tracking-wider text-[#16A34A] mb-3 shadow-2xs">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>
-                      {language === 'en'
-                        ? 'ENTERPRISE EMAIL DIRECTORY'
-                        : language === 'ko'
-                        ? '기업 전용 부서별 직통 이메일'
-                        : 'DOANH NGHIỆP // HỆ THỐNG HÒM THƯ CHUYÊN TRÁCH'}
-                    </span>
-                  </div>
-                  <h2 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl text-haq-ink uppercase leading-snug">
-                    {language === 'en'
-                      ? 'OFFICIAL INBOXES BY DEPARTMENT'
-                      : language === 'ko'
-                      ? '담당 부서별 공식 이메일 소통 창구'
-                      : 'KẾT NỐI TRỰC TIẾP TỪNG BỘ PHẬN CHUYÊN TRÁCH'}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-haq-text-secondary mt-2.5 leading-relaxed font-normal">
-                    {language === 'en'
-                      ? 'Select the dedicated departmental inbox below for faster routing, direct accountability, and timely enterprise support.'
-                      : language === 'ko'
-                      ? '문의 목적에 맞는 해당 부서의 직통 이메일로 접수해 주시면 담당 책임자가 신속하고 전문적으로 검토 후 회신드립니다.'
-                      : 'Gửi thư trực tiếp đến hòm thư chuyên trách giúp thông tin được bảo mật, chuyển đúng người phụ trách bộ phận và ưu tiên xử lý trong vòng 2 – 24 giờ.'}
-                  </p>
+              <div className="mb-6 sm:mb-8">
+                <h2 className="font-heading font-extrabold text-xl sm:text-2xl md:text-3xl text-haq-ink uppercase">
+                  {language === 'en'
+                    ? 'Departmental Email Directory'
+                    : language === 'ko'
+                    ? '부서별 공식 이메일 안내'
+                    : 'Danh Bạ Email Tiếp Nhận Theo Bộ Phận'}
+                </h2>
+                <p className="text-xs sm:text-sm text-haq-text-secondary mt-1 leading-relaxed">
+                  {language === 'en'
+                    ? 'Please reach out to the appropriate department directly for prompt assistance:'
+                    : language === 'ko'
+                    ? '문의 목적에 맞는 해당 부서로 직접 연락해 주시면 신속하게 회신드리겠습니다:'
+                    : 'Quý đối tác và khách hàng có thể liên hệ trực tiếp với các bộ phận phụ trách để được hỗ trợ nhanh nhất:'}
+                </p>
+              </div>
+
+              {/* Bảng danh bạ đơn giản, trực quan */}
+              <div className="border border-haq-border rounded-2xl overflow-hidden bg-white shadow-2xs">
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left text-sm border-collapse">
+                    <thead className="bg-haq-soft/80 border-b border-haq-border text-haq-ink font-heading font-bold text-xs uppercase tracking-wider">
+                      <tr>
+                        <th className="py-3.5 px-6 w-[28%]">
+                          {language === 'en' ? 'Department' : language === 'ko' ? '담당 부서' : 'Bộ phận'}
+                        </th>
+                        <th className="py-3.5 px-6 w-[48%]">
+                          {language === 'en' ? 'Scope of Responsibility' : language === 'ko' ? '업무 내용' : 'Nội dung phụ trách'}
+                        </th>
+                        <th className="py-3.5 px-6 w-[24%]">
+                          {language === 'en' ? 'Official Email' : language === 'ko' ? '공식 이메일' : 'Email tiếp nhận'}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-haq-border">
+                      {DEPARTMENT_EMAILS.map((item) => {
+                        const isCopied = copiedEmail === item.email
+                        const dept = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
+                        const role = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
+
+                        return (
+                          <tr key={item.email} className="hover:bg-haq-soft/40 transition-colors">
+                            <td className="py-4 px-6 font-heading font-bold text-haq-ink text-sm">
+                              {dept}
+                            </td>
+                            <td className="py-4 px-6 text-haq-text-secondary text-sm leading-relaxed">
+                              {role}
+                            </td>
+                            <td className="py-4 px-6">
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`mailto:${item.email}`}
+                                  className="font-mono text-sm font-semibold text-[#16A34A] hover:underline"
+                                  title={`Gửi thư tới ${item.email}`}
+                                >
+                                  {item.email}
+                                </a>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopyEmail(item.email)}
+                                  className="inline-flex items-center justify-center p-1.5 text-haq-text-secondary hover:text-haq-ink rounded-md hover:bg-haq-soft transition-colors cursor-pointer"
+                                  title={isCopied ? 'Đã sao chép' : 'Sao chép email'}
+                                  aria-label={`Sao chép ${item.email}`}
+                                >
+                                  {isCopied ? (
+                                    <Check className="w-3.5 h-3.5 text-[#16A34A]" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
                 </div>
 
-                {/* Head office quick badge */}
-                <div className="shrink-0 p-4 sm:p-5 rounded-2xl bg-white border border-haq-border shadow-2xs">
-                  <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-haq-text-secondary block">
-                    {language === 'en' ? 'Corporate Head Office' : language === 'ko' ? '본사 대표 공식 이메일' : 'Hòm thư Chung Doanh Nghiệp'}
-                  </span>
-                  <a
-                    href="mailto:info@haq.com.vn"
-                    className="font-mono text-sm font-bold text-haq-ink hover:text-[#16A34A] transition-colors inline-flex items-center gap-1.5 mt-1"
-                    title="Gửi thư tới info@haq.com.vn"
-                  >
-                    <span>info@haq.com.vn</span>
-                    <ArrowUpRight className="w-4 h-4 text-haq-text-secondary" />
-                  </a>
+                {/* Mobile Stacked List View */}
+                <div className="divide-y divide-haq-border md:hidden">
+                  {DEPARTMENT_EMAILS.map((item) => {
+                    const isCopied = copiedEmail === item.email
+                    const dept = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
+                    const role = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
+
+                    return (
+                      <div key={item.email} className="p-4 space-y-1.5">
+                        <div className="font-heading font-bold text-sm text-haq-ink">
+                          {dept}
+                        </div>
+                        <div className="text-xs text-haq-text-secondary leading-relaxed">
+                          {role}
+                        </div>
+                        <div className="pt-1.5 flex items-center justify-between gap-2">
+                          <a
+                            href={`mailto:${item.email}`}
+                            className="font-mono text-xs font-semibold text-[#16A34A] hover:underline truncate"
+                          >
+                            {item.email}
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyEmail(item.email)}
+                            className="inline-flex items-center gap-1 text-[11px] font-heading font-medium text-haq-text-secondary hover:text-haq-ink px-2 py-1 rounded bg-haq-soft border border-haq-border cursor-pointer shrink-0"
+                          >
+                            {isCopied ? (
+                              <>
+                                <Check className="w-3 h-3 text-[#16A34A]" />
+                                <span className="text-[#16A34A]">Đã chép</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>Sao chép</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </Reveal>
-
-            {/* Departmental Directory Grid (2x2 Balanced Architectural Layout) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
-              {DEPARTMENT_EMAILS.map((item, idx) => {
-                const Icon = item.icon
-                const isCopied = copiedEmail === item.email
-                const deptName = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
-                const category = language === 'en' ? item.categoryEn : language === 'ko' ? item.categoryKo : item.categoryVi
-                const roleDesc = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
-                const responseTime = language === 'en' ? item.responseTimeEn : language === 'ko' ? item.responseTimeKo : item.responseTimeVi
-
-                return (
-                  <Reveal key={item.id} delay={idx * 60} direction="up">
-                    <div className="bg-white rounded-2xl p-6 sm:p-7 border border-haq-border shadow-2xs hover:shadow-md hover:border-[#16A34A]/50 transition-all duration-300 flex flex-col justify-between h-full group">
-                      <div>
-                        {/* Top Meta: Code + Response time */}
-                        <div className="flex items-center justify-between gap-2 mb-4 pb-3.5 border-b border-haq-border/60">
-                          <span className="font-mono text-xs font-bold text-[#16A34A] tracking-wider uppercase flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]" />
-                            {item.code} // {category}
-                          </span>
-                          <span className="text-[11px] font-sans font-medium text-haq-text-secondary bg-haq-soft/80 px-2.5 py-0.5 rounded-full border border-haq-border/60 shrink-0">
-                            {responseTime}
-                          </span>
-                        </div>
-
-                        {/* Department title */}
-                        <div className="flex items-start gap-3.5">
-                          <div className="w-10 h-10 rounded-xl bg-haq-soft border border-haq-border flex items-center justify-center shrink-0 text-haq-ink group-hover:text-[#16A34A] group-hover:border-[#16A34A]/40 transition-colors">
-                            <Icon className="w-5 h-5" strokeWidth={1.75} />
-                          </div>
-                          <div>
-                            <h3 className="font-heading font-extrabold text-base sm:text-lg text-haq-ink uppercase leading-snug group-hover:text-[#16A34A] transition-colors">
-                              {deptName}
-                            </h3>
-                          </div>
-                        </div>
-
-                        {/* Role Description */}
-                        <p className="text-xs sm:text-sm text-haq-text-secondary mt-3.5 leading-relaxed font-normal">
-                          {roleDesc}
-                        </p>
-                      </div>
-
-                      {/* Email Interaction Bar */}
-                      <div className="mt-6 pt-4 border-t border-haq-border flex items-center justify-between gap-3">
-                        <a
-                          href={`mailto:${item.email}`}
-                          className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-haq-ink hover:text-[#16A34A] transition-colors group/link min-w-0"
-                          title={`Soạn thư gửi tới ${item.email}`}
-                        >
-                          <Mail className="w-4 h-4 text-haq-text-secondary group-hover/link:text-[#16A34A] shrink-0" />
-                          <span className="truncate">{item.email}</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-haq-text-secondary group-hover/link:text-[#16A34A] group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform shrink-0" />
-                        </a>
-
-                        <button
-                          type="button"
-                          onClick={() => handleCopyEmail(item.email)}
-                          className={`inline-flex items-center gap-1.5 text-xs font-heading font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer shrink-0 ${
-                            isCopied
-                              ? 'bg-emerald-50 text-[#16A34A] border-emerald-200'
-                              : 'bg-haq-soft hover:bg-white text-haq-text-secondary hover:text-haq-ink border-haq-border'
-                          }`}
-                          title={isCopied ? 'Đã sao chép vào bộ nhớ tạm' : 'Sao chép địa chỉ email'}
-                          aria-label={`Sao chép ${item.email}`}
-                        >
-                          {isCopied ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-[#16A34A]" />
-                              <span>{language === 'en' ? 'Copied' : language === 'ko' ? '복사됨' : 'Đã chép'}</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>{language === 'en' ? 'Copy' : language === 'ko' ? '복사' : 'Sao chép'}</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </Reveal>
-                )
-              })}
-            </div>
           </div>
         </section>
 
@@ -992,7 +967,7 @@ export default function ContactPage() {
                             href="#email-directory"
                             className="font-heading font-bold text-[#16A34A] hover:underline inline-flex items-center gap-1"
                           >
-                            <span>{language === 'en' ? 'View 4 inboxes ↓' : language === 'ko' ? '4개 부서 메일 보기 ↓' : 'Xem 4 phòng ban ↓'}</span>
+                            <span>{language === 'en' ? 'View departmental inboxes ↑' : language === 'ko' ? '부서별 메일 안내 ↑' : 'Xem danh bạ email các bộ phận ↑'}</span>
                           </a>
                         </div>
                       </div>
