@@ -16,7 +16,7 @@ import TermsOfServicePage from './pages/TermsOfServicePage.jsx'
 import Admin from './pages/Admin.jsx'
 import ProductDetailPage from './pages/ProductDetailPage.jsx'
 
-import { initPostHog, recordSessionVisit } from './services/posthog'
+import { initPostHog, recordSessionVisit, trackPageView } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import SeoHead from './components/SeoHead'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -27,8 +27,9 @@ function RouteSync() {
   const { language, setLanguage } = useLanguage()
   const prevPathRef = useRef(pathname)
 
-  // 1. Only scroll to top when user actually navigates to a new route
+  // 1. Only scroll to top and track pageview when user actually navigates to a new route
   useEffect(() => {
+    trackPageView(pathname)
     if (prevPathRef.current !== pathname) {
       prevPathRef.current = pathname
       window.scrollTo(0, 0)

@@ -153,12 +153,12 @@ export function initPostHog() {
     if (POSTHOG_KEY && POSTHOG_KEY !== 'phc_demo_haq_food_analytics_key') {
       posthog.init(POSTHOG_KEY, {
         api_host: POSTHOG_HOST,
-        autocapture: false, // Explicit tracking for clean B2B data
-        capture_pageview: false, // Không tự động bắn pageview ở homepage
+        autocapture: true, // Thu thập toàn bộ click trên nút, link, thẻ sản phẩm, menu
+        capture_pageview: 'always', // Tự động ghi nhận lượt xem trang
         capture_pageleave: true,
-        disable_session_recording: true, // MẶC ĐỊNH TẮT TOÀN TRANG
+        disable_session_recording: false, // Bật ghi hình phiên làm việc cho toàn bộ web
         session_recording: {
-          maskAllInputs: true,
+          maskAllInputs: true, // Che thông tin nhạy cảm ở các ô nhập liệu
         },
         persistence: 'localStorage+cookie',
         before_send: (event) => {
@@ -166,7 +166,7 @@ export function initPostHog() {
           const currentUrl = event?.properties?.['$current_url'] || ''
           const currentPath = event?.properties?.['$pathname'] || ''
 
-          // 1. Loại trừ hoàn toàn 100% trang Admin
+          // 1. Loại trừ hoàn toàn 100% trang Admin để bảo mật dữ liệu quản trị
           if (
             path.startsWith('/admin') || 
             currentPath.startsWith('/admin') || 
@@ -175,32 +175,16 @@ export function initPostHog() {
             return null
           }
 
-          // 2. CHẶN TUYỆT ĐỐI GHI HÌNH TẠI HOMEPAGE VÀ CÁC TRANG KHÔNG PHẢI SẢN PHẨM
-          // Toàn bộ các gói tin ghi hình session recording có tên sự kiện là '$snapshot'
-          if (event?.event === '$snapshot') {
-            const isProduct = 
-              path.startsWith('/san-pham/') || 
-              currentPath.startsWith('/san-pham/') || 
-              currentUrl.includes('/san-pham/')
-
-            // Nếu đang ở Homepage (/) hoặc các trang khác không phải chi tiết sản phẩm -> HỦY BỎ GÓI TIN GHI HÌNH
-            if (!isProduct) {
-              return null
-            }
-          }
-
           return event
         },
         loaded: (ph) => {
-          // Nếu đang ở Trang chủ (/), chủ động dừng ghi hình nếu có
-          const currentPath = window.location.pathname
-          if (currentPath === '/' || currentPath === '' || currentPath.startsWith('/admin')) {
-            try {
-              if (typeof ph.stopSessionRecording === 'function') {
-                ph.stopSessionRecording()
-              }
-            } catch (e) {}
-          }
+          try {
+            const host = window.location.hostname
+            ph.register({
+              site_domain: host,
+              is_production: host.includes('haq.com.vn'),
+            })
+          } catch (e) {}
           captureAndPersistUTMs()
         },
       })
@@ -212,6 +196,23 @@ export function initPostHog() {
 
   captureAndPersistUTMs()
   return posthog
+}
+
+/**
+ * Ghi nhận Pageview khi chuyển trang trong React Router
+ */
+export function trackPageView(pathname) {
+  if (typeof window === 'undefined') return
+  if (window.location.pathname.startsWith('/admin')) return
+  try {
+    if (posthog && posthog.__loaded) {
+      posthog.capture('$pageview', {
+        $current_url: window.location.href,
+        pathname: pathname || window.location.pathname,
+        site_domain: window.location.hostname,
+      })
+    }
+  } catch (e) {}
 }
 
 /**
