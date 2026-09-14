@@ -42,7 +42,7 @@ export default function AboutCompany() {
               Chất lượng vượt niềm tin
             </h3>
             <p className="text-haq-text-secondary leading-relaxed mb-8 text-left sm:text-justify text-sm sm:text-base font-normal">
-              Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là bánh nướng và bánh tráng đạt chuẩn ISO – HACCP.
+              Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với thế mạnh chủ lực là bánh tráng và đồ ăn vặt đóng gói đạt chuẩn ISO – HACCP.
             </p>
 
             {/* Badges / Value Stats */}

@@ -128,16 +128,16 @@ const PROFILE_I18N = {
     zh: 'HAQ FOOD',
   },
   story_p1_mid: {
-    vi: ' là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là ',
+    vi: ' là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói chuẩn vị Việt, nổi bật với thế mạnh chủ lực là ',
     en: ' is a premier manufacturer and distributor in the packaged food industry, specializing in ',
     ko: '는 베트남 전통 가공식품 전문 제조·유통 기업으로, 주력 제품군인 ',
-    zh: '是越南包装食品与休闲零食领域的领先制造企业，尤以两大核心品类——',
+    zh: '是越南包装食品与休闲零食领域的领先制造企业，尤以核心品类——',
   },
   story_p1_strong_products: {
-    vi: 'bánh nướng và bánh tráng',
-    en: 'baked pastries and crispy rice paper snacks',
-    ko: '구운 과자와 바삭 라이스페이퍼',
-    zh: '烘烤糕点与酥脆米纸',
+    vi: 'bánh tráng và đồ ăn vặt đóng gói',
+    en: 'crispy rice paper snacks and packaged treats',
+    ko: '바삭 라이스페이퍼와 포장 스낵',
+    zh: '酥脆米纸与包装休闲零食',
   },
   story_p1_after_prod: {
     vi: '. Ứng dụng dây chuyền chế biến hiện đại đạt chuẩn ',

@@ -68,7 +68,7 @@ export const CATEGORY_VISUALS = {
     image: catBanhImg,
     desc: 'Bánh hạnh nhân thượng hạng thơm bùi giòn xốp đạt chuẩn xuất khẩu sang thị trường châu Á.',
     featured: 'Bánh hạnh nhân thượng hạng',
-    featuredDesc: 'Bánh nướng giòn tan bùi thơm hạt hạnh nhân tự nhiên, đạt chuẩn ISO 22000.',
+    featuredDesc: 'Bánh hạnh nhân giòn tan bùi thơm hạt hạnh nhân tự nhiên, đạt chuẩn ISO 22000.',
   },
   'banh-deo': {
     image: catBanhImg,
@@ -84,7 +84,7 @@ export const CATEGORY_VISUALS = {
   },
   'banh-khac': {
     image: catBanhImg,
-    desc: 'Các dòng bánh nướng và bánh ngọt đa dạng của HAQ FOOD.',
+    desc: 'Các dòng bánh truyền thống và bánh ngọt đa dạng của HAQ FOOD.',
     featured: 'Bánh đậu xanh tươi',
     featuredDesc: 'Đậu xanh nguyên chất tươi ngon, bổ dưỡng cho cả gia đình.',
   },

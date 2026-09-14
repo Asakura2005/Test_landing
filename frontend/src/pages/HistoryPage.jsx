@@ -310,7 +310,7 @@ export default function HistoryPage() {
                         ? '베트남 프리미엄 스낵 및 건조식품 전체 라인업을 확인하세요.'
                         : language === 'zh'
                         ? '探索香脆米纸、烘焙糕点以及农副产品干制品全线产品。'
-                        : 'Khám phá đầy đủ các dòng bánh tráng, bánh nướng và nông sản sấy.'}
+                        : 'Khám phá đầy đủ các dòng bánh tráng, đồ ăn vặt và nông sản sấy.'}
                     </p>
                   </div>
                   <div className="mt-5 inline-flex items-center gap-2 text-xs font-heading font-bold text-haq-red group-hover:translate-x-1 transition-transform">
@@ -392,11 +392,11 @@ function getChapters(lang) {
       lead: en ? 'Elevating heritage recipes combined with advanced baking and drying systems to satisfy diverse consumer tastes.'
         : ko ? '전통 비법에 현대적 제빵 및 건조 기술을 접목하여 소비자의 다채로운 입맛을 충족시켰습니다.'
         : zh ? '升华传统家传配方，融合现代烘焙与低温脱水技术，满足消费者多元化味蕾。'
-        : 'Nâng tầm công thức gia truyền kết hợp thiết bị nướng và sấy hiện đại, đáp ứng đa dạng khẩu vị người tiêu dùng.',
+        : 'Nâng tầm công thức gia truyền kết hợp thiết bị chế biến và sấy hiện đại, đáp ứng đa dạng khẩu vị người tiêu dùng.',
       desc: en ? 'Heavily investing in our dedicated R&D lab to standardize clean agri-produce processing. HAQ FOOD broadened its catalog from rice paper to premium baked cookies, traditional mung bean cakes, and ready-to-eat dried meats, expanding to 15+ SKUs.'
         : ko ? 'R&D 전담 연구소에 과감히 투자하여 청정 농산물 가공 공정을 표준화했습니다. 라이스페이퍼에서 프리미엄 구운 과자, 전통 녹두과자, 건조 육류 간식으로 카테고리를 넓혀 총 15종 이상의 SKU를 구축했습니다.'
         : zh ? '大力投资建设独立 R&D 实验室，标准化洁净农产品加工工艺。HAQ FOOD 将产品线从传统烤米纸延伸至高端烘焙饼干、传统绿豆糕及开袋即食肉类干制品，SKU 扩充至 15+ 款。'
-        : 'Đầu tư mạnh mẽ vào phòng nghiên cứu R&D, chuẩn hóa quy trình chế biến nông sản sạch. HAQ FOOD mở rộng danh mục từ bánh tráng sang các dòng bánh nướng thượng hạng, bánh đậu xanh truyền thống và đồ ăn khô ăn liền, nâng tổng số mã sản phẩm lên hơn 15+ SKU.',
+        : 'Đầu tư mạnh mẽ vào phòng nghiên cứu R&D, chuẩn hóa quy trình chế biến nông sản sạch. HAQ FOOD mở rộng danh mục từ bánh tráng sang các dòng bánh hạnh nhân, bánh đậu xanh truyền thống và đồ ăn vặt đóng gói ăn liền, nâng tổng số mã sản phẩm lên hơn 15+ SKU.',
       achievements: en ? [
         'Successfully formulated crispy almond cookies and smooth fresh mung bean cakes.',
         'Commissioned high-tech popcorn popping chamber with uniform caramel coating.',
@@ -496,7 +496,7 @@ function getChapters(lang) {
         '升级企业内部 QC 质检实验室，逐批严控微生物与水分指标。',
       ] : [
         'Đạt chứng chỉ quốc tế ISO 22000:2018 & HACCP Codex từ tổ chức giám định độc lập.',
-        'Xuất khẩu chính ngạch thành công bánh nướng & bánh tráng sang Hàn Quốc & Đài Loan.',
+        'Xuất khẩu chính ngạch thành công các dòng bánh tráng & đồ ăn vặt sang Hàn Quốc & Đài Loan.',
         'Chuẩn hóa bao bì đa ngôn ngữ và tem nhãn hải quan theo quy định quốc tế.',
         'Nâng cấp phòng thí nghiệm nội bộ (QC Lab) kiểm tra vi sinh và độ ẩm từng lô.',
       ],

@@ -12,7 +12,7 @@ const MILESTONES = [
   {
     year: '2022',
     title: 'Mở rộng dải sản phẩm',
-    desc: 'Phát triển các dòng bánh nướng thượng hạng (Bánh hạnh nhân, Bánh đậu xanh tươi) và đồ ăn vặt đóng gói ăn liền.',
+    desc: 'Phát triển các dòng bánh truyền thống (Bánh hạnh nhân, Bánh đậu xanh tươi) và đồ ăn vặt đóng gói ăn liền.',
     icon: Sparkles,
     badge: 'EXPANSION',
   },

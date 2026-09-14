@@ -40,7 +40,7 @@ export const translations = {
       // Section 01
       sec1_badge: '01 — TỔNG QUAN DOANH NGHIỆP',
       sec1_title: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
-      sec1_desc: 'Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với hai dòng thế mạnh chủ lực là bánh nướng và bánh tráng. Doanh nghiệp ứng dụng dây chuyền chế biến hiện đại đạt chuẩn ISO – HACCP với cam kết khắt khe về An toàn – Minh bạch – Chất lượng cao.',
+      sec1_desc: 'Thành lập năm 2021, Công ty Cổ phần HAQ Hà Nội là đơn vị sản xuất và phân phối uy tín trong ngành thực phẩm đóng gói và đồ ăn vặt chuẩn vị Việt, nổi bật với thế mạnh chủ lực là bánh tráng và đồ ăn vặt đóng gói. Doanh nghiệp ứng dụng dây chuyền chế biến hiện đại đạt chuẩn ISO – HACCP với cam kết khắt khe về An toàn – Minh bạch – Chất lượng cao.',
       fact_header: 'HỒ SƠ ĐĂNG KÝ DOANH NGHIỆP',
       fact_est: 'THÀNH LẬP 2021',
       fact_legal_name_label: 'Tên pháp nhân',
@@ -53,7 +53,7 @@ export const translations = {
       fact_hq_label: 'Trụ sở & Vận hành',
       fact_hq_val: 'Thành phố Hà Nội, Việt Nam',
       fact_scope_label: 'Lĩnh vực sản xuất',
-      fact_scope_val: 'Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh nướng hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.',
+      fact_scope_val: 'Sản xuất, chế biến sâu và bảo quản thực phẩm: Bánh tráng sấy giòn cao cấp (HOKI), bánh hạnh nhân, bánh sữa dừa, bánh đậu xanh tươi và nông sản sấy khô.',
       fact_dist_label: 'Hệ thống phân phối',
       fact_dist_val: 'Chuỗi bán lẻ hiện đại (WinMart, Circle K, GS25, Bách Hóa Xanh, K-Market...), đại lý phân phối toàn quốc và xuất khẩu (Hàn Quốc, Đài Loan).',
       fact_coop_label: 'Mô hình hợp tác B2B',
@@ -399,7 +399,7 @@ export const translations = {
       // Section 01
       sec1_badge: '01 — CORPORATE OVERVIEW',
       sec1_title: 'HAQ FOOD HANOI JOINT STOCK COMPANY',
-      sec1_desc: 'Established in 2021 in Hanoi, HAQ Hanoi Joint Stock Company specializes in the manufacturing and distribution of packaged processed foods. The company masters closed convection drying technology, developing premium crispy rice paper snacks, traditional baked goods, and dried agricultural products for domestic retail chains and international export markets.',
+      sec1_desc: 'Established in 2021 in Hanoi, HAQ Hanoi Joint Stock Company specializes in the manufacturing and distribution of packaged processed foods and snacks. The company masters closed convection drying technology, developing premium crispy rice paper snacks and packaged treats for domestic retail chains and international export markets.',
       fact_header: 'ENTERPRISE REGISTRATION DOSSIER',
       fact_est: 'EST. 2021',
       fact_legal_name_label: 'Legal Entity',
@@ -758,7 +758,7 @@ export const translations = {
       // Section 01
       sec1_badge: '01 — 기업 개요',
       sec1_title: 'HAQ 하노이 주식회사 (HAQ FOOD HANOI JSC)',
-      sec1_desc: '2021년 베트남 하노이에 설립된 HAQ FOOD는 프리미엄 포장 가공식품의 생산 및 유통을 선도하고 있습니다. 첨단 밀폐 대류 건조 기술을 바탕으로 크리스피 라이스페이퍼 스낵, 전통 구운 스낵, 건조 농산물을 생산하여 국내 주요 대형마트 및 해외(한국, 대만)로 수출하고 있습니다.',
+      sec1_desc: '2021년 베트남 하노이에 설립된 HAQ FOOD는 프리미엄 포장 가공식품 및 스낵의 생산 및 유통을 선도하고 있습니다. 첨단 밀폐 대류 건조 기술을 바탕으로 크리스피 라이스페이퍼 스낵과 포장 간식을 생산하여 국내 주요 대형마트 및 해외(한국, 대만)로 수출하고 있습니다.',
       fact_header: '기업 등록 및 법인 정보',
       fact_est: '2021년 설립',
       fact_legal_name_label: '법인명',
