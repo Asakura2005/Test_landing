@@ -5,7 +5,7 @@
  * ==============================================================================
  */
 
-const CRYPTO_API_URL = import.meta.env.VITE_BACKEND_API_URL || ''
+const CRYPTO_API_URL = import.meta.env.VITE_BACKEND_API_URL || 'https://test-landing-l1xv.onrender.com/api'
 
 /**
  * Helper: Lấy auth token từ session storage

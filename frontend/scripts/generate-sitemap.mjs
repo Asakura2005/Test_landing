@@ -63,6 +63,14 @@ const STATIC_SECTIONS = [
     changefreq: 'daily',
   },
   {
+    vi: '/tuyen-dung',
+    en: '/en/careers',
+    ko: '/ko/careers',
+    zh: '/zh/careers',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
     vi: '/lien-he',
     en: '/en/contact',
     ko: '/ko/contact',
@@ -72,26 +80,113 @@ const STATIC_SECTIONS = [
   },
 ]
 
-const POLICY_PAGES = [
-  { path: '/chinh-sach', priority: '0.5' },
-  { path: '/chinh-sach-bao-mat', priority: '0.5' },
-  { path: '/dieu-khoan-su-dung', priority: '0.5' },
-  { path: '/chinh-sach-doi-tra-hoan-tien', priority: '0.5' },
+const POLICY_SECTIONS = [
+  {
+    vi: '/chinh-sach',
+    en: '/en/policy',
+    ko: '/ko/policy',
+    zh: '/zh/policy',
+    priority: '0.5',
+    changefreq: 'monthly',
+  },
+  {
+    vi: '/chinh-sach-bao-mat',
+    en: '/en/privacy-policy',
+    ko: '/ko/privacy-policy',
+    zh: '/zh/privacy-policy',
+    priority: '0.5',
+    changefreq: 'monthly',
+  },
+  {
+    vi: '/dieu-khoan-su-dung',
+    en: '/en/terms-of-service',
+    ko: '/ko/terms-of-service',
+    zh: '/zh/terms-of-service',
+    priority: '0.5',
+    changefreq: 'monthly',
+  },
+  {
+    vi: '/chinh-sach-doi-tra-hoan-tien',
+    en: '/en/refund-policy',
+    ko: '/ko/refund-policy',
+    zh: '/zh/refund-policy',
+    priority: '0.5',
+    changefreq: 'monthly',
+  },
 ]
+
+function xmlEscape(str) {
+  if (!str) return ''
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
+function safeSlug(slug) {
+  return encodeURI(String(slug || '').trim())
+}
 
 function renderUrlEntry({ loc, alternates, lastmod = TODAY, changefreq = 'weekly', priority = '0.8' }) {
   const alternateXml = alternates
     ? alternates
-        .map(a => `    <xhtml:link rel="alternate" hreflang="${a.lang}" href="${a.href}" />`)
+        .map(a => `    <xhtml:link rel="alternate" hreflang="${xmlEscape(a.lang)}" href="${xmlEscape(a.href)}" />`)
         .join('\n') + '\n'
     : ''
 
   return `  <url>
-    <loc>${loc}</loc>
-${alternateXml}    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
+    <loc>${xmlEscape(loc)}</loc>
+${alternateXml}    <lastmod>${xmlEscape(lastmod)}</lastmod>
+    <changefreq>${xmlEscape(changefreq)}</changefreq>
+    <priority>${xmlEscape(priority)}</priority>
   </url>`
+}
+
+function addMultilingualSectionEntries(entries, sec) {
+  const alternates = [
+    { lang: 'vi', href: `${SITE_ORIGIN}${sec.vi}` },
+    { lang: 'en', href: `${SITE_ORIGIN}${sec.en}` },
+    { lang: 'ko', href: `${SITE_ORIGIN}${sec.ko}` },
+    { lang: 'zh', href: `${SITE_ORIGIN}${sec.zh}` },
+    { lang: 'x-default', href: `${SITE_ORIGIN}${sec.vi}` },
+  ]
+
+  const basePriority = parseFloat(sec.priority)
+  const variantPriority = Math.max(0.1, (basePriority - 0.1)).toFixed(1)
+
+  // VI
+  entries.push(renderUrlEntry({
+    loc: `${SITE_ORIGIN}${sec.vi}`,
+    alternates,
+    priority: sec.priority,
+    changefreq: sec.changefreq,
+  }))
+
+  // EN
+  entries.push(renderUrlEntry({
+    loc: `${SITE_ORIGIN}${sec.en}`,
+    alternates,
+    priority: variantPriority,
+    changefreq: sec.changefreq,
+  }))
+
+  // KO
+  entries.push(renderUrlEntry({
+    loc: `${SITE_ORIGIN}${sec.ko}`,
+    alternates,
+    priority: variantPriority,
+    changefreq: sec.changefreq,
+  }))
+
+  // ZH
+  entries.push(renderUrlEntry({
+    loc: `${SITE_ORIGIN}${sec.zh}`,
+    alternates,
+    priority: variantPriority,
+    changefreq: sec.changefreq,
+  }))
 }
 
 async function generateSitemap() {
@@ -105,7 +200,7 @@ async function generateSitemap() {
     
     const [prodsRes, newsRes] = await Promise.all([
       supabase.from('products').select('slug, created_at, name'),
-      supabase.from('news').select('slug, created_at, published_at, title')
+      supabase.from('news').select('slug, created_at, published_at, title, category')
     ])
 
     if (Array.isArray(prodsRes.data)) {
@@ -113,7 +208,9 @@ async function generateSitemap() {
     }
 
     if (Array.isArray(newsRes.data)) {
-      newsList = newsRes.data.filter(n => n && n.slug && n.slug !== 'adasdasd' && !n.slug.includes('test'))
+      newsList = newsRes.data.filter(
+        n => n && n.slug && n.slug !== 'adasdasd' && !n.slug.toLowerCase().includes('test')
+      )
     }
 
     console.log(`[sitemap] Fetched ${products.length} products and ${newsList.length} articles from Supabase.`)
@@ -125,70 +222,29 @@ async function generateSitemap() {
 
   // 1. Static main sections (multilingual)
   for (const sec of STATIC_SECTIONS) {
-    const alternates = [
-      { lang: 'vi', href: `${SITE_ORIGIN}${sec.vi}` },
-      { lang: 'en', href: `${SITE_ORIGIN}${sec.en}` },
-      { lang: 'ko', href: `${SITE_ORIGIN}${sec.ko}` },
-      { lang: 'zh', href: `${SITE_ORIGIN}${sec.zh}` },
-      { lang: 'x-default', href: `${SITE_ORIGIN}${sec.vi}` },
-    ]
-
-    // Add Vietnamese primary URL
-    entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}${sec.vi}`,
-      alternates,
-      priority: sec.priority,
-      changefreq: sec.changefreq
-    }))
-
-    // Add English variant URL
-    entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}${sec.en}`,
-      alternates,
-      priority: (parseFloat(sec.priority) - 0.1).toFixed(1),
-      changefreq: sec.changefreq
-    }))
-
-    // Add Korean variant URL
-    entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}${sec.ko}`,
-      alternates,
-      priority: (parseFloat(sec.priority) - 0.1).toFixed(1),
-      changefreq: sec.changefreq
-    }))
-
-    // Add Chinese variant URL
-    entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}${sec.zh}`,
-      alternates,
-      priority: (parseFloat(sec.priority) - 0.1).toFixed(1),
-      changefreq: sec.changefreq
-    }))
+    addMultilingualSectionEntries(entries, sec)
   }
 
-  // 2. Policy pages
-  for (const pol of POLICY_PAGES) {
-    entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}${pol.path}`,
-      priority: pol.priority,
-      changefreq: 'monthly'
-    }))
+  // 2. Policy pages (multilingual)
+  for (const pol of POLICY_SECTIONS) {
+    addMultilingualSectionEntries(entries, pol)
   }
 
   // 3. Dynamic Products
   for (const prod of products) {
+    const cleanSlug = safeSlug(prod.slug)
     const pDate = (prod.created_at ? new Date(prod.created_at).toISOString().split('T')[0] : TODAY)
     const alternates = [
-      { lang: 'vi', href: `${SITE_ORIGIN}/san-pham/${prod.slug}` },
-      { lang: 'en', href: `${SITE_ORIGIN}/en/products/${prod.slug}` },
-      { lang: 'ko', href: `${SITE_ORIGIN}/ko/products/${prod.slug}` },
-      { lang: 'zh', href: `${SITE_ORIGIN}/zh/products/${prod.slug}` },
-      { lang: 'x-default', href: `${SITE_ORIGIN}/san-pham/${prod.slug}` },
+      { lang: 'vi', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
+      { lang: 'en', href: `${SITE_ORIGIN}/en/products/${cleanSlug}` },
+      { lang: 'ko', href: `${SITE_ORIGIN}/ko/products/${cleanSlug}` },
+      { lang: 'zh', href: `${SITE_ORIGIN}/zh/products/${cleanSlug}` },
+      { lang: 'x-default', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
     ]
 
     // VI
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/san-pham/${prod.slug}`,
+      loc: `${SITE_ORIGIN}/san-pham/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'weekly',
@@ -197,7 +253,7 @@ async function generateSitemap() {
 
     // EN
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/en/products/${prod.slug}`,
+      loc: `${SITE_ORIGIN}/en/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'weekly',
@@ -206,7 +262,7 @@ async function generateSitemap() {
 
     // KO
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/ko/products/${prod.slug}`,
+      loc: `${SITE_ORIGIN}/ko/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'weekly',
@@ -215,7 +271,7 @@ async function generateSitemap() {
 
     // ZH
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/zh/products/${prod.slug}`,
+      loc: `${SITE_ORIGIN}/zh/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'weekly',
@@ -225,19 +281,20 @@ async function generateSitemap() {
 
   // 4. Dynamic News & Articles
   for (const item of newsList) {
+    const cleanSlug = safeSlug(item.slug)
     const rawDate = item.published_at || item.created_at
     const nDate = (rawDate ? new Date(rawDate).toISOString().split('T')[0] : TODAY)
     const alternates = [
-      { lang: 'vi', href: `${SITE_ORIGIN}/tin-tuc/${item.slug}` },
-      { lang: 'en', href: `${SITE_ORIGIN}/en/news/${item.slug}` },
-      { lang: 'ko', href: `${SITE_ORIGIN}/ko/news/${item.slug}` },
-      { lang: 'zh', href: `${SITE_ORIGIN}/zh/news/${item.slug}` },
-      { lang: 'x-default', href: `${SITE_ORIGIN}/tin-tuc/${item.slug}` },
+      { lang: 'vi', href: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}` },
+      { lang: 'en', href: `${SITE_ORIGIN}/en/news/${cleanSlug}` },
+      { lang: 'ko', href: `${SITE_ORIGIN}/ko/news/${cleanSlug}` },
+      { lang: 'zh', href: `${SITE_ORIGIN}/zh/news/${cleanSlug}` },
+      { lang: 'x-default', href: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}` },
     ]
 
     // VI
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/tin-tuc/${item.slug}`,
+      loc: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
@@ -246,7 +303,7 @@ async function generateSitemap() {
 
     // EN
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/en/news/${item.slug}`,
+      loc: `${SITE_ORIGIN}/en/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
@@ -255,7 +312,7 @@ async function generateSitemap() {
 
     // KO
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/ko/news/${item.slug}`,
+      loc: `${SITE_ORIGIN}/ko/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
@@ -264,7 +321,7 @@ async function generateSitemap() {
 
     // ZH
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/zh/news/${item.slug}`,
+      loc: `${SITE_ORIGIN}/zh/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',

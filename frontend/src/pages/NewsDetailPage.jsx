@@ -52,14 +52,18 @@ export default function NewsDetailPage() {
   const [isCopied, setIsCopied] = useState(false)
 
   useEffect(() => {
+    let isMounted = true
     const fetchArticle = async () => {
       try {
         setIsLoading(true)
+        setNews(null)
+        setRelatedNews([])
         const [articleData, allNewsData] = await Promise.all([
           getNewsBySlug(slug),
           getNews().catch(() => [])
         ])
         
+        if (!isMounted) return
         setNews(articleData)
 
         // Lọc bài viết liên quan
@@ -75,12 +79,22 @@ export default function NewsDetailPage() {
         }
       } catch (err) {
         console.error("Error fetching article:", err)
+        if (isMounted) {
+          setNews(null)
+          setRelatedNews([])
+        }
       } finally {
-        setIsLoading(false)
+        if (isMounted) {
+          setIsLoading(false)
+        }
       }
     }
     fetchArticle()
     window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    return () => {
+      isMounted = false
+    }
   }, [slug])
 
   const localizedNews = useMemo(() => {
@@ -93,9 +107,21 @@ export default function NewsDetailPage() {
 
   // Dynamic SEO Meta Tags & Schema.org NewsArticle Structured Data
   useEffect(() => {
-    if (!news) return
+    const SCRIPT_ID = 'news-article-schema-ld'
+    const removeScript = () => {
+      const el = document.getElementById(SCRIPT_ID)
+      if (el) el.remove()
+    }
 
-    const articleTitle = localizedNews?.title || news.title || 'Tin tức'
+    if (!news) {
+      removeScript()
+      if (!isLoading) {
+        document.title = `${language === 'en' ? 'Article Not Found' : language === 'ko' ? '기사를 찾을 수 없습니다' : language === 'zh' ? '文章不存在' : 'Bài viết không tồn tại'} | HAQ FOOD`
+      }
+      return
+    }
+
+    const articleTitle = (localizedNews?.title || news.title || 'Tin tức').trim()
     const pageTitle = `${articleTitle} | HAQ FOOD`
     document.title = pageTitle
 
@@ -144,9 +170,19 @@ export default function NewsDetailPage() {
     updateMetaTag('name', 'twitter:image', articleImage)
 
     // 3. Schema.org NewsArticle JSON-LD Script
-    const datePub = news.published_at || news.created_at || new Date().toISOString()
-    const dateMod = news.updated_at || news.published_at || news.created_at || new Date().toISOString()
-    const authorName = localizedNews?.author || news.author || 'Ban Truyền Thông HAQ FOOD'
+    const toIsoDate = (val) => {
+      if (!val) return new Date().toISOString()
+      try {
+        const d = new Date(val)
+        if (!isNaN(d.getTime())) return d.toISOString()
+      } catch (e) {}
+      return new Date().toISOString()
+    }
+
+    const datePub = toIsoDate(news.published_at || news.created_at)
+    const dateMod = toIsoDate(news.updated_at || news.published_at || news.created_at)
+    const authorName = (localizedNews?.author || news.author || 'Ban Truyền Thông HAQ FOOD').trim()
+    const isOrgAuthor = authorName.includes('Ban') || authorName.includes('HAQ') || authorName.includes('Cty') || authorName.includes('Công ty')
 
     const newsSchema = {
       '@context': 'https://schema.org',
@@ -162,7 +198,7 @@ export default function NewsDetailPage() {
       },
       'author': [
         {
-          '@type': 'Person',
+          '@type': isOrgAuthor ? 'Organization' : 'Person',
           'name': authorName,
           'url': 'https://haq.com.vn/'
         }
@@ -178,7 +214,6 @@ export default function NewsDetailPage() {
       }
     }
 
-    const SCRIPT_ID = 'news-article-schema-ld'
     let scriptEl = document.getElementById(SCRIPT_ID)
     if (!scriptEl) {
       scriptEl = document.createElement('script')
@@ -189,12 +224,9 @@ export default function NewsDetailPage() {
     scriptEl.textContent = JSON.stringify(newsSchema)
 
     return () => {
-      const el = document.getElementById(SCRIPT_ID)
-      if (el) el.remove()
-      updateMetaTag('property', 'og:image', 'https://haq.com.vn/favicon.jpg')
-      updateMetaTag('name', 'twitter:image', 'https://haq.com.vn/favicon.jpg')
+      removeScript()
     }
-  }, [news, localizedNews, slug])
+  }, [news, localizedNews, slug, language, isLoading])
 
   const handleShare = () => {
     if (navigator.share) {

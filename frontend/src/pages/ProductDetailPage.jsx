@@ -42,6 +42,7 @@ export default function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         setIsLoading(true)
+        setProduct(null)
         setSelectedVariantIndex(0)
         setIsZooming(false)
         setBackgroundPosition('0% 0%')
@@ -122,9 +123,21 @@ export default function ProductDetailPage() {
 
   // Dynamic SEO Meta Tags & Schema.org Product Structured Data
   useEffect(() => {
-    if (!product || !localizedProduct) return
+    const SCRIPT_ID = 'product-schema-ld'
+    const removeScript = () => {
+      const el = document.getElementById(SCRIPT_ID)
+      if (el) el.remove()
+    }
 
-    const prodName = localizedProduct.name || product.name || 'Sản phẩm'
+    if (!product || !localizedProduct) {
+      removeScript()
+      if (!isLoading) {
+        document.title = `${language === 'en' ? 'Product Not Found' : language === 'ko' ? '제품을 찾을 수 없습니다' : language === 'zh' ? '产品不存在' : 'Sản phẩm không tồn tại'} | HAQ FOOD`
+      }
+      return
+    }
+
+    const prodName = (localizedProduct.name || product.name || 'Sản phẩm').trim()
     const pageTitle = `${prodName} | HAQ FOOD`
     document.title = pageTitle
 
@@ -190,22 +203,19 @@ export default function ProductDetailPage() {
         '@type': 'Brand',
         'name': 'HAQ FOOD'
       },
-      'sku': product.slug || String(product.id),
-      'offers': {
-        '@type': 'Offer',
-        'url': currentUrl,
-        'priceCurrency': 'VND',
-        'price': '0',
-        'priceValidUntil': '2027-12-31',
-        'availability': 'https://schema.org/InStock',
-        'seller': {
-          '@type': 'Organization',
-          'name': 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI'
-        }
-      }
+      'manufacturer': {
+        '@type': 'Organization',
+        'name': 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
+        'url': 'https://haq.com.vn/'
+      },
+      'url': currentUrl,
+      'sku': product.slug || String(product.id)
     }
 
-    const SCRIPT_ID = 'product-schema-ld'
+    if (product.category) {
+      productSchema.category = product.category
+    }
+
     let scriptEl = document.getElementById(SCRIPT_ID)
     if (!scriptEl) {
       scriptEl = document.createElement('script')
@@ -216,12 +226,9 @@ export default function ProductDetailPage() {
     scriptEl.textContent = JSON.stringify(productSchema)
 
     return () => {
-      const el = document.getElementById(SCRIPT_ID)
-      if (el) el.remove()
-      updateMetaTag('property', 'og:image', 'https://haq.com.vn/favicon.jpg')
-      updateMetaTag('name', 'twitter:image', 'https://haq.com.vn/favicon.jpg')
+      removeScript()
     }
-  }, [product, localizedProduct, activeImage, selectedVariantIndex, slug])
+  }, [product, localizedProduct, activeImage, selectedVariantIndex, slug, language, isLoading])
 
   const handleSelectVariant = (idx) => {
     setSelectedVariantIndex(idx)

@@ -200,7 +200,7 @@ export default function Footer() {
           <p>
             {t('home.footer.legal_license_label', 'Giấy phép đăng ký kinh doanh:')}{' '}
             <a
-              href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi#goog_fullscreen_ad"
+              href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi"
               target="_blank"
               rel="noopener noreferrer"
               className="font-bold text-white hover:text-[#16A34A] hover:underline inline-flex items-center gap-1 transition-colors"

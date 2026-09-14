@@ -178,10 +178,13 @@ export default function NewsPage({ defaultTab }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
               {currentList.map((rawItem) => {
                 const item = getLocalizedNews(rawItem, language)
+                const detailPath = activeTab === 'tuyen-dung'
+                  ? (language === 'zh' ? `/zh/careers/${item.slug}` : language === 'en' ? `/en/careers/${item.slug}` : language === 'ko' ? `/ko/careers/${item.slug}` : `/tuyen-dung/${item.slug}`)
+                  : (language === 'zh' ? `/zh/news/${item.slug}` : language === 'en' ? `/en/news/${item.slug}` : language === 'ko' ? `/ko/news/${item.slug}` : `/tin-tuc/${item.slug}`)
                 return (
                 <Link
                   key={item.id}
-                  to={`/tin-tuc/${item.slug}`}
+                  to={detailPath}
                   className="group flex flex-col bg-white rounded-xl overflow-hidden border border-[#E2E8E4] hover:border-[#0F5132]/40 hover:shadow-md transition-all duration-300 text-left"
                 >
                   {/* Ảnh bài viết */}

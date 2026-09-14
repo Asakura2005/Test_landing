@@ -201,7 +201,7 @@ export async function getLeads() {
       })()
     : null
 
-  const backendUrl = import.meta.env.VITE_BACKEND_API_URL || ''
+  const backendUrl = import.meta.env.VITE_BACKEND_API_URL || 'https://test-landing-l1xv.onrender.com/api'
   if (backendUrl && token) {
     try {
       const response = await fetch(`${backendUrl}/leads`, {

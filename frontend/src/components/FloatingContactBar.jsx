@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Phone, MessageCircle, Mail, Sparkles, X } from 'lucide-react'
+import { Phone, MessageCircle, Mail, Sparkles, X, MapPin } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 export default function FloatingContactBar() {
@@ -23,12 +23,11 @@ export default function FloatingContactBar() {
       text: 'Zalo',
     },
     {
-      href: 'https://facebook.com',
-      icon: null,
-      label: 'Fanpage HAQ FOOD',
-      color: 'bg-[#1877F2]',
-      title: 'Facebook',
-      text: 'f',
+      href: 'https://maps.app.goo.gl/yAYkH7bYurLEtenP7',
+      icon: MapPin,
+      label: language === 'en' ? 'Google Maps: HAQ FOOD' : language === 'ko' ? 'Google 지도: HAQ FOOD' : language === 'zh' ? '谷歌地图: HAQ FOOD' : 'Chỉ đường Google Maps',
+      color: 'bg-[#EA4335]',
+      title: 'Google Maps',
     },
     {
       href: 'mailto:info@haq.com.vn',

@@ -51,6 +51,14 @@ export const ROUTE_DEFINITIONS = [
     aliases: ['/en/tin-tuc', '/ko/tin-tuc', '/zh/tin-tuc'],
   },
   {
+    key: 'careers',
+    vi: '/tuyen-dung',
+    en: '/en/careers',
+    ko: '/ko/careers',
+    zh: '/zh/careers',
+    aliases: ['/en/tuyen-dung', '/ko/tuyen-dung', '/zh/tuyen-dung'],
+  },
+  {
     key: 'contact',
     vi: '/lien-he',
     en: '/en/contact',
@@ -183,4 +191,106 @@ export function getContactUrl(language = 'vi') {
   if (language === 'zh') return '/zh/contact'
   return '/lien-he'
 }
+
+/**
+ * Helper sinh đường dẫn trang giới thiệu theo ngôn ngữ
+ */
+export function getAboutUrl(language = 'vi') {
+  if (language === 'en') return '/en/about'
+  if (language === 'ko') return '/ko/about'
+  if (language === 'zh') return '/zh/about'
+  return '/gioi-thieu'
+}
+
+/**
+ * Helper sinh đường dẫn trang lịch sử / dấu mốc theo ngôn ngữ
+ */
+export function getHistoryUrl(language = 'vi') {
+  if (language === 'en') return '/en/history'
+  if (language === 'ko') return '/ko/history'
+  if (language === 'zh') return '/zh/history'
+  return '/lich-su'
+}
+
+/**
+ * Helper sinh đường dẫn trang năng lực sản xuất theo ngôn ngữ
+ */
+export function getCapabilitiesUrl(language = 'vi') {
+  if (language === 'en') return '/en/capabilities'
+  if (language === 'ko') return '/ko/capabilities'
+  if (language === 'zh') return '/zh/capabilities'
+  return '/nang-luc'
+}
+
+/**
+ * Helper sinh đường dẫn trang tin tức theo ngôn ngữ
+ */
+export function getNewsUrl(language = 'vi') {
+  if (language === 'en') return '/en/news'
+  if (language === 'ko') return '/ko/news'
+  if (language === 'zh') return '/zh/news'
+  return '/tin-tuc'
+}
+
+/**
+ * Helper sinh đường dẫn chi tiết bài viết theo ngôn ngữ
+ */
+export function getNewsDetailUrl(slug, language = 'vi') {
+  const cleanSlug = slug || ''
+  if (language === 'en') return `/en/news/${cleanSlug}`
+  if (language === 'ko') return `/ko/news/${cleanSlug}`
+  if (language === 'zh') return `/zh/news/${cleanSlug}`
+  return `/tin-tuc/${cleanSlug}`
+}
+
+/**
+ * Helper sinh đường dẫn trang tuyển dụng theo ngôn ngữ
+ */
+export function getCareersUrl(language = 'vi') {
+  if (language === 'en') return '/en/careers'
+  if (language === 'ko') return '/ko/careers'
+  if (language === 'zh') return '/zh/careers'
+  return '/tuyen-dung'
+}
+
+/**
+ * Helper sinh đường dẫn chính sách hoàn tiền theo ngôn ngữ
+ */
+export function getRefundPolicyUrl(language = 'vi') {
+  if (language === 'en') return '/en/refund-policy'
+  if (language === 'ko') return '/ko/refund-policy'
+  if (language === 'zh') return '/zh/refund-policy'
+  return '/chinh-sach-doi-tra-hoan-tien'
+}
+
+/**
+ * Helper sinh đường dẫn chính sách bảo mật theo ngôn ngữ
+ */
+export function getPrivacyPolicyUrl(language = 'vi') {
+  if (language === 'en') return '/en/privacy-policy'
+  if (language === 'ko') return '/ko/privacy-policy'
+  if (language === 'zh') return '/zh/privacy-policy'
+  return '/chinh-sach-bao-mat'
+}
+
+/**
+ * Helper sinh đường dẫn điều khoản sử dụng theo ngôn ngữ
+ */
+export function getTermsUrl(language = 'vi') {
+  if (language === 'en') return '/en/terms-of-service'
+  if (language === 'ko') return '/ko/terms-of-service'
+  if (language === 'zh') return '/zh/terms-of-service'
+  return '/dieu-khoan-su-dung'
+}
+
+/**
+ * Helper sinh đường dẫn chính sách / công bố sản phẩm theo ngôn ngữ
+ */
+export function getPolicyUrl(language = 'vi') {
+  if (language === 'en') return '/en/policy'
+  if (language === 'ko') return '/ko/policy'
+  if (language === 'zh') return '/zh/policy'
+  return '/chinh-sach'
+}
+
 

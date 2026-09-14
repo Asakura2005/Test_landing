@@ -291,6 +291,54 @@
   </url>
 
   <url>
+    <loc>https://haq.com.vn/tuyen-dung</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tuyen-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/careers" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/careers" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/tuyen-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/en/careers</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tuyen-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/careers" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/careers" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/tuyen-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/ko/careers</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tuyen-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/careers" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/careers" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/tuyen-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/zh/careers</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tuyen-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/careers" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/careers" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/tuyen-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
     <loc>https://haq.com.vn/lien-he</loc>
     <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lien-he" />
     <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/contact" />
@@ -340,30 +388,194 @@
 
   <url>
     <loc>https://haq.com.vn/chinh-sach</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach" />
     <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/en/policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/ko/policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/zh/policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://haq.com.vn/chinh-sach-bao-mat</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-bao-mat" />
     <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/en/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/ko/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/zh/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-bao-mat" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://haq.com.vn/dieu-khoan-su-dung</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/dieu-khoan-su-dung" />
     <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
+    <loc>https://haq.com.vn/en/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/ko/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/zh/terms-of-service</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/terms-of-service" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/dieu-khoan-su-dung" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
     <loc>https://haq.com.vn/chinh-sach-doi-tra-hoan-tien</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
     <lastmod>2026-09-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/en/refund-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/ko/refund-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://haq.com.vn/zh/refund-policy</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://haq.com.vn/zh/refund-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/chinh-sach-doi-tra-hoan-tien" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 
   <url>

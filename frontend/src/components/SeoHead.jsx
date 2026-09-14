@@ -48,6 +48,36 @@ const SEO_TITLES = {
     ko: 'B2B 제휴, OEM/ODM 수탁 생산 및 도매 견적 문의 | HAQ FOOD',
     zh: '商务合作、OEM/ODM 代工与批发询价 | HAQ FOOD',
   },
+  careers: {
+    vi: 'Cơ Hội Nghề Nghiệp & Tuyển Dụng Nhân Sự | HAQ FOOD',
+    en: 'Careers & Job Opportunities | HAQ FOOD Hanoi JSC',
+    ko: '채용 정보 및 인재 영입 | HAQ FOOD',
+    zh: '人才招聘与职业发展机会 | HAQ FOOD',
+  },
+  policy: {
+    vi: 'Chính Sách Chất Lượng & Công Bố Sản Phẩm | HAQ FOOD',
+    en: 'Quality Policies & Product Declarations | HAQ FOOD',
+    ko: '품질 정책 및 제품 정보 공시 | HAQ FOOD',
+    zh: '质量政策与产品公开声明 | HAQ FOOD',
+  },
+  privacy: {
+    vi: 'Chính Sách Bảo Mật Thông Tin | HAQ FOOD',
+    en: 'Privacy Policy | HAQ FOOD Hanoi JSC',
+    ko: '개인정보 처리방침 | HAQ FOOD',
+    zh: '隐私政策声明 | HAQ FOOD',
+  },
+  terms: {
+    vi: 'Điều Khoản Sử Dụng Dịch Vụ & Website | HAQ FOOD',
+    en: 'Terms of Service | HAQ FOOD Hanoi JSC',
+    ko: '이용 약관 | HAQ FOOD',
+    zh: '网站使用条款 | HAQ FOOD',
+  },
+  refund: {
+    vi: 'Chính Sách Đổi Trả & Hoàn Tiền B2B | HAQ FOOD',
+    en: 'Return & Refund Policy | HAQ FOOD Hanoi JSC',
+    ko: '교환 및 환불 정책 | HAQ FOOD',
+    zh: '退换货与退款政策 | HAQ FOOD',
+  },
 }
 
 const SEO_DESCRIPTIONS = {
@@ -75,6 +105,36 @@ const SEO_DESCRIPTIONS = {
     ko: '전국 유통망 공급 단가, OEM/ODM 맞춤 제작 및 해외 수출 관련 상담은 HAQ FOOD B2B 전담 부서로 문의하시기 바랍니다.',
     zh: '联系 HAQ FOOD B2B 商务部，获取全国经销代理批发报价、OEM/ODM 自有品牌代工咨询及进出口业务对接。',
   },
+  careers: {
+    vi: 'Gia nhập đội ngũ HAQ FOOD — môi trường làm việc năng động, đãi ngộ cạnh tranh trong ngành sản xuất thực phẩm và xuất khẩu nông sản sạch.',
+    en: 'Join HAQ FOOD Hanoi JSC — dynamic work environment and competitive compensation in food manufacturing and agricultural export.',
+    ko: 'HAQ FOOD와 함께 성장할 인재를 모집합니다. 식품 가공 및 농산물 수출 분야의 역동적인 근무 환경과 복지 혜택.',
+    zh: '加入 HAQ FOOD 河内股份公司 — 充满活力的工作环境，在食品制造与优质农产品出口领域提供极具竞争力的福利待遇。',
+  },
+  policy: {
+    vi: 'Thông tin công bố chất lượng sản phẩm, hồ sơ tự công bố và tiêu chuẩn an toàn thực phẩm ISO 22000 & HACCP của HAQ FOOD.',
+    en: 'Product quality declarations, self-declaration dossiers, and ISO 22000 & HACCP food safety standards of HAQ FOOD.',
+    ko: 'HAQ FOOD의 제품 품질 공시, 자체 신고 서류 및 ISO 22000 & HACCP 식품 안전 기준 안내.',
+    zh: 'HAQ FOOD 产品质量声明、自我公开备案文件及 ISO 22000 与 HACCP 食品安全标准。',
+  },
+  privacy: {
+    vi: 'Chính sách bảo mật thông tin khách hàng, đối tác và cam kết bảo vệ dữ liệu doanh nghiệp của CÔNG TY CỔ PHẦN HAQ HÀ NỘI.',
+    en: 'Privacy policy and data protection commitments for clients and partners of HAQ FOOD Hanoi JSC.',
+    ko: 'HAQ 하노이 주식회사의 고객 및 파트너 개인정보 보호 정책과 데이터 보안 서약.',
+    zh: '河内 HAQ 股份公司客户及商业伙伴隐私保护政策与数据安全承诺。',
+  },
+  terms: {
+    vi: 'Điều khoản sử dụng website, quyền và nghĩa vụ của đối tác B2B khi giao dịch cùng CÔNG TY CỔ PHẦN HAQ HÀ NỘI.',
+    en: 'Terms and conditions governing the use of haq.com.vn and B2B partner commercial transactions.',
+    ko: 'haq.com.vn 웹사이트 이용 약관 및 B2B 거래 파트너의 권리와 의무 안내.',
+    zh: 'haq.com.vn 网站使用条款及 B2B 合作客户商业往来权责说明。',
+  },
+  refund: {
+    vi: 'Quy định đổi trả hàng hóa, hoàn tiền và bảo hành sản phẩm thực phẩm dành cho đại lý và nhà phân phối của HAQ FOOD.',
+    en: 'Return, refund, and product warranty terms for authorized distributors and B2B partners of HAQ FOOD.',
+    ko: 'HAQ FOOD 공인 대리점 및 유통 파트너를 위한 반품, 환불 및 품질 보증 규정.',
+    zh: '面向 HAQ FOOD 授权经销商及分销合作伙伴的退换货、退款及产品质保规定。',
+  },
 }
 
 function resolveSectionKey(pathname) {
@@ -83,9 +143,25 @@ function resolveSectionKey(pathname) {
   if (p.includes('/history') || p.includes('/lich-su')) return 'history'
   if (p.includes('/capabilities') || p.includes('/nang-luc')) return 'capabilities'
   if (p.includes('/products') || p.includes('/san-pham')) return 'products'
+  if (p.includes('/careers') || p.includes('/tuyen-dung')) return 'careers'
   if (p.includes('/news') || p.includes('/tin-tuc')) return 'news'
   if (p.includes('/contact') || p.includes('/lien-he')) return 'contact'
+  if (p.includes('/privacy-policy') || p.includes('/chinh-sach-bao-mat')) return 'privacy'
+  if (p.includes('/terms-of-service') || p.includes('/dieu-khoan-su-dung')) return 'terms'
+  if (p.includes('/refund-policy') || p.includes('/chinh-sach-doi-tra')) return 'refund'
+  if (p.includes('/policy') || p.includes('/chinh-sach')) return 'policy'
   return 'home'
+}
+
+function setMetaTag(attr, key, content) {
+  if (!content || typeof document === 'undefined') return
+  let el = document.querySelector(`meta[${attr}="${key}"]`)
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute(attr, key)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
 }
 
 export default function SeoHead() {
@@ -101,23 +177,31 @@ export default function SeoHead() {
       // 1. Update <html> lang attribute
       document.documentElement.lang = language === 'zh' ? 'zh-Hans' : language
 
-      // 2. Resolve section & update title (skip detail pages which manage their own dynamic SEO & Schema)
+      // 2. Resolve section & update title & OpenGraph (skip detail pages which manage their own dynamic SEO & Schema)
       const isDetailPage = /^\/(en|ko|zh)?\/?(san-pham|products|tin-tuc|news|tuyen-dung|careers)\/[^/]+$/i.test(activePath.replace(/\/$/, ''))
       if (!isDetailPage) {
         const sectionKey = resolveSectionKey(activePath)
         const titleObj = SEO_TITLES[sectionKey] || SEO_TITLES.home
-        document.title = titleObj[language] || titleObj.vi
+        const pageTitle = titleObj[language] || titleObj.vi
+        document.title = pageTitle
 
-        // 3. Update meta description
+        // 3. Update meta description & OG / Twitter
         const descObj = SEO_DESCRIPTIONS[sectionKey] || SEO_DESCRIPTIONS.home
         const metaDesc = descObj[language] || descObj.vi
-        let descTag = document.querySelector('meta[name="description"]')
-        if (!descTag) {
-          descTag = document.createElement('meta')
-          descTag.setAttribute('name', 'description')
-          document.head.appendChild(descTag)
-        }
-        descTag.setAttribute('content', metaDesc)
+        const pageUrl = `${SITE_ORIGIN}${activePath}`
+        const fallbackImage = 'https://haq.com.vn/favicon.jpg'
+
+        setMetaTag('name', 'description', metaDesc)
+        setMetaTag('property', 'og:title', pageTitle)
+        setMetaTag('property', 'og:description', metaDesc)
+        setMetaTag('property', 'og:type', 'website')
+        setMetaTag('property', 'og:url', pageUrl)
+        setMetaTag('property', 'og:image', fallbackImage)
+
+        setMetaTag('name', 'twitter:card', 'summary_large_image')
+        setMetaTag('name', 'twitter:title', pageTitle)
+        setMetaTag('name', 'twitter:description', metaDesc)
+        setMetaTag('name', 'twitter:image', fallbackImage)
       }
 
       // 4. Update Canonical URL

@@ -9,8 +9,8 @@ import {
   decryptObject 
 } from './security.js'
 
-// Backend API URL cho auth endpoints
-const AUTH_API_URL = import.meta.env.VITE_BACKEND_API_URL || ''
+// Backend API URL cho auth endpoints (fallback về Render production nếu env chưa được thiết lập)
+const AUTH_API_URL = import.meta.env.VITE_BACKEND_API_URL || 'https://test-landing-l1xv.onrender.com/api'
 
 // Storage Keys
 const SESSION_KEY = 'haq_auth_session'

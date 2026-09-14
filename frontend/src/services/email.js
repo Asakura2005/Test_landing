@@ -5,8 +5,8 @@
  * Service gọi API Backend để gửi email cảnh báo Lead B2B mới về cho Admin/Sales.
  */
 
-// SECURITY: Đọc từ biến môi trường — không dùng fallback hardcode
-const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || import.meta.env.VITE_API_URL || ''
+// SECURITY: Đọc từ biến môi trường — fallback về Render production URL
+const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || import.meta.env.VITE_API_URL || 'https://test-landing-l1xv.onrender.com/api'
 if (!API_BASE_URL) {
   console.warn('WARNING: VITE_BACKEND_API_URL not configured. Email notifications will not work.')
 }

@@ -23,18 +23,35 @@ app.use(helmet({
 // CORS Whitelist (H2)
 const ALLOWED_ORIGINS = [
   'https://test-landing-five-blond.vercel.app',
+  'https://haq.com.vn',
+  'https://www.haq.com.vn',
   'http://localhost:5173',   // Vite dev
   'http://localhost:3000',   // Local build
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(s => s.trim()) : []),
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) : []),
 ]
 
 app.use(cors({
   origin: function (origin, callback) {
     // Cho phép request không có origin (curl, mobile app, server-to-server)
     if (!origin) return callback(null, true)
+    
+    // 1. Khớp chính xác trong whitelist
     if (ALLOWED_ORIGINS.includes(origin)) {
       return callback(null, true)
     }
-    return callback(new Error('Blocked by CORS policy.'))
+
+    // 2. Cho phép tất cả các domain vercel.app (production, preview branches)
+    if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true)
+    }
+
+    // 3. Cho phép haq.com.vn và tất cả subdomains
+    if (/^https:\/\/(.*\.)?haq\.com\.vn$/.test(origin)) {
+      return callback(null, true)
+    }
+
+    return callback(null, false)
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
