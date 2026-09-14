@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/*
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://haq.com.vn/sitemap.xml

@@ -1120,7 +1120,7 @@ export default function StickyNav() {
                           : 'text-white/70 hover:text-white hover:bg-white/10'
                       }`}
                     >
-                      <span>{item.code === 'vi' ? '🇻🇳 VN' : item.code === 'en' ? '🇬🇧 EN' : '🇰🇷 KO'}</span>
+                      <span>{item.code === 'vi' ? 'VN' : item.code === 'en' ? 'EN' : 'KO'}</span>
                     </button>
                   ))}
                 </div>

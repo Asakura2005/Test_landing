@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- ================= HOMEPAGE ================= -->
+  <url>
+    <loc>https://haq.com.vn/</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ================= ABOUT / GIỚI THIỆU ================= -->
+  <url>
+    <loc>https://haq.com.vn/gioi-thieu</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/gioi-thieu" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/about" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/gioi-thieu" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/gioi-thieu" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/about" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/about" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/about</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/gioi-thieu" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/about" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/about" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ================= PRODUCTS / SẢN PHẨM ================= -->
+  <url>
+    <loc>https://haq.com.vn/san-pham</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/san-pham" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/products" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/products" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/san-pham" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/products</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/san-pham" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/products" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/products" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/products</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/san-pham" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/products" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/products" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ================= CAPABILITIES / NĂNG LỰC SẢN XUẤT ================= -->
+  <url>
+    <loc>https://haq.com.vn/nang-luc</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/nang-luc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/capabilities" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/capabilities" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://haq.com.vn/nang-luc" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/capabilities</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/nang-luc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/capabilities" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/capabilities" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/capabilities</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/nang-luc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/capabilities" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/capabilities" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ================= HISTORY / LỊCH SỬ PHÁT TRIỂN ================= -->
+  <url>
+    <loc>https://haq.com.vn/lich-su</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lich-su" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/history" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/history" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/history</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lich-su" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/history" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/history" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/history</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lich-su" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/history" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/history" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ================= NEWS / TIN TỨC ================= -->
+  <url>
+    <loc>https://haq.com.vn/tin-tuc</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tin-tuc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/news" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/news" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/news</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tin-tuc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/news" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/news" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/news</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/tin-tuc" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/news" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/news" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ================= CONTACT / LIÊN HỆ ================= -->
+  <url>
+    <loc>https://haq.com.vn/lien-he</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lien-he" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/contact" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/contact" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lien-he" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/contact" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/contact" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/ko/contact</loc>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://haq.com.vn/lien-he" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://haq.com.vn/en/contact" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://haq.com.vn/ko/contact" />
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ================= POLICIES / CHÍNH SÁCH ================= -->
+  <url>
+    <loc>https://haq.com.vn/chinh-sach</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/chinh-sach-bao-mat</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/dieu-khoan-su-dung</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://haq.com.vn/chinh-sach-doi-tra-hoan-tien</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
