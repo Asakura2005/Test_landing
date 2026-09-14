@@ -3,6 +3,7 @@ import { X, CheckCircle, Package, Calendar, Truck, ArrowRight } from 'lucide-rea
 import { useAnalytics } from '../hooks/useAnalytics'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct } from '../utils/i18nData'
+import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 
 export default function ProductDetailModal({ product: rawProduct, onClose }) {
   const { t, language } = useLanguage()

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { getCapabilitiesUrl } from '../utils/routeI18n'
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
@@ -27,7 +28,7 @@ const DEFAULT_PILLARS = [
 ]
 
 export default function QuickStats() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const rawPillars = t('home.quick_stats.pillars', null)
   const pillars = (Array.isArray(rawPillars) && rawPillars.length > 0) ? rawPillars : DEFAULT_PILLARS
@@ -49,7 +50,7 @@ export default function QuickStats() {
           </div>
           <Reveal delay={200}>
             <Link
-              to="/nang-luc"
+              to={getCapabilitiesUrl(language)}
               className="inline-flex items-center gap-2 text-sm font-heading font-bold text-haq-red hover:text-haq-ink transition-colors group"
             >
               <span>{t('home.quick_stats.view_detail', 'Xem chi tiết năng lực')}</span>
@@ -63,7 +64,7 @@ export default function QuickStats() {
           {pillars.map((pillar, idx) => (
             <Reveal key={pillar.num} delay={idx * 120}>
               <Link
-                to="/nang-luc"
+                to={getCapabilitiesUrl(language)}
                 className="group bg-white p-5 sm:p-7 lg:p-8 flex flex-col h-full hover:bg-haq-cream/30 transition-colors"
               >
                 <div className="flex items-baseline justify-between mb-6">

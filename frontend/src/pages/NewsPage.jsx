@@ -15,6 +15,7 @@ import Footer from '../components/Footer'
 import { getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedNews, translateNewsCategory } from '../utils/i18nData'
+import { getHomeUrl, getNewsDetailUrl } from '../utils/routeI18n'
 
 // Ước tính thời gian đọc bài viết
 function getReadTime(item, language) {
@@ -167,7 +168,7 @@ export default function NewsPage({ defaultTab }) {
                   <span>{language === 'en' ? 'Email CV to tuyendung@haq.com.vn' : language === 'ko' ? '이메일로 이력서 보내기: tuyendung@haq.com.vn' : language === 'zh' ? '发送简历至: tuyendung@haq.com.vn' : 'Gửi CV về: tuyendung@haq.com.vn'}</span>
                 </a>
               ) : (
-                <Link to="/" className="inline-flex items-center gap-1.5 text-[#0F5132] text-xs font-bold uppercase tracking-wider hover:underline">
+                <Link to={getHomeUrl(language)} className="inline-flex items-center gap-1.5 text-[#0F5132] text-xs font-bold uppercase tracking-wider hover:underline">
                   <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : language === 'zh' ? '返回首页' : 'Về trang chủ'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>

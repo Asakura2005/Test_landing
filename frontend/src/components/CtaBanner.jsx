@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { getContactUrl, getProductsPageUrl } from '../utils/routeI18n'
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
@@ -21,7 +22,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 }
 
 export default function CtaBanner() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   return (
     <section className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-haq-cream/50 border-b border-haq-border flex items-center justify-center py-10 sm:py-14 lg:py-0">
@@ -47,7 +48,7 @@ export default function CtaBanner() {
         <Reveal delay={450}>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link
-              to="/lien-he"
+              to={getContactUrl(language)}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-haq-red hover:bg-[#0c3e27] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <span>{t('home.cta_banner.cta_contact', 'Liên hệ hợp tác')}</span>
@@ -55,7 +56,7 @@ export default function CtaBanner() {
             </Link>
 
             <Link
-              to="/san-pham"
+              to={getProductsPageUrl(language)}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-haq-cream text-haq-ink border border-haq-border text-xs sm:text-sm font-heading font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 shadow-2xs hover:shadow-xs"
             >
               <span>{t('home.cta_banner.cta_explore', 'Khám phá sản phẩm')}</span>

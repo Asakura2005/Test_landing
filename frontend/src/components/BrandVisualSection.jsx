@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Globe2, ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { getAboutUrl } from '../utils/routeI18n'
 import exportVisualImg from '../assets/distribution/distribution_export.jpg'
+
+const MARKET_BADGES = [
+  { flag: '🇻🇳', name: { vi: 'Việt Nam', en: 'Vietnam', ko: '베트남', zh: '越南' } },
+  { flag: '🇰🇷', name: { vi: 'Hàn Quốc', en: 'South Korea', ko: '대한민국', zh: '韩国' } },
+  { flag: '🇹🇼', name: { vi: 'Đài Loan', en: 'Taiwan', ko: '대만', zh: '中国台湾' } },
+]
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
@@ -22,7 +29,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 }
 
 export default function BrandVisualSection() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   return (
     <section className="relative w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-[#0C1E15] text-white overflow-hidden flex items-center justify-center py-10 sm:py-14 lg:py-0">
@@ -61,17 +68,13 @@ export default function BrandVisualSection() {
           {/* Markets Badge Row */}
           <Reveal delay={300}>
             <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-6">
-              {[
-                { flag: '🇻🇳', name: 'Việt Nam' },
-                { flag: '🇰🇷', name: 'Hàn Quốc' },
-                { flag: '🇹🇼', name: 'Đài Loan' },
-              ].map((m, idx) => (
+              {MARKET_BADGES.map((m, idx) => (
                 <span
                   key={idx}
                   className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-xs border border-white/15 rounded-full px-3 sm:px-3.5 py-1 text-xs font-heading font-medium text-white/90"
                 >
                   <span>{m.flag}</span>
-                  <span>{m.name}</span>
+                  <span>{m.name[language] || m.name.vi}</span>
                 </span>
               ))}
             </div>
@@ -86,7 +89,7 @@ export default function BrandVisualSection() {
 
           <Reveal delay={600}>
             <Link
-              to="/gioi-thieu#phan-phoi"
+              to={`${getAboutUrl(language)}#phan-phoi`}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#16A34A] hover:bg-[#0F5132] text-white text-xs sm:text-sm font-heading font-bold uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg text-center"
             >
               <span>{t('home.brand_visual.cta', 'Tìm hiểu hệ thống phân phối')}</span>

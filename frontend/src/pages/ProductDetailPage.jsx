@@ -8,6 +8,7 @@ import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedCategory } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl, getContactUrl } from '../utils/routeI18n'
+import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
 
 /**
  * Trợ giúp giải quyết đường dẫn ảnh sản phẩm / variant an toàn

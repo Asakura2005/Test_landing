@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { getAboutUrl } from '../utils/routeI18n'
 
 function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null)
@@ -21,7 +22,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 }
 
 export default function BrandStatement() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   return (
     <section id="gioi-thieu" className="w-full lg:h-[calc(100vh-72px)] lg:min-h-[580px] bg-white border-b border-haq-border relative overflow-hidden flex items-center justify-center py-10 sm:py-14 lg:py-0">
@@ -50,7 +51,7 @@ export default function BrandStatement() {
             <Reveal delay={600}>
               <div className="mt-6 sm:mt-8">
                 <Link
-                  to="/gioi-thieu"
+                  to={getAboutUrl(language)}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-haq-ink hover:bg-[#0C1E15] text-white text-sm font-heading font-bold px-7 py-3.5 rounded-full transition-colors text-center"
                 >
                   <span>{t('home.brand_statement.cta', 'Tìm hiểu thêm về chúng tôi')}</span>

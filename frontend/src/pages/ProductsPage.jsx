@@ -14,7 +14,7 @@ import {
 import { getProducts, getCategories } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '../utils/i18nData'
-import { getProductDetailUrl } from '../utils/routeI18n'
+import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
 
 import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
 
@@ -126,13 +126,13 @@ export default function ProductsPage() {
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             {/* Breadcrumb */}
             <div className="py-3 flex items-center gap-1.5 text-xs text-haq-text-secondary overflow-x-auto whitespace-nowrap border-b border-haq-border/50">
-              <Link to="/" className="hover:text-haq-red flex items-center gap-1 transition-colors">
+              <Link to={getHomeUrl(language)} className="hover:text-haq-red flex items-center gap-1 transition-colors">
                 <Home className="w-3 h-3" />
                 <span>{t('products_page.breadcrumb_home', 'Trang chủ')}</span>
               </Link>
               <ChevronRight className="w-3 h-3 text-haq-border" />
               <Link
-                to="/san-pham"
+                to={getProductsPageUrl(language)}
                 onClick={() => handleRootCategoryChange('all')}
                 className={`hover:text-haq-red transition-colors ${currentCategorySlug === 'all' ? 'text-haq-red font-bold' : ''}`}
               >

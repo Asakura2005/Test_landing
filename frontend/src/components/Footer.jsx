@@ -2,10 +2,24 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail, ExternalLink, ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import {
+  getHomeUrl,
+  getContactUrl,
+  getAboutUrl,
+  getCapabilitiesUrl,
+  getHistoryUrl,
+  getNewsUrl,
+  getCareersUrl,
+  getProductsPageUrl,
+  getRefundPolicyUrl,
+  getPrivacyPolicyUrl,
+  getTermsUrl,
+  getPolicyUrl,
+} from '../utils/routeI18n'
 import logoImg from '../assets/logo-haq.jpg'
 
 export default function Footer() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -18,7 +32,7 @@ export default function Footer() {
         <div className="pb-6 sm:pb-10 border-b border-white/10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
             <div className="flex items-center gap-3.5 sm:gap-4">
-              <Link to="/" className="shrink-0 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white p-1.5 shadow-sm">
+              <Link to={getHomeUrl(language)} className="shrink-0 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white p-1.5 shadow-sm">
                 <img
                   src={logoImg}
                   alt="HAQ FOOD Logo"
@@ -43,7 +57,7 @@ export default function Footer() {
             {/* Quick Contact Badge */}
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               <Link
-                to="/lien-he"
+                to={getContactUrl(language)}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#13863d] transition-all shadow-xs hover:shadow-md text-center"
               >
                 <span>{t('home.footer.b2b_cta', 'LIÊN HỆ HỢP TÁC B2B')}</span>
@@ -66,32 +80,32 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
-                <Link to="/gioi-thieu" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={getAboutUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link1', 'Giới thiệu Tổng quan Công ty')}
                 </Link>
               </li>
               <li>
-                <Link to="/nang-luc" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={getCapabilitiesUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link2', 'Năng lực sản xuất & Nhà máy')}
                 </Link>
               </li>
               <li>
-                <Link to="/lich-su" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={getHistoryUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link3', 'Câu chuyện & Dấu mốc phát triển (2021 — 2026)')}
                 </Link>
               </li>
               <li>
-                <Link to="/tin-tuc" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={getNewsUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link4', 'Tin tức & Sự kiện Doanh nghiệp')}
                 </Link>
               </li>
               <li>
-                <Link to="/tuyen-dung" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={getCareersUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link_careers', 'Cơ hội nghề nghiệp & Tuyển dụng')}
                 </Link>
               </li>
               <li>
-                <Link to="/gioi-thieu#van-hoa" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={`${getAboutUrl(language)}#van-hoa`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col1_link5', '5 Giá trị văn hóa cốt lõi')}
                 </Link>
               </li>
@@ -106,27 +120,27 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
-                <Link to="/san-pham" className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
+                <Link to={getProductsPageUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
                   {t('home.footer.col2_link1', 'Tất cả sản phẩm (HAQ Catalog) →')}
                 </Link>
               </li>
               <li>
-                <Link to="/san-pham?category=banh-trang" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={`${getProductsPageUrl(language)}?category=banh-trang`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col2_link2', 'Bánh tráng sấy giòn & Bánh tráng trộn HOKI')}
                 </Link>
               </li>
               <li>
-                <Link to="/san-pham?category=cac-loai-banh" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={`${getProductsPageUrl(language)}?category=cac-loai-banh`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col2_link3', 'Bánh đậu xanh tươi & Các loại bánh truyền thống')}
                 </Link>
               </li>
               <li>
-                <Link to="/san-pham?category=bap-rang-bo" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={`${getProductsPageUrl(language)}?category=bap-rang-bo`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col2_link4', 'Bắp rang bơ sấy nổ công nghệ cao')}
                 </Link>
               </li>
               <li>
-                <Link to="/san-pham?category=thit-kho" className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                <Link to={`${getProductsPageUrl(language)}?category=thit-kho`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
                   {t('home.footer.col2_link5', 'Thịt sấy khô & Đồ ăn vặt hảo hạng')}
                 </Link>
               </li>
@@ -215,28 +229,28 @@ export default function Footer() {
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80">
             <Link
-              to="/chinh-sach-doi-tra-hoan-tien"
+              to={getRefundPolicyUrl(language)}
               className="hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_refund', 'Chính sách đổi trả hàng và hoàn tiền')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
-              to="/chinh-sach-bao-mat"
+              to={getPrivacyPolicyUrl(language)}
               className="hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_privacy', 'Chính sách bảo mật')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
-              to="/dieu-khoan-su-dung"
+              to={getTermsUrl(language)}
               className="hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_terms', 'Điều khoản sử dụng')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
-              to="/chinh-sach"
+              to={getPolicyUrl(language)}
               className="hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_compliance', 'Công bố sản phẩm')}

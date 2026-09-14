@@ -18,19 +18,8 @@ import Footer from '../components/Footer'
 import { getNewsBySlug, getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedNews, translateNewsCategory } from '../utils/i18nData'
+import { getNewsUrl, getNewsDetailUrl, getCareersUrl } from '../utils/routeI18n'
 import DOMPurify from 'dompurify'
-
-const CATEGORY_MAP = {
-  'Tất cả': { vi: 'Tất cả', en: 'All News', ko: '전체 소식', zh: '全部资讯' },
-  'Tin tức': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '新闻动态' },
-  'Tuyển dụng': { vi: 'Tuyển dụng', en: 'Careers', ko: '채용', zh: '人才招聘' },
-  'Thông cáo báo chí': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '企业快讯' },
-  'Thị trường & Xuất khẩu': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '市场与外贸' },
-  'Sự kiện & Hoạt động': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '展会活动' },
-  'Chứng nhận & Tiêu chuẩn': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '认证与标准' },
-  'Chính sách Đại lý': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '代理合作' },
-  'Sản phẩm mới': { vi: 'Tin tức', en: 'News', ko: '뉴스', zh: '新品上市' },
-}
 
 function getReadTime(item, language) {
   if (!item) return ''
@@ -265,7 +254,7 @@ export default function NewsDetailPage() {
             : 'Bài viết không tồn tại hoặc đã được chuyển sang địa chỉ khác.'}
         </p>
         <Link 
-          to="/tin-tuc" 
+          to={getNewsUrl(language)} 
           className="bg-[#0F5132] hover:bg-[#14532D] text-white px-6 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors shadow-2xs inline-flex items-center gap-2"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
@@ -287,9 +276,7 @@ export default function NewsDetailPage() {
           {/* Back Link & Breadcrumb */}
           <div className="mb-6 flex items-center justify-between">
             <Link 
-              to={news?.category === 'Tuyển dụng' 
-                ? (language === 'zh' ? '/zh/careers' : language === 'en' ? '/en/careers' : language === 'ko' ? '/ko/careers' : '/tuyen-dung')
-                : (language === 'zh' ? '/zh/news' : language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc')} 
+              to={news?.category === 'Tuyển dụng' ? getCareersUrl(language) : getNewsUrl(language)} 
               className="inline-flex items-center gap-1.5 text-[#52665A] hover:text-[#0F5132] text-xs font-medium transition-colors group"
             >
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
@@ -323,7 +310,7 @@ export default function NewsDetailPage() {
           <header className="mb-8 text-left border-b border-[#E2E8E4] pb-6">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="bg-[#0F5132] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-2xs">
-                {localizedNews?.category || CATEGORY_MAP[news.category]?.[language] || news.category}
+                {localizedNews?.category || translateNewsCategory(news?.category, language) || news?.category}
               </span>
               <span className="text-xs text-gray-400">•</span>
               <span className="text-xs font-mono text-[#52665A] flex items-center gap-1">
@@ -481,7 +468,7 @@ export default function NewsDetailPage() {
                   </h3>
                 </div>
                 <Link 
-                  to={language === 'zh' ? '/zh/news' : language === 'en' ? '/en/news' : language === 'ko' ? '/ko/news' : '/tin-tuc'} 
+                  to={getNewsUrl(language)} 
                   className="text-xs font-medium text-[#0F5132] hover:underline inline-flex items-center gap-1"
                 >
                   <span>{language === 'en' ? 'View all' : language === 'ko' ? '모두 보기' : language === 'zh' ? '查看全部' : 'Xem tất cả'}</span>
@@ -493,7 +480,7 @@ export default function NewsDetailPage() {
                 {localizedRelatedNews.map(item => (
                   <Link
                     key={item.id}
-                    to={language === 'zh' ? `/zh/news/${item.slug}` : language === 'en' ? `/en/news/${item.slug}` : language === 'ko' ? `/ko/news/${item.slug}` : `/tin-tuc/${item.slug}`}
+                    to={getNewsDetailUrl(item.slug, language)}
                     className="group flex flex-col bg-white rounded-xl overflow-hidden border border-[#E2E8E4] hover:border-[#0F5132]/40 hover:shadow-sm transition-all duration-300 text-left"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
@@ -505,7 +492,7 @@ export default function NewsDetailPage() {
                       />
                       <div className="absolute top-2 left-2">
                         <span className="bg-white/95 backdrop-blur-xs text-[#0F5132] text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-[#E2E8E4]">
-                          {item.category || CATEGORY_MAP[item.category]?.[language] || item.category}
+                          {item.category || translateNewsCategory(item.category, language)}
                         </span>
                       </div>
                     </div>
