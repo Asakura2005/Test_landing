@@ -43,15 +43,19 @@ export default function SearchOverlay({ isOpen, onClose }) {
       return
     }
     const q = query.toLowerCase()
-    const filtered = products.filter(
-      (p) =>
+    const filtered = products.filter((p) => {
+      const loc = getLocalizedProduct(p, language)
+      return (
         p.name?.toLowerCase().includes(q) ||
         p.en_name?.toLowerCase().includes(q) ||
+        loc.name?.toLowerCase().includes(q) ||
+        loc.description?.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q) ||
         p.categories?.name?.toLowerCase().includes(q)
-    )
+      )
+    })
     setResults(filtered)
-  }, [query, products])
+  }, [query, products, language])
 
   if (!isOpen) return null
 
@@ -65,18 +69,33 @@ export default function SearchOverlay({ isOpen, onClose }) {
   }
 
   const QUICK_LINKS = [
-    { label: language === 'en' ? 'HAQ Mixed Rice Paper' : language === 'ko' ? 'HAQ 비빔 라이스페이퍼' : 'Bánh tráng trộn HAQ', path: getProductsPageUrl(language) },
-    { label: language === 'en' ? 'Green Bean Cake' : language === 'ko' ? '녹두 케이크' : 'Bánh đậu xanh', path: getProductsPageUrl(language) },
-    { label: language === 'en' ? 'Almond Pastry' : language === 'ko' ? '아몬드 페이스트리' : 'Bánh hạnh nhân', path: getProductsPageUrl(language) },
-    { label: language === 'en' ? 'OEM/ODM Solutions' : language === 'ko' ? 'OEM/ODM 솔루션' : 'Năng lực OEM/ODM', path: `${getHomeUrl(language)}#nang-luc` },
-    { label: language === 'en' ? 'Distribution Network' : language === 'ko' ? '유통 네트워크' : 'Hệ thống phân phối', path: `${getHomeUrl(language)}#thi-truong` },
+    {
+      label: language === 'en' ? 'HAQ Mixed Rice Paper' : language === 'ko' ? 'HAQ 비빔 라이스페이퍼' : language === 'zh' ? 'HAQ 拌米纸' : 'Bánh tráng trộn HAQ',
+      path: getProductsPageUrl(language),
+    },
+    {
+      label: language === 'en' ? 'Green Bean Cake' : language === 'ko' ? '녹두 케이크' : language === 'zh' ? '传统绿豆糕' : 'Bánh đậu xanh',
+      path: getProductsPageUrl(language),
+    },
+    {
+      label: language === 'en' ? 'Almond Pastry' : language === 'ko' ? '아몬드 페이스트리' : language === 'zh' ? '香酥杏仁饼' : 'Bánh hạnh nhân',
+      path: getProductsPageUrl(language),
+    },
+    {
+      label: language === 'en' ? 'OEM/ODM Solutions' : language === 'ko' ? 'OEM/ODM 솔루션' : language === 'zh' ? 'OEM/ODM 代工方案' : 'Năng lực OEM/ODM',
+      path: `${getHomeUrl(language)}#nang-luc`,
+    },
+    {
+      label: language === 'en' ? 'Distribution Network' : language === 'ko' ? '유통 네트워크' : language === 'zh' ? '分销与出口网络' : 'Hệ thống phân phối',
+      path: `${getHomeUrl(language)}#thi-truong`,
+    },
   ]
 
   const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Tìm kiếm sản phẩm HAQ FOOD"
+      aria-label={language === 'en' ? 'Search HAQ FOOD products' : language === 'ko' ? 'HAQ FOOD 제품 검색' : language === 'zh' ? '搜索 HAQ FOOD 产品' : 'Tìm kiếm sản phẩm HAQ FOOD'}
       className="fixed inset-0 z-[10000] flex items-start justify-center pt-2 sm:pt-4 md:pt-20 px-2 sm:px-4 md:px-6 bg-black/70 backdrop-blur-sm transition-opacity font-sans"
       onClick={onClose}
     >
@@ -92,14 +111,22 @@ export default function SearchOverlay({ isOpen, onClose }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Tìm kiếm sản phẩm, danh mục, thông tin HAQ FOOD..."
+            placeholder={
+              language === 'en'
+                ? 'Search products, categories, HAQ FOOD specs...'
+                : language === 'ko'
+                ? '제품, 카테고리, HAQ FOOD 정보 검색...'
+                : language === 'zh'
+                ? '搜索产品、品类及 HAQ FOOD 商业资讯...'
+                : 'Tìm kiếm sản phẩm, danh mục, thông tin HAQ FOOD...'
+            }
             className="flex-1 text-base sm:text-lg font-heading font-bold text-haq-ink outline-none placeholder:text-haq-text-secondary bg-transparent"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
               className="p-1 text-haq-text-secondary hover:text-haq-ink cursor-pointer"
-              aria-label="Xóa nội dung"
+              aria-label={language === 'en' ? 'Clear' : language === 'ko' ? '지우기' : language === 'zh' ? '清空' : 'Xóa nội dung'}
             >
               <X className="w-5 h-5" />
             </button>
@@ -118,7 +145,13 @@ export default function SearchOverlay({ isOpen, onClose }) {
           {query.trim() ? (
             <div>
               <div className="text-xs font-heading font-bold tracking-wider text-haq-text-secondary uppercase mb-3">
-                KẾT QUẢ TÌM KIẾM ({results.length})
+                {language === 'en'
+                  ? `SEARCH RESULTS (${results.length})`
+                  : language === 'ko'
+                  ? `검색 결과 (${results.length})`
+                  : language === 'zh'
+                  ? `搜索结果 (${results.length})`
+                  : `KẾT QUẢ TÌM KIẾM (${results.length})`}
               </div>
               {results.length > 0 ? (
                 <div className="divide-y divide-haq-border">
@@ -159,14 +192,28 @@ export default function SearchOverlay({ isOpen, onClose }) {
                 </div>
               ) : (
                 <div className="text-center py-10 text-haq-text-secondary text-sm">
-                  Không tìm thấy kết quả phù hợp cho "<strong>{query}</strong>".
+                  {language === 'en' ? (
+                    <>No results found for "<strong>{query}</strong>".</>
+                  ) : language === 'ko' ? (
+                    <>"<strong>{query}</strong>"에 대한 검색 결과가 없습니다.</>
+                  ) : language === 'zh' ? (
+                    <>未找到与 "<strong>{query}</strong>" 相关的匹配结果。</>
+                  ) : (
+                    <>Không tìm thấy kết quả phù hợp cho "<strong>{query}</strong>".</>
+                  )}
                 </div>
               )}
             </div>
           ) : (
             <div>
               <div className="text-xs font-heading font-bold tracking-wider text-haq-text-secondary uppercase mb-3">
-                TÌM KIẾM NHANH
+                {language === 'en'
+                  ? 'QUICK SEARCH'
+                  : language === 'ko'
+                  ? '빠른 검색'
+                  : language === 'zh'
+                  ? '热门快捷检索'
+                  : 'TÌM KIẾM NHANH'}
               </div>
               <div className="flex flex-wrap gap-2">
                 {QUICK_LINKS.map((link, idx) => (

@@ -95,7 +95,8 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
     if (leadForm) {
       leadForm.scrollIntoView({ behavior: 'smooth' })
     } else {
-      window.location.href = '/lien-he?type=products'
+      const contactPath = language === 'zh' ? '/zh/contact?type=products' : language === 'ko' ? '/ko/contact?type=products' : language === 'en' ? '/en/contact?type=products' : '/lien-he?type=products'
+      window.location.href = contactPath
     }
   }
 
@@ -183,7 +184,9 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
           {/* Category & Title */}
           <div className="mb-6">
             <div className="flex items-center gap-2 flex-wrap mb-2">
-              <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block">{product.category}</span>
+              <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block">
+                {product.category || product.categories?.name || 'HAQ FOOD'}
+              </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-haq-ink uppercase leading-normal">
               {product.name}
@@ -203,6 +206,8 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
                   ? 'An exquisite gift carrying traditional flavors, crafted from stringently selected ingredients.'
                   : language === 'ko'
                   ? '엄선된 재료로 정성을 다해 만든 전통의 풍미를 담은 최고의 선물입니다.'
+                  : language === 'zh'
+                  ? '甄选优质食材，承载经典风味的精选伴手礼。'
                   : 'Món quà tuyệt hảo mang hương vị truyền thống, được chế biến từ những nguyên liệu chọn lọc khắt khe nhất.'}
               </p>
             )}

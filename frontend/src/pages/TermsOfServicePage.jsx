@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
     document.title = data.docTitle
   }, [data.docTitle])
 
-  const homeUrl = language === 'en' ? '/en' : language === 'ko' ? '/ko' : '/'
+  const homeUrl = language === 'en' ? '/en' : language === 'ko' ? '/ko' : language === 'zh' ? '/zh' : '/'
 
   return (
     <div className="min-h-screen bg-haq-cream text-haq-ink flex flex-col selection:bg-haq-red selection:text-white font-sans">

@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "../styles.module.css";
+import { useLanguage } from "../../../context/LanguageContext";
 
 interface ProvinceTooltipProps {
   name: string;
@@ -19,6 +20,20 @@ export const ProvinceTooltip: React.FC<ProvinceTooltipProps> = ({
   y,
   visible,
 }) => {
+  const { language } = useLanguage();
+
+  const countText =
+    language === 'en'
+      ? `${productCount} HAQ FOOD specialt${productCount > 1 ? 'ies' : 'y'}`
+      : language === 'ko'
+      ? `${productCount}개 HAQ FOOD 특산품`
+      : language === 'zh'
+      ? `${productCount} 款 HAQ FOOD 特产`
+      : `${productCount} đặc sản HAQ FOOD`;
+
+  const defaultRegion =
+    language === 'en' ? 'Vietnam' : language === 'ko' ? '베트남' : language === 'zh' ? '越南' : 'Việt Nam';
+
   return (
     <AnimatePresence>
       {visible && (
@@ -37,10 +52,10 @@ export const ProvinceTooltip: React.FC<ProvinceTooltipProps> = ({
           <div className={styles.tooltipMeta}>
             {productCount > 0 ? (
               <span className={styles.tooltipCountBadge}>
-                {productCount} đặc sản HAQ FOOD
+                {countText}
               </span>
             ) : (
-              <span className={styles.tooltipRegionText}>{region || "Việt Nam"}</span>
+              <span className={styles.tooltipRegionText}>{region || defaultRegion}</span>
             )}
           </div>
         </motion.div>

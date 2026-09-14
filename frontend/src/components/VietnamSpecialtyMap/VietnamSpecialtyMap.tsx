@@ -31,6 +31,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     const s = p.slug || p.productId || '';
     if (language === 'en') return `/en/products/${s}`;
     if (language === 'ko') return `/ko/products/${s}`;
+    if (language === 'zh') return `/zh/products/${s}`;
     return `/san-pham/${s}`;
   };
   const [hoveredProvince, setHoveredProvince] = useState<{
@@ -109,13 +110,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 
       setHoveredProvince({
         id,
-        name: info.name,
-        region: info.region,
+        name: specialties[id]?.provinceLabel || info.name,
+        region: specialties[id]?.region || info.region,
         x: screenPt.x,
         y: screenPt.y,
       });
     },
-    [isDragging, transform, selectedProvinceId]
+    [isDragging, transform, selectedProvinceId, specialties]
   );
 
   const handleLeaveProvince = useCallback(() => {
@@ -186,7 +187,9 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   // Clear province selection to return to region/nationwide overview
   const handleClearProvince = useCallback(() => {
     setSelectedProvinceId(null);
-  }, []);
+    setHoveredProvince(null);
+    resetTransform();
+  }, [resetTransform]);
 
   // Curated products when no province is selected:
   // Filtered by selected region and sorted strictly by view count descending!
@@ -236,20 +239,54 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   const supportingProducts = showcaseProducts.slice(1, 3);
 
   const provinceTitle = selectedProvinceId
-    ? activeProvinceInfo?.name || activeSpecialty?.provinceLabel || "Tỉnh thành"
-    : "SẢN PHẨM NỔI BẬT";
+    ? activeSpecialty?.provinceLabel || activeProvinceInfo?.name || (language === 'en' ? 'Province' : language === 'ko' ? '지역' : language === 'zh' ? '省市' : 'Tỉnh thành')
+    : (language === 'en' ? 'FEATURED SPECIALTIES' : language === 'ko' ? '대표 특산물' : language === 'zh' ? '特色招牌产品' : 'SẢN PHẨM NỔI BẬT');
 
   const regionBadge = selectedProvinceId
-    ? activeSpecialty?.region || activeProvinceInfo?.region || selectedRegion
+    ? activeSpecialty?.region || activeProvinceInfo?.region || (
+        selectedRegion === 'Miền Bắc' ? (language === 'en' ? 'Northern Vietnam' : language === 'ko' ? '베트남 북부' : language === 'zh' ? '越南北部' : 'Miền Bắc') :
+        selectedRegion === 'Miền Trung' ? (language === 'en' ? 'Central Vietnam' : language === 'ko' ? '베트남 중부' : language === 'zh' ? '越南中部' : 'Miền Trung') :
+        selectedRegion === 'Miền Nam' ? (language === 'en' ? 'Southern Vietnam' : language === 'ko' ? '베트남 남부' : language === 'zh' ? '越南南部' : 'Miền Nam') : null
+      )
     : null;
 
   const provinceDesc = selectedProvinceId
     ? activeSpecialty?.shortDescription ||
       activeSpecialty?.description ||
-      "Vùng nông sản nguyên bản liên kết chế biến chuẩn quốc tế của HAQ FOOD."
+      (language === 'en'
+        ? 'Origin of local agricultural ingredients partnered with HAQ FOOD international standard processing.'
+        : language === 'ko'
+        ? 'HAQ FOOD의 국제 표준 가공 라인과 연계된 베트남 청정 농산물 원산지.'
+        : language === 'zh'
+        ? 'HAQ FOOD 国际标准现代加工产业链深度合作的优质越南原生态农产区。'
+        : 'Vùng nông sản nguyên bản liên kết chế biến chuẩn quốc tế của HAQ FOOD.')
     : selectedRegion === "ALL"
-    ? "Sản phẩm được quan tâm nhiều nhất toàn quốc trên hệ sinh thái HAQ FOOD."
-    : `Sản phẩm được quan tâm nhiều nhất tại ${selectedRegion} trên hệ sinh thái HAQ FOOD.`;
+    ? (language === 'en'
+        ? 'Most searched and favored Vietnamese specialty snacks across the HAQ FOOD ecosystem.'
+        : language === 'ko'
+        ? 'HAQ FOOD 생태계에서 전국적으로 가장 인기 있는 베트남 특산 스낵 제품군.'
+        : language === 'zh'
+        ? 'HAQ FOOD 越南全国生态系统中最受采购商与消费者青睐的精选特色零食。'
+        : 'Sản phẩm được quan tâm nhiều nhất toàn quốc trên hệ sinh thái HAQ FOOD.')
+    : (language === 'en'
+        ? `Most popular specialties in ${selectedRegion === 'Miền Bắc' ? 'Northern Vietnam' : selectedRegion === 'Miền Trung' ? 'Central Vietnam' : 'Southern Vietnam'} across HAQ FOOD.`
+        : language === 'ko'
+        ? `HAQ FOOD 생태계 내 ${selectedRegion === 'Miền Bắc' ? '베트남 북부' : selectedRegion === 'Miền Trung' ? '베트남 중부' : '베트남 남부'} 지역 대표 인기 특산품.`
+        : language === 'zh'
+        ? `HAQ FOOD ${selectedRegion === 'Miền Bắc' ? '越南北部' : selectedRegion === 'Miền Trung' ? '越南中部' : '越南南部'}地区最受关注的特色代表产品。`
+        : `Sản phẩm được quan tâm nhiều nhất tại ${selectedRegion} trên hệ sinh thái HAQ FOOD.`);
+
+  const flagshipBadge = language === 'en' ? 'Flagship' : language === 'ko' ? '대표상품' : language === 'zh' ? '核心主打' : 'Chủ lực';
+  const viewDetailText = language === 'en' ? 'View Details' : language === 'ko' ? '상세보기' : language === 'zh' ? '查看详情' : 'Xem chi tiết';
+  const defaultCategoryText = language === 'en' ? 'Specialty' : language === 'ko' ? '특산물' : language === 'zh' ? '特色特产' : 'Sản phẩm';
+  const flagshipCategoryText = language === 'en' ? 'Flagship Specialty' : language === 'ko' ? '대표 특산물' : language === 'zh' ? '核心主打产品' : 'Sản phẩm chủ lực';
+  const defaultProductDesc = language === 'en'
+    ? 'Authentic natural taste carefully selected from local agricultural origins.'
+    : language === 'ko'
+    ? '현지 청정 농산물 원산지에서 엄선한 본연의 풍미.'
+    : language === 'zh'
+    ? '精选自越南本地特色原料产区的地道天然风味。'
+    : 'Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương.';
 
   return (
     <section
@@ -307,7 +344,15 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         {/* Subtle Map Atlas Watermark Hint */}
         <div className="absolute top-3 left-3 z-10 hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-haq-border/60 text-[10px] font-heading font-medium text-haq-text-secondary shadow-2xs pointer-events-none">
           <Navigation className="w-3 h-3 text-[#0F5132]" />
-          <span>Cuộn chuột để thu phóng · Kéo để xoay bản đồ</span>
+          <span>
+            {language === 'en'
+              ? 'Scroll to zoom · Drag to pan map'
+              : language === 'ko'
+              ? '스크롤하여 확대/축소 · 드래그하여 지도 이동'
+              : language === 'zh'
+              ? '滚动滚轮缩放 · 按住拖拽平移地图'
+              : 'Cuộn chuột để thu phóng · Kéo để xoay bản đồ'}
+          </span>
         </div>
 
         {/* Large Prominent SVG Map Container */}
@@ -455,7 +500,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                               {prod.is_pinned && (
                                 <span className="absolute top-1.5 left-1.5 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
                                   <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
-                                  Chủ lực
+                                  {flagshipBadge}
                                 </span>
                               )}
                               {prod.image ? (
@@ -474,17 +519,17 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             <div className="pt-2 flex flex-col flex-1 justify-between">
                               <div>
                                 <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                  {prod.category || "Sản phẩm"}
+                                  {prod.category || defaultCategoryText}
                                 </span>
                                 <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
                                   {prod.name}
                                 </h4>
                                 <p className="text-[11px] text-haq-text-secondary line-clamp-2 font-light mt-0.5 hidden sm:block">
-                                  {prod.description || "Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương."}
+                                  {prod.description || defaultProductDesc}
                                 </p>
                               </div>
                               <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
-                                <span>Xem chi tiết</span>
+                                <span>{viewDetailText}</span>
                                 <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
                               </div>
                             </div>
@@ -503,7 +548,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             {showcaseProducts[0].is_pinned && (
                               <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
                                 <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
-                                Chủ lực
+                                {flagshipBadge}
                               </span>
                             )}
                             <img
@@ -516,14 +561,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <div className="flex-1 min-w-0 sm:pt-2 flex flex-col justify-between">
                             <div>
                               <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {showcaseProducts[0].category || "Sản phẩm chủ lực"}
+                                {showcaseProducts[0].category || flagshipCategoryText}
                               </span>
                               <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
                                 {showcaseProducts[0].name}
                               </h4>
                             </div>
                             <div className="mt-1 sm:mt-2 pt-1 sm:pt-1.5 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
-                              <span>Xem chi tiết</span>
+                              <span>{viewDetailText}</span>
                               <span>→</span>
                             </div>
                           </div>
@@ -548,14 +593,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                               <div className="pt-2 flex flex-col flex-1 justify-between">
                                 <div>
                                   <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                    {prod.category || "Sản phẩm"}
+                                    {prod.category || defaultCategoryText}
                                   </span>
                                   <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
                                     {prod.name}
                                   </h4>
                                 </div>
                                 <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
-                                  <span>Xem chi tiết</span>
+                                  <span>{viewDetailText}</span>
                                   <span>→</span>
                                 </div>
                               </div>
@@ -579,13 +624,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         </div>
                         <div className="flex-1 min-w-0">
                           <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block">
-                            {showcaseProducts[0].category || "Sản phẩm"}
+                            {showcaseProducts[0].category || defaultCategoryText}
                           </span>
                           <h4 className="font-heading font-bold text-sm text-haq-ink line-clamp-2 leading-snug mt-0.5">
                             {showcaseProducts[0].name}
                           </h4>
                           <span className="inline-flex items-center gap-1 text-xs font-heading font-bold text-[#0F5132] mt-2">
-                            <span>Xem chi tiết</span>
+                            <span>{viewDetailText}</span>
                             <span>→</span>
                           </span>
                         </div>
@@ -611,7 +656,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         {featuredProduct.is_pinned && (
                           <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
                             <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
-                            Chủ lực
+                            {flagshipBadge}
                           </span>
                         )}
                         {featuredProduct.image ? (
@@ -629,13 +674,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                       {/* Featured Info */}
                       <div className="pt-2 flex flex-col shrink-0">
                         <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold">
-                          {featuredProduct.category || "Sản phẩm chủ lực"}
+                          {featuredProduct.category || flagshipCategoryText}
                         </span>
                         <span className="font-heading font-bold text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 mt-0.5">
                           {featuredProduct.name}
                         </span>
                         <p className="text-[11px] text-haq-text-secondary line-clamp-1 font-light mt-0.5">
-                          {featuredProduct.description || "Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương."}
+                          {featuredProduct.description || defaultProductDesc}
                         </p>
                       </div>
                     </Link>
@@ -673,7 +718,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                               </span>
                               <div className="flex items-center justify-between mt-0.5">
                                 <span className="text-[10px] text-haq-text-secondary truncate font-light">
-                                  {prod.category || "Sản phẩm"}
+                                  {prod.category || defaultCategoryText}
                                 </span>
                                 <span className="text-[10px] text-[#0F5132] font-semibold ml-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
                                   →
@@ -692,7 +737,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           {supportingProducts[0].is_pinned && (
                             <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
                               <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
-                              Chủ lực
+                              {flagshipBadge}
                             </span>
                           )}
                           {supportingProducts[0].image ? (
@@ -709,13 +754,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 
                         <div className="pt-2 flex flex-col shrink-0">
                           <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold">
-                            {supportingProducts[0].category || "Sản phẩm"}
+                            {supportingProducts[0].category || defaultCategoryText}
                           </span>
                           <span className="font-heading font-bold text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 mt-0.5">
                             {supportingProducts[0].name}
                           </span>
                           <p className="text-[11px] text-haq-text-secondary line-clamp-1 font-light mt-0.5">
-                            {supportingProducts[0].description || "Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương."}
+                            {supportingProducts[0].description || defaultProductDesc}
                           </p>
                         </div>
                       </Link>
@@ -732,10 +777,22 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                 >
                   <span className="text-2xl mb-2">🌱</span>
                   <p className="font-heading font-bold text-sm text-haq-ink mb-1">
-                    Chưa có sản phẩm tại {activeProvinceInfo?.name || activeSpecialty?.provinceLabel || "địa phương này"}
+                    {language === 'en'
+                      ? `No products listed in ${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || 'this province'} yet`
+                      : language === 'ko'
+                      ? `${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || '해당 지역'}에는 아직 등록된 제품이 없습니다`
+                      : language === 'zh'
+                      ? `${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || '该地区'}暂未上架直营特色产品`
+                      : `Chưa có sản phẩm tại ${activeProvinceInfo?.name || activeSpecialty?.provinceLabel || "địa phương này"}`}
                   </p>
                   <p className="text-xs text-haq-text-secondary max-w-xs leading-relaxed font-light">
-                    HAQ FOOD đang trong quá trình khảo sát và phát triển các dòng sản phẩm liên kết tại địa phương này.
+                    {language === 'en'
+                      ? 'HAQ FOOD is currently researching and developing local agricultural partnerships in this region.'
+                      : language === 'ko'
+                      ? 'HAQ FOOD는 현재 이 지역의 농산물 연계 생산 라인을 지속적으로 조사 및 개발하고 있습니다.'
+                      : language === 'zh'
+                      ? 'HAQ FOOD 正在对该省市的特色农产品供应链进行实地考察与联合开发。'
+                      : 'HAQ FOOD đang trong quá trình khảo sát và phát triển các dòng sản phẩm liên kết tại địa phương này.'}
                   </p>
                 </motion.div>
               )}
@@ -746,7 +803,10 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         {/* 5. ONLY ONE CTA AT BOTTOM */}
         <div className="pt-2.5 mt-2 border-t border-haq-border/60 flex items-center justify-end shrink-0">
           <Link
-            to={selectedProvinceId ? `/san-pham?province=${selectedProvinceId}` : "/san-pham"}
+            to={(() => {
+              const base = language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham';
+              return selectedProvinceId ? `${base}?province=${selectedProvinceId}` : base;
+            })()}
             className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-[#0F5132] hover:text-[#16A34A] uppercase tracking-wider transition-colors group"
           >
             <span>{t('home.specialty_map.cta', 'XEM TẤT CẢ SẢN PHẨM')}</span>

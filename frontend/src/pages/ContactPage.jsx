@@ -40,12 +40,15 @@ const DEPARTMENT_EMAILS = [
     deptVi: 'Phòng Bán Hàng & Kinh Doanh B2B',
     deptEn: 'B2B Sales & Commercial Dept',
     deptKo: 'B2B 영업 및 유통 사업부',
+    deptZh: 'B2B销售与商务拓展部',
     roleVi: 'Báo giá sỉ, chính sách đại lý & NPP, đơn hàng xuất khẩu, hợp đồng gia công OEM/ODM.',
     roleEn: 'Wholesale pricing, distributor & dealer policies, export trade, OEM/ODM contracts.',
     roleKo: '도매 단가표, 대리점 공급 정책, 해외 수출 및 OEM/ODM 위탁 제조 문의.',
+    roleZh: '批发报价、代理商及经销商政策、进出口外贸、OEM/ODM代工合作。',
     badgeVi: 'BÁO GIÁ & ĐẠI LÝ',
     badgeEn: 'SALES & QUOTES',
     badgeKo: '영업 & 견적',
+    badgeZh: '批发报价 & 代理加盟',
     email: 'sales01@haq.com.vn',
     icon: ShoppingBag,
   },
@@ -54,12 +57,15 @@ const DEPARTMENT_EMAILS = [
     deptVi: 'Bộ Phận Chăm Sóc Khách Hàng',
     deptEn: 'Customer Care & Service Dept',
     deptKo: '고객 만족 및 서비스 센터',
+    deptZh: '客户关怀与售后服务中心',
     roleVi: 'Tiếp nhận phản hồi chất lượng sản phẩm, chính sách bảo hành, đổi trả & hỗ trợ đối tác.',
     roleEn: 'Product quality feedback, warranty/exchange policies, partner assistance.',
     roleKo: '제품 품질 피드백, 교환 및 반품 정책, 고객 만족 서비스 지원.',
+    roleZh: '产品质量反馈、质保与退换货政策、合作伙伴全方位协同支持。',
     badgeVi: 'HẬU MÃI & CSKH',
     badgeEn: 'CUSTOMER CARE',
     badgeKo: '고객 만족',
+    badgeZh: '售后保障 & 客服',
     email: 'cskh@haq.com.vn',
     icon: Headphones,
   },
@@ -68,12 +74,15 @@ const DEPARTMENT_EMAILS = [
     deptVi: 'Hỗ Trợ Kỹ Thuật & Vận Đơn',
     deptEn: 'Technical & Order Support',
     deptKo: '물류 운영 및 기술 지원팀',
+    deptZh: '技术支持与订单物流部',
     roleVi: 'Tiến độ giao nhận hàng hóa, chứng từ vận chuyển, thông số kỹ thuật & kiểm nghiệm ISO/HACCP.',
     roleEn: 'Order tracking, shipping documents, technical specifications & ISO/HACCP records.',
     roleKo: '주문 배송 추적, 통관 및 수출 서류, 제품 기술 규격 및 ISO/HACCP 인증 확인.',
+    roleZh: '订单发运跟踪、报关物流单据、产品技术指标及 ISO/HACCP 质检报告核验。',
     badgeVi: 'KỸ THUẬT & ĐƠN HÀNG',
     badgeEn: 'OPERATIONS & DOCS',
     badgeKo: '기술 & 서류',
+    badgeZh: '技术规格 & 订单',
     email: 'support@haq.com.vn',
     icon: LifeBuoy,
   },
@@ -82,12 +91,15 @@ const DEPARTMENT_EMAILS = [
     deptVi: 'Ban Nhân Sự & Tuyển Dụng',
     deptEn: 'Human Resources & Recruitment',
     deptKo: '인사 및 인재 채용팀',
+    deptZh: '人力资源与招聘部',
     roleVi: 'Tiếp nhận hồ sơ ứng viên (CV), lịch phỏng vấn & cơ hội việc làm tại HAQ FOOD.',
     roleEn: 'CV submissions, interview schedules, career opportunities across factories & offices.',
     roleKo: '입사 지원서(CV) 접수, 면접 일정 조율 및 HAQ FOOD 채용 공고 안내.',
+    roleZh: '接收应聘简历 (CV)、安排面试沟通及 HAQ FOOD 招聘岗位咨询。',
     badgeVi: 'TUYỂN DỤNG & CV',
     badgeEn: 'CAREERS & HR',
     badgeKo: '채용 & 인사',
+    badgeZh: '人才招募 & HR',
     email: 'tuyendung@haq.com.vn',
     icon: Briefcase,
   },
@@ -154,87 +166,97 @@ export default function ContactPage() {
     {
       id: 'partnership',
       aliases: ['daily', 'npp', 'partner', 'distribution'],
-      title: language === 'en' ? 'Distributor & Dealer' : language === 'ko' ? '대리점 및 유통 파트너' : 'Đại lý & NPP',
-      shortTitle: language === 'en' ? 'Distributor' : language === 'ko' ? '대리점·유통' : 'Đại lý & NPP',
-      tag: language === 'en' ? 'Nationwide Distribution Solutions' : language === 'ko' ? '전국 유통망 솔루션' : 'Giải pháp Phân phối Toàn quốc',
+      title: language === 'en' ? 'Distributor & Dealer' : language === 'ko' ? '대리점 및 유통 파트너' : language === 'zh' ? '代理商与区域经销商' : 'Đại lý & NPP',
+      shortTitle: language === 'en' ? 'Distributor' : language === 'ko' ? '대리점·유통' : language === 'zh' ? '代理·经销' : 'Đại lý & NPP',
+      tag: language === 'en' ? 'Nationwide Distribution Solutions' : language === 'ko' ? '전국 유통망 솔루션' : language === 'zh' ? '全国渠道分销解决方案' : 'Giải pháp Phân phối Toàn quốc',
       desc: language === 'en'
         ? 'Expand distribution networks with flexible margins and dedicated hands-on sales support.'
         : language === 'ko'
         ? '유연한 공급 정책과 긴밀한 현장 지원으로 유통망을 확장하세요.'
+        : language === 'zh'
+        ? '灵活的渠道利润政策与专人深度协同，助力开拓广阔分销市场。'
         : 'Mở rộng mạng lưới phân phối với chính sách linh hoạt và hỗ trợ sát sao.',
-      dept: language === 'en' ? 'Dealer & Distribution Development Dept' : language === 'ko' ? '대리점·유통 개발 부서' : 'Phòng Phát triển Đại lý & NPP',
+      dept: language === 'en' ? 'Dealer & Distribution Development Dept' : language === 'ko' ? '대리점·유통 개발 부서' : language === 'zh' ? '代理与渠道开发部' : 'Phòng Phát triển Đại lý & NPP',
       icon: Handshake,
       hotline: '024 23 23 56 56 (Ext 102)',
       email: 'sales01@haq.com.vn',
-      leadNeed: language === 'en' ? 'Distributor & Dealer Partnership' : language === 'ko' ? '대리점 및 유통 파트너십' : 'Hợp tác Đại lý & Nhà phân phối',
+      leadNeed: language === 'en' ? 'Distributor & Dealer Partnership' : language === 'ko' ? '대리점 및 유통 파트너십' : language === 'zh' ? '代理商与分销商合作' : 'Hợp tác Đại lý & Nhà phân phối',
     },
     {
       id: 'products',
       aliases: ['mua-hang', 'don-hang', 'ban-buon', 'wholesale'],
-      title: language === 'en' ? 'Wholesale & Bulk Orders' : language === 'ko' ? '도매 및 대량 주문' : 'Mua sỉ & Đơn hàng lớn',
-      shortTitle: language === 'en' ? 'Wholesale' : language === 'ko' ? '도매·대량구매' : 'Mua sỉ & Bán buôn',
-      tag: language === 'en' ? 'Wholesale & Corporate Gift Solutions' : language === 'ko' ? '도매 및 기업 선물 솔루션' : 'Giải pháp Đơn hàng sỉ & Quà tặng',
+      title: language === 'en' ? 'Wholesale & Bulk Orders' : language === 'ko' ? '도매 및 대량 주문' : language === 'zh' ? '批发采购与大宗订单' : 'Mua sỉ & Đơn hàng lớn',
+      shortTitle: language === 'en' ? 'Wholesale' : language === 'ko' ? '도매·대량구매' : language === 'zh' ? '大宗采购' : 'Mua sỉ & Bán buôn',
+      tag: language === 'en' ? 'Wholesale & Corporate Gift Solutions' : language === 'ko' ? '도매 및 기업 선물 솔루션' : language === 'zh' ? '批发集采与企业礼品定制方案' : 'Giải pháp Đơn hàng sỉ & Quà tặng',
       desc: language === 'en'
         ? 'Fast quotation for convenience store chains, mini supermarkets, catering services, and large corporate gift orders.'
         : language === 'ko'
         ? '편의점 체인, 중소형 마트, 단체 급식 및 대량 주문을 위한 신속한 견적 제공.'
+        : language === 'zh'
+        ? '为连锁便利店、精品商超、餐饮食堂及企业批量礼品提供快速报价与供应链保障。'
         : 'Báo giá nhanh cho chuỗi cửa hàng tiện lợi, siêu thị mini, bếp ăn công nghiệp và các đơn hàng lớn.',
-      dept: language === 'en' ? 'Sales & Commercial Dept' : language === 'ko' ? '영업·유통 사업부' : 'Phòng Kinh doanh & Bán lẻ',
+      dept: language === 'en' ? 'Sales & Commercial Dept' : language === 'ko' ? '영업·유통 사업부' : language === 'zh' ? '销售与商业渠道部' : 'Phòng Kinh doanh & Bán lẻ',
       icon: Package,
       hotline: '024 23 23 56 56 (Ext 101)',
       email: 'sales01@haq.com.vn',
-      leadNeed: language === 'en' ? 'Wholesale & Product Inquiries' : language === 'ko' ? '도매 구매 및 제품 문의' : 'Mua sỉ & Tìm hiểu sản phẩm',
+      leadNeed: language === 'en' ? 'Wholesale & Product Inquiries' : language === 'ko' ? '도매 구매 및 제품 문의' : language === 'zh' ? '批发采购与产品咨询' : 'Mua sỉ & Tìm hiểu sản phẩm',
     },
     {
       id: 'export',
       aliases: ['international', 'global', 'thi-truong-moi'],
-      title: language === 'en' ? 'Export & Global Markets' : language === 'ko' ? '수출 및 글로벌 시장' : 'Xuất khẩu & Thị trường mới',
-      shortTitle: language === 'en' ? 'Export' : language === 'ko' ? '해외 수출' : 'Xuất khẩu Quốc tế',
-      tag: language === 'en' ? 'Official Trade & International Export' : language === 'ko' ? '정식 무역 및 해외 수출' : 'Thương mại & Xuất khẩu Chính ngạch',
+      title: language === 'en' ? 'Export & Global Markets' : language === 'ko' ? '수출 및 글로벌 시장' : language === 'zh' ? '出口外贸与国际市场' : 'Xuất khẩu & Thị trường mới',
+      shortTitle: language === 'en' ? 'Export' : language === 'ko' ? '해외 수출' : language === 'zh' ? '国际出口' : 'Xuất khẩu Quốc tế',
+      tag: language === 'en' ? 'Official Trade & International Export' : language === 'ko' ? '정식 무역 및 해외 수출' : language === 'zh' ? '正品一般贸易与国际出口业务' : 'Thương mại & Xuất khẩu Chính ngạch',
       desc: language === 'en'
         ? 'Supplying certified processed foods conforming strictly with international food hygiene regulations.'
         : language === 'ko'
         ? '해외 국가별 통관 기준 및 검역 요건을 충족하는 인증 식품 공급.'
+        : language === 'zh'
+        ? '供应符合国际食品安全标准、支持跨境通关与检疫合规的优质休闲食品。'
         : 'Cung ứng sản phẩm đạt tiêu chuẩn, phù hợp với nhu cầu thị trường quốc tế.',
-      dept: language === 'en' ? 'International Trade Dept' : language === 'ko' ? '해외무역사업팀' : 'Phòng Thương mại Quốc tế',
+      dept: language === 'en' ? 'International Trade Dept' : language === 'ko' ? '해외무역사업팀' : language === 'zh' ? '国际贸易部' : 'Phòng Thương mại Quốc tế',
       icon: Globe2,
       hotline: '024 23 23 56 56 (Ext 103)',
       email: 'sales01@haq.com.vn',
-      leadNeed: language === 'en' ? 'Export Trade Partnership' : language === 'ko' ? '해외 수출 무역 협력' : 'Đối tác Thương mại Xuất khẩu',
+      leadNeed: language === 'en' ? 'Export Trade Partnership' : language === 'ko' ? '해외 수출 무역 협력' : language === 'zh' ? '国际出口贸易合作' : 'Đối tác Thương mại Xuất khẩu',
     },
     {
       id: 'oem',
       aliases: ['private-label', 'giacong', 'san-xuat'],
-      title: language === 'en' ? 'OEM & Private Label' : language === 'ko' ? 'OEM / ODM 위탁 제조' : 'Sản xuất & Gia công',
-      shortTitle: language === 'en' ? 'OEM / ODM' : language === 'ko' ? 'OEM/ODM' : 'Sản xuất & Gia công',
-      tag: language === 'en' ? 'Private Label & Contract Manufacturing' : language === 'ko' ? '자체 브랜드(PB) 수탁 생산' : 'Sản xuất & Gia công Thương hiệu riêng',
+      title: language === 'en' ? 'OEM & Private Label' : language === 'ko' ? 'OEM / ODM 위탁 제조' : language === 'zh' ? 'OEM / ODM 贴牌代工' : 'Sản xuất & Gia công',
+      shortTitle: language === 'en' ? 'OEM / ODM' : language === 'ko' ? 'OEM/ODM' : language === 'zh' ? '代工定制' : 'Sản xuất & Gia công',
+      tag: language === 'en' ? 'Private Label & Contract Manufacturing' : language === 'ko' ? '자체 브랜드(PB) 수탁 생산' : language === 'zh' ? '自有品牌 (PB) 贴牌定制与代工制造' : 'Sản xuất & Gia công Thương hiệu riêng',
       desc: language === 'en'
         ? 'Comprehensive contract manufacturing and recipe development tailored to corporate specifications.'
         : language === 'ko'
         ? '기업 맞춤형 레시피 개발 및 패키징 위탁 생산 원스톱 솔루션.'
+        : language === 'zh'
+        ? '根据企业客户专属需求，提供一站式配方研发、柔性生产与包装代工解决方案。'
         : 'Giải pháp sản xuất và gia công theo yêu cầu doanh nghiệp.',
-      dept: language === 'en' ? 'R&D & OEM Manufacturing Center' : language === 'ko' ? 'R&D 및 OEM 제조센터' : 'Trung tâm R&D & Gia công OEM',
+      dept: language === 'en' ? 'R&D & OEM Manufacturing Center' : language === 'ko' ? 'R&D 및 OEM 제조센터' : language === 'zh' ? '研发与 OEM 代工中心' : 'Trung tâm R&D & Gia công OEM',
       icon: Building2,
       hotline: '024 23 23 56 56 (Ext 104)',
       email: 'sales01@haq.com.vn',
-      leadNeed: language === 'en' ? 'Private Label & OEM Manufacturing' : language === 'ko' ? 'PB 및 OEM 위탁 제조' : 'Sản xuất Private Label & Gia công OEM',
+      leadNeed: language === 'en' ? 'Private Label & OEM Manufacturing' : language === 'ko' ? 'PB 및 OEM 위탁 제조' : language === 'zh' ? '自有品牌与 OEM 代工制造' : 'Sản xuất Private Label & Gia công OEM',
     },
     {
       id: 'general',
       aliases: ['support', 'contact', 'other', 'cham-soc'],
-      title: language === 'en' ? 'Customer Care & Support' : language === 'ko' ? '고객 지원 및 일반 문의' : 'Chăm sóc & Hỗ trợ',
-      shortTitle: language === 'en' ? 'Support' : language === 'ko' ? '고객 지원' : 'Hỗ trợ đối tác',
-      tag: language === 'en' ? 'Customer Service & General Inquiries' : language === 'ko' ? '고객 서비스 및 협력 지원' : 'Dịch vụ Khách hàng & Hợp tác chung',
+      title: language === 'en' ? 'Customer Care & Support' : language === 'ko' ? '고객 지원 및 일반 문의' : language === 'zh' ? '客户支持与综合咨询' : 'Chăm sóc & Hỗ trợ',
+      shortTitle: language === 'en' ? 'Support' : language === 'ko' ? '고객 지원' : language === 'zh' ? '客户支持' : 'Hỗ trợ đối tác',
+      tag: language === 'en' ? 'Customer Service & General Inquiries' : language === 'ko' ? '고객 서비스 및 협력 지원' : language === 'zh' ? '客户服务与综合合作咨询' : 'Dịch vụ Khách hàng & Hợp tác chung',
       desc: language === 'en'
         ? 'Documentation queries, warranty/exchange policies, and continuous partnership assistance.'
         : language === 'ko'
         ? '거래 서류 확인, 반품 교환 정책 및 비즈니스 협력 전반 지원.'
+        : language === 'zh'
+        ? '合同单证查询、退换货政策咨询以及全方位商务对接支持。'
         : 'Tra cứu chứng từ, chính sách đổi trả và hỗ trợ trong quá trình hợp tác.',
-      dept: language === 'en' ? 'Customer Care Dept' : language === 'ko' ? '고객지원센터' : 'Bộ phận Chăm sóc Khách hàng',
+      dept: language === 'en' ? 'Customer Care Dept' : language === 'ko' ? '고객지원센터' : language === 'zh' ? '客户服务中心' : 'Bộ phận Chăm sóc Khách hàng',
       icon: Headphones,
       hotline: '024 23 23 56 56',
       email: 'cskh@haq.com.vn',
-      leadNeed: language === 'en' ? 'General Support & Contact' : language === 'ko' ? '일반 문의 및 고객 지원' : 'Liên hệ & Hỗ trợ chung',
+      leadNeed: language === 'en' ? 'General Support & Contact' : language === 'ko' ? '일반 문의 및 고객 지원' : language === 'zh' ? '综合咨询与业务对接' : 'Liên hệ & Hỗ trợ chung',
     },
   ], [language])
 
@@ -318,7 +340,7 @@ export default function ContactPage() {
 
     try {
       const leadPayload = {
-        name: formData.fullName || 'Khách hàng liên hệ website',
+        name: formData.fullName || (language === 'zh' ? '网站联系客户' : language === 'ko' ? '웹사이트 문의 고객' : language === 'en' ? 'Website Inquiry Contact' : 'Khách hàng liên hệ website'),
         company: formData.company || undefined,
         phone: formData.phone,
         email: formData.email || '',
@@ -345,7 +367,13 @@ export default function ContactPage() {
       console.error('Contact submission error:', err)
       setErrorMessage(
         err?.message ||
-        'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0993 308 319 để được hỗ trợ trực tiếp.'
+        (language === 'zh'
+          ? '暂时无法提交信息。请通过热线电话 024 23 23 56 56 或 Zalo 0993 308 319 直接联系我们。'
+          : language === 'ko'
+          ? '현재 문의를 접수할 수 없습니다. 대표번호 024 23 23 56 56 또는 Zalo 0993 308 319로 문의해 주시기 바랍니다.'
+          : language === 'en'
+          ? 'Unable to submit your inquiry at this moment. Please contact us via hotline 024 23 23 56 56 or Zalo 0993 308 319 for direct support.'
+          : 'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0993 308 319 để được hỗ trợ trực tiếp.')
       )
     } finally {
       setIsSubmitting(false)
@@ -377,6 +405,8 @@ export default function ContactPage() {
                     <>PARTNER WITH <span className="whitespace-nowrap">HAQ FOOD</span></>
                   ) : language === 'ko' ? (
                     <><span className="whitespace-nowrap">HAQ FOOD</span> 비즈니스 협력 안내</>
+                  ) : language === 'zh' ? (
+                    <>与 <span className="whitespace-nowrap">HAQ FOOD</span> 携手共赢合作</>
                   ) : (
                     <>KẾT NỐI HỢP TÁC CÙNG <span className="whitespace-nowrap">HAQ FOOD</span></>
                   )}
@@ -386,6 +416,8 @@ export default function ContactPage() {
                     ? 'Select a collaboration model below to receive wholesale price lists, dealer discount policies, or get in touch directly with our dedicated specialists.'
                     : language === 'ko'
                     ? '아래에서 협력 방식을 선택하시면 전담팀에서 최적의 공급 단가표, 대리점 할인율 및 맞춤형 상담을 안내해 드립니다.'
+                    : language === 'zh'
+                    ? '在下方选择您的合作模式，获取批发价格清单、代理折扣政策，或直接联系业务专员对接。'
                     : 'Lựa chọn mô hình hợp tác bên dưới để nhận bảng giá sỉ, chính sách chiết khấu đại lý hoặc gửi yêu cầu tư vấn trực tiếp đến chuyên viên phụ trách.'}
                 </p>
               </div>
@@ -500,7 +532,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <span className="font-heading text-xs font-bold uppercase text-haq-ink block">
-                          {language === 'en' ? 'Need instant consultation?' : language === 'ko' ? '즉시 전문가 상담이 필요하신가요?' : 'Cần kết nối chuyên viên ngay?'}
+                          {language === 'en' ? 'Need instant consultation?' : language === 'ko' ? '즉시 전문가 상담이 필요하신가요?' : language === 'zh' ? '需要立即咨询专员？' : 'Cần kết nối chuyên viên ngay?'}
                         </span>
                         <span className="text-xs text-haq-text-secondary">
                           Hotline:{' '}
@@ -518,7 +550,7 @@ export default function ContactPage() {
                       href="tel:0993308319"
                       className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
                     >
-                      <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : 'Gọi trực tiếp'}</span>
+                      <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : language === 'zh' ? '直接致电' : 'Gọi trực tiếp'}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -566,6 +598,8 @@ export default function ContactPage() {
                           ? `Your inquiry has been routed to ${activeTopic.dept}. A dedicated specialist will reach out via phone or email within 24 business hours.`
                           : language === 'ko'
                           ? `고객님의 문의가 ${activeTopic.dept}로 전달되었습니다. 담당 전문가가 영업일 기준 24시간 내로 연락드리겠습니다.`
+                          : language === 'zh'
+                          ? `您的需求已分配至 ${activeTopic.dept}。专属业务负责人将在24个工作小时内通过电话或邮件与您联系。`
                           : `Thông tin của bạn đã được chuyển đến ${activeTopic.dept}. Chuyên viên phụ trách sẽ liên hệ lại qua số điện thoại hoặc email trong vòng 24 giờ làm việc.`}
                       </p>
                       <div className="pt-4 flex items-center justify-center gap-3 flex-wrap">
@@ -574,7 +608,7 @@ export default function ContactPage() {
                           onClick={resetForm}
                           className="bg-[#16A34A] hover:bg-[#0F5132] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full transition-colors cursor-pointer"
                         >
-                          {language === 'en' ? 'SUBMIT ANOTHER INQUIRY' : language === 'ko' ? '추가 문의하기' : 'GỬI THÊM YÊU CẦU KHÁC'}
+                          {language === 'en' ? 'SUBMIT ANOTHER INQUIRY' : language === 'ko' ? '추가 문의하기' : language === 'zh' ? '提交其他需求' : 'GỬI THÊM YÊU CẦU KHÁC'}
                         </button>
                         <a
                           href="https://zalo.me/1361851474644984696"
@@ -582,7 +616,7 @@ export default function ContactPage() {
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 bg-[#0068FF] text-white font-heading font-bold text-xs uppercase px-6 py-3 rounded-full hover:bg-[#0052cc] transition-colors"
                         >
-                          <span>{language === 'en' ? 'INSTANT CHAT' : language === 'ko' ? '실시간 비즈니스 채팅' : 'NHẮN ZALO DOANH NGHIỆP'}</span>
+                          <span>{language === 'en' ? 'INSTANT CHAT' : language === 'ko' ? '실시간 비즈니스 채팅' : language === 'zh' ? '企业即时沟通' : 'NHẮN ZALO DOANH NGHIỆP'}</span>
                         </a>
                       </div>
                     </div>
@@ -607,7 +641,7 @@ export default function ContactPage() {
                             required
                             value={formData.fullName}
                             onChange={handleInputChange}
-                            placeholder={language === 'en' ? 'E.g.: John Smith' : language === 'ko' ? '예: 홍길동' : 'Ví dụ: Nguyễn Văn An'}
+                            placeholder={language === 'en' ? 'E.g.: John Smith' : language === 'ko' ? '예: 홍길동' : language === 'zh' ? '例如：张先生 / 李女士' : 'Ví dụ: Nguyễn Văn An'}
                             className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
@@ -622,7 +656,7 @@ export default function ContactPage() {
                             required
                             value={formData.company}
                             onChange={handleInputChange}
-                            placeholder={language === 'en' ? 'E.g.: ABC Distribution Corp' : language === 'ko' ? '예: ABC 유통 주식회사' : 'Ví dụ: Công ty / Đại lý ABC'}
+                            placeholder={language === 'en' ? 'E.g.: ABC Distribution Corp' : language === 'ko' ? '예: ABC 유통 주식회사' : language === 'zh' ? '例如：华信商贸有限公司' : 'Ví dụ: Công ty / Đại lý ABC'}
                             className="w-full px-4 py-3 bg-haq-sage/15 border border-haq-border rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/50"
                           />
                         </div>
@@ -684,9 +718,9 @@ export default function ContactPage() {
 
                         <div>
                           <label className="block text-xs font-heading font-semibold text-haq-text-secondary uppercase mb-1.5">
-                            {language === 'en' ? 'Region / Location' : language === 'ko' ? '지역 / 시·도' : 'Khu vực / Tỉnh thành'}{' '}
+                            {language === 'en' ? 'Region / Location' : language === 'ko' ? '지역 / 시·도' : language === 'zh' ? '所在地区 / 省市' : 'Khu vực / Tỉnh thành'}{' '}
                             <span className="text-[11px] font-normal text-haq-text-secondary/70 lowercase">
-                              ({language === 'en' ? 'optional' : language === 'ko' ? '선택' : 'không bắt buộc'})
+                              ({language === 'en' ? 'optional' : language === 'ko' ? '선택' : language === 'zh' ? '选填' : 'không bắt buộc'})
                             </span>
                           </label>
                           <input
@@ -694,7 +728,7 @@ export default function ContactPage() {
                             name="region"
                             value={formData.region}
                             onChange={handleInputChange}
-                            placeholder={language === 'en' ? 'E.g.: Hanoi, HCMC, Seoul, Tokyo...' : language === 'ko' ? '예: 서울, 부산, 하노이...' : 'Ví dụ: Hà Nội, TP.HCM, Miền Bắc...'}
+                            placeholder={language === 'en' ? 'E.g.: Hanoi, HCMC, Seoul, Tokyo...' : language === 'ko' ? '예: 서울, 부산, 하노이...' : language === 'zh' ? '例如：河内、胡志明市、广州、上海...' : 'Ví dụ: Hà Nội, TP.HCM, Miền Bắc...'}
                             className="w-full px-4 py-3 bg-haq-sage/10 border border-haq-border/80 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/40 text-haq-ink"
                           />
                         </div>
@@ -705,7 +739,7 @@ export default function ContactPage() {
                         <label className="block text-xs font-heading font-semibold text-haq-text-secondary uppercase mb-1.5">
                           {t('contact_page.note_label', 'Ghi chú & Yêu cầu cụ thể')}{' '}
                           <span className="text-[11px] font-normal text-haq-text-secondary/70 lowercase">
-                            ({language === 'en' ? 'optional' : language === 'ko' ? '선택' : 'không bắt buộc'})
+                            ({language === 'en' ? 'optional' : language === 'ko' ? '선택' : language === 'zh' ? '选填' : 'không bắt buộc'})
                           </span>
                         </label>
                         <textarea
@@ -718,6 +752,8 @@ export default function ContactPage() {
                               ? 'Tell us more about your target products, expected order volume, or partnership requirements...'
                               : language === 'ko'
                               ? '관심 제품, 예상 주문 수량 또는 구체적인 협력 요구사항을 입력해 주세요...'
+                              : language === 'zh'
+                              ? '请详细描述您感兴趣的产品、预估采购数量或具体合作需求...'
                               : 'Chia sẻ thêm về nhu cầu, sản lượng dự kiến hoặc mong muốn hợp tác của bạn...'
                           }
                           className="w-full px-4 py-3 bg-haq-sage/10 border border-haq-border/80 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#16A34A] focus:bg-white transition-colors placeholder:text-haq-text-secondary/40 text-haq-ink resize-none"
@@ -745,9 +781,9 @@ export default function ContactPage() {
                       {/* 7. Small Trust Row Below CTA */}
                       <div className="pt-1 text-center">
                         <p className="text-[12px] sm:text-[13px] text-haq-text-secondary font-medium flex items-center justify-center gap-2 flex-wrap">
-                          <span>{language === 'en' ? 'Response within 24 hours' : language === 'ko' ? '24시간 내 빠른 응답' : 'Phản hồi trong 24 giờ làm việc'}</span>
+                          <span>{language === 'en' ? 'Response within 24 hours' : language === 'ko' ? '24시간 내 빠른 응답' : language === 'zh' ? '24个工作小时内快速响应' : 'Phản hồi trong 24 giờ làm việc'}</span>
                           <span className="text-[#16A34A]">•</span>
-                          <span>{language === 'en' ? 'Information confidential' : language === 'ko' ? '정보 철저 보호' : 'Bảo mật thông tin'}</span>
+                          <span>{language === 'en' ? 'Information confidential' : language === 'ko' ? '정보 철저 보호' : language === 'zh' ? '商业信息严格保密' : 'Bảo mật thông tin'}</span>
                         </p>
                       </div>
                     </form>
@@ -768,13 +804,15 @@ export default function ContactPage() {
               {/* Section Header */}
               <div className="max-w-3xl mb-8 sm:mb-10">
                 <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                  {language === 'en' ? 'CORPORATE INBOX DIRECTORY' : language === 'ko' ? '기업 공식 이메일 안내' : 'HỆ THỐNG EMAIL CHUYÊN TRÁCH DOANH NGHIỆP'}
+                  {language === 'en' ? 'CORPORATE INBOX DIRECTORY' : language === 'ko' ? '기업 공식 이메일 안내' : language === 'zh' ? '企业专属联络邮箱系统' : 'HỆ THỐNG EMAIL CHUYÊN TRÁCH DOANH NGHIỆP'}
                 </span>
                 <h2 className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl text-haq-ink uppercase mt-1.5 leading-snug">
                   {language === 'en'
                     ? 'OFFICIAL INBOXES BY DEPARTMENT'
                     : language === 'ko'
                     ? '부서별 직통 이메일 소통 창구'
+                    : language === 'zh'
+                    ? '直连各职能部门专属通道'
                     : 'KẾT NỐI TRỰC TIẾP TỪNG BỘ PHẬN CHUYÊN TRÁCH'}
                 </h2>
                 <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
@@ -782,6 +820,8 @@ export default function ContactPage() {
                     ? 'Inquiries sent to dedicated departmental inboxes are prioritized and routed directly to the specialists in charge.'
                     : language === 'ko'
                     ? '문의 목적에 맞는 해당 부서의 공식 이메일로 보내주시면 전담 인력이 신속하고 정확하게 검토 후 회신드립니다.'
+                    : language === 'zh'
+                    ? '将您的需求直接发送至对应部门专责邮箱，将获得优先分流处理与专职人员对接。'
                     : 'Gửi thư trực tiếp đến từng hòm thư chuyên trách giúp yêu cầu của Quý đối tác được bảo mật, phân luồng chính xác và ưu tiên xử lý.'}
                 </p>
               </div>
@@ -795,10 +835,10 @@ export default function ContactPage() {
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-heading font-extrabold text-base sm:text-lg text-haq-ink uppercase">
-                        {language === 'en' ? 'Corporate Head Office' : language === 'ko' ? '본사 대표 공식 이메일' : 'Hòm Thư Đại Diện Tổng Công Ty'}
+                        {language === 'en' ? 'Corporate Head Office' : language === 'ko' ? '본사 대표 공식 이메일' : language === 'zh' ? '总公司官方联络邮箱' : 'Hòm Thư Đại Diện Tổng Công Ty'}
                       </h3>
                       <span className="text-[10px] font-heading font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-haq-sage/40 text-[#16A34A] border border-haq-border">
-                        {language === 'en' ? 'GENERAL INQUIRIES' : language === 'ko' ? '일반 문의' : 'LIÊN HỆ CHUNG'}
+                        {language === 'en' ? 'GENERAL INQUIRIES' : language === 'ko' ? '일반 문의' : language === 'zh' ? '综合事务' : 'LIÊN HỆ CHUNG'}
                       </span>
                     </div>
                     <p className="text-xs text-haq-text-secondary mt-1">
@@ -806,6 +846,8 @@ export default function ContactPage() {
                         ? 'Receiving capability profiles, strategic partnerships, and general administration.'
                         : language === 'ko'
                         ? '기업 소개서 접수, 전략적 파트너십 및 일반 행정 업무 문의.'
+                        : language === 'zh'
+                        ? '接收企业资质文件、战略合作洽谈与行政商务往来。'
                         : 'Tiếp nhận hồ sơ năng lực doanh nghiệp, đề xuất hợp tác & văn thư hành chính.'}
                     </p>
                   </div>
@@ -842,9 +884,9 @@ export default function ContactPage() {
                 {DEPARTMENT_EMAILS.map((item, idx) => {
                   const Icon = item.icon
                   const isCopied = copiedEmail === item.email
-                  const deptName = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : item.deptVi
-                  const roleDesc = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : item.roleVi
-                  const badgeText = language === 'en' ? item.badgeEn : language === 'ko' ? item.badgeKo : item.badgeVi
+                  const deptName = language === 'en' ? item.deptEn : language === 'ko' ? item.deptKo : language === 'zh' ? item.deptZh : item.deptVi
+                  const roleDesc = language === 'en' ? item.roleEn : language === 'ko' ? item.roleKo : language === 'zh' ? item.roleZh : item.roleVi
+                  const badgeText = language === 'en' ? item.badgeEn : language === 'ko' ? item.badgeKo : language === 'zh' ? item.badgeZh : item.badgeVi
 
                   return (
                     <Reveal key={item.id} delay={idx * 60} direction="up">
@@ -923,16 +965,18 @@ export default function ContactPage() {
                   <div className="flex flex-col justify-between bg-haq-sage/20 rounded-3xl p-6 sm:p-8 border border-haq-border shadow-2xs h-full">
                     <div>
                       <span className="font-heading text-xs font-bold text-[#16A34A] uppercase tracking-wider">
-                        {language === 'en' ? 'DIRECT CHANNELS' : language === 'ko' ? '직접 문의' : 'KÊNH TRỰC TIẾP'}
+                        {language === 'en' ? 'DIRECT CHANNELS' : language === 'ko' ? '직접 문의' : language === 'zh' ? '直接联络' : 'KÊNH TRỰC TIẾP'}
                       </span>
                       <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink uppercase mt-1.5">
-                        {language === 'en' ? 'CONTACT OUR HEAD OFFICE' : language === 'ko' ? '본사 및 대표 연락처' : 'LIÊN HỆ VĂN PHÒNG CHÍNH'}
+                        {language === 'en' ? 'CONTACT OUR HEAD OFFICE' : language === 'ko' ? '본사 및 대표 연락처' : language === 'zh' ? '联络河内总部办公室' : 'LIÊN HỆ VĂN PHÒNG CHÍNH'}
                       </h3>
                       <p className="text-xs sm:text-sm text-haq-text-secondary mt-2 leading-relaxed font-normal">
                         {language === 'en'
                           ? 'You are welcome to visit our headquarters in Hanoi or reach out directly through our official channels below.'
                           : language === 'ko'
                           ? '하노이 본사 사무실을 직접 방문하시거나 아래 공식 채널을 통해 언제든 문의하실 수 있습니다.'
+                          : language === 'zh'
+                          ? '欢迎莅临我们位于越南河内的公司总部，或通过以下官方渠道直接与我们联络。'
                           : 'Quý khách có thể ghé thăm trực tiếp văn phòng làm việc hoặc liên hệ qua các kênh thông tin chính thức dưới đây.'}
                       </p>
 
@@ -944,13 +988,13 @@ export default function ContactPage() {
                           </div>
                           <div>
                             <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                              {language === 'en' ? 'Landline Phone' : language === 'ko' ? '유선 전화' : 'Điện thoại cố định'}
+                              {language === 'en' ? 'Landline Phone' : language === 'ko' ? '유선 전화' : language === 'zh' ? '总机电话' : 'Điện thoại cố định'}
                             </span>
                             <a href="tel:02423235656" className="font-heading font-bold text-lg text-haq-ink hover:text-[#16A34A] transition-colors">
                               024 23 23 56 56
                             </a>
                             <p className="text-[11px] text-haq-text-secondary">
-                              {language === 'en' ? 'Mon – Sat: 8:00 AM – 5:30 PM (GMT+7)' : language === 'ko' ? '월 – 토: 08:00 – 17:30' : 'Thứ 2 – Thứ 7: 8h00 – 17h30'}
+                              {language === 'en' ? 'Mon – Sat: 8:00 AM – 5:30 PM (GMT+7)' : language === 'ko' ? '월 – 토: 08:00 – 17:30' : language === 'zh' ? '周一至周六：08:00 – 17:30' : 'Thứ 2 – Thứ 7: 8h00 – 17h30'}
                             </p>
                           </div>
                         </div>
@@ -962,7 +1006,7 @@ export default function ContactPage() {
                           </div>
                           <div>
                             <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                              {language === 'en' ? 'Corporate Instant Messaging' : language === 'ko' ? '실시간 비즈니스 채팅' : 'Zalo Tư Vấn Doanh Nghiệp'}
+                              {language === 'en' ? 'Corporate Instant Messaging' : language === 'ko' ? '실시간 비즈니스 채팅' : language === 'zh' ? '企业即时通讯' : 'Zalo Tư Vấn Doanh Nghiệp'}
                             </span>
                             <a
                               href="https://zalo.me/1361851474644984696"
@@ -973,7 +1017,7 @@ export default function ContactPage() {
                               HAQ Hà Nội
                             </a>
                             <p className="text-[11px] text-haq-text-secondary">
-                              {language === 'en' ? 'Official OA – 24/7 Assistance' : language === 'ko' ? '공식 채널 – 24/7 지원' : 'Zalo OA chính thức – Hỗ trợ 24/7'}
+                              {language === 'en' ? 'Official OA – 24/7 Assistance' : language === 'ko' ? '공식 채널 – 24/7 지원' : language === 'zh' ? '官方企业号 – 24/7 快速响应' : 'Zalo OA chính thức – Hỗ trợ 24/7'}
                             </p>
                           </div>
                         </div>
@@ -985,25 +1029,25 @@ export default function ContactPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <span className="block font-heading text-[11px] uppercase tracking-wider text-haq-text-secondary font-semibold">
-                              {language === 'en' ? 'Corporate Official Mailbox' : language === 'ko' ? '대표 공식 이메일' : 'Hòm thư Chung Doanh Nghiệp'}
+                              {language === 'en' ? 'Corporate Official Mailbox' : language === 'ko' ? '대표 공식 이메일' : language === 'zh' ? '企业官方邮箱' : 'Hòm thư Chung Doanh Nghiệp'}
                             </span>
                             <a href="mailto:info@haq.com.vn" className="font-mono font-bold text-base text-haq-ink hover:text-[#16A34A] transition-colors truncate block">
                               info@haq.com.vn
                             </a>
                             <p className="text-[11px] text-haq-text-secondary mt-0.5">
-                              {language === 'en' ? 'Receiving capability dossiers & general inquiries' : language === 'ko' ? '기업 소개서 및 일반 문의 접수' : 'Tiếp nhận hồ sơ năng lực & liên hệ chung'}
+                              {language === 'en' ? 'Receiving capability dossiers & general inquiries' : language === 'ko' ? '기업 소개서 및 일반 문의 접수' : language === 'zh' ? '接收企业合作资料与综合咨询' : 'Tiếp nhận hồ sơ năng lực & liên hệ chung'}
                             </p>
                           </div>
                         </div>
 
                         {/* Quick link to departmental directory */}
                         <div className="pt-2 px-1 flex items-center justify-between text-xs text-haq-text-secondary">
-                          <span>{language === 'en' ? 'Need department-specific emails?' : language === 'ko' ? '부서별 직통 메일이 필요하신가요?' : 'Cần gửi tới hòm thư chuyên trách?'}</span>
+                          <span>{language === 'en' ? 'Need department-specific emails?' : language === 'ko' ? '부서별 직통 메일이 필요하신가요?' : language === 'zh' ? '需要联系具体职能部门？' : 'Cần gửi tới hòm thư chuyên trách?'}</span>
                           <a
                             href="#email-directory"
                             className="font-heading font-bold text-[#16A34A] hover:underline inline-flex items-center gap-1"
                           >
-                            <span>{language === 'en' ? 'View departmental inboxes ↑' : language === 'ko' ? '부서별 메일 안내 ↑' : 'Xem danh bạ email các bộ phận ↑'}</span>
+                            <span>{language === 'en' ? 'View departmental inboxes ↑' : language === 'ko' ? '부서별 메일 안내 ↑' : language === 'zh' ? '查看部门邮箱列表 ↑' : 'Xem danh bạ email các bộ phận ↑'}</span>
                           </a>
                         </div>
                       </div>
@@ -1014,13 +1058,15 @@ export default function ContactPage() {
                         <MapPin className="w-5 h-5 text-[#16A34A] shrink-0 mt-0.5" />
                         <div>
                           <span className="block font-heading text-xs font-bold text-haq-ink uppercase">
-                            {language === 'en' ? 'HAQ FOOD Headquarters' : language === 'ko' ? 'HAQ FOOD 본사 주소' : 'Trụ sở chính HAQ FOOD'}
+                            {language === 'en' ? 'HAQ FOOD Headquarters' : language === 'ko' ? 'HAQ FOOD 본사 주소' : language === 'zh' ? 'HAQ FOOD 越南总部地址' : 'Trụ sở chính HAQ FOOD'}
                           </span>
                           <p className="text-xs text-haq-text-secondary mt-0.5">
                             {language === 'en'
                               ? 'No. 30, Alley 1 Pham Tuan Tai St, Nghia Do Ward, Cau Giay Dist, Hanoi, Vietnam.'
                               : language === 'ko'
                               ? '베트남 하노이시 꺼우저이구 응이어도동 팜뚜언따이 1골목 30호.'
+                              : language === 'zh'
+                              ? '越南河内市纸桥郡义都坊范俊才路1巷30号。'
                               : 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.'}
                           </p>
                           <a
@@ -1029,7 +1075,7 @@ export default function ContactPage() {
                             rel="noreferrer"
                             className="inline-flex items-center gap-1.5 text-xs text-[#16A34A] font-bold mt-2 hover:underline"
                           >
-                            <span>{language === 'en' ? 'Open on Google Maps' : language === 'ko' ? 'Google 지도에서 위치 보기' : 'Mở vị trí trên Google Maps'}</span>
+                            <span>{language === 'en' ? 'Open on Google Maps' : language === 'ko' ? 'Google 지도에서 위치 보기' : language === 'zh' ? '在谷歌地图中查看位置' : 'Mở vị trí trên Google Maps'}</span>
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                         </div>

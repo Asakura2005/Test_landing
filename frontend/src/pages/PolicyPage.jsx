@@ -16,6 +16,8 @@ export default function PolicyPage() {
               <>Policies <span className="text-white">& Terms</span></>
             ) : language === 'ko' ? (
               <>정책 <span className="text-white">& 약관</span></>
+            ) : language === 'zh' ? (
+              <>政策 <span className="text-white">& 条款</span></>
             ) : (
               <>Chính Sách <span className="text-white">& Điều Khoản</span></>
             )}
@@ -30,6 +32,8 @@ export default function PolicyPage() {
                 ? 'Policy content will be updated shortly.'
                 : language === 'ko'
                 ? '정책 및 약관 내용이 곧 업데이트될 예정입니다.'
+                : language === 'zh'
+                ? '政策条款内容即将更新。'
                 : 'Nội dung chính sách sẽ được cập nhật sau.'}
             </p>
           </div>

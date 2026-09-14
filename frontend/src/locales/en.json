@@ -384,7 +384,15 @@
     "not_found_title": "Product Not Found",
     "not_found_desc": "The product may have been removed or the link is invalid.",
     "back_home": "Back to Home",
-    "no_image": "No image available"
+    "no_image": "No image available",
+    "details_title": "Product Details",
+    "accordion_info": "Product Information",
+    "accordion_ingredients": "Product Ingredients",
+    "accordion_storage": "Usage & Storage Instructions",
+    "manufacturing_date": "Manufacturing Date:",
+    "manufacturing_date_value": "Printed on product packaging.",
+    "shelf_life_label": "Shelf Life:",
+    "certifications_label": "Certifications:"
   },
   "capabilities": {
     "badge": "MANUFACTURING & PLANT CAPABILITIES",

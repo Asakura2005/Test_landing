@@ -8,103 +8,116 @@ export const ROUTE_DEFINITIONS = [
     vi: '/',
     en: '/en',
     ko: '/ko',
+    zh: '/zh',
   },
   {
     key: 'about',
     vi: '/gioi-thieu',
     en: '/en/about',
     ko: '/ko/about',
-    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu'],
+    zh: '/zh/about',
+    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu', '/zh/gioi-thieu'],
   },
   {
     key: 'history',
     vi: '/lich-su',
     en: '/en/history',
     ko: '/ko/history',
-    aliases: ['/ve-chung-toi/lich-su', '/en/lich-su', '/ko/lich-su'],
+    zh: '/zh/history',
+    aliases: ['/ve-chung-toi/lich-su', '/en/lich-su', '/ko/lich-su', '/zh/lich-su'],
   },
   {
     key: 'capabilities',
     vi: '/nang-luc',
     en: '/en/capabilities',
     ko: '/ko/capabilities',
-    aliases: ['/en/nang-luc', '/ko/nang-luc'],
+    zh: '/zh/capabilities',
+    aliases: ['/en/nang-luc', '/ko/nang-luc', '/zh/nang-luc'],
   },
   {
     key: 'products',
     vi: '/san-pham',
     en: '/en/products',
     ko: '/ko/products',
-    aliases: ['/en/san-pham', '/ko/san-pham'],
+    zh: '/zh/products',
+    aliases: ['/en/san-pham', '/ko/san-pham', '/zh/san-pham'],
   },
   {
     key: 'news',
     vi: '/tin-tuc',
     en: '/en/news',
     ko: '/ko/news',
-    aliases: ['/en/tin-tuc', '/ko/tin-tuc'],
+    zh: '/zh/news',
+    aliases: ['/en/tin-tuc', '/ko/tin-tuc', '/zh/tin-tuc'],
   },
   {
     key: 'contact',
     vi: '/lien-he',
     en: '/en/contact',
     ko: '/ko/contact',
-    aliases: ['/en/lien-he', '/ko/lien-he'],
+    zh: '/zh/contact',
+    aliases: ['/en/lien-he', '/ko/lien-he', '/zh/lien-he'],
   },
   {
     key: 'policy',
     vi: '/chinh-sach',
     en: '/en/policy',
     ko: '/ko/policy',
+    zh: '/zh/policy',
   },
   {
     key: 'privacy',
     vi: '/chinh-sach-bao-mat',
     en: '/en/privacy-policy',
     ko: '/ko/privacy-policy',
+    zh: '/zh/privacy-policy',
   },
   {
     key: 'terms',
     vi: '/dieu-khoan-su-dung',
     en: '/en/terms-of-service',
     ko: '/ko/terms-of-service',
+    zh: '/zh/terms-of-service',
   },
   {
     key: 'refund',
     vi: '/chinh-sach-doi-tra-hoan-tien',
     en: '/en/refund-policy',
     ko: '/ko/refund-policy',
+    zh: '/zh/refund-policy',
   },
 ]
 
 /**
- * Given the current pathname and target language ('vi' | 'en' | 'ko'),
+ * Given the current pathname and target language ('vi' | 'en' | 'ko' | 'zh'),
  * compute the target pathname for seamless client-side navigation.
  */
 export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
   const normalized = currentPath.replace(/\/$/, '') || '/'
 
-  // 1. Check dynamic product detail (/san-pham/:slug, /en/products/:slug, /ko/products/:slug)
-  const productDetailMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham)\/([^/]+)$/)
+  // 1. Check dynamic product detail (/san-pham/:slug, /en/products/:slug, /ko/products/:slug, /zh/products/:slug)
+  const productDetailMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/zh\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham|\/zh\/san-pham)\/([^/]+)$/)
   if (productDetailMatch) {
     const slug = productDetailMatch[1]
     if (targetLang === 'en') return `/en/products/${slug}`
     if (targetLang === 'ko') return `/ko/products/${slug}`
+    if (targetLang === 'zh') return `/zh/products/${slug}`
     return `/san-pham/${slug}`
   }
 
-  // 2. Check dynamic news detail (/tin-tuc/:slug, /en/news/:slug, /ko/news/:slug)
-  const newsDetailMatch = normalized.match(/^(?:\/en\/news|\/ko\/news|\/tin-tuc|\/en\/tin-tuc|\/ko\/tin-tuc)\/([^/]+)$/)
+  // 2. Check dynamic news detail (/tin-tuc/:slug, /en/news/:slug, /ko/news/:slug, /zh/news/:slug)
+  const newsDetailMatch = normalized.match(/^(?:\/en\/news|\/ko\/news|\/zh\/news|\/tin-tuc|\/en\/tin-tuc|\/ko\/tin-tuc|\/zh\/tin-tuc)\/([^/]+)$/)
   if (newsDetailMatch) {
     const slug = newsDetailMatch[1]
     if (targetLang === 'en') return `/en/news/${slug}`
     if (targetLang === 'ko') return `/ko/news/${slug}`
+    if (targetLang === 'zh') return `/zh/news/${slug}`
     return `/tin-tuc/${slug}`
   }
 
   // 3. Match against static definitions
   for (const def of ROUTE_DEFINITIONS) {
-    const matches = [def.vi, def.en, def.ko, ...(def.aliases || [])]
+    const matches = [def.vi, def.en, def.ko, def.zh, ...(def.aliases || [])]
     if (matches.includes(normalized)) {
       return def[targetLang] || def.vi
     }
@@ -113,6 +126,7 @@ export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
   // 4. Default fallback: Home or language prefix
   if (targetLang === 'en') return '/en'
   if (targetLang === 'ko') return '/ko'
+  if (targetLang === 'zh') return '/zh'
   return '/'
 }
 
@@ -124,6 +138,7 @@ export function getAlternateHreflangUrls(currentPath = '/', origin = 'https://ha
     vi: `${origin}${getEquivalentRoute(currentPath, 'vi')}`,
     en: `${origin}${getEquivalentRoute(currentPath, 'en')}`,
     ko: `${origin}${getEquivalentRoute(currentPath, 'ko')}`,
+    zh: `${origin}${getEquivalentRoute(currentPath, 'zh')}`,
     xDefault: `${origin}${getEquivalentRoute(currentPath, 'vi')}`,
   }
 }
@@ -135,6 +150,7 @@ export function getProductDetailUrl(slug, language = 'vi') {
   const cleanSlug = slug || ''
   if (language === 'en') return `/en/products/${cleanSlug}`
   if (language === 'ko') return `/ko/products/${cleanSlug}`
+  if (language === 'zh') return `/zh/products/${cleanSlug}`
   return `/san-pham/${cleanSlug}`
 }
 
@@ -144,6 +160,7 @@ export function getProductDetailUrl(slug, language = 'vi') {
 export function getProductsPageUrl(language = 'vi') {
   if (language === 'en') return '/en/products'
   if (language === 'ko') return '/ko/products'
+  if (language === 'zh') return '/zh/products'
   return '/san-pham'
 }
 
@@ -153,6 +170,7 @@ export function getProductsPageUrl(language = 'vi') {
 export function getHomeUrl(language = 'vi') {
   if (language === 'en') return '/en'
   if (language === 'ko') return '/ko'
+  if (language === 'zh') return '/zh'
   return '/'
 }
 
@@ -162,6 +180,7 @@ export function getHomeUrl(language = 'vi') {
 export function getContactUrl(language = 'vi') {
   if (language === 'en') return '/en/contact'
   if (language === 'ko') return '/ko/contact'
+  if (language === 'zh') return '/zh/contact'
   return '/lien-he'
 }
 

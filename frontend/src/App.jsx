@@ -42,6 +42,8 @@ function RouteSync() {
       if (language !== 'en') setLanguage('en')
     } else if (pathname.startsWith('/ko')) {
       if (language !== 'ko') setLanguage('ko')
+    } else if (pathname.startsWith('/zh')) {
+      if (language !== 'zh') setLanguage('zh')
     } else if (!pathname.startsWith('/admin')) {
       const saved = localStorage.getItem('haq_language')
       if (!saved && language !== 'vi') {
@@ -129,6 +131,30 @@ function AppRoutes() {
             <Route path="/ko/san-pham" element={<ProductsPage />} />
             <Route path="/ko/san-pham/:slug" element={<ProductDetailPage />} />
             <Route path="/ko/lien-he" element={<ContactPage />} />
+
+            {/* ================= CHINESE (B2B China & Global Chinese) ================= */}
+            <Route path="/zh" element={<Home />} />
+            <Route path="/zh/about" element={<CompanyProfilePage />} />
+            <Route path="/zh/history" element={<HistoryPage />} />
+            <Route path="/zh/capabilities" element={<CapabilitiesPage />} />
+            <Route path="/zh/products" element={<ProductsPage />} />
+            <Route path="/zh/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/zh/news" element={<NewsPage />} />
+            <Route path="/zh/news/:slug" element={<NewsDetailPage />} />
+            <Route path="/zh/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
+            <Route path="/zh/careers/:slug" element={<NewsDetailPage />} />
+            <Route path="/zh/contact" element={<ContactPage />} />
+            <Route path="/zh/policy" element={<PolicyPage />} />
+            <Route path="/zh/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/zh/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/zh/refund-policy" element={<RefundPolicyPage />} />
+
+            {/* Chinese Aliases for backward compatibility */}
+            <Route path="/zh/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/zh/gioi-thieu/*" element={<CompanyProfilePage />} />
+            <Route path="/zh/san-pham" element={<ProductsPage />} />
+            <Route path="/zh/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/zh/lien-he" element={<ContactPage />} />
 
           {/* Legal & Policy Pages (Vietnamese) */}
           <Route path="/chinh-sach" element={<PolicyPage />} />

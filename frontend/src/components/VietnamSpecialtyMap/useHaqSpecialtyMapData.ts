@@ -82,7 +82,14 @@ export function useHaqSpecialtyMapData(
         province: code,
         provinceLabel: provinceName,
         region: regionName,
-        tag: language === 'en' ? `Specialty of ${provinceName}` : language === 'ko' ? `${provinceName} 특산품` : `Đặc sản ${provinceName}`,
+        tag:
+          language === 'en'
+            ? `Specialty of ${provinceName}`
+            : language === 'ko'
+            ? `${provinceName} 특산품`
+            : language === 'zh'
+            ? `${provinceName}特色风味`
+            : `Đặc sản ${provinceName}`,
         shortDescription: locProv.short_description || undefined,
         description: locProv.description || undefined,
         image: locProv.image || undefined,
@@ -103,7 +110,14 @@ export function useHaqSpecialtyMapData(
           province: code,
           provinceLabel: provinceName,
           region: regionName,
-          tag: language === 'en' ? `Specialty of ${provinceName}` : language === 'ko' ? `${provinceName} 특산품` : `Đặc sản ${provinceName}`,
+          tag:
+            language === 'en'
+              ? `Specialty of ${provinceName}`
+              : language === 'ko'
+              ? `${provinceName} 특산품`
+              : language === 'zh'
+              ? `${provinceName}特色风味`
+              : `Đặc sản ${provinceName}`,
           shortDescription: locProv.short_description || undefined,
           description: locProv.description || undefined,
           image: locProv.image || undefined,
@@ -134,15 +148,28 @@ export function useHaqSpecialtyMapData(
           imgUrl = locItem.variants[0].img;
         }
 
-        const fallbackDesc = language === 'en'
-          ? "Premium specialty products carefully selected by HAQ FOOD from fresh local ingredients."
-          : language === 'ko'
-          ? "신선한 현지 원료로 HAQ FOOD가 엄선한 프리미엄 특산품입니다."
-          : "Sản phẩm đặc sản cao cấp được HAQ FOOD tuyển chọn kỹ lưỡng từ nguồn nguyên liệu tươi ngon tại địa phương.";
+        const fallbackDesc =
+          language === 'en'
+            ? "Premium specialty products carefully selected by HAQ FOOD from fresh local ingredients."
+            : language === 'ko'
+            ? "신선한 현지 원료로 HAQ FOOD가 엄선한 프리미엄 특산품입니다."
+            : language === 'zh'
+            ? "由 HAQ FOOD 精选当地新鲜优质原料匠心打造的特色地道风味食品。"
+            : "Sản phẩm đặc sản cao cấp được HAQ FOOD tuyển chọn kỹ lưỡng từ nguồn nguyên liệu tươi ngon tại địa phương.";
 
         const productModel: Product = {
           name: locItem.name || "HAQ FOOD",
-          category: locItem.categories?.name || locItem.category_name || locItem.category || (language === 'en' ? 'AUTHENTIC SPECIALTY' : language === 'ko' ? '정통 특산품' : 'ĐẶC SẢN NGUYÊN BẢN'),
+          category:
+            locItem.categories?.name ||
+            locItem.category_name ||
+            locItem.category ||
+            (language === 'en'
+              ? 'AUTHENTIC SPECIALTY'
+              : language === 'ko'
+              ? '정통 특산품'
+              : language === 'zh'
+              ? '原产地地道风味'
+              : 'ĐẶC SẢN NGUYÊN BẢN'),
           description:
             locItem.description ||
             locItem.short_description ||
@@ -154,7 +181,14 @@ export function useHaqSpecialtyMapData(
           slug: locItem.slug,
           is_pinned: Boolean(locItem.is_pinned),
           views: Number(locItem.views || locItem.view_count || 0),
-          href: language === 'en' ? `/en/products/${locItem.slug || locItem.id}` : language === 'ko' ? `/ko/products/${locItem.slug || locItem.id}` : `/san-pham/${locItem.slug || locItem.id}`,
+          href:
+            language === 'en'
+              ? `/en/products/${locItem.slug || locItem.id}`
+              : language === 'ko'
+              ? `/ko/products/${locItem.slug || locItem.id}`
+              : language === 'zh'
+              ? `/zh/products/${locItem.slug || locItem.id}`
+              : `/san-pham/${locItem.slug || locItem.id}`,
         };
 
         // If pinned, unshift to first position; else push

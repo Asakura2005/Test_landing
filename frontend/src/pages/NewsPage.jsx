@@ -14,6 +14,7 @@ import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import { getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
+import { getLocalizedNews, translateNewsCategory } from '../utils/i18nData'
 
 // Ước tính thời gian đọc bài viết
 function getReadTime(item, language) {
@@ -22,6 +23,7 @@ function getReadTime(item, language) {
   const minutes = Math.max(1, Math.ceil(wordCount / 220))
   if (language === 'en') return `${minutes} min read`
   if (language === 'ko') return `${minutes}분 읽기`
+  if (language === 'zh') return `${minutes} 分钟阅读`
   return `${minutes} phút đọc`
 }
 
@@ -104,8 +106,8 @@ export default function NewsPage({ defaultTab }) {
           {/* Tiêu đề căn giữa lớn, rõ ràng */}
           <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-[#0F5132] tracking-tight uppercase">
             {activeTab === 'tuyen-dung' 
-              ? (language === 'en' ? 'CAREERS' : language === 'ko' ? '채용' : 'TUYỂN DỤNG')
-              : (language === 'en' ? 'NEWS' : language === 'ko' ? '뉴스' : 'TIN TỨC')
+              ? (language === 'en' ? 'CAREERS' : language === 'ko' ? '채용' : language === 'zh' ? '人才招聘' : 'TUYỂN DỤNG')
+              : (language === 'en' ? 'NEWS' : language === 'ko' ? '뉴스' : language === 'zh' ? '新闻动态' : 'TIN TỨC')
             }
           </h1>
         </div>
@@ -121,7 +123,7 @@ export default function NewsPage({ defaultTab }) {
             <div className="flex flex-col items-center justify-center py-20 text-[#52665A]">
               <div className="w-8 h-8 border-3 border-[#0F5132]/20 border-t-[#0F5132] rounded-full animate-spin mb-3" />
               <p className="font-mono text-xs uppercase tracking-widest">
-                {language === 'en' ? 'Loading...' : language === 'ko' ? '불러오는 중...' : 'Đang tải...'}
+                {language === 'en' ? 'Loading...' : language === 'ko' ? '불러오는 중...' : language === 'zh' ? '正在加载...' : 'Đang tải...'}
               </p>
             </div>
           ) : currentList.length === 0 ? (
@@ -136,8 +138,8 @@ export default function NewsPage({ defaultTab }) {
               </div>
               <h2 className="text-lg md:text-xl font-heading font-bold text-[#11261B] mb-2 uppercase">
                 {activeTab === 'tuyen-dung'
-                  ? (language === 'en' ? 'No Current Openings' : language === 'ko' ? '현재 채용 공고가 없습니다' : 'Chưa có thông báo tuyển dụng mới')
-                  : (language === 'en' ? 'No Articles Yet' : language === 'ko' ? '등록된 기사가 없습니다' : 'Chưa có bài viết mới')}
+                  ? (language === 'en' ? 'No Current Openings' : language === 'ko' ? '현재 채용 공고가 없습니다' : language === 'zh' ? '暂无最新招聘岗位' : 'Chưa có thông báo tuyển dụng mới')
+                  : (language === 'en' ? 'No Articles Yet' : language === 'ko' ? '등록된 기사가 없습니다' : language === 'zh' ? '暂无最新文章' : 'Chưa có bài viết mới')}
               </h2>
               <p className="text-[#52665A] text-xs leading-relaxed max-w-md mx-auto mb-6 font-light">
                 {activeTab === 'tuyen-dung'
@@ -145,11 +147,15 @@ export default function NewsPage({ defaultTab }) {
                     ? 'HAQ FOOD currently has no active recruitment postings. Interested candidates are welcome to send CV to tuyendung@haq.com.vn.'
                     : language === 'ko'
                     ? '현재 채용 중인 직무가 없습니다. 입사를 희망하시는 분은 tuyendung@haq.com.vn으로 이력서를 보내주시기 바랍니다.'
+                    : language === 'zh'
+                    ? 'HAQ FOOD 目前暂无公开招聘岗位。有意向者欢迎将个人简历发送至 tuyendung@haq.com.vn 纳入人才储备。'
                     : 'Hiện tại HAQ FOOD chưa có đợt tuyển dụng mới. Quý ứng viên quan tâm có thể gửi CV về email phòng Nhân sự để được lưu hồ sơ ưu tiên.')
                   : (language === 'en'
                     ? 'Content is currently being updated. Please check back soon.'
                     : language === 'ko'
                     ? '소식이 업데이트 중입니다. 잠시 후 다시 확인해 주십시오.'
+                    : language === 'zh'
+                    ? '系统正在更新最新资讯，请稍后再次访问。'
                     : 'Hệ thống đang cập nhật các nội dung mới nhất. Quý khách vui lòng quay lại sau.')}
               </p>
               {activeTab === 'tuyen-dung' ? (
@@ -158,11 +164,11 @@ export default function NewsPage({ defaultTab }) {
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0F5132] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#14532D] transition-colors shadow-2xs font-mono"
                 >
                   <Mail className="w-4 h-4" />
-                  <span>{language === 'en' ? 'Email CV to tuyendung@haq.com.vn' : language === 'ko' ? '이메일로 이력서 보내기: tuyendung@haq.com.vn' : 'Gửi CV về: tuyendung@haq.com.vn'}</span>
+                  <span>{language === 'en' ? 'Email CV to tuyendung@haq.com.vn' : language === 'ko' ? '이메일로 이력서 보내기: tuyendung@haq.com.vn' : language === 'zh' ? '发送简历至: tuyendung@haq.com.vn' : 'Gửi CV về: tuyendung@haq.com.vn'}</span>
                 </a>
               ) : (
                 <Link to="/" className="inline-flex items-center gap-1.5 text-[#0F5132] text-xs font-bold uppercase tracking-wider hover:underline">
-                  <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : 'Về trang chủ'}</span>
+                  <span>{language === 'en' ? 'Back to homepage' : language === 'ko' ? '홈으로 돌아가기' : language === 'zh' ? '返回首页' : 'Về trang chủ'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               )}
@@ -170,7 +176,9 @@ export default function NewsPage({ defaultTab }) {
           ) : (
             /* Lưới 3 cột bài viết chuẩn theo mẫu */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-              {currentList.map((item) => (
+              {currentList.map((rawItem) => {
+                const item = getLocalizedNews(rawItem, language)
+                return (
                 <Link
                   key={item.id}
                   to={`/tin-tuc/${item.slug}`}
@@ -187,15 +195,17 @@ export default function NewsPage({ defaultTab }) {
                     <div className="absolute top-2.5 left-2.5">
                       <span className="bg-[#0F5132] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs">
                         {activeTab === 'tuyen-dung' 
-                          ? (language === 'en' ? 'Careers' : language === 'ko' ? '채용' : 'Tuyển dụng')
-                          : (item.category || 'Tin tức')}
+                          ? (language === 'en' ? 'Careers' : language === 'ko' ? '채용' : language === 'zh' ? '人才招聘' : 'Tuyển dụng')
+                          : (item.category || (language === 'en' ? 'News' : language === 'ko' ? '뉴스' : language === 'zh' ? '新闻动态' : 'Tin tức'))}
                       </span>
                     </div>
                     {item.is_pinned && (
                       <div className="absolute top-2.5 right-2.5">
                         <span className="bg-[#16A34A] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-2xs flex items-center gap-1">
                           <Bookmark className="w-2.5 h-2.5 fill-current" />
-                          {activeTab === 'tuyen-dung' ? 'Gấp' : 'Tiêu điểm'}
+                          {activeTab === 'tuyen-dung'
+                            ? (language === 'en' ? 'Urgent' : language === 'ko' ? '긴급' : language === 'zh' ? '急招' : 'Gấp')
+                            : (language === 'en' ? 'Featured' : language === 'ko' ? '주목' : language === 'zh' ? '焦点' : 'Tiêu điểm')}
                         </span>
                       </div>
                     )}
@@ -207,7 +217,7 @@ export default function NewsPage({ defaultTab }) {
                     <div className="flex items-center gap-2 text-[10px] text-[#52665A] font-mono uppercase mb-2">
                       <span className="flex items-center gap-1 text-[#0F5132] font-semibold">
                         <Calendar className="w-3 h-3" /> 
-                        {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : 'vi-VN')}
+                        {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : language === 'zh' ? 'zh-CN' : 'vi-VN')}
                       </span>
                       {activeTab === 'tin-tuc' && (
                         <>
@@ -242,15 +252,16 @@ export default function NewsPage({ defaultTab }) {
                     <div className="mt-auto pt-3 border-t border-[#E2E8E4]/60 flex items-center justify-between text-xs font-semibold text-[#0F5132] group-hover:translate-x-0.5 transition-transform">
                       <span>
                         {activeTab === 'tuyen-dung' 
-                          ? (language === 'en' ? 'View Details & Apply' : language === 'ko' ? '상세보기 및 지원' : 'Xem chi tiết & Ứng tuyển')
-                          : (language === 'en' ? 'Read story' : language === 'ko' ? '기사 읽기' : 'Đọc bài viết')
+                          ? (language === 'en' ? 'View Details & Apply' : language === 'ko' ? '상세보기 및 지원' : language === 'zh' ? '查看详情与应聘' : 'Xem chi tiết & Ứng tuyển')
+                          : (language === 'en' ? 'Read story' : language === 'ko' ? '기사 읽기' : language === 'zh' ? '阅读全文' : 'Đọc bài viết')
                         }
                       </span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </Link>
-              ))}
+                )
+              })}
             </div>
           )}
 

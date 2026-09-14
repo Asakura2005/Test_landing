@@ -25,11 +25,30 @@ export default function Certifications({ className = '' }) {
       id: 'iso',
       tag: 'STANDARD 01',
       code: 'ISO 22000:2018',
-      title: isEn ? 'Food Safety Management System' : 'Hệ Thống Quản Lý An Toàn Thực Phẩm',
-      issuer: isEn ? 'International Certification' : 'Chứng nhận Quốc tế',
-      desc: isEn 
-        ? 'Closed clean drying line, strict temperature control and zero oil residue standards.' 
-        : 'Chứng nhận toàn bộ dây chuyền sản xuất sấy sạch và chế biến khép kín đạt tiêu chuẩn quốc tế.',
+      title:
+        language === 'en'
+          ? 'Food Safety Management System'
+          : language === 'ko'
+          ? '식품안전경영시스템'
+          : language === 'zh'
+          ? '食品安全管理体系'
+          : 'Hệ Thống Quản Lý An Toàn Thực Phẩm',
+      issuer:
+        language === 'en'
+          ? 'International Certification'
+          : language === 'ko'
+          ? '국제 인증'
+          : language === 'zh'
+          ? '国际标准化认证'
+          : 'Chứng nhận Quốc tế',
+      desc:
+        language === 'en'
+          ? 'Closed clean drying line, strict temperature control and zero oil residue standards.'
+          : language === 'ko'
+          ? '전체 밀폐식 청정 건조 라인 및 가공 공정이 국제 표준을 준수합니다.'
+          : language === 'zh'
+          ? '全封闭洁净干燥生产线与深加工车间严格符合国际食品安全标准。'
+          : 'Chứng nhận toàn bộ dây chuyền sản xuất sấy sạch và chế biến khép kín đạt tiêu chuẩn quốc tế.',
       // 👉 Gán ảnh chứng chỉ ISO vào đây: image: certIsoImg
       image: null,
       badge: 'ISO 22000',
@@ -39,11 +58,30 @@ export default function Certifications({ className = '' }) {
       id: 'haccp',
       tag: 'STANDARD 02',
       code: 'HACCP CODEX',
-      title: isEn ? 'Critical Hazard Control' : 'Hệ Thống Phân Tích Mối Nguy & Điểm Kiểm Soát Tới Hạn',
-      issuer: isEn ? 'Codex Alimentarius' : 'Tiêu chuẩn Codex Quốc tế',
-      desc: isEn 
-        ? 'Comprehensive biological, chemical, and physical risk prevention across processing stages.' 
-        : 'Kiểm soát nghiêm ngặt rủi ro vi sinh, vật lý và hóa học; loại trừ hoàn toàn nguy cơ lây nhiễm chéo.',
+      title:
+        language === 'en'
+          ? 'Critical Hazard Control'
+          : language === 'ko'
+          ? '위해요소중점관리기준 (HACCP)'
+          : language === 'zh'
+          ? '危害分析与关键控制点体系 (HACCP)'
+          : 'Hệ Thống Phân Tích Mối Nguy & Điểm Kiểm Soát Tới Hạn',
+      issuer:
+        language === 'en'
+          ? 'Codex Alimentarius'
+          : language === 'ko'
+          ? '국제 코덱스 규격'
+          : language === 'zh'
+          ? '国际食品法典委员会标准'
+          : 'Tiêu chuẩn Codex Quốc tế',
+      desc:
+        language === 'en'
+          ? 'Comprehensive biological, chemical, and physical risk prevention across processing stages.'
+          : language === 'ko'
+          ? '생물학적, 화학적, 물리적 위해 요소를 원천 차단하고 교차 오염을 방지합니다.'
+          : language === 'zh'
+          ? '全流程严格管控生物、化学与物理风险，彻底消除交叉污染隐患。'
+          : 'Kiểm soát nghiêm ngặt rủi ro vi sinh, vật lý và hóa học; loại trừ hoàn toàn nguy cơ lây nhiễm chéo.',
       // 👉 Gán ảnh chứng chỉ HACCP vào đây: image: certHaccpImg
       image: null,
       badge: 'HACCP',
@@ -52,29 +90,95 @@ export default function Certifications({ className = '' }) {
     {
       id: 'lab-test',
       tag: 'REPORT 03',
-      code: isEn ? 'LAB TEST REPORT' : 'PHIẾU KIỂM NGHIỆM',
-      title: isEn ? 'Microbiological & Chemical Test' : 'Phiếu Kết Quả Phân Tích Chỉ Tiêu Vi Sinh & Kim Loại',
-      issuer: isEn ? 'Independent Testing Lab' : 'Phòng Kiểm Nghiệm Độc Lập',
-      desc: isEn 
-        ? 'Independent laboratory verification of moisture, heavy metals, and food safety standards.' 
-        : 'Kết quả kiểm nghiệm chỉ tiêu vi sinh, độ ẩm và các chỉ số an toàn theo quy chuẩn kỹ thuật quốc gia.',
+      code:
+        language === 'en'
+          ? 'LAB TEST REPORT'
+          : language === 'ko'
+          ? '공인 시험성적서'
+          : language === 'zh'
+          ? '权威质量检测报告'
+          : 'PHIẾU KIỂM NGHIỆM',
+      title:
+        language === 'en'
+          ? 'Microbiological & Chemical Test'
+          : language === 'ko'
+          ? '미생물 및 유해 화학 성분 정밀 분석'
+          : language === 'zh'
+          ? '微生物与重金属指标综合理化分析'
+          : 'Phiếu Kết Quả Phân Tích Chỉ Tiêu Vi Sinh & Kim Loại',
+      issuer:
+        language === 'en'
+          ? 'Independent Testing Lab'
+          : language === 'ko'
+          ? '공인 독립 시험연구기관'
+          : language === 'zh'
+          ? '独立第三方检验检测机构'
+          : 'Phòng Kiểm Nghiệm Độc Lập',
+      desc:
+        language === 'en'
+          ? 'Independent laboratory verification of moisture, heavy metals, and food safety standards.'
+          : language === 'ko'
+          ? '국가 기술 표준에 따른 미생물, 수분율 및 안전 지표 정밀 검사 완료.'
+          : language === 'zh'
+          ? '依照越南国家技术标准严格检定微生物、水分及各项理化安全指标。'
+          : 'Kết quả kiểm nghiệm chỉ tiêu vi sinh, độ ẩm và các chỉ số an toàn theo quy chuẩn kỹ thuật quốc gia.',
       // 👉 Gán ảnh phiếu kết quả kiểm nghiệm vào đây: image: labTestImg
       image: null,
-      badge: isEn ? 'VERIFIED' : 'ĐẠT CHUẨN',
+      badge:
+        language === 'en'
+          ? 'VERIFIED'
+          : language === 'ko'
+          ? '적합 판정'
+          : language === 'zh'
+          ? '合格认证'
+          : 'ĐẠT CHUẨN',
       icon: FileCheck,
     },
     {
       id: 'vsattp',
       tag: 'LEGAL 04',
-      code: isEn ? 'FOOD SAFETY DOSSIER' : 'HỒ SƠ TỰ CÔNG BỐ',
-      title: isEn ? 'Regulatory Compliance & Product Dossier' : 'Hồ Sơ Tự Công Bố Sản Phẩm & Chứng Nhận VSATTP',
-      issuer: isEn ? 'Department of Food Safety' : 'Cơ quan Quản lý ATTP',
-      desc: isEn 
-        ? '100% compliant documentation, legal safety certification, and full origin traceability.' 
-        : 'Đầy đủ giấy chứng nhận cơ sở đủ điều kiện ATTP, bản tự công bố sản phẩm và mã số truy xuất nguồn gốc.',
+      code:
+        language === 'en'
+          ? 'FOOD SAFETY DOSSIER'
+          : language === 'ko'
+          ? '식품안전 규정 준수'
+          : language === 'zh'
+          ? '越南食品安全资质文件'
+          : 'HỒ SƠ TỰ CÔNG BỐ',
+      title:
+        language === 'en'
+          ? 'Regulatory Compliance & Product Dossier'
+          : language === 'ko'
+          ? '제품 자체 공시 및 식품안전위생 인증'
+          : language === 'zh'
+          ? '产品合规备案与食品卫生安全认证'
+          : 'Hồ Sơ Tự Công Bố Sản Phẩm & Chứng Nhận VSATTP',
+      issuer:
+        language === 'en'
+          ? 'Department of Food Safety'
+          : language === 'ko'
+          ? '식품안전관리당국'
+          : language === 'zh'
+          ? '越南食品安全监管局'
+          : 'Cơ quan Quản lý ATTP',
+      desc:
+        language === 'en'
+          ? '100% compliant documentation, legal safety certification, and full origin traceability.'
+          : language === 'ko'
+          ? '식품안전 적격 시설 인증서 완비 및 전체 제품군 원산지 이력 추적 코드 부여.'
+          : language === 'zh'
+          ? '具备完备的食品生产卫生合格资质证书、产品企业标准备案及源头溯源码。'
+          : 'Đầy đủ giấy chứng nhận cơ sở đủ điều kiện ATTP, bản tự công bố sản phẩm và mã số truy xuất nguồn gốc.',
       // 👉 Gán ảnh giấy chứng nhận VSATTP / bản công bố vào đây: image: vsattpImg
       image: null,
-      badge: isEn ? 'OFFICIAL' : 'HỢP QUY',
+      badge:
+        language === 'en'
+          ? 'OFFICIAL'
+          : language === 'ko'
+          ? '공식 규격'
+          : language === 'zh'
+          ? '法定合规'
+          : 'HỢP QUY',
       icon: FileText,
     },
   ]
@@ -85,15 +189,31 @@ export default function Certifications({ className = '' }) {
         {/* Header */}
         <div ref={ref} className="reveal max-w-3xl mb-14">
           <p className="font-heading text-xs tracking-[0.25em] uppercase text-[#16A34A] font-bold mb-3">
-            {isEn ? 'QUALITY ASSURANCE · CERTIFICATIONS' : 'TIÊU CHUẨN XƯỞNG & BẢO CHỨNG CHẤT LƯỢNG'}
+            {language === 'en'
+              ? 'QUALITY ASSURANCE · CERTIFICATIONS'
+              : language === 'ko'
+              ? '생산 표준 및 품질 보증'
+              : language === 'zh'
+              ? '生产车间标准与国际权威资质'
+              : 'TIÊU CHUẨN XƯỞNG & BẢO CHỨNG CHẤT LƯỢNG'}
           </p>
           <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase leading-snug">
-            {isEn ? 'ISO & HACCP COMPLIANCE ACROSS ALL LINES' : 'HỒ SƠ CHỨNG NHẬN & BẰNG CHỨNG KIỂM ĐỊNH'}
+            {language === 'en'
+              ? 'ISO & HACCP COMPLIANCE ACROSS ALL LINES'
+              : language === 'ko'
+              ? '인증 포트폴리오 및 공인 시험 증빙'
+              : language === 'zh'
+              ? '资质认证档案与出厂质检凭证'
+              : 'HỒ SƠ CHỨNG NHẬN & BẰNG CHỨNG KIỂM ĐỊNH'}
           </h2>
           <div className="mt-3 h-0.5 w-16 bg-[#16A34A]" />
           <p className="mt-4 text-sm text-haq-text-secondary leading-relaxed max-w-2xl">
-            {isEn 
+            {language === 'en'
               ? 'Complete transparency with certified inspection documents, international food safety standards, and verified batch laboratory testing reports.'
+              : language === 'ko'
+              ? '품질 검사 증명서, 국제 식품 안전 규격 및 HAQ FOOD의 자체 공시 문서를 100% 투명하게 공개합니다.'
+              : language === 'zh'
+              ? '100% 透明公开质检凭证、国际食品安全认证与 HAQ FOOD 官方备案文件。'
               : 'Minh bạch 100% chứng thư kiểm định chất lượng, tiêu chuẩn an toàn thực phẩm quốc tế và hồ sơ tự công bố của HAQ FOOD.'}
           </p>
         </div>
@@ -124,7 +244,13 @@ export default function Certifications({ className = '' }) {
                       <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover/img:opacity-100">
                         <span className="inline-flex items-center gap-1.5 bg-white text-haq-ink font-heading font-bold text-xs px-3.5 py-2 rounded-full shadow-md">
                           <ZoomIn className="w-3.5 h-3.5 text-[#16A34A]" />
-                          {isEn ? 'View Certificate' : 'Phóng to xem'}
+                          {language === 'en'
+                            ? 'View Certificate'
+                            : language === 'ko'
+                            ? '크게 보기'
+                            : language === 'zh'
+                            ? '点击放大查看'
+                            : 'Phóng to xem'}
                         </span>
                       </div>
                     </div>
@@ -155,7 +281,15 @@ export default function Certifications({ className = '' }) {
                         </div>
                         <div className="inline-flex items-center gap-1 text-[10px] font-heading font-bold text-[#16A34A] pt-2">
                           <ZoomIn className="w-3 h-3" />
-                          <span>{isEn ? 'Click to inspect' : 'Bấm để xem chi tiết'}</span>
+                          <span>
+                            {language === 'en'
+                              ? 'Click to inspect'
+                              : language === 'ko'
+                              ? '자세히 보기'
+                              : language === 'zh'
+                              ? '点击查看详情'
+                              : 'Bấm để xem chi tiết'}
+                          </span>
                         </div>
                       </div>
 
@@ -200,7 +334,15 @@ export default function Certifications({ className = '' }) {
                       onClick={() => setActiveCert(c)}
                       className="inline-flex items-center gap-1 text-[11px] font-heading font-bold text-[#16A34A] hover:text-[#0F5132] transition-colors cursor-pointer"
                     >
-                      <span>{isEn ? 'View' : 'Xem'}</span>
+                      <span>
+                        {language === 'en'
+                          ? 'View'
+                          : language === 'ko'
+                          ? '보기'
+                          : language === 'zh'
+                          ? '查看'
+                          : 'Xem'}
+                      </span>
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   </div>
@@ -276,7 +418,13 @@ export default function Certifications({ className = '' }) {
                 onClick={() => setActiveCert(null)}
                 className="font-heading font-bold text-[#16A34A] hover:underline cursor-pointer"
               >
-                {isEn ? 'Close' : 'Đóng'}
+                {language === 'en'
+                  ? 'Close'
+                  : language === 'ko'
+                  ? '닫기'
+                  : language === 'zh'
+                  ? '关闭'
+                  : 'Đóng'}
               </button>
             </div>
           </div>

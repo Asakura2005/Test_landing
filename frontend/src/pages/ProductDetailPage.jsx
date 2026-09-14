@@ -120,11 +120,108 @@ export default function ProductDetailPage() {
     return product ? getLocalizedProduct(product, language) : null
   }, [product, language])
 
+  // Dynamic SEO Meta Tags & Schema.org Product Structured Data
   useEffect(() => {
-    if (localizedProduct?.name) {
-      document.title = `${localizedProduct.name} | HAQ FOOD`
+    if (!product || !localizedProduct) return
+
+    const prodName = localizedProduct.name || product.name || 'Sản phẩm'
+    const pageTitle = `${prodName} | HAQ FOOD`
+    document.title = pageTitle
+
+    // 1. Meta description
+    const rawDesc = localizedProduct.description || localizedProduct.short_description || localizedProduct.highlights?.join(', ') || product.description || ''
+    const cleanDesc = rawDesc
+      .replace(/<[^>]*>?/gm, '')
+      .replace(/&[a-z0-9#]+;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 200)
+
+    const finalDesc = cleanDesc || `${prodName} — CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). Sản phẩm đồ ăn vặt chất lượng cao đạt chuẩn ISO 22000 & HACCP.`
+
+    const updateMetaTag = (attr, key, content) => {
+      if (!content) return
+      let el = document.querySelector(`meta[${attr}="${key}"]`)
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute(attr, key)
+        document.head.appendChild(el)
+      }
+      el.setAttribute('content', content)
     }
-  }, [localizedProduct])
+
+    updateMetaTag('name', 'description', finalDesc)
+
+    // 2. Open Graph & Twitter Card Image
+    const fallbackImage = 'https://haq.com.vn/favicon.jpg'
+    let prodImage = 
+      resolveSafeProductImage(activeImage) ||
+      resolveSafeProductImage(localizedProduct.variants?.[selectedVariantIndex]?.img) ||
+      resolveSafeProductImage(localizedProduct.images?.[0]) ||
+      resolveSafeProductImage(localizedProduct.image_url) ||
+      resolveSafeProductImage(localizedProduct.image) ||
+      fallbackImage
+
+    if (prodImage && !prodImage.startsWith('http://') && !prodImage.startsWith('https://')) {
+      prodImage = `https://haq.com.vn${prodImage.startsWith('/') ? '' : '/'}${prodImage}`
+    }
+
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : `https://haq.com.vn/san-pham/${product.slug}`
+
+    updateMetaTag('property', 'og:title', pageTitle)
+    updateMetaTag('property', 'og:description', finalDesc)
+    updateMetaTag('property', 'og:image', prodImage)
+    updateMetaTag('property', 'og:type', 'product')
+    updateMetaTag('property', 'og:url', currentUrl)
+
+    updateMetaTag('name', 'twitter:card', 'summary_large_image')
+    updateMetaTag('name', 'twitter:title', pageTitle)
+    updateMetaTag('name', 'twitter:description', finalDesc)
+    updateMetaTag('name', 'twitter:image', prodImage)
+
+    // 3. Schema.org Product JSON-LD Script
+    const productSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      'name': prodName,
+      'image': [prodImage],
+      'description': finalDesc,
+      'brand': {
+        '@type': 'Brand',
+        'name': 'HAQ FOOD'
+      },
+      'sku': product.slug || String(product.id),
+      'offers': {
+        '@type': 'Offer',
+        'url': currentUrl,
+        'priceCurrency': 'VND',
+        'price': '0',
+        'priceValidUntil': '2027-12-31',
+        'availability': 'https://schema.org/InStock',
+        'seller': {
+          '@type': 'Organization',
+          'name': 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI'
+        }
+      }
+    }
+
+    const SCRIPT_ID = 'product-schema-ld'
+    let scriptEl = document.getElementById(SCRIPT_ID)
+    if (!scriptEl) {
+      scriptEl = document.createElement('script')
+      scriptEl.id = SCRIPT_ID
+      scriptEl.type = 'application/ld+json'
+      document.head.appendChild(scriptEl)
+    }
+    scriptEl.textContent = JSON.stringify(productSchema)
+
+    return () => {
+      const el = document.getElementById(SCRIPT_ID)
+      if (el) el.remove()
+      updateMetaTag('property', 'og:image', 'https://haq.com.vn/favicon.jpg')
+      updateMetaTag('name', 'twitter:image', 'https://haq.com.vn/favicon.jpg')
+    }
+  }, [product, localizedProduct, activeImage, selectedVariantIndex, slug])
 
   const handleSelectVariant = (idx) => {
     setSelectedVariantIndex(idx)
@@ -321,7 +418,7 @@ export default function ProductDetailPage() {
                 </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-haq-text-secondary/40 italic">
-                  {language === 'en' ? 'No image available' : language === 'ko' ? '사용 가능한 이미지가 없습니다' : 'Chưa có hình ảnh'}
+                  {language === 'en' ? 'No image available' : language === 'ko' ? '사용 가능한 이미지가 없습니다' : language === 'zh' ? '暂无图片' : 'Chưa có hình ảnh'}
                 </div>
               )}
             </div>
@@ -402,6 +499,8 @@ export default function ProductDetailPage() {
                     ? 'An exquisite gift carrying traditional flavors, crafted from stringently selected ingredients.'
                     : language === 'ko'
                     ? '엄선된 재료로 정성을 다해 만든 전통의 풍미를 담은 최고의 선물입니다.'
+                    : language === 'zh'
+                    ? '甄选优质食材，承载经典风味的精选伴手礼。'
                     : 'Món quà tuyệt hảo mang hương vị truyền thống, được chế biến từ những nguyên liệu chọn lọc khắt khe nhất.'}
                 </p>
               )}
@@ -702,7 +801,7 @@ export default function ProductDetailPage() {
                         />
                       ) : (
                         <div className="text-haq-text-secondary/30 text-xs text-center border border-dashed border-haq-border p-4 rounded w-full h-full flex items-center justify-center">
-                          {language === 'en' ? 'No image' : language === 'ko' ? '이미지 없음' : 'Chưa có ảnh'}
+                          {language === 'en' ? 'No image' : language === 'ko' ? '이미지 없음' : language === 'zh' ? '暂无图片' : 'Chưa có ảnh'}
                         </div>
                       )}
                     </div>

@@ -384,7 +384,15 @@
     "not_found_title": "제품을 찾을 수 없습니다",
     "not_found_desc": "제품이 삭제되었거나 잘못된 링크입니다.",
     "back_home": "홈으로 돌아가기",
-    "no_image": "등록된 이미지가 없습니다"
+    "no_image": "등록된 이미지가 없습니다",
+    "details_title": "제품 상세 정보",
+    "accordion_info": "제품 기본 정보",
+    "accordion_ingredients": "원재료 및 함량",
+    "accordion_storage": "섭취 및 보관 방법",
+    "manufacturing_date": "제조일자:",
+    "manufacturing_date_value": "제품 포장 별도 표기일까지.",
+    "shelf_life_label": "소비기한:",
+    "certifications_label": "인증 표준:"
   },
   "capabilities": {
     "badge": "제조 시설 및 생산 역량",

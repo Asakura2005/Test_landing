@@ -2,9 +2,10 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import vi from '../locales/vi.json'
 import en from '../locales/en.json'
 import ko from '../locales/ko.json'
+import zh from '../locales/zh.json'
 import { getEquivalentRoute } from '../utils/routeI18n'
 
-export const translations = { vi, en, ko }
+export const translations = { vi, en, ko, zh }
 
 const LanguageContext = createContext()
 
@@ -27,6 +28,12 @@ export const LANGUAGES = [
     nativeName: '한국어',
     label: 'KO',
   },
+  {
+    code: 'zh',
+    name: 'Chinese',
+    nativeName: '简体中文',
+    label: 'ZH',
+  },
 ]
 
 export function LanguageProvider({ children }) {
@@ -36,8 +43,9 @@ export function LanguageProvider({ children }) {
       const path = window.location.pathname
       if (path.startsWith('/en')) return 'en'
       if (path.startsWith('/ko')) return 'ko'
+      if (path.startsWith('/zh')) return 'zh'
       const saved = localStorage.getItem('haq_language')
-      if (saved && ['vi', 'en', 'ko'].includes(saved)) return saved
+      if (saved && ['vi', 'en', 'ko', 'zh'].includes(saved)) return saved
     }
     return 'vi'
   })
@@ -45,7 +53,7 @@ export function LanguageProvider({ children }) {
   // Synchronize <html> lang attribute
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.documentElement.lang = language
+      document.documentElement.lang = language === 'zh' ? 'zh-Hans' : language
     }
   }, [language])
 
@@ -58,6 +66,8 @@ export function LanguageProvider({ children }) {
         setLanguageState('en')
       } else if (path.startsWith('/ko')) {
         setLanguageState('ko')
+      } else if (path.startsWith('/zh')) {
+        setLanguageState('zh')
       } else if (!path.startsWith('/admin')) {
         setLanguageState('vi')
       }
@@ -67,7 +77,7 @@ export function LanguageProvider({ children }) {
   }, [])
 
   const setLanguage = useCallback((code) => {
-    if (!['vi', 'en', 'ko'].includes(code)) return
+    if (!['vi', 'en', 'ko', 'zh'].includes(code)) return
     setLanguageState(code)
     try {
       localStorage.setItem('haq_language', code)
@@ -83,7 +93,7 @@ export function LanguageProvider({ children }) {
    * 3. Dispatches custom event for any SEO or external listeners
    */
   const switchLanguage = useCallback((targetCode, navigate, currentPath) => {
-    if (!['vi', 'en', 'ko'].includes(targetCode)) return
+    if (!['vi', 'en', 'ko', 'zh'].includes(targetCode)) return
     setLanguage(targetCode)
 
     if (typeof window !== 'undefined') {

@@ -186,13 +186,6 @@ export default function Footer() {
                   <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors font-semibold">
                     info@haq.com.vn
                   </a>
-                  <div className="text-[11px] text-white/60 mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
-                    <span>B2B: <a href="mailto:sales01@haq.com.vn" className="hover:text-white transition-colors">sales01@haq.com.vn</a></span>
-                    <span className="opacity-40">·</span>
-                    <span>CSKH: <a href="mailto:cskh@haq.com.vn" className="hover:text-white transition-colors">cskh@haq.com.vn</a></span>
-                    <span className="opacity-40">·</span>
-                    <span>Tuyển dụng: <a href="mailto:tuyendung@haq.com.vn" className="hover:text-white transition-colors">tuyendung@haq.com.vn</a></span>
-                  </div>
                 </div>
               </li>
             </ul>
@@ -264,30 +257,21 @@ export default function Footer() {
               href="https://zalo.me/1361851474644984696"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white/80 transition-colors"
+              className="hover:text-white/80 transition-colors inline-flex items-center gap-1.5"
               aria-label="Liên hệ Zalo OA HAQ Hà Nội"
             >
-              Zalo OA (HAQ Hà Nội)
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              Zalo OA: HAQ Hà Nội
             </a>
             <span className="text-white/20">·</span>
             <a
-              href="https://facebook.com"
+              href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white/80 transition-colors"
-              aria-label="Trang Facebook HAQ FOOD"
+              aria-label="Google Maps HAQ FOOD"
             >
-              Facebook
-            </a>
-            <span className="text-white/20">·</span>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white/80 transition-colors"
-              aria-label="Trang LinkedIn HAQ FOOD"
-            >
-              LinkedIn
+              Google Maps
             </a>
           </div>
         </div>

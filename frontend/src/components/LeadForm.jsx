@@ -115,7 +115,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    {language === 'en' ? 'Hotline (Landline)' : language === 'ko' ? '대표 핫라인 (유선전화)' : 'Hotline (Điện thoại bàn)'}
+                    {language === 'en' ? 'Hotline (Landline)' : language === 'ko' ? '대표 핫라인 (유선전화)' : language === 'zh' ? '总机热线 (座机)' : 'Hotline (Điện thoại bàn)'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     024 23 23 56 56
@@ -129,7 +129,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    {language === 'en' ? 'Official Zalo (24/7)' : language === 'ko' ? '공식 비즈니스 Zalo (24/7)' : 'Zalo Doanh Nghiệp (24/7)'}
+                    {language === 'en' ? 'Official Zalo (24/7)' : language === 'ko' ? '공식 비즈니스 Zalo (24/7)' : language === 'zh' ? '官方企业 Zalo (24/7)' : 'Zalo Doanh Nghiệp (24/7)'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     HAQ Hà Nội
@@ -143,7 +143,7 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    {language === 'en' ? 'Corporate Partnership Email' : language === 'ko' ? '기업 제휴 이메일' : 'Email Hợp Tác Doanh Nghiệp'}
+                    {language === 'en' ? 'Corporate Partnership Email' : language === 'ko' ? '기업 제휴 이메일' : language === 'zh' ? '商务合作邮箱' : 'Email Hợp Tác Doanh Nghiệp'}
                   </span>
                   <span className="font-heading font-bold text-base text-white">
                     info@haq.com.vn
@@ -157,10 +157,16 @@ export default function LeadForm() {
                 </div>
                 <div>
                   <span className="block font-heading text-[10px] uppercase font-bold tracking-wider text-white/50">
-                    Trụ Sở Chính (Google Maps)
+                    {language === 'en' ? 'Headquarters (Google Maps)' : language === 'ko' ? '본사 위치 (Google 지도)' : language === 'zh' ? '公司总部 (谷歌地图)' : 'Trụ Sở Chính (Google Maps)'}
                   </span>
                   <span className="font-heading font-bold text-sm text-white leading-relaxed">
-                    Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, TP. Hà Nội
+                    {language === 'en'
+                      ? 'No. 30, Lane 1 Pham Tuan Tai, Nghia Do Ward, Hanoi'
+                      : language === 'ko'
+                      ? '베트남 하노이시 꺼우저이구 팜뚜언따이 1번 골목 30호'
+                      : language === 'zh'
+                      ? '越南河内市义都坊范俊才路1巷30号'
+                      : 'Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, TP. Hà Nội'}
                   </span>
                 </div>
               </a>

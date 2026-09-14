@@ -469,6 +469,158 @@ export const POLICY_TRANSLATIONS = {
         },
       ],
     },
+    zh: {
+      docTitle: '退换货及退款政策 | HAQ FOOD',
+      breadcrumbs: {
+        home: '首页',
+        category: '法律合规与政策',
+        current: '退换货及退款政策',
+      },
+      badge: '官方政策',
+      title: '退换货及退款政策 | HAQ FOOD',
+      intro:
+        '河内 HAQ 股份公司（HAQ FOOD）承诺提供符合最高卫生与安全标准的高品质包装食品。以下为面向全球合作伙伴、分销商与客户的退换货及退款处理原则与流程。',
+      tocTitle: '政策目录',
+      supportBox: {
+        title: '需要直接协助？',
+        desc: '客户关怀中心与法律合规部随时竭诚为您服务。',
+        phone: '+84 24 23 23 56 56',
+      },
+      contactBox: {
+        company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (河内 HAQ 股份公司)',
+        addressLabel: '地址：',
+        address: '越南河内市义都坊范俊才路1巷30号',
+        hotlineLabel: '热线电话：',
+        zaloLabel: '官方 Zalo OA：',
+        zaloName: 'HAQ Hà Nội',
+        zaloNote: '(+84 993 308 319)',
+        emailLabel: '处理邮箱：',
+        email: 'info@haq.com.vn',
+      },
+      sections: [
+        {
+          id: 'section-1',
+          num: '01',
+          title: '适用范围',
+          content: [
+            {
+              type: 'p',
+              text: '本政策适用于河内 HAQ 股份公司直接生产、加工或通过正规商业渠道（批发分销网络、连锁商超、电商平台及 B2B/OEM 订单）销售的所有包装食品。',
+            },
+          ],
+        },
+        {
+          id: 'section-2',
+          num: '02',
+          title: '退换货条件',
+          content: [
+            {
+              type: 'p',
+              text: '产品在符合以下条件时将被受理检验并办理退换货：',
+            },
+            {
+              type: 'ul',
+              items: [
+                '产品保持原始完整包装及生产商标贴封口（依规开箱使用后发现内部批次质量问题的情况除外）。',
+                '客户能提供有效采购凭证（增值税发票、交接单、出库单或对账订单号）。',
+                '提供收货时或发现质量缺陷时清晰的照片或视频佐证。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-3',
+          num: '03',
+          title: '支持退换货的情况',
+          content: [
+            {
+              type: 'ul',
+              items: [
+                '制造缺陷：在规定储存条件下，在保质期内发生变质、异物或理化指标异常。',
+                '运输受损：交付验收时发现严重破袋、漏气或密封失效，影响食品安全。',
+                '品规或数量不符：所交付商品与商业合同约定的品种、数量或包装规格不符。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-4',
+          num: '04',
+          title: '不予受理的情况',
+          content: [
+            {
+              type: 'ul',
+              items: [
+                '产品已超过保质期限，或因不当保存（高温高湿、阳光直射等）导致变质。',
+                '擅自拆装、防伪标签损毁或无法核实为 HAQ FOOD 正品来源。',
+                '非产品质量问题或未在合同中约定的个人偏好退货。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-5',
+          num: '05',
+          title: '退换货处理流程',
+          content: [
+            {
+              type: 'ol',
+              items: [
+                '步骤 1：拨打热线 (+84 24 23 23 56 56) 或发送邮件至 info@haq.com.vn，附带订单号与异常照片。',
+                '步骤 2：质检部门 (QC) 与客服团队核实凭证与原因，并在规定时限内回复处理方案。',
+                '步骤 3：协调缺陷产品召回并补发合格新批次商品或办理退款手续。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-6',
+          num: '06',
+          title: '处理时限',
+          content: [
+            {
+              type: 'p',
+              text: '收到完整单据与对照留样后即刻启动核验，并依商业合同规定的法定时限内正式书面答复处理结果。',
+            },
+          ],
+        },
+        {
+          id: 'section-7',
+          num: '07',
+          title: '退款方式',
+          content: [
+            {
+              type: 'p',
+              text: '经双方协商一致办理退款的，款项将按以下方式退回：',
+            },
+            {
+              type: 'ul',
+              items: [
+                '原路转账至客户或合作单位指定的银行账户。',
+                '直接冲抵下一批次货款（适用于 B2B 分销商与长期代理商合作伙伴）。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-8',
+          num: '08',
+          title: '运输物流费用',
+          content: [
+            {
+              type: 'p',
+              text: '凡因生产制造缺陷或 HAQ FOOD 方运输责任引发的退换货，相关来回物流费用全部由 HAQ FOOD 承担。',
+            },
+          ],
+        },
+        {
+          id: 'section-9',
+          num: '09',
+          title: '官方售后联系方式',
+          isContact: true,
+        },
+      ],
+    },
   },
 
   // =========================================================================
@@ -912,6 +1064,150 @@ export const POLICY_TRANSLATIONS = {
         },
       ],
     },
+    zh: {
+      docTitle: '隐私保护政策 | HAQ FOOD',
+      breadcrumbs: {
+        home: '首页',
+        category: '法律合规与政策',
+        current: '隐私保护政策',
+      },
+      badge: '信息安全',
+      title: '隐私保护政策 | HAQ FOOD',
+      intro:
+        '河内 HAQ 股份公司（HAQ FOOD）郑重承诺保护访问官网、登记咨询、索取样品及开展商务合作客户的个人信息安全与商业数据隐私。',
+      tocTitle: '政策目录',
+      supportBox: {
+        title: '需要咨询或更正数据？',
+        desc: '信息安全专员将及时解答与处理您的诉求。',
+        phone: '+84 24 23 23 56 56',
+      },
+      contactBox: {
+        company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (河内 HAQ 股份公司)',
+        addressLabel: '地址：',
+        address: '越南河内市义都坊范俊才路1巷30号',
+        hotlineLabel: '热线电话：',
+        zaloLabel: '官方 Zalo OA：',
+        zaloName: 'HAQ Hà Nội',
+        zaloNote: '(+84 993 308 319)',
+        emailLabel: '信息处理邮箱：',
+        email: 'info@haq.com.vn',
+      },
+      sections: [
+        {
+          id: 'section-1',
+          num: '01',
+          title: '信息收集目的',
+          content: [
+            {
+              type: 'p',
+              text: 'HAQ FOOD 收集用户信息仅用于合法的商业及客户服务目的：',
+            },
+            {
+              type: 'ul',
+              items: [
+                '向登记合作意向的客户提供批发报价、代工政策与寄送样品。',
+                '确认、履行并跟进商品销售合同、OEM/ODM 合同及售后关怀。',
+                '向订阅客户发送有关新品发布、促销活动及重大展会动态的通知。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-2',
+          num: '02',
+          title: '收集的信息类型',
+          content: [
+            {
+              type: 'ul',
+              items: [
+                '基础身份信息：联系人姓名、企业或店铺名称、职位。',
+                '联系方式：联系电话、企业电子邮箱、收货及开票地址。',
+                '业务需求说明：合作类型（批发采购、大宗代理、OEM/ODM 定制或正贸出口）。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-3',
+          num: '03',
+          title: '信息使用范围',
+          content: [
+            {
+              type: 'p',
+              text: '收集的客户信息严格在 HAQ FOOD 内部受控范围内使用，包括业务对接团队、客服团队、物流发货及合同财务部门。',
+            },
+          ],
+        },
+        {
+          id: 'section-4',
+          num: '04',
+          title: '信息安全保护承诺',
+          content: [
+            {
+              type: 'p',
+              text: 'HAQ FOOD 部署标准化技术防护系统，所有提交的数据均通过加密通道传输，严防未经授权的外部窃取、泄露或篡改。',
+            },
+          ],
+        },
+        {
+          id: 'section-5',
+          num: '05',
+          title: '严格禁止向第三方出售信息',
+          content: [
+            {
+              type: 'p',
+              text: 'HAQ FOOD 绝不向任何第三方出租、出售或进行商业利益交换。仅在配合委托物流承运方配送或依国家司法行政机关法定书面程序要求时，在必要最小限度内配合提供。',
+            },
+          ],
+        },
+        {
+          id: 'section-6',
+          num: '06',
+          title: 'Cookie 技术应用',
+          content: [
+            {
+              type: 'p',
+              text: '网站运用 Cookie 以记住用户所选语言环境并开展匿名访问统计。用户可随时通过浏览器偏好设置自主管理或关闭 Cookie。',
+            },
+          ],
+        },
+        {
+          id: 'section-7',
+          num: '07',
+          title: '用户的合法权利',
+          content: [
+            {
+              type: 'p',
+              text: '用户享有以下法定权利：',
+            },
+            {
+              type: 'ul',
+              items: [
+                '查阅、核对、补充或更正已留存的联系方式与企业信息。',
+                '拒绝接收营销推广资讯，或要求从公司数据库中永久删除相关信息。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-8',
+          num: '08',
+          title: '信息保存期限',
+          content: [
+            {
+              type: 'p',
+              text: '客户数据将在合作履约期间内安全妥善留存，或依据相关税收财务法规规定的法定期限保存，期满后进行不可逆的彻底销毁。',
+            },
+          ],
+        },
+        {
+          id: 'section-9',
+          num: '09',
+          title: '隐私安全专员联系方式',
+          isContact: true,
+        },
+      ],
+    },
   },
 
   // =========================================================================
@@ -1315,6 +1611,139 @@ export const POLICY_TRANSLATIONS = {
           id: 'section-9',
           num: '09',
           title: '법무 문의처',
+          isContact: true,
+        },
+      ],
+    },
+    zh: {
+      docTitle: '服务条款 | HAQ FOOD',
+      breadcrumbs: {
+        home: '首页',
+        category: '法律合规与政策',
+        current: '服务条款',
+      },
+      badge: '官方条款',
+      title: '服务条款 | HAQ FOOD',
+      intro:
+        '欢迎访问河内 HAQ 股份公司（HAQ FOOD）官方网站。访问、浏览或使用本网站上的任何服务即表示您已阅读、理解并同意接受以下使用条款与条件的约束。',
+      tocTitle: '条款目录',
+      supportBox: {
+        title: '需要法律合规咨询？',
+        desc: '我们的法务与合规团队随时为您提供专业支持。',
+        phone: '+84 24 23 23 56 56',
+      },
+      contactBox: {
+        company: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (河内 HAQ 股份公司)',
+        addressLabel: '地址：',
+        address: '越南河内市义都坊范俊才路1巷30号',
+        hotlineLabel: '热线电话：',
+        zaloLabel: '官方 Zalo OA：',
+        zaloName: 'HAQ Hà Nội',
+        zaloNote: '(+84 993 308 319)',
+        emailLabel: '法务对接邮箱：',
+        email: 'info@haq.com.vn',
+      },
+      sections: [
+        {
+          id: 'section-1',
+          num: '01',
+          title: '适用范围与条款接受',
+          content: [
+            {
+              type: 'p',
+              text: '访问本网站即视为您已无条件接受并受本服务条款的约束。如果您不同意本条款的任何部分，请立即停止浏览和使用本网站。',
+            },
+          ],
+        },
+        {
+          id: 'section-2',
+          num: '02',
+          title: '网站使用权限与限制',
+          content: [
+            {
+              type: 'p',
+              text: '您仅可为合法商业目的使用本网站，严禁从事以下行为：',
+            },
+            {
+              type: 'ul',
+              items: [
+                '实施攻击、未经授权入侵或干扰服务器及网络数据库系统的行为。',
+                '使用未经许可的网络爬虫、自动化脚本或数据挖掘工具进行恶意抓取。',
+                '冒充 HAQ FOOD 或其授权商业代表进行欺诈或不正当竞争。',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'section-3',
+          num: '03',
+          title: '网站信息的准确性',
+          content: [
+            {
+              type: 'p',
+              text: '本网站发布的产品包装图样、工厂产能及规格说明均由 HAQ FOOD 维护与审核。我们尽力确保信息准确，但因生产工艺改进与包装升级，部分参数可能在未预先通知的情况下更新。',
+            },
+          ],
+        },
+        {
+          id: 'section-4',
+          num: '04',
+          title: '产品信息与商业报价',
+          content: [
+            {
+              type: 'p',
+              text: '网站展示的产品信息仅供品类参考。具体批发价格、代理折扣及 OEM/ODM 起订量（MOQ）以双方正式盖章确认的书面报价单和购销合同为准。',
+            },
+          ],
+        },
+        {
+          id: 'section-5',
+          num: '05',
+          title: '知识产权归属',
+          content: [
+            {
+              type: 'p',
+              text: 'HAQ FOOD 商标、HOKI 品牌包装设计、标识、工厂实拍图像及网站代码均属河内 HAQ 股份公司的独家知识产权，受越南知识产权法及国际条约保护。未经书面许可，严禁擅自复制、转载或商用。',
+            },
+          ],
+        },
+        {
+          id: 'section-6',
+          num: '06',
+          title: '第三方链接声明',
+          content: [
+            {
+              type: 'p',
+              text: '本网站可能包含指向第三方网站（如越南税务门户、社交媒体及合作物流平台）的链接。HAQ FOOD 对任何第三方网站的内容、准确性或隐私合规不承担责任。',
+            },
+          ],
+        },
+        {
+          id: 'section-7',
+          num: '07',
+          title: '免责声明与责任限制',
+          content: [
+            {
+              type: 'p',
+              text: '在法律允许的最大范围内，因不可抗力、网络电信故障或超出 HAQ FOOD 合理控制范围的技术中断导致的间接损失，HAQ FOOD 免除相关赔偿责任。',
+            },
+          ],
+        },
+        {
+          id: 'section-8',
+          num: '08',
+          title: '条款修订',
+          content: [
+            {
+              type: 'p',
+              text: 'HAQ FOOD 保留根据法律法规变更及业务发展需要随时修订本条款的权利。修改后的条款自公布于本网站起立即生效。',
+            },
+          ],
+        },
+        {
+          id: 'section-9',
+          num: '09',
+          title: '法务联系方式',
           isContact: true,
         },
       ],

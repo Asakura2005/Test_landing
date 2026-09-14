@@ -12,7 +12,7 @@ export default function FloatingContactBar() {
       icon: Phone,
       label: '024 23 23 56 56',
       color: 'bg-haq-green-dark',
-      title: language === 'en' ? 'Call Hotline' : 'Gọi Hotline',
+      title: language === 'en' ? 'Call Hotline' : language === 'ko' ? '핫라인 전화' : language === 'zh' ? '拨打热线' : 'Gọi Hotline',
     },
     {
       href: 'https://zalo.me/1361851474644984696',
@@ -38,7 +38,7 @@ export default function FloatingContactBar() {
       title: 'Email',
     },
     {
-      href: '/lien-he?type=oem',
+      href: language === 'en' ? '/en/contact?type=oem' : language === 'ko' ? '/ko/contact?type=oem' : language === 'zh' ? '/zh/contact?type=oem' : '/lien-he?type=oem',
       icon: Sparkles,
       label: 'B2B / OEM',
       color: 'bg-[#0C1E15]',
@@ -49,7 +49,7 @@ export default function FloatingContactBar() {
 
   return (
     <aside
-      aria-label={language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : 'Liên hệ nhanh'}
+      aria-label={language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : language === 'zh' ? '快速咨询' : 'Liên hệ nhanh'}
       className="fixed right-3 sm:right-5 bottom-5 sm:bottom-6 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-2.5 pointer-events-none"
     >
       {/* Collapsible Contact Items */}
@@ -88,8 +88,8 @@ export default function FloatingContactBar() {
         className={`relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full text-white shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 pointer-events-auto ${
           isOpen ? 'bg-[#0C1E15]' : 'bg-[#0F5132]'
         }`}
-        aria-label={isOpen ? 'Thu nhỏ liên hệ' : 'Mở liên hệ nhanh'}
-        title={isOpen ? 'Thu nhỏ' : 'Liên hệ nhanh'}
+        aria-label={isOpen ? (language === 'en' ? 'Collapse' : language === 'ko' ? '접기' : language === 'zh' ? '收起' : 'Thu nhỏ liên hệ') : (language === 'en' ? 'Open quick contact' : language === 'ko' ? '빠른 문의 열기' : language === 'zh' ? '展开快速咨询' : 'Mở liên hệ nhanh')}
+        title={isOpen ? (language === 'en' ? 'Collapse' : language === 'ko' ? '접기' : language === 'zh' ? '收起' : 'Thu nhỏ') : (language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : language === 'zh' ? '快速咨询' : 'Liên hệ nhanh')}
       >
         {isOpen ? (
           <X className="w-5 h-5" />

@@ -47,6 +47,32 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
     )
   }
 
+  if (code === 'zh') {
+    return (
+      <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
+        <rect width="30" height="20" fill="#DE2910" />
+        {/* Big star centered at (5, 5) */}
+        <polygon
+          points="5,2 5.9,4.1 8.2,4.1 6.3,5.5 7.1,7.6 5,6.2 2.9,7.6 3.7,5.5 1.8,4.1 4.1,4.1"
+          fill="#FFDE00"
+        />
+        {/* 4 small stars pointing towards big star */}
+        <g transform="translate(10, 2) rotate(121)">
+          <polygon points="0,-1 0.29,-0.31 0.95,-0.31 0.42,0.11 0.59,0.81 0,0.38 -0.59,0.81 -0.42,0.11 -0.95,-0.31 -0.29,-0.31" fill="#FFDE00" />
+        </g>
+        <g transform="translate(12, 4) rotate(98)">
+          <polygon points="0,-1 0.29,-0.31 0.95,-0.31 0.42,0.11 0.59,0.81 0,0.38 -0.59,0.81 -0.42,0.11 -0.95,-0.31 -0.29,-0.31" fill="#FFDE00" />
+        </g>
+        <g transform="translate(12, 7) rotate(54)">
+          <polygon points="0,-1 0.29,-0.31 0.95,-0.31 0.42,0.11 0.59,0.81 0,0.38 -0.59,0.81 -0.42,0.11 -0.95,-0.31 -0.29,-0.31" fill="#FFDE00" />
+        </g>
+        <g transform="translate(10, 9) rotate(31)">
+          <polygon points="0,-1 0.29,-0.31 0.95,-0.31 0.42,0.11 0.59,0.81 0,0.38 -0.59,0.81 -0.42,0.11 -0.95,-0.31 -0.29,-0.31" fill="#FFDE00" />
+        </g>
+      </svg>
+    )
+  }
+
   // en (USA)
   return (
     <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">

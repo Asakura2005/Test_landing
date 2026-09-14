@@ -40,7 +40,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 /* ═══════════════════════════════════════════════════════════════ */
 export default function ProductsPage() {
   const { t, language } = useLanguage()
-  const en = language === 'en', ko = language === 'ko'
+  const en = language === 'en', ko = language === 'ko', zh = language === 'zh'
   const [searchParams, setSearchParams] = useSearchParams()
   const currentCategorySlug = searchParams.get('category') || 'all'
   const currentSubCategorySlug = searchParams.get('sub') || null
@@ -165,7 +165,7 @@ export default function ProductsPage() {
               </p>
               <h1 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug">
                 {activeCategoryNode.slug === 'all'
-                  ? (en ? 'All Products' : ko ? '전체 제품' : 'Tất cả sản phẩm')
+                  ? (en ? 'All Products' : ko ? '전체 제품' : zh ? '全部产品' : 'Tất cả sản phẩm')
                   : activeCategoryNode.name}
               </h1>
               <p className="mt-3 text-sm text-haq-text-secondary max-w-xl leading-relaxed">
@@ -204,7 +204,7 @@ export default function ProductsPage() {
               <div className="py-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
                 <span className="text-[11px] font-heading font-bold text-haq-text-secondary uppercase mr-1 shrink-0 flex items-center gap-1">
                   <Layers className="w-3 h-3 text-haq-red" />
-                  <span>{en ? 'Filter:' : ko ? '분류:' : 'Lọc:'}</span>
+                  <span>{en ? 'Filter:' : ko ? '분류:' : zh ? '筛选：' : 'Lọc:'}</span>
                 </span>
 
                 <button
@@ -216,7 +216,7 @@ export default function ProductsPage() {
                       : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/80 border border-haq-border'
                   }`}
                 >
-                  {en ? `All ${activeRootCategory.name}` : ko ? `${activeRootCategory.name} 전체` : `Tất cả ${activeRootCategory.name}`}
+                  {en ? `All ${activeRootCategory.name}` : ko ? `${activeRootCategory.name} 전체` : zh ? `全部 ${activeRootCategory.name}` : `Tất cả ${activeRootCategory.name}`}
                 </button>
 
                 {activeRootCategory.children.map((child) => (
@@ -246,9 +246,9 @@ export default function ProductsPage() {
             {/* Result count */}
             <div className="flex items-center justify-between mb-8 text-xs">
               <span className="text-haq-text-secondary">
-                {en ? 'Showing' : ko ? '총' : 'Hiển thị'}{' '}
+                {en ? 'Showing' : ko ? '총' : zh ? '共显示' : 'Hiển thị'}{' '}
                 <strong className="text-haq-ink">{filteredProducts.length}</strong>{' '}
-                {en ? 'products' : ko ? '개 제품' : 'sản phẩm'}
+                {en ? 'products' : ko ? '개 제품' : zh ? '款产品' : 'sản phẩm'}
                 {currentSubCategorySlug && activeCategoryNode ? ` — ${activeCategoryNode.name}` : ''}
               </span>
             </div>
@@ -293,7 +293,7 @@ export default function ProductsPage() {
                           />
                           {prod.is_pinned && (
                             <span className="absolute top-3 left-3 bg-[#16A34A] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
-                              {en ? 'Flagship' : ko ? '대표' : 'Chủ lực'}
+                              {en ? 'Flagship' : ko ? '대표' : zh ? '核心' : 'Chủ lực'}
                             </span>
                           )}
                         </div>
@@ -316,12 +316,12 @@ export default function ProductsPage() {
                           </h3>
 
                           <p className="mt-2 text-xs text-haq-text-secondary leading-relaxed line-clamp-2 min-h-[2.25rem]">
-                            {prod.description || (en ? 'Safely packaged, certified for food safety.' : ko ? '안전 포장 및 식품 안전 인증.' : 'Sản phẩm đóng gói an toàn, đạt chuẩn ATTP.')}
+                            {prod.description || (en ? 'Safely packaged, certified for food safety.' : ko ? '안전 포장 및 식품 안전 인증.' : zh ? '安全卫生包装，符合严苛食品安全标准。' : 'Sản phẩm đóng gói an toàn, đạt chuẩn ATTP.')}
                           </p>
 
                           <div className="mt-auto pt-4">
                             <span className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-haq-red group-hover:gap-2.5 transition-all">
-                              <span>{en ? 'View details' : ko ? '상세 보기' : 'Xem chi tiết'}</span>
+                              <span>{en ? 'View details' : ko ? '상세 보기' : zh ? '查看详情' : 'Xem chi tiết'}</span>
                               <ArrowRight className="w-3.5 h-3.5" />
                             </span>
                           </div>

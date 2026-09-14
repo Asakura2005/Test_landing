@@ -130,7 +130,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
           {/* Card Footer */}
           <div className={styles.cardFooter}>
             <a
-              href={currentProduct.href || "/san-pham"}
+              href={currentProduct.href || (language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham')}
               className={styles.cardCta}
               onClick={(e) => {
                 if (!currentProduct.href || currentProduct.href === "#") {
@@ -192,6 +192,10 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
                 <>
                   HAQ FOOD는 <strong>{provinceLabel}</strong> 지역의 특산품 네트워크를 지속적으로 확장하고 있습니다. 철저한 위생 기준 아래 전통의 원초적 풍미를 간직한 농식품을 발굴하고 있습니다.
                 </>
+              ) : language === 'zh' ? (
+                <>
+                  HAQ FOOD 正在持续拓展 <strong>{provinceLabel}</strong> 的特色农产品生态网络。我们严把食品安全关，深度挖掘并研发保留原汁原味的地方传统特色美食。
+                </>
               ) : (
                 <>
                   HAQ FOOD đang mở rộng hệ sinh thái đặc sản tại <strong>{provinceLabel}</strong>. Chúng tôi liên tục tìm kiếm và phát triển các sản phẩm nông sản, ẩm thực truyền thống giữ trọn hương vị nguyên bản và an toàn vệ sinh thực phẩm.
@@ -201,7 +205,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
           </p>
 
           <div className={styles.cardFooter}>
-            <a href="/san-pham" className={styles.cardCta}>
+            <a href={language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham'} className={styles.cardCta}>
               <span>{t('home.specialty_map.card.view_all_products', 'XEM TẤT CẢ SẢN PHẨM')}</span>
               <span className={styles.ctaArrow} aria-hidden="true">→</span>
             </a>
