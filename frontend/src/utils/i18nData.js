@@ -353,42 +353,176 @@ export const CATEGORY_I18N = {
       featuredDesc: '精选精瘦牛肉，以香茅、辣椒和传统天然香辛料精心腌制。',
     },
   },
+  'banh-cookies': {
+    en: {
+      name: 'Cookies & Butter Biscuits',
+      shortName: 'Cookies',
+      desc: 'Premium crispy butter cookies and chocolate biscuits meeting export standards.',
+      featured: 'Butter Cookies Selection',
+      featuredDesc: 'Golden buttery aroma baked with fine Danish-style recipe.',
+    },
+    ko: {
+      name: '쿠키 및 비스킷',
+      shortName: '쿠키',
+      desc: '엄선된 프리미엄 버터 쿠키 및 초콜릿 비스킷 컬렉션.',
+      featured: '버터 쿠키 셀렉션',
+      featuredDesc: '진한 버터 향과 바삭한 식감의 고급 유러피언 레시피 쿠키.',
+    },
+    zh: {
+      name: '精品曲奇与脆饼',
+      shortName: '曲奇',
+      desc: '精选上等黄油曲奇与浓郁风味饼干，完全符合严苛出口规范。',
+      featured: '精选黄油曲奇礼盒',
+      featuredDesc: '色泽金黄诱人，浓醇黄油香气扑鼻，酥脆可口。',
+    },
+  },
+  'banh-cha': {
+    en: {
+      name: 'Traditional Banh Cha (Crispy Pastry)',
+      shortName: 'Banh Cha',
+      desc: 'Traditional Hanoi delicacy with lime leaves, candied winter melon, and aromatic spices.',
+      featured: 'Traditional Crispy Banh Cha',
+      featuredDesc: 'Heritage recipe with authentic Hanoi flavors and delightful crunch.',
+    },
+    ko: {
+      name: '전통 반짜 (라임잎 포크 페이스트리)',
+      shortName: '반짜',
+      desc: '신선한 라임잎과 동아정과, 천연 향신료가 어우러진 하노이 전통 과자.',
+      featured: '전통 바삭 반짜',
+      featuredDesc: '하노이 정통 비법으로 구워낸 고소하고 바삭한 전통의 맛.',
+    },
+    zh: {
+      name: '河内传统风味脆饼 (Bánh Chả)',
+      shortName: '传统脆饼',
+      desc: '河内百年传统名点，融合柠檬叶清香、糖冬瓜与精炼配料精心烘烤。',
+      featured: '古传风味香脆 Bánh Chả',
+      featuredDesc: '纯正地道河内老风味，咸甜酥香，余味悠长。',
+    },
+  },
+  'do-an-vat-cach-tan': {
+    en: {
+      name: 'Innovative Modern Snacks',
+      shortName: 'Innovative Snacks',
+      desc: 'Creative fusion snacks combining Vietnamese culinary heritage with modern convective drying tech.',
+      featured: 'HAQ Innovative Snacks',
+      featuredDesc: 'Healthy, low-oil crispy snacks with modern appetizing seasonings.',
+    },
+    ko: {
+      name: '혁신 퓨전 스낵',
+      shortName: '퓨전 스낵',
+      desc: '베트남 전통 미식과 현대식 대류 건조 기술을 융합한 창의적인 스낵 라인업.',
+      featured: 'HAQ 혁신 퓨전 스낵',
+      featuredDesc: '기름기를 줄이고 원재료 본연의 바삭함을 살린 현대적인 웰빙 스낵.',
+    },
+    zh: {
+      name: '创新风味休闲零食',
+      shortName: '创新零食',
+      desc: '传统越南美食灵魂与现代化热风烘干工艺的创意融合。',
+      featured: 'HAQ 创新休闲零食系列',
+      featuredDesc: '低油减负，健康香脆，满足年轻一代挑剔味蕾。',
+    },
+  },
+  'do-an-vat-hien-dai': {
+    en: {
+      name: 'Modern Trendy Snacks',
+      shortName: 'Modern Snacks',
+      desc: 'On-trend snacks crafted for modern lifestyles, including gourmet popcorn and crispy rice paper.',
+      featured: 'Modern Snack Collection',
+      featuredDesc: 'Convenient ready-to-eat snacks meeting ISO 22000 & HACCP standards.',
+    },
+    ko: {
+      name: '트렌디 현대 스낵',
+      shortName: '현대 스낵',
+      desc: '팝콘, 바삭 라이스페이퍼 등 현대인의 라이프스타일에 맞춘 트렌디 스낵.',
+      featured: '모던 스낵 컬렉션',
+      featuredDesc: 'ISO 22000 및 HACCP 인증 설비에서 생산되는 위생적이고 편리한 간식.',
+    },
+    zh: {
+      name: '现代潮流休闲零食',
+      shortName: '潮流零食',
+      desc: '专为现代快节奏生活打造的高品质爆米花、酥脆烘烤米纸等便携零食。',
+      featured: '现代潮流零食精选',
+      featuredDesc: '严格遵循 ISO 22000 与 HACCP 国际食品规范，开袋即享。',
+    },
+  },
+  'do-an-vat-truyen-thong': {
+    en: {
+      name: 'Traditional Heritage Snacks',
+      shortName: 'Traditional Snacks',
+      desc: 'Quintessential Vietnamese delicacies preserving generational culinary heritage.',
+      featured: 'Heritage Snack Treasures',
+      featuredDesc: 'Pure natural ingredients capturing the authentic soul of Vietnamese food culture.',
+    },
+    ko: {
+      name: '베트남 전통 특산 스낵',
+      shortName: '전통 스낵',
+      desc: '세대를 이어 전해 내려온 베트남 전통 명가 간식 및 특산 디저트.',
+      featured: '전통 특산 스낵 명품',
+      featuredDesc: '순수 천연 원료로 빚어낸 베트남 고유의 풍미와 정취.',
+    },
+    zh: {
+      name: '传统地道农特零食',
+      shortName: '传统零食',
+      desc: '传承世代经典工艺，汇聚纯正越南各省地道传统名点与伴手礼。',
+      featured: '传统风味精选代表',
+      featuredDesc: '纯天然精选原料，承载浓厚地道的越南传统饮食文化灵魂。',
+    },
+  },
 }
 
 export function translateCategoryName(catName, language = 'vi') {
   if (!catName || language === 'vi') return catName
   const lower = catName.trim().toLowerCase()
-  if (lower.includes('sấy giòn') || lower.includes('bánh tráng sấy')) {
+  // Direct key lookup
+  if (CATEGORY_I18N[lower]?.[language]?.name) {
+    return CATEGORY_I18N[lower][language].name
+  }
+  if (lower.includes('sấy giòn') || lower.includes('bánh tráng sấy') || lower.includes('banh-trang-say')) {
     return CATEGORY_I18N['banh-trang-say-gion']?.[language]?.name || catName
   }
-  if (lower.includes('trộn')) {
+  if (lower.includes('trộn') || lower.includes('banh-trang-tron')) {
     return CATEGORY_I18N['banh-trang-tron']?.[language]?.name || catName
   }
-  if (lower.includes('bánh tráng')) {
+  if (lower.includes('bánh tráng') || lower.includes('banh-trang')) {
     return CATEGORY_I18N['banh-trang']?.[language]?.name || catName
   }
-  if (lower.includes('đậu xanh')) {
+  if (lower.includes('đậu xanh') || lower.includes('dau-xanh')) {
     return CATEGORY_I18N['banh-dau-xanh']?.[language]?.name || catName
   }
-  if (lower.includes('bắp rang') || lower.includes('bap rang')) {
+  if (lower.includes('bắp rang') || lower.includes('bap-rang') || lower.includes('popcorn')) {
     return CATEGORY_I18N['bap-rang-bo']?.[language]?.name || catName
   }
-  if (lower.includes('hạnh nhân')) {
+  if (lower.includes('hạnh nhân') || lower.includes('hanh-nhan')) {
     return CATEGORY_I18N['banh-hanh-nhan']?.[language]?.name || catName
   }
-  if (lower.includes('bánh sữa')) {
+  if (lower.includes('bánh sữa') || lower.includes('banh-sua')) {
     return CATEGORY_I18N['banh-sua']?.[language]?.name || catName
   }
-  if (lower.includes('bánh dẻo')) {
+  if (lower.includes('bánh dẻo') || lower.includes('banh-deo')) {
     return CATEGORY_I18N['banh-deo']?.[language]?.name || catName
   }
-  if (lower.includes('thịt khô') || lower.includes('thịt')) {
+  if (lower.includes('thịt khô') || lower.includes('thịt') || lower.includes('thit-kho')) {
     return CATEGORY_I18N['thit-kho']?.[language]?.name || catName
   }
-  if (lower.includes('các loại bánh')) {
+  if (lower.includes('cookie')) {
+    return CATEGORY_I18N['banh-cookies']?.[language]?.name || catName
+  }
+  if (lower.includes('chả') || lower.includes('banh-cha')) {
+    return CATEGORY_I18N['banh-cha']?.[language]?.name || catName
+  }
+  if (lower.includes('cách tân') || lower.includes('cach-tan')) {
+    return CATEGORY_I18N['do-an-vat-cach-tan']?.[language]?.name || catName
+  }
+  if (lower.includes('hiện đại') || lower.includes('hien-dai')) {
+    return CATEGORY_I18N['do-an-vat-hien-dai']?.[language]?.name || catName
+  }
+  if (lower.includes('truyền thống') || lower.includes('truyen-thong')) {
+    return CATEGORY_I18N['do-an-vat-truyen-thong']?.[language]?.name || catName
+  }
+  if (lower.includes('các loại bánh') || lower.includes('cac-loai-banh')) {
     return CATEGORY_I18N['cac-loai-banh']?.[language]?.name || catName
   }
-  if (lower.includes('bánh khác')) {
+  if (lower.includes('bánh khác') || lower.includes('banh-khac')) {
     return CATEGORY_I18N['banh-khac']?.[language]?.name || catName
   }
   return catName
@@ -401,6 +535,20 @@ export function translateCategoryName(catName, language = 'vi') {
 export const PRODUCT_I18N = {
   // 1. Bánh tráng sấy giòn vị chà bông
   'banh-trang-say-gion-vi-tra-bong': {
+    en: {
+      name: 'HOKI - Crispy Baked Rice Paper (Pork Floss Flavor)',
+      desc: 'Ultra-crispy baked rice paper infused with premium golden savory pork floss and signature seasonings. Delivers an irresistibly crunchy, well-balanced salty-sweet snack suitable for all occasions.',
+    },
+    ko: {
+      name: 'HOKI - 바삭 구운 라이스페이퍼 (포크플로스맛)',
+      desc: '바삭하게 구워낸 라이스페이퍼에 부드럽고 짭조름한 프리미엄 포크플로스와 특제 양념이 조화롭게 어우러져 남녀노소 누구나 언제 어디서나 맛있게 즐길 수 있는 스낵입니다.',
+    },
+    zh: {
+      name: 'HOKI - 酥脆烘烤米纸 (猪肉松味)',
+      desc: '超酥脆烘烤米纸，缀以精选上等金黄香脆猪肉松与特调咸香秘制调味，咸甜适中，香脆可口，是居家休闲与聚会的理想零食。',
+    },
+  },
+  'banh-trang-say-gion-vi-cha-bong': {
     en: {
       name: 'HOKI - Crispy Baked Rice Paper (Pork Floss Flavor)',
       desc: 'Ultra-crispy baked rice paper infused with premium golden savory pork floss and signature seasonings. Delivers an irresistibly crunchy, well-balanced salty-sweet snack suitable for all occasions.',
@@ -430,6 +578,20 @@ export const PRODUCT_I18N = {
       desc: '对流热风烘烤的超酥脆米纸，融入浓郁地道的五香牛肉鲜香与天然香辛料，层层入味，酥香微辣，越嚼越有滋味。',
     },
   },
+  'banh-trang-say-gion-vi-sa-te-bo': {
+    en: {
+      name: 'HOKI - Crispy Baked Rice Paper (Spicy Beef Satay Flavor)',
+      desc: 'Crispy convective-dried rice paper coated with rich lemongrass beef satay and warm chili seasonings for an intensely savory, crunchy bite.',
+    },
+    ko: {
+      name: 'HOKI - 바삭 구운 라이스페이퍼 (소고기 사테맛)',
+      desc: '바삭한 대류 열풍 건조 라이스페이퍼에 매콤한 소고기 사테 양념과 천연 향신료가 조화를 이루어 씹을수록 감칠맛이 폭발합니다.',
+    },
+    zh: {
+      name: 'HOKI - 酥脆烘烤米纸 (香辣沙爹牛肉味)',
+      desc: '对流热风烘干工艺制作的超脆米纸，融入浓郁沙爹牛肉风味与精调辛香料，咸香微辣，香脆爽口。',
+    },
+  },
 
   // 3. Bánh tráng sấy giòn vị tôm
   'banh-trang-say-gion-vi-tom': {
@@ -447,7 +609,39 @@ export const PRODUCT_I18N = {
     },
   },
 
-  // 4. Bánh tráng trộn gà lá chanh
+  // 4. Bánh tráng sấy giòn vị phô mai
+  'banh-trang-say-gion-phomai': {
+    en: {
+      name: 'HOKI - Crispy Baked Rice Paper (Cheese Flavor)',
+      desc: 'Crispy convective-dried rice paper generously dusted with savory cheddar cheese powder and golden crispy shallots, delivering a delicious fusion crunch.',
+    },
+    ko: {
+      name: 'HOKI - 바삭 구운 라이스페이퍼 (치즈맛)',
+      desc: '바삭한 대류 열풍 건조 라이스페이퍼에 고소하고 짭조름한 프리미엄 치즈 파우더를 듬뿍 뿌린 현대적인 퓨전 스낵입니다.',
+    },
+    zh: {
+      name: 'HOKI - 酥脆烘烤米纸 (芝士味)',
+      desc: '精细热风烘烤的超脆米纸，满撒香浓微咸芝士粉，搭配金黄炸葱酥，西式风味与传统米纸的惊艳碰撞。',
+    },
+  },
+
+  // 5. Bánh tráng sấy thực cẩm
+  'banh-trang-say-thuc-cam': {
+    en: {
+      name: 'HOKI - Multi-Flavor Savory Baked Rice Paper',
+      desc: 'Crispy baked rice paper enriched with dried shrimp floss, annatto oil, dried scallions, and fried garlic for a harmonious burst of Vietnamese street flavors.',
+    },
+    ko: {
+      name: 'HOKI - 멀티 플레이버 바삭 구운 라이스페이퍼',
+      desc: '말린 새우 보푸라기, 아나토 오일, 건조 쪽파와 튀긴 마늘 등 다채로운 전통 양념이 한데 어우러져 풍성한 풍미를 전합니다.',
+    },
+    zh: {
+      name: 'HOKI - 什锦多风味酥脆烘烤米纸',
+      desc: '荟萃精选鲜虾松、胭脂树油、脱水香葱段与香炸蒜粒，色泽诱人，咸香酥脆，风味层次极为丰富。',
+    },
+  },
+
+  // 6. Bánh tráng trộn gà lá chanh
   'banh-trang-tron-ga-la-chanh': {
     en: {
       name: 'HOKI - Mixed Rice Paper with Chicken & Lime Leaves',
@@ -463,7 +657,7 @@ export const PRODUCT_I18N = {
     },
   },
 
-  // 5. Bánh tráng trộn sợi sa tế tôm
+  // 7. Bánh tráng trộn sợi sa tế tôm
   'banh-trang-tron-sa-te-tom': {
     en: {
       name: 'HOKI - Shredded Rice Paper with Shrimp Satay',
@@ -478,98 +672,398 @@ export const PRODUCT_I18N = {
       desc: '筋道爽滑的米纸丝，融入香浓微辣的鲜虾沙爹酱，搭配香脆炸红葱头与秘制香辛料。咸甜微辣完美平衡，海虾香气独特浓郁，越嚼越香，风味令人着迷。',
     },
   },
-
-  // 6. Bánh đậu xanh vị lá dứa
-  'banh-dau-xanh-vi-la-dua': {
+  'banh-trang-tron-vi-sa-te-tom': {
     en: {
-      name: 'Fresh Mung Bean Cake with Pandan Flavor',
-      desc: 'Pure fresh mung bean cake subtly blended with natural fragrant pandan extract. Melts smoothly on the palate with a refreshing, delicate aroma and gentle sweetness.',
+      name: 'HOKI - Shredded Rice Paper with Shrimp Satay',
+      desc: 'Soft and chewy shredded rice paper combined with rich, spicy and aromatic shrimp satay, blended with golden shallots and signature seasonings. Perfectly spicy and savory with robust sea shrimp aroma.',
     },
     ko: {
-      name: '판단잎 신선 녹두 케이크',
-      desc: '신선한 100% 순수 녹두에 천연 판단잎의 은은하고 산뜻한 향을 더하여 입안에서 부드럽게 녹아내리는 베트남 전통 명가 디저트입니다.',
+      name: 'HOKI - 새우 사테 비빔 라이스페이퍼',
+      desc: '쫄깃하고 부드러운 채 썬 라이스페이퍼에 진하고 매콤한 새우 사테, 바삭한 샬롯과 특제 양념이 어우러져 있습니다. 적당한 단짠의 조화와 매콤한 맛, 특유의 새우 풍미가 어우러져 먹을수록 당기는 맛있는 간식입니다.',
     },
     zh: {
-      name: '新鲜绿豆糕 (斑斓叶味)',
-      desc: '精选新鲜纯绿豆与天然清香斑斓叶汁巧妙融合，口感细腻柔滑，甜度清雅适口，入口即化，茶歇品鉴的经典雅致茶点。',
+      name: 'HOKI - 拌米纸丝 (鲜虾沙爹味)',
+      desc: '筋道爽滑的米纸丝，融入香浓微辣的鲜虾沙爹酱，搭配香脆炸红葱头与秘制香辛料。咸甜微辣完美平衡，海虾香气独特浓郁，越嚼越香，风味令人着迷。',
     },
   },
 
-  // 7. Bánh đậu xanh tươi mix vị
-  'banh-dau-xanh-tuoi-mix-vi': {
+  // 8. Bánh tráng trộn sa tế bò
+  'banh-trang-tron-sa-te-bo': {
     en: {
-      name: 'Fresh Mung Bean Cake (Assorted Flavors Box)',
-      desc: 'Assorted gift box featuring a rich variety of classic and modern mung bean cakes. Crafted from pristine whole mung beans, preserving authentic texture and delicate sweetness.',
+      name: 'HOKI - Shredded Rice Paper with Spicy Beef Satay',
+      desc: 'Chewy shredded rice paper coated with savory lemongrass beef satay sauce, crispy fried shallots, and warm Vietnamese street seasonings.',
     },
     ko: {
-      name: '모듬 신선 녹두 케이크 (혼합 선물세트)',
-      desc: '전통과 현대의 다채로운 풍미를 한 상자에 정성껏 담아 신선한 녹두의 풍부한 맛을 다양하게 경험할 수 있는 프리미엄 선물용 디저트 세트입니다.',
+      name: 'HOKI - 소고기 사테 비빔 라이스페이퍼',
+      desc: '쫄깃한 라이스페이퍼에 매콤향긋한 레몬그라스 소고기 사테 양념과 바삭한 샬롯이 어우러져 깊고 진한 감칠맛을 전합니다.',
     },
     zh: {
-      name: '新鲜绿豆糕 (混合口味礼盒装)',
-      desc: '荟萃传统原味与现代多元风味的新鲜绿豆糕组合装，选用上等天然纯绿豆精心制作，细腻醇厚，带来丰富多层次的地道美味体验。',
+      name: 'HOKI - 香辣牛肉沙爹拌米纸',
+      desc: '招牌韧道米纸丝，浸润香浓香茅牛肉沙爹酱汁，配以香脆葱酥，香辣醇厚，还原纯正越南街头特色风味。',
     },
   },
 
-  // 8. Bánh đậu xanh tươi
-  'banh-dau-xanh-tuoi': {
+  // 9. Bắp rang bơ phô mai
+  'bap-rang-bo-vi-pho-mai': {
     en: {
-      name: 'Traditional Fresh Mung Bean Cake',
-      desc: 'Famous Hai Duong heritage recipe made from 100% pure selected mung beans. Silky smooth texture that gently melts in your mouth with an elegant, natural sweetness.',
+      name: 'HOKI - Savory Cheddar Cheese Popcorn',
+      desc: 'Gourmet popped corn coated with rich savory cheddar cheese seasoning. Perfectly crispy, delivering a mouthwatering melt-in-the-mouth cheesy crunch.',
     },
     ko: {
-      name: '전통 신선 녹두 케이크',
-      desc: '수백 년 전통 하이즈엉 명가 레시피로 엄선된 순수 녹두만을 사용하여 입안 가득 은은한 단맛과 부드럽게 녹아내리는 전통의 풍미를 간직한 대표 특산품입니다.',
+      name: 'HOKI - 체다 치즈 팝콘',
+      desc: '진하고 고소한 프리미엄 체다 치즈 시즈닝을 듬뿍 입힌 고소하고 바삭한 팝콘. 한 입 가득 퍼지는 풍부한 치즈 풍미가 매력적인 프리미엄 스낵.',
     },
     zh: {
-      name: '传统新鲜绿豆糕',
-      desc: '传承越南海阳百年经典传统配方，精选优质纯绿豆精工慢制，豆香浓郁醇厚，入口细腻爽滑，清甜不腻，尽显传统饮食精粹。',
+      name: 'HOKI - 浓香芝士风味爆米花',
+      desc: '精选高膨化度玉米粒，裹满醇厚香浓的切达芝士粉。金黄诱人，咸香酥脆，每一口都是浓郁回味的芝士盛宴。',
     },
   },
 
-  // Catalog supplementary items
+  // 10. Bắp rang bơ caramel
   'bap-rang-bo-caramel': {
     en: {
-      name: 'Caramel Butter Popcorn',
+      name: 'HOKI - Caramel Butter Popcorn',
       desc: 'Gourmet popped corn glazed with sweet rich caramel butter, delightfully crunchy in every kernel.',
     },
     ko: {
-      name: '카라멜 버터 팝콘',
+      name: 'HOKI - 카라멜 버터 팝콘',
       desc: '고소한 버터와 달콤한 카라멜 코팅을 입혀 한 알 한 알 바삭함이 살아있는 프리미엄 팝콘입니다.',
     },
     zh: {
-      name: '焦糖黄油爆米花',
+      name: 'HOKI - 焦糖黄油爆米花',
       desc: '高膨化精选爆米花，裹以浓郁香甜的焦糖黄油脆皮糖衣，粒粒香脆醇厚。',
     },
   },
 
+  // 11. Bắp rang bơ matcha
+  'bap-rang-bo-matcha': {
+    en: {
+      name: 'HOKI - Japanese Matcha Green Tea Popcorn',
+      desc: 'Crispy puffed corn coated with genuine green tea matcha glaze, offering a delicate herbal aroma and balanced sweet-earthy finish.',
+    },
+    ko: {
+      name: 'HOKI - 말차 녹차 팝콘',
+      desc: '은은하고 깊은 풍미의 천연 말차 파우더와 고소한 버터가 조화롭게 어우러진 산뜻하고 바삭한 프리미엄 그린티 팝콘.',
+    },
+    zh: {
+      name: 'HOKI - 日式抹茶风味爆米花',
+      desc: '严选优质天然抹茶粉微苦回甘的纯正茶韵，与酥脆爆米花巧妙交融，清甜甘醇，茶香四溢。',
+    },
+  },
+
+  // 12. Bắp rang bơ vị truyền thống
+  'bap-rang-bo-vi-truyen-thong': {
+    en: {
+      name: 'HOKI - Classic Sweet Butter Popcorn',
+      desc: 'Perfectly popped corn kernels lightly sweetened and tossed with pure creamy butter and a pinch of fine salt.',
+    },
+    ko: {
+      name: 'HOKI - 오리지널 스위트 버터 팝콘',
+      desc: '순수 천연 버터와 알맞은 단맛이 어우러져 남녀노소 누구나 질리지 않고 즐길 수 있는 클래식 오리지널 팝콘.',
+    },
+    zh: {
+      name: 'HOKI - 原味经典黄油爆米花',
+      desc: '选用优质玉米粒爆裂成型，裹以醇香天然黄油与微甜糖衣，香甜酥脆，回味纯净。',
+    },
+  },
+
+  // 13. Bánh cookies
+  'banh-cookies': {
+    en: {
+      name: 'HAQ - Premium Butter Cookies Selection',
+      desc: 'Crispy, golden artisan cookies baked with rich dairy butter and fine wheat flour. Perfectly flaky texture that pairs exquisitely with tea or coffee.',
+    },
+    ko: {
+      name: 'HAQ - 프리미엄 버터 쿠키 컬렉션',
+      desc: '고급 천연 버터와 엄선된 밀가루로 정성껏 구워낸 황금빛 쿠키. 입안 가득 퍼지는 부드러운 버터 향과 기분 좋은 바삭함이 일품입니다.',
+    },
+    zh: {
+      name: 'HAQ - 精品黄油曲奇饼干',
+      desc: '严选优质天然黄油与精制小麦粉精心烘焙，色泽金黄，奶香浓郁，口感酥松轻盈，茶歇相伴的上乘点心。',
+    },
+  },
+
+  // 14. Bánh sữa đậu
+  'banh-sua-dau': {
+    en: {
+      name: 'HAQ - Soy Milk & Butter Soft Pastries',
+      desc: 'Soft and delicate traditional pastries crafted from pure soybeans and creamy dairy butter. Mildly sweet with a comforting, natural aroma.',
+    },
+    ko: {
+      name: 'HAQ - 두유 버터 소프트 페이스트리' ,
+      desc: '순수 대두의 고소함과 신선한 버터 풍미가 조화롭게 어우러진 부드러운 전통 디저트. 은은한 단맛과 편안한 풍미가 특징입니다.',
+    },
+    zh: {
+      name: 'HAQ - 传统鲜香豆乳酥点',
+      desc: '选用天然优质大豆配合醇正黄油慢火制作，豆香醇正悠远，奶香细腻，软糯适口，甜度温和。',
+    },
+  },
+
+  // 15. Bánh sữa dừa
+  'banh-sua-dua': {
+    en: {
+      name: 'HAQ - Ben Tre Coconut Milk Cake',
+      desc: 'Traditional Mekong Delta delicacy crafted with pure aromatic coconut milk, offering delicate natural sweetness.',
+    },
+    ko: {
+      name: 'HAQ - 벤째 코코넛 밀크 케이크',
+      desc: '메콩델타산 신선한 순수 코코넛 밀크로 정성껏 빚어낸 진하고 고소한 풍미의 전통 특산 과자.',
+    },
+    zh: {
+      name: 'HAQ - 槟椥天然椰奶香糕',
+      desc: '选用湄公河三角洲优质天然椰浆古法熬制，椰香浓郁悠长，甘醇软糯。',
+    },
+  },
+
+  // 16. Bánh dẻo khoai môn mochi chà bông trứng muối
+  'banh-deo-khoai-mon-mochi-cha-bong-trung-muoi': {
+    en: {
+      name: 'HAQ - Taro Mochi Pastry with Pork Floss & Salted Egg',
+      desc: 'Multi-layered artisan pastry filled with fragrant taro paste, chewy mochi, savory pork floss, and rich salted egg yolk. A harmonious blend of sweet and savory.',
+    },
+    ko: {
+      name: 'HAQ - 토란 모찌 포크플로스 솔티드에그 페이스트리',
+      desc: '향긋한 토란 앙금, 쫄깃한 모찌 찹쌀떡, 짭조름한 포크플로스와 고소한 염지 계란 노른자가 층층이 어우러진 단짠 명품 페이스트리.',
+    },
+    zh: {
+      name: 'HAQ - 香芋麻薯肉松咸蛋黄软糯糕',
+      desc: '多重丰富层次：绵密香浓芋泥、软糯拉丝麻薯、鲜美金黄肉松与醇香咸蛋黄完美交融，咸甜相宜，回味无穷。',
+    },
+  },
+
+  // 17. Bánh dẻo trứng muối
+  'banh-deo-trung-muoi': {
+    en: {
+      name: 'HAQ - Traditional Soft Pastry with Salted Egg Yolk',
+      desc: 'Classic Vietnamese soft-skin glutinous pastry enclosing sweet mung bean filling and a whole savory salted egg yolk center.',
+    },
+    ko: {
+      name: 'HAQ - 전통 솔티드에그 소프트 페이스트리',
+      desc: '부드럽고 쫄깃한 찹쌀 피 속에 달콤한 녹두 앙금과 고소하고 짭조름한 염지 계란 노른자가 통째로 들어간 베트남 정통 명절 디저트.',
+    },
+    zh: {
+      name: 'HAQ - 传统咸蛋黄软糯月糕',
+      desc: '传统糯米冰皮包裹细腻温润绿豆沙与一整颗金黄油润咸蛋黄，软糯香甜中透着咸香，经典传世美味。',
+    },
+  },
+
+  // 18. Bánh hạnh nhân truyền thống
+  'banh-hanh-nhan-truyen-thong': {
+    en: {
+      name: 'HAQ - Classic Golden Almond Pastries',
+      desc: 'Traditional buttery flaky biscuits encrusted with golden roasted sliced almonds. Export quality with authentic crunch.',
+    },
+    ko: {
+      name: 'HAQ - 전통 오리지널 아몬드 페이스트리',
+      desc: '바삭하고 고소한 버터 쿠키 도우에 듬뿍 올린 슬라이스 아몬드가 일품인 아시아 수출 규격의 대표 아몬드 비스킷.',
+    },
+    zh: {
+      name: 'HAQ - 传统原味香脆杏仁酥饼',
+      desc: '经典传统黄油起酥配方，面层铺满厚厚香烤天然扁桃仁片，色泽金黄璀璨，酥脆浓郁。',
+    },
+  },
   'banh-hanh-nhan': {
     en: {
-      name: 'Premium Almond Pastries',
+      name: 'HAQ - Premium Almond Pastries',
       desc: 'Flaky and buttery artisan biscuits covered with fragrant roasted almond slices, meeting export standards for Asian markets.',
     },
     ko: {
-      name: '프리미엄 아몬드 페이스트리',
+      name: 'HAQ - 프리미엄 아몬드 페이스트리',
       desc: '고소한 버터 풍미와 슬라이스 아몬드의 바삭함이 어우러진 아시아 수출 규격의 프리미엄 디저트 비스킷.',
     },
     zh: {
-      name: '香脆起酥杏仁饼',
+      name: 'HAQ - 香脆起酥杏仁饼',
       desc: '浓郁纯正黄油起酥工艺，缀满香烤天然杏仁切片，酥脆微甜，符合亚洲高端食品出口规范。',
     },
   },
 
-  'banh-sua-dua': {
+  // 19. Bánh hạnh nhân trà xanh
+  'banh-hanh-nhan-tra-xanh': {
     en: {
-      name: 'Ben Tre Coconut Milk Cake',
-      desc: 'Traditional Mekong Delta delicacy crafted with pure aromatic coconut milk, offering delicate natural sweetness.',
+      name: 'HAQ - Crispy Green Tea Almond Pastries',
+      desc: 'Artisan flaky biscuits layered with fragrant roasted almond slices and premium green tea matcha extract.',
     },
     ko: {
-      name: '벤째 코코넛 밀크 케이크',
-      desc: '메콩델타산 신선한 순수 코코넛 밀크로 정성껏 빚어낸 진하고 고소한 풍미의 전통 특산 과자.',
+      name: 'HAQ - 바삭 녹차 아몬드 페이스트리',
+      desc: '고소하게 구워낸 슬라이스 아몬드와 은은한 그린티 말차 풍미가 완벽한 조화를 이루는 프리미엄 아몬드 비스킷.',
     },
     zh: {
-      name: '槟椥天然椰奶香糕',
-      desc: '选用湄公河三角洲优质天然椰浆古法熬制，椰香浓郁悠长，甘醇软糯。',
+      name: 'HAQ - 清香绿茶杏仁酥饼',
+      desc: '金黄酥脆起酥饼缀满香烤天然杏仁片，沁润清新绿茶香韵，茶香与坚果脂香相得益彰。',
+    },
+  },
+
+  // 20. Bánh hạnh nhân ca cao
+  'banh-hanh-nhan-ca-cao': {
+    en: {
+      name: 'HAQ - Crispy Cocoa Almond Pastries',
+      desc: 'Flaky and buttery artisan biscuits infused with rich pure cocoa powder and generous roasted almond slices.',
+    },
+    ko: {
+      name: 'HAQ - 바삭 코코아 아몬드 페이스트리',
+      desc: '진한 순수 코코아의 풍미와 고소한 슬라이스 아몬드가 어우러져 깊고 그윽한 달콤쌉싸름한 맛을 전하는 비스킷.',
+    },
+    zh: {
+      name: 'HAQ - 浓香可可杏仁酥饼',
+      desc: '优质纯可可的浓郁微苦与香烤杏仁片的温润坚果香气完美结合，层叠酥脆，回味绵长。',
+    },
+  },
+
+  // 21. Bánh hạnh nhân hỗn hợp
+  'banh-hanh-nhan-hon-hop': {
+    en: {
+      name: 'HAQ - Assorted Flavors Almond Pastries Box',
+      desc: 'Luxury gift box presenting classic, cocoa, and green tea almond pastries. A crunchy and elegant indulgence.',
+    },
+    ko: {
+      name: 'HAQ - 모듬 아몬드 페이스트리 선물세트',
+      desc: '오리지널, 코코아, 녹차 등 다채로운 아몬드 비스킷을 고급스러운 한 상자에 담아낸 선물용 프리미엄 셀렉션.',
+    },
+    zh: {
+      name: 'HAQ - 多口味混合装香脆杏仁饼礼盒',
+      desc: '尊享礼盒汇聚原味、可可与清香绿茶三款招牌杏仁酥饼，坚果醇厚，起酥层层分明，礼赠佳品。',
+    },
+  },
+
+  // 22. Bánh đậu xanh tươi
+  'banh-dau-xanh-tuoi': {
+    en: {
+      name: 'HAQ - Traditional Fresh Mung Bean Cake',
+      desc: 'Famous Hai Duong heritage recipe made from 100% pure selected mung beans. Silky smooth texture that gently melts in your mouth with an elegant, natural sweetness.',
+    },
+    ko: {
+      name: 'HAQ - 전통 신선 녹두 케이크',
+      desc: '수백 년 전통 하이즈엉 명가 레시피로 엄선된 순수 녹두만을 사용하여 입안 가득 은은한 단맛과 부드럽게 녹아내리는 전통의 풍미를 간직한 대표 특산품입니다.',
+    },
+    zh: {
+      name: 'HAQ - 传统新鲜绿豆糕',
+      desc: '传承越南海阳百年经典传统配方，精选优质纯绿豆精工慢制，豆香浓郁醇厚，入口细腻爽滑，清甜不腻，尽显传统饮食精粹。',
+    },
+  },
+
+  // 23. Bánh đậu xanh vị lá dứa
+  'banh-dau-xanh-vi-la-dua': {
+    en: {
+      name: 'HAQ - Fresh Mung Bean Cake with Pandan Flavor',
+      desc: 'Pure fresh mung bean cake subtly blended with natural fragrant pandan extract. Melts smoothly on the palate with a refreshing, delicate aroma and gentle sweetness.',
+    },
+    ko: {
+      name: 'HAQ - 판단잎 신선 녹두 케이크',
+      desc: '신선한 100% 순수 녹두에 천연 판단잎의 은은하고 산뜻한 향을 더하여 입안에서 부드럽게 녹아내리는 베트남 전통 명가 디저트입니다.',
+    },
+    zh: {
+      name: 'HAQ - 新鲜绿豆糕 (斑斓叶味)',
+      desc: '精选新鲜纯绿豆与天然清香斑斓叶汁巧妙融合，口感细腻柔滑，甜度清雅适口，入口即化，茶歇品鉴的经典雅致茶点。',
+    },
+  },
+
+  // 24. Bánh đậu xanh tươi vị đậu đỏ
+  'banh-dau-xanh-tuoi-vi-dau-do': {
+    en: {
+      name: 'HAQ - Fresh Mung Bean Cake with Red Bean Flavor',
+      desc: 'Unique fusion of fresh whole mung beans and sweet red beans. Ultra-smooth texture with dual bean richness and balanced sweetness.',
+    },
+    ko: {
+      name: 'HAQ - 팥맛 신선 녹두 케이크',
+      desc: '신선한 녹두와 달콤하고 풍부한 팥의 영양이 조화롭게 어우러진 부드러운 전통 케이크로 깊고 은은한 감미를 선사합니다.',
+    },
+    zh: {
+      name: 'HAQ - 新鲜绿豆糕 (红豆风味)',
+      desc: '严选优质纯绿豆粉与精研红豆沙双豆融合，豆香更加浓郁醇厚，粉质细腻柔和，甜度恰到好处。',
+    },
+  },
+
+  // 25. Bánh đậu xanh mix vị
+  'banh-dau-xanh-mix-vi': {
+    en: {
+      name: 'HAQ - Fresh Mung Bean Cake (Assorted Flavors Box)',
+      desc: 'Assorted gift box featuring classic original, aromatic pandan, and red bean mung bean cakes. A delightful celebration of Vietnamese confectionery.',
+    },
+    ko: {
+      name: 'HAQ - 모듬 신선 녹두 케이크 (혼합 선물세트)',
+      desc: '오리지널 전통 녹두, 싱그러운 판단잎, 달콤한 팥 풍미를 정갈한 한 상자에 모아 다양한 맛의 향연을 즐길 수 있는 특산 선물세트.',
+    },
+    zh: {
+      name: 'HAQ - 新鲜绿豆糕 (混合口味礼盒装)',
+      desc: '精心组合原味绿豆、清香斑斓与香甜红豆三款传统糕点，粉质细腻柔滑，一次尽享丰富多样的地道传统美味。',
+    },
+  },
+  'banh-dau-xanh-tuoi-mix-vi': {
+    en: {
+      name: 'HAQ - Fresh Mung Bean Cake (Assorted Flavors Box)',
+      desc: 'Assorted gift box featuring a rich variety of classic and modern mung bean cakes. Crafted from pristine whole mung beans, preserving authentic texture and delicate sweetness.',
+    },
+    ko: {
+      name: 'HAQ - 모듬 신선 녹두 케이크 (혼합 선물세트)',
+      desc: '전통과 현대의 다채로운 풍미를 한 상자에 정성껏 담아 신선한 녹두의 풍부한 맛을 다양하게 경험할 수 있는 프리미엄 선물용 디저트 세트입니다.',
+    },
+    zh: {
+      name: 'HAQ - 新鲜绿豆糕 (混合口味礼盒装)',
+      desc: '荟萃传统原味与现代多元风味的新鲜绿豆糕组合装，选用上等天然纯绿豆精心制作，细腻醇厚，带来丰富多层次的地道美味体验。',
+    },
+  },
+
+  // 26. Bánh chả hương vị cổ truyền
+  'banh-cha': {
+    en: {
+      name: 'HAQ - Traditional Hanoi Crispy Pastry (Banh Cha)',
+      desc: 'Historic Hanoi street specialty featuring golden-brown pastry crust stuffed with candied winter melon, aromatic kaffir lime leaves, and spices.',
+    },
+    ko: {
+      name: 'HAQ - 하노이 전통 라임잎 페이스트리 (반짜)',
+      desc: '달콤한 동아정과와 상큼한 라임잎, 고소한 버터 풍미의 바삭한 피가 어우러진 하노이의 대표적인 전통 향토 과자 반짜.',
+    },
+    zh: {
+      name: 'HAQ - 河内传统风味香脆饼 (Bánh Chả)',
+      desc: '越南首都河内享负盛名的传统老字号名点，外皮焦香金黄酥脆，内裹糖冬瓜与精切柠檬叶细丝，香气馥郁，经典古早味。',
+    },
+  },
+
+  // 27. Khô bò sốt chanh
+  'kho-bo-sot-chanh': {
+    en: {
+      name: 'HAQ - Premium Beef Jerky with Zesty Lime Sauce',
+      desc: 'Select tender lean beef marinated in zesty fresh lime juice, tomyum spices, lemongrass, and natural chilies. Chewy and deeply flavorful.',
+    },
+    ko: {
+      name: 'HAQ - 상큼한 라임 소스 프리미엄 비프 저키',
+      desc: '엄선된 소고기에 신선한 생라임 소스와 매콤상큼한 톰얌 향신료, 레몬그라스를 재워 부드럽고 쫄깃한 식감을 살린 특급 육포.',
+    },
+    zh: {
+      name: 'HAQ - 特级青柠酱汁手撕牛肉干',
+      desc: '严选优质大块精瘦牛肉，调入鲜榨青柠汁、冬阴功辛香料、香茅与鲜辣椒精心慢制，鲜嫩筋道，酸辣开胃，回味醇厚。',
+    },
+  },
+
+  // 28. Khô viên vị bò
+  'kho-vien-vi-bo': {
+    en: {
+      name: 'HAQ - Tender Spiced Jerky Bites (Beef Flavor)',
+      desc: 'Bite-sized tender meat cubes slowly seasoned with five-spice, ginger, lemongrass, and natural beef seasonings. Juicy, chewy, and robust.',
+    },
+    ko: {
+      name: 'HAQ - 소고기 풍미 큐브 육포',
+      desc: '한 입 크기로 먹기 편한 부드러운 고기 큐브에 오향분, 생강, 레몬그라스와 특제 소고기 양념을 깊숙이 배어들게 한 쫄깃한 간식.',
+    },
+    zh: {
+      name: 'HAQ - 秘制五香牛肉风味肉粒',
+      desc: '一口一块的便携肉粒，浸润特调五香粉、鲜生姜、香茅与纯正牛肉香韵，肉质紧实有嚼劲，鲜香浓郁。',
+    },
+  },
+
+  // 29. Khô sợi vị bò
+  'kho-soi-vi-bo': {
+    en: {
+      name: 'HAQ - Shredded Spiced Jerky (Beef Flavor)',
+      desc: 'Hand-pulled tender meat shreds delicately seasoned with turmeric curry, natural spices, and five-spice beef aroma. Perfect with lime and chili sauce.',
+    },
+    ko: {
+      name: 'HAQ - 소고기 풍미 찢은 육포',
+      desc: '결대로 정성껏 찢어낸 고기 가닥에 강황 카레, 오향분과 진한 소고기 양념이 골고루 배어들어 맥주 안주나 간식으로 최고인 육포.',
+    },
+    zh: {
+      name: 'HAQ - 秘制五香牛肉风味手撕肉丝',
+      desc: '沿纹理精心手撕成丝，浸透姜黄咖喱、五香调味与醇浓牛肉风味，丝丝入味，佐酒茶叙的上乘佐食。',
     },
   },
 }
@@ -578,59 +1072,71 @@ export const PRODUCT_I18N = {
 export const PRODUCT_SLUG_ALIASES = {
   // Chà bông
   'banh-trang-say-gion-vi-tra-bong': 'banh-trang-say-gion-vi-tra-bong',
-  'banh-trang-say-cha-bong-50g': 'banh-trang-say-gion-vi-tra-bong',
-  'banh-trang-say-cha-bong': 'banh-trang-say-gion-vi-tra-bong',
   'banh-trang-say-gion-vi-cha-bong': 'banh-trang-say-gion-vi-tra-bong',
-  'banh-trang-say-gion-tra-bong': 'banh-trang-say-gion-vi-tra-bong',
+  'banh-trang-say-gion-cha-bong': 'banh-trang-say-gion-vi-tra-bong',
+  'banh-trang-say-cha-bong': 'banh-trang-say-gion-vi-tra-bong',
 
   // Bò
   'banh-trang-say-gion-vi-bo': 'banh-trang-say-gion-vi-bo',
-  'banh-trang-say-bo-50g': 'banh-trang-say-gion-vi-bo',
-  'banh-trang-say-bo': 'banh-trang-say-gion-vi-bo',
   'banh-trang-say-gion-bo': 'banh-trang-say-gion-vi-bo',
+  'banh-trang-say-bo': 'banh-trang-say-gion-vi-bo',
+  'banh-trang-say-gion-vi-sa-te-bo': 'banh-trang-say-gion-vi-sa-te-bo',
+  'banh-trang-tron-sa-te-bo': 'banh-trang-tron-sa-te-bo',
 
   // Tôm
   'banh-trang-say-gion-vi-tom': 'banh-trang-say-gion-vi-tom',
-  'banh-trang-say-tom-50g': 'banh-trang-say-gion-vi-tom',
-  'banh-trang-say-tom': 'banh-trang-say-gion-vi-tom',
   'banh-trang-say-gion-tom': 'banh-trang-say-gion-vi-tom',
+  'banh-trang-say-tom': 'banh-trang-say-gion-vi-tom',
+  'banh-trang-tron-vi-sa-te-tom': 'banh-trang-tron-sa-te-tom',
+  'banh-trang-tron-sa-te-tom': 'banh-trang-tron-sa-te-tom',
+
+  // Phô mai
+  'banh-trang-say-gion-phomai': 'banh-trang-say-gion-phomai',
+  'banh-trang-say-gion-vi-pho-mai': 'banh-trang-say-gion-phomai',
+  'bap-rang-bo-vi-pho-mai': 'bap-rang-bo-vi-pho-mai',
+  'bap-rang-bo-pho-mai': 'bap-rang-bo-vi-pho-mai',
+
+  // Thực cẩm
+  'banh-trang-say-thuc-cam': 'banh-trang-say-thuc-cam',
 
   // Gà lá chanh
   'banh-trang-tron-ga-la-chanh': 'banh-trang-tron-ga-la-chanh',
-  'banh-trang-cuon-ga-la-chanh-100g': 'banh-trang-tron-ga-la-chanh',
-  'banh-trang-cuon-ga': 'banh-trang-tron-ga-la-chanh',
   'banh-trang-tron-ga': 'banh-trang-tron-ga-la-chanh',
 
-  // Sa tế tôm
-  'banh-trang-tron-sa-te-tom': 'banh-trang-tron-sa-te-tom',
-  'banh-trang-soi-sa-te-tom-100g': 'banh-trang-tron-sa-te-tom',
-  'banh-trang-tron-haq': 'banh-trang-tron-sa-te-tom',
-  'banh-trang-tron-sa-te': 'banh-trang-tron-sa-te-tom',
-
-  // Đậu xanh lá dứa
+  // Đậu xanh
   'banh-dau-xanh-vi-la-dua': 'banh-dau-xanh-vi-la-dua',
   'banh-dau-xanh-la-dua': 'banh-dau-xanh-vi-la-dua',
-  'banh-dau-xanh-tuoi-vi-la-dua-250g': 'banh-dau-xanh-vi-la-dua',
-  'banh-dau-xanh-la-dua-110g': 'banh-dau-xanh-vi-la-dua',
-
-  // Đậu xanh mix vị
-  'banh-dau-xanh-tuoi-mix-vi': 'banh-dau-xanh-tuoi-mix-vi',
-  'banh-dau-xanh-mix-vi': 'banh-dau-xanh-tuoi-mix-vi',
-  'banh-dau-xanh-tuoi-mix-vi-250g': 'banh-dau-xanh-tuoi-mix-vi',
-
-  // Đậu xanh tươi
   'banh-dau-xanh-tuoi': 'banh-dau-xanh-tuoi',
-  'banh-dau-xanh-tuoi-250g': 'banh-dau-xanh-tuoi',
-  'banh-dau-xanh-tuoi-110g': 'banh-dau-xanh-tuoi',
-  'banh-dau-xanh-truyen-thong': 'banh-dau-xanh-tuoi',
+  'banh-dau-xanh': 'banh-dau-xanh-tuoi',
+  'banh-dau-xanh-tuoi-mix-vi': 'banh-dau-xanh-tuoi-mix-vi',
+  'banh-dau-xanh-mix-vi': 'banh-dau-xanh-mix-vi',
+  'banh-dau-xanh-tuoi-vi-dau-do': 'banh-dau-xanh-tuoi-vi-dau-do',
+  'banh-dau-xanh-dau-do': 'banh-dau-xanh-tuoi-vi-dau-do',
 
-  // Bắp rang bơ & khác
-  'bap-rang-bo': 'bap-rang-bo-caramel',
+  // Bắp rang bơ
   'bap-rang-bo-caramel': 'bap-rang-bo-caramel',
+  'bap-rang-bo-matcha': 'bap-rang-bo-matcha',
+  'bap-rang-bo-vi-truyen-thong': 'bap-rang-bo-vi-truyen-thong',
+
+  // Hạnh nhân
   'banh-hanh-nhan': 'banh-hanh-nhan',
-  'banh-hanh-nhan-thuong-hang': 'banh-hanh-nhan',
-  'banh-sua': 'banh-sua-dua',
+  'banh-hanh-nhan-truyen-thong': 'banh-hanh-nhan-truyen-thong',
+  'banh-hanh-nhan-tra-xanh': 'banh-hanh-nhan-tra-xanh',
+  'banh-hanh-nhan-ca-cao': 'banh-hanh-nhan-ca-cao',
+  'banh-hanh-nhan-hon-hop': 'banh-hanh-nhan-hon-hop',
+
+  // Bánh khác
+  'banh-cookies': 'banh-cookies',
+  'banh-sua-dau': 'banh-sua-dau',
   'banh-sua-dua': 'banh-sua-dua',
+  'banh-cha': 'banh-cha',
+  'banh-deo-khoai-mon-mochi-cha-bong-trung-muoi': 'banh-deo-khoai-mon-mochi-cha-bong-trung-muoi',
+  'banh-deo-trung-muoi': 'banh-deo-trung-muoi',
+
+  // Thịt khô
+  'kho-bo-sot-chanh': 'kho-bo-sot-chanh',
+  'kho-vien-vi-bo': 'kho-vien-vi-bo',
+  'kho-soi-vi-bo': 'kho-soi-vi-bo',
 }
 
 // =============================================================================
@@ -698,30 +1204,63 @@ export const PACKAGING_TRANSLATIONS = {
 
 export const SHELF_LIFE_TRANSLATIONS = {
   '6 tháng': { en: '6 months', ko: '6개월', zh: '6 个月' },
-  '6 tháng ': { en: '6 months', ko: '6개월', zh: '6 个月' },
-  '6': { en: '6 months', ko: '6개월', zh: '6 个月' },
-  '1 tháng': { en: '1 month', ko: '1개월', zh: '1 个月' },
-  '1 tháng ': { en: '1 month', ko: '1개월', zh: '1 个月' },
-  '1': { en: '1 month', ko: '1개월', zh: '1 个月' },
   '3 tháng': { en: '3 months', ko: '3개월', zh: '3 个月' },
+  '4 tháng': { en: '4 months', ko: '4개월', zh: '4 个月' },
+  '5 tháng': { en: '5 months', ko: '5개월', zh: '5 个月' },
   '9 tháng': { en: '9 months', ko: '9개월', zh: '9 个月' },
   '12 tháng': { en: '12 months', ko: '12개월', zh: '12 个月' },
-  '12 tháng ': { en: '12 months', ko: '12개월', zh: '12 个月' },
-}
-
-export function translateVariantPack(pack, language = 'vi') {
-  if (!pack || language === 'vi') return pack
-  const normalized = pack.trim().toLowerCase()
-  const match = PACKAGING_TRANSLATIONS[normalized]
-  if (match && match[language]) return match[language]
-  return pack
+  '30 ngày': { en: '30 days', ko: '30일', zh: '30 天' },
+  '45 ngày': { en: '45 days', ko: '45일', zh: '45 天' },
+  '180 ngày': { en: '180 days', ko: '180일', zh: '180 天' },
 }
 
 export function translateVariantShelf(shelf, language = 'vi') {
   if (!shelf || language === 'vi') return shelf
-  const normalized = String(shelf).trim().toLowerCase()
-  const match = SHELF_LIFE_TRANSLATIONS[normalized]
-  if (match && match[language]) return match[language]
+  const normalized = String(shelf).trim()
+  const lower = normalized.toLowerCase()
+
+  // Match range e.g. "6-12 tháng"
+  if (lower.includes('6-12') && lower.includes('tháng')) {
+    if (lower.includes('kể từ') || lower.includes('ngày sản xuất')) {
+      if (language === 'en') return '6–12 months from date of manufacture'
+      if (language === 'ko') return '제조일로부터 6-12개월'
+      if (language === 'zh') return '自生产之日起 6–12 个月'
+    }
+    if (language === 'en') return '6–12 months'
+    if (language === 'ko') return '6-12개월'
+    if (language === 'zh') return '6–12 个月'
+  }
+
+  // Match "X ngày kể từ ngày sản xuất" or "X ngày"
+  const dayMatch = lower.match(/(\d+)\s*ngày/)
+  if (dayMatch) {
+    const d = dayMatch[1]
+    if (lower.includes('kể từ') || lower.includes('ngày sản xuất')) {
+      if (language === 'en') return `${d} days from date of manufacture`
+      if (language === 'ko') return `제조일로부터 ${d}일`
+      if (language === 'zh') return `自生产之日起 ${d} 天`
+    }
+    if (language === 'en') return `${d} days`
+    if (language === 'ko') return `${d}일`
+    if (language === 'zh') return `${d} 天`
+  }
+
+  // Match "X tháng kể từ ngày sản xuất" or "X tháng"
+  const monthMatch = lower.match(/(\d+)\s*tháng/)
+  if (monthMatch) {
+    const m = monthMatch[1]
+    if (lower.includes('kể từ') || lower.includes('ngày sản xuất')) {
+      if (language === 'en') return `${m} months from date of manufacture`
+      if (language === 'ko') return `제조일로부터 ${m}개월`
+      if (language === 'zh') return `自生产之日起 ${m} 个月`
+    }
+    if (language === 'en') return `${m} months`
+    if (language === 'ko') return `${m}개월`
+    if (language === 'zh') return `${m} 个月`
+  }
+
+  const exact = SHELF_LIFE_TRANSLATIONS[lower]
+  if (exact && exact[language]) return exact[language]
   return shelf
 }
 
@@ -754,97 +1293,278 @@ export function translateVariantSize(size, language = 'vi') {
 
 export const STORAGE_GUIDE_TRANSLATIONS = {
   default: {
-    en: 'Store in a cool, dry place away from direct sunlight. Seal tightly after opening.',
-    ko: '직사광선을 피해 서늘하고 건조한 곳에 보관하십시오. 개봉 후에는 밀봉하여 보관하십시오.',
-    zh: '请置于阴凉干燥处，避免阳光直射。开封后请密封保存并尽快食用。',
+    en: 'Store in a cool, dry place away from direct sunlight, insects, and high temperatures. Best consumed promptly after opening. Do not use if expired or showing signs of deterioration.',
+    ko: '직사광선, 해충 및 고온을 피해 서늘하고 건조한 곳에 보관하십시오. 개봉 후에는 가급적 빨리 섭취하십시오. 변질되었거나 유통기한이 지난 제품은 섭취하지 마십시오.',
+    zh: '请保存在阴凉干燥处，避免阳光直射、昆虫接触及高温环境。开封后请尽快食用完毕。产品受潮发霉或已过保质期时请勿食用。',
+  },
+  jerky: {
+    en: 'Consume directly after opening. Best served with fresh lime or chili sauce. Recommended to store in refrigerator. Keep in a cool, dry place away from sunlight. Do not consume if expired or package is compromised.',
+    ko: '개봉 후 즉시 섭취하십시오. 신선한 라임이나 칠리소스와 곁들이면 더욱 맛있습니다. 냉장 보관을 권장합니다. 직사광선을 피해 서늘하고 건조한 곳에 보관하십시오. 유통기한이 지났거나 포장이 훼손된 제품은 섭취하지 마십시오.',
+    zh: '开封后即可直接食用。佐以鲜柠檬或辣椒酱风味更佳。建议冷藏保存。请存放于阴凉干燥处，避免阳光直射。若包装破损或产品已过保质期请勿食用。',
   },
 }
 
 export function translateStorageGuide(guide, language = 'vi') {
   if (!guide || language === 'vi') return guide
   const lower = guide.toLowerCase()
-  if (lower.includes('khô ráo') || lower.includes('thoáng mát') || lower.includes('nơi khô')) {
+  if (lower.includes('tủ lạnh') || lower.includes('tương ớt') || lower.includes('chanh tươi')) {
+    return STORAGE_GUIDE_TRANSLATIONS.jerky[language] || guide
+  }
+  if (lower.includes('khô ráo') || lower.includes('thoáng mát') || lower.includes('nơi khô') || lower.includes('bao bì')) {
     return STORAGE_GUIDE_TRANSLATIONS.default[language] || guide
   }
   return guide
 }
 
 export const INGREDIENTS_TRANSLATIONS = {
-  'bánh tráng sấy giòn vị chà bông': {
-    en: 'Rice flour, premium dried pork floss, vegetable oil, sugar, iodized salt, garlic, chili, natural seasonings.',
-    ko: '쌀가루, 프리미엄 돼지고기 플로스, 식물성 유지, 설탕, 요오드 소금, 마늘, 고추, 천연 조미료.',
-    zh: '大米粉、精选优质猪肉松、植物油、白砂糖、食用盐、大蒜、辣椒、天然复合调味料。',
+  'banh-trang-say-gion-vi-tra-bong': {
+    en: 'Rice paper (60%), dried savory pork floss (15%), garlic oil (6%), refined sugar (5%), fried shallots (4%), dried garlic (4%), iodized salt (4%), chili (2%).',
+    ko: '라이스페이퍼(60%), 건조 포크플로스(15%), 마늘오일(6%), 정제설탕(5%), 튀긴 샬롯(4%), 건마늘(4%), 요오드 소금(4%), 고추(2%).',
+    zh: '米纸 (60%)、精选猪肉松 (15%)、蒜香油 (6%)、白砂糖 (5%)、炸红葱 (4%)、脱水大蒜 (4%)、食用盐 (4%)、辣椒 (2%)。',
   },
-  'bánh tráng sấy giòn vị bò': {
-    en: 'Rice flour, dried beef seasonings, chili, lemongrass, garlic, vegetable oil, sugar, salt, natural spices.',
-    ko: '쌀가루, 건조 소고기 시즈닝, 고추, 레몬그라스, 마늘, 식물성 유지, 설탕, 소금, 천연 향신료.',
-    zh: '大米粉、香醇牛肉风味调料、辣椒、香茅、大蒜、精炼植物油、白砂糖、食用盐、天然香辛料。',
+  'banh-trang-say-gion-vi-cha-bong': {
+    en: 'Rice paper (60%), dried savory pork floss (15%), garlic oil (6%), refined sugar (5%), fried shallots (4%), dried garlic (4%), iodized salt (4%), chili (2%).',
+    ko: '라이스페이퍼(60%), 건조 포크플로스(15%), 마늘오일(6%), 정제설탕(5%), 튀긴 샬롯(4%), 건마늘(4%), 요오드 소금(4%), 고추(2%).',
+    zh: '米纸 (60%)、精选猪肉松 (15%)、蒜香油 (6%)、白砂糖 (5%)、炸红葱 (4%)、脱水大蒜 (4%)、食用盐 (4%)、辣椒 (2%)。',
   },
-  'bánh tráng sấy giòn vị tôm': {
-    en: 'Rice flour, shrimp seasoning, sea salt, vegetable oil, garlic, chili, natural spices.',
-    ko: '쌀가루, 천연 새우 시즈닝, 천일염, 식물성 유지, 마늘, 고추, 천연 향신료.',
-    zh: '大米粉、海虾调味粉、天然海盐、植物油、大蒜、辣椒、天然辛香料。',
+  'banh-trang-say-gion-vi-bo': {
+    en: 'Rice paper (60%), spiced beef seasonings (15%), chili satay oil (6%), fried shallots (5%), sugar (5%), garlic (5%), iodized salt (4%).',
+    ko: '라이스페이퍼(60%), 양념 소고기 시즈닝(15%), 칠리 사테 오일(6%), 튀긴 샬롯(5%), 설탕(5%), 마늘(5%), 소금(4%).',
+    zh: '米纸 (60%)、牛肉风味调味料 (15%)、辣椒沙爹油 (6%)、炸红葱 (5%)、白砂糖 (5%)、大蒜 (5%)、食用盐 (4%)。',
   },
-  'bánh tráng trộn gà lá chanh': {
-    en: 'Shredded rice paper, seasoned dried chicken, dried lime leaves, fried crispy shallots, vegetable oil, signature satay sauce.',
-    ko: '채 썬 라이스페이퍼, 양념 건조 닭고기, 건조 라임잎, 바삭한 튀긴 샬롯, 식물성 유지, 특제 사테 소스.',
-    zh: '米纸条丝、五香鸡肉丝、精选柠檬叶细丝、香酥炸红葱头、精炼植物油、特调沙爹拌酱。',
+  'banh-trang-say-gion-vi-sa-te-bo': {
+    en: 'Rice paper (60%), spiced beef seasonings (15%), chili satay oil (6%), fried shallots (5%), sugar (5%), garlic (5%), iodized salt (4%).',
+    ko: '라이스페이퍼(60%), 양념 소고기 시즈닝(15%), 칠리 사테 오일(6%), 튀긴 샬롯(5%), 설탕(5%), 마늘(5%), 소금(4%).',
+    zh: '米纸 (60%)、牛肉风味调味料 (15%)、辣椒沙爹油 (6%)、炸红葱 (5%)、白砂糖 (5%)、大蒜 (5%)、食用盐 (4%)。',
   },
-  'bánh tráng trộn sợi sa tế tôm': {
-    en: 'Shredded rice paper, dried shrimp seasoning, spicy chili satay oil, fried crispy shallots, garlic, sea salt.',
-    ko: '채 썬 라이스페이퍼, 건새우 시즈닝, 매콤한 고추 사테유, 튀긴 샬롯, 마늘, 천일염.',
-    zh: '米纸丝、鲜香虾味粉、香辣辣椒沙爹油、香脆炸红葱头、大蒜、天然海盐。',
+  'banh-trang-say-gion-vi-tom': {
+    en: 'Rice paper (60%), dried seasoned baby shrimp (15%), garlic oil (6%), refined sugar (5%), fried shallots (4%), dried garlic (4%), salt (4%), chili (2%).',
+    ko: '라이스페이퍼(60%), 건조 양념 새우(15%), 마늘오일(6%), 정제설탕(5%), 튀긴 샬롯(4%), 건마늘(4%), 소금(4%), 고추(2%).',
+    zh: '米纸 (60%)、烘烤鲜虾肉松 (15%)、蒜香油 (6%)、白砂糖 (5%)、香炸红葱 (4%)、脱水蒜粒 (4%)、食用盐 (4%)、辣椒 (2%)。',
   },
-  'bánh đậu xanh vị lá dứa': {
-    en: '100% pure mung bean powder, fresh pandan extract, refined cane sugar, pure vegetable oil.',
-    ko: '100% 순수 녹두 분말, 천연 판단잎 추출물, 정제 사탕수수 설탕, 순수 식물성 유지.',
-    zh: '100% 纯天然绿豆粉、天然新鲜斑斓叶萃取汁、精制白砂糖、纯正植物油。',
+  'banh-trang-say-gion-phomai': {
+    en: 'Rice paper (60%), cheddar cheese powder (12%), fried shallots (10%), garlic oil, refined sugar, salt, natural flavorings.',
+    ko: '라이스페이퍼(60%), 체다 치즈 파우더(12%), 튀긴 샬롯(10%), 마늘오일, 정제설탕, 소금, 천연 향료.',
+    zh: '米纸 (60%)、切达芝士粉 (12%)、香炸红葱 (10%)、大蒜油、白砂糖、食用盐、天然香辛料。',
   },
-  'bánh đậu xanh tươi mix vị': {
-    en: 'Selected mung bean flour, pandan extract, cane sugar, pure vegetable oil, natural assorted flavorings.',
-    ko: '엄선된 녹두 분말, 판단잎 추출물, 사탕수수 설탕, 식물성 유지, 천연 모듬 풍미료.',
-    zh: '特选纯天然绿豆粉、清香斑斓汁、优质白砂糖、纯植物油、天然风味调配成分。',
+  'banh-trang-say-thuc-cam': {
+    en: 'Rice paper (60%), dried shrimp floss (10%), annatto seed oil (6%), fried shallots (5%), dried scallions (5%), refined sugar (5%), dried garlic (5%), iodized salt (4%).',
+    ko: '라이스페이퍼(60%), 건조 새우 플로스(10%), 아나토 오일(6%), 튀긴 샬롯(5%), 건조 쪽파(5%), 설탕(5%), 건마늘(5%), 소금(4%).',
+    zh: '米纸 (60%)、鲜虾松 (10%)、天然胭脂树红油 (6%)、炸红葱酥 (5%)、脱水香葱 (5%)、白砂糖 (5%)、脱水蒜粒 (5%)、食用盐 (4%)。',
   },
-  'bánh đậu xanh tươi': {
-    en: '100% selected Vietnamese mung bean powder, refined cane sugar, pure vegetable oil.',
-    ko: '엄선된 100% 베트남산 녹두 분말, 정제 사탕수수 설탕, 순수 식물성 유지.',
-    zh: '100% 精选纯正越南绿豆粉、白砂糖、优质精炼植物油。',
+  'banh-trang-tron-ga-la-chanh': {
+    en: 'Shredded rice paper, shredded seasoned chicken, kaffir lime leaves, fresh chili, sugar, iodized salt, crispy fried shallots, garlic.',
+    ko: '채 썬 라이스페이퍼, 양념 닭고기, 라임잎, 생고추, 설탕, 요오드 소금, 바삭한 튀긴 샬롯, 마늘.',
+    zh: '米纸丝、鲜香鸡肉丝、精选柠檬叶、新鲜辣椒、白砂糖、食用盐、香脆红葱酥、大蒜。',
+  },
+  'banh-trang-tron-vi-sa-te-tom': {
+    en: 'Shredded rice paper, spicy shrimp satay sauce, fresh chili, cane sugar, iodized salt, fried shallots, garlic oil.',
+    ko: '채 썬 라이스페이퍼, 매콤한 새우 사테, 생고추, 사탕수수 설탕, 요오드 소금, 튀긴 샬롯, 마늘오일.',
+    zh: '米纸丝、鲜香虾味沙爹酱、鲜辣椒、白砂糖、食用盐、香炸红葱、蒜香调味油。',
+  },
+  'banh-trang-tron-sa-te-bo': {
+    en: 'Shredded rice paper, spicy beef satay seasonings, lemongrass, chili, cane sugar, iodized salt, fried shallots, garlic.',
+    ko: '채 썬 라이스페이퍼, 매콤한 소고기 사테 양념, 레몬그라스, 고추, 설탕, 소금, 튀긴 샬롯, 마늘.',
+    zh: '米纸丝、香辣牛肉沙爹酱、香茅、辣椒、白砂糖、食用盐、炸红葱酥、大蒜。',
+  },
+  'bap-rang-bo-caramel': {
+    en: 'Non-GMO American popping corn, pure butter oil, refined sugar, rich golden caramel glaze.',
+    ko: '논-GMO 미국산 팝콘 옥수수, 순수 버터 오일, 정제 설탕, 리치 골든 카라멜 코팅.',
+    zh: '精选非转基因爆裂玉米、纯正黄油、精制白砂糖、浓香焦糖浆。',
+  },
+  'bap-rang-bo-vi-pho-mai': {
+    en: 'Non-GMO American popping corn, pure butter oil, refined sugar, savory cheddar cheese seasoning powder.',
+    ko: '논-GMO 미국산 팝콘 옥수수, 순수 버터 오일, 정제 설탕, 프리미엄 체다 치즈 파우더.',
+    zh: '精选非转基因爆裂玉米、纯正黄油、精制白砂糖、特级切达芝士调味粉。',
+  },
+  'bap-rang-bo-matcha': {
+    en: 'Non-GMO American popping corn, pure butter oil, refined cane sugar, pure Japanese matcha green tea powder.',
+    ko: '논-GMO 미국산 팝콘 옥수수, 순수 버터 오일, 정제 설탕, 천연 말차 녹차 파우더.',
+    zh: '精选非转基因爆裂玉米、天然黄油、精制白砂糖、纯正日本抹茶粉。',
+  },
+  'bap-rang-bo-vi-truyen-thong': {
+    en: 'Non-GMO American popping corn, pure butter oil, refined sugar, pure sea salt.',
+    ko: '논-GMO 미국산 팝콘 옥수수, 순수 버터 오일, 정제 설탕, 천일염.',
+    zh: '精选非转基因爆裂玉米、纯正黄油、精制白砂糖、食用精盐。',
+  },
+  'banh-cookies': {
+    en: 'Fine wheat flour, pure European dairy butter, refined cane sugar, fresh chicken eggs, whole milk powder, natural vanilla.',
+    ko: '고급 소맥분, 유럽산 순수 천연 버터, 정제 설탕, 신선한 계란, 전지분유, 천연 바닐라.',
+    zh: '精选特级小麦粉、天然优质黄油、精制白砂糖、新鲜鸡蛋、全脂奶粉、天然香草。',
+  },
+  'banh-sua-dau': {
+    en: 'Wheat flour (35%), vegetable margarine (24%), cane sugar (17%), soy bean powder, whole fresh milk.',
+    ko: '소맥분(35%), 식물성 마가린(24%), 사탕수수 설탕(17%), 대두 분말, 신선한 원유.',
+    zh: '小麦粉 (35%)、精炼植物黄油 (24%)、白砂糖 (17%)、天然大豆粉、纯鲜牛奶。',
+  },
+  'banh-sua-dua': {
+    en: 'Pure Ben Tre coconut milk, premium glutinous rice flour, cane sugar, condensed milk, malt syrup.',
+    ko: '벤째산 순수 코코넛 밀크, 프리미엄 찹쌀가루, 사탕수수 설탕, 연유, 맥아당.',
+    zh: '越南槟椥纯正天然椰浆、精制糯米粉、白砂糖、炼乳、麦芽糖。',
+  },
+  'banh-deo-khoai-mon-mochi-cha-bong-trung-muoi': {
+    en: 'Glutinous rice flour, fresh taro paste, chewy mochi, premium savory pork floss, salted egg yolk, vegetable oil, cane sugar.',
+    ko: '찹쌀가루, 신선한 토란 앙금, 쫄깃한 모찌 찹쌀떡, 프리미엄 포크플로스, 염지 계란 노른자, 식물성 유지, 설탕.',
+    zh: '优质糯米粉、新鲜香芋泥、软糯拉丝麻薯、特级金黄猪肉松、油润咸蛋黄、精炼植物油、白砂糖。',
+  },
+  'banh-deo-trung-muoi': {
+    en: 'Glutinous rice flour, smooth mung bean paste, whole salted egg yolk, vegetable oil, refined cane sugar.',
+    ko: '찹쌀가루, 부드러운 녹두 앙금, 통 염지 계란 노른자, 식물성 유지, 정제 설탕.',
+    zh: '精选糯米粉、温润细腻绿豆沙、整颗金黄咸蛋黄、精炼植物油、精制白砂糖。',
+  },
+  'banh-hanh-nhan-ca-cao': {
+    en: 'Wheat flour (43%), tapioca starch (16%), refined sugar (16%), sliced almonds (12%), vegetable margarine, pure cocoa powder (5%).',
+    ko: '소맥분(43%), 타피오카 전분(16%), 정제설탕(16%), 슬라이스 아몬드(12%), 식물성 마가린, 순수 코코아 분말(5%).',
+    zh: '小麦粉 (43%)、木薯淀粉 (16%)、精制白砂糖 (16%)、香烤切片杏仁 (12%)、植物黄油、纯可可粉 (5%)。',
+  },
+  'banh-hanh-nhan-tra-xanh': {
+    en: 'Wheat flour (43%), tapioca starch (16%), refined sugar (16%), sliced almonds (12%), vegetable margarine, green tea powder (5%).',
+    ko: '소맥분(43%), 타피오카 전분(16%), 정제설탕(16%), 슬라이스 아몬드(12%), 식물성 마가린, 녹차 분말(5%).',
+    zh: '小麦粉 (43%)、木薯淀粉 (16%)、精制白砂糖 (16%)、香烤切片杏仁 (12%)、植物黄油、精选绿茶粉 (5%)。',
+  },
+  'banh-hanh-nhan-truyen-thong': {
+    en: 'Wheat flour (43%), tapioca starch (16%), refined sugar (16%), sliced almonds (15%), vegetable margarine, natural flavor.',
+    ko: '소맥분(43%), 타피오카 전분(16%), 정제설탕(16%), 슬라이스 아몬드(15%), 식물성 마가린, 천연 바닐라 향.',
+    zh: '小麦粉 (43%)、木薯淀粉 (16%)、精制白砂糖 (16%)、香烤切片杏仁 (15%)、植物黄油、天然香草提取物。',
+  },
+  'banh-hanh-nhan-hon-hop': {
+    en: 'Wheat flour, sliced almonds, vegetable margarine, refined sugar, pure cocoa powder, green tea powder, natural vanilla.',
+    ko: '소맥분, 슬라이스 아몬드, 식물성 마가린, 정제설탕, 순수 코코아 분말, 녹차 분말, 천연 바닐라.',
+    zh: '特级小麦粉、香脆杏仁切片、植物黄油、精制白砂糖、纯可可粉、精研绿茶粉、天然香草。',
+  },
+  'banh-dau-xanh-vi-la-dua': {
+    en: 'Selected pure mung beans (65%), refined cane sugar, glutinous rice flour, vegetable oil, natural pandan leaf extract, vanillin, food preservatives (INS 202).',
+    ko: '엄선된 순수 녹두(65%), 정제 사탕수수 설탕, 찹쌀가루, 식물성 유지, 천연 판단잎 추출물, 바닐린, 식품보존료(INS 202).',
+    zh: '精选脱皮纯绿豆 (65%)、精制白砂糖、糯米粉、精炼植物油、天然斑斓叶汁、食用香草醛、食品保鲜剂 (INS 202)。',
+  },
+  'banh-dau-xanh-tuoi-vi-dau-do': {
+    en: 'Pure mung beans (35%), select red beans (35%), refined cane sugar, glutinous rice flour, vegetable oil, vanilla and red bean flavorings, humectant (INS 422), preservative (INS 202).',
+    ko: '순수 녹두(35%), 엄선된 팥(35%), 정제 사탕수수 설탕, 찹쌀가루, 식물성 유지, 바닐라 및 팥 향료, 보습제(INS 422), 보존료(INS 202).',
+    zh: '精选脱皮纯绿豆 (35%)、精选红小豆 (35%)、精制白砂糖、糯米粉、植物油、红豆与香草天然复合调味料、保水增润剂 (INS 422)、食品保鲜剂 (INS 202)。',
+  },
+  'banh-dau-xanh-tuoi': {
+    en: 'Selected pure mung beans (65%), refined cane sugar, glutinous rice flour, vegetable oil, natural vanilla, humectant (INS 422), preservative (INS 202).',
+    ko: '엄선된 순수 녹두(65%), 정제 사탕수수 설탕, 찹쌀가루, 식물성 유지, 천연 바닐라, 보습제(INS 422), 보존료(INS 202).',
+    zh: '100% 精选脱皮纯绿豆 (65%)、精制白砂糖、糯米粉、精炼植物油、天然香草素、保水剂 (INS 422)、食品保鲜剂 (INS 202)。',
+  },
+  'banh-dau-xanh-mix-vi': {
+    en: 'Selected mung beans, red beans, pandan leaf extract, refined sugar, glutinous rice flour, vegetable oil, natural flavorings.',
+    ko: '엄선된 녹두, 팥, 천연 판단잎 추출물, 정제 사탕수수 설탕, 찹쌀가루, 식물성 유지, 천연 향미료.',
+    zh: '精选纯绿豆、精制红小豆、天然新鲜斑斓叶萃取汁、白砂糖、糯米粉、纯正植物油、天然风味调味料。',
+  },
+  'banh-cha': {
+    en: 'Fine wheat flour, cane sugar, malt syrup, vegetable oil, butter, diced pork fat, candied winter melon, fresh kaffir lime leaves, five-spice.',
+    ko: '소맥분, 사탕수수 설탕, 맥아당 시럽, 식물성 유지, 버터, 돼지 비계 큐브, 동아정과, 신선한 라임잎, 오향분.',
+    zh: '特制小麦粉、精制白砂糖、麦芽糖浆、植物油、优质黄油、秘制猪肥肉丁、腌制糖冬瓜条、鲜切柠檬叶丝、传统五香粉。',
+  },
+  'kho-soi-vi-bo': {
+    en: 'Lean meat (80%), sugar, oyster sauce, iodized salt, annatto oil, fish sauce, fresh ginger, lemongrass, fresh chili, chili powder, turmeric curry, five-spice, natural beef aroma, flavor enhancer (INS 621).',
+    ko: '정육(80%), 설탕, 굴소스, 요오드 소금, 아나토 오일, 피시소스, 생강, 레몬그라스, 생고추, 고춧가루, 강황 카레, 오향분, 천연 소고기 향, 향미증진제(INS 621).',
+    zh: '精选鲜肉 (80%)、白砂糖、特级蚝油、食用盐、胭脂树红油、传统鱼露、鲜生姜、香茅、鲜辣椒、辣椒粉、姜黄咖喱、五香粉、天然牛肉香精、风味增味剂 (INS 621)。',
+  },
+  'kho-vien-vi-bo': {
+    en: 'Select tender meat (80%), cane sugar, oyster sauce, sea salt, annatto oil, fish sauce, fresh ginger, lemongrass, fresh chili, chili powder, turmeric curry, five-spice, natural beef aroma, flavor enhancer (INS 621).',
+    ko: '엄선육(80%), 설탕, 굴소스, 천일염, 아나토 오일, 피시소스, 생강, 레몬그라스, 고추, 고춧가루, 강황 카레, 오향분, 천연 소고기 향, 향미증진제(INS 621).',
+    zh: '精选嫩肉 (80%)、白砂糖、蚝油、天然海盐、胭脂树红油、优质鱼露、鲜姜、香茅、辣椒、辣椒粉、姜黄咖喱粉、传统五香粉、天然牛肉香辛料、增味剂 (INS 621)。',
+  },
+  'kho-bo-sot-chanh': {
+    en: 'Selected beef (50%), buffalo meat (30%), zesty lime sauce (5%), tomyum spices, malt syrup, iodized salt, sugar, vegetable oil, onion powder, fresh ginger, curry, lemongrass, citric acid (INS E330), natural paprika extract (INS 160C).',
+    ko: '엄선된 소고기(50%), 버팔로육(30%), 상큼한 라임 소스(5%), 톰얌 향신료, 맥아당, 요오드 소금, 설탕, 식물성 유지, 양파가루, 생강, 카레, 레몬그라스, 구연산(INS E330), 파프리카 추출색소(INS 160C).',
+    zh: '精选牛肉 (50%)、水牛肉 (30%)、鲜榨青柠汁复合调味酱 (5%)、冬阴功辛香料、麦芽糖、食用盐、白砂糖、植物油、洋葱粉、生姜、咖喱、香茅、柠檬酸调节剂 (INS E330)、天然红椒提取物 (INS 160C)。',
   },
 }
 
 export function translateIngredients(ing, language = 'vi', slugOrName = '') {
   if (!ing || language === 'vi') return ing
-  const cleanKey = (slugOrName || '').toLowerCase()
+  const cleanKey = (slugOrName || '').toLowerCase().trim()
+  
+  // 1. Exact or alias match from dictionary
+  if (INGREDIENTS_TRANSLATIONS[cleanKey]?.[language]) {
+    return INGREDIENTS_TRANSLATIONS[cleanKey][language]
+  }
+  const alias = PRODUCT_SLUG_ALIASES[cleanKey]
+  if (alias && INGREDIENTS_TRANSLATIONS[alias]?.[language]) {
+    return INGREDIENTS_TRANSLATIONS[alias][language]
+  }
+
+  // 2. Keyword fallback matching
   for (const [key, trans] of Object.entries(INGREDIENTS_TRANSLATIONS)) {
     if (cleanKey.includes(key) || key.includes(cleanKey)) {
       if (trans[language]) return trans[language]
     }
   }
-  const lower = ing.toLowerCase()
+
+  const lower = (ing || '').toLowerCase()
+  if (lower.includes('bò') && lower.includes('chanh')) {
+    return INGREDIENTS_TRANSLATIONS['kho-bo-sot-chanh'][language] || ing
+  }
+  if (lower.includes('thịt gà') && lower.includes('bò')) {
+    return INGREDIENTS_TRANSLATIONS['kho-soi-vi-bo'][language] || ing
+  }
+  if (lower.includes('thịt heo') && lower.includes('bò')) {
+    return INGREDIENTS_TRANSLATIONS['kho-vien-vi-bo'][language] || ing
+  }
+  if (lower.includes('bánh chả') || lower.includes('mỡ lợn') || lower.includes('mứt bí')) {
+    return INGREDIENTS_TRANSLATIONS['banh-cha'][language] || ing
+  }
+  if (lower.includes('đậu đỏ')) {
+    return INGREDIENTS_TRANSLATIONS['banh-dau-xanh-tuoi-vi-dau-do'][language] || ing
+  }
   if (lower.includes('đậu xanh') && lower.includes('lá dứa')) {
-    return INGREDIENTS_TRANSLATIONS['bánh đậu xanh vị lá dứa'][language] || ing
+    return INGREDIENTS_TRANSLATIONS['banh-dau-xanh-vi-la-dua'][language] || ing
   }
   if (lower.includes('đậu xanh') && lower.includes('mix')) {
-    return INGREDIENTS_TRANSLATIONS['bánh đậu xanh tươi mix vị'][language] || ing
+    return INGREDIENTS_TRANSLATIONS['banh-dau-xanh-mix-vi'][language] || ing
   }
   if (lower.includes('đậu xanh')) {
-    return INGREDIENTS_TRANSLATIONS['bánh đậu xanh tươi'][language] || ing
+    return INGREDIENTS_TRANSLATIONS['banh-dau-xanh-tuoi'][language] || ing
   }
-  if (lower.includes('gà lá chanh') || lower.includes('gà')) {
-    return INGREDIENTS_TRANSLATIONS['bánh tráng trộn gà lá chanh'][language] || ing
+  if (lower.includes('ngô mỹ') && lower.includes('caramel')) {
+    return INGREDIENTS_TRANSLATIONS['bap-rang-bo-caramel'][language] || ing
   }
-  if (lower.includes('sa tế') || lower.includes('sa tế tôm')) {
-    return INGREDIENTS_TRANSLATIONS['bánh tráng trộn sợi sa tế tôm'][language] || ing
+  if (lower.includes('ngô mỹ') && lower.includes('phô mai')) {
+    return INGREDIENTS_TRANSLATIONS['bap-rang-bo-vi-pho-mai'][language] || ing
+  }
+  if (lower.includes('ngô mỹ')) {
+    return INGREDIENTS_TRANSLATIONS['bap-rang-bo-vi-truyen-thong'][language] || ing
+  }
+  if (lower.includes('hạnh nhân') && lower.includes('ca cao')) {
+    return INGREDIENTS_TRANSLATIONS['banh-hanh-nhan-ca-cao'][language] || ing
+  }
+  if (lower.includes('hạnh nhân') && lower.includes('trà xanh')) {
+    return INGREDIENTS_TRANSLATIONS['banh-hanh-nhan-tra-xanh'][language] || ing
+  }
+  if (lower.includes('hạnh nhân')) {
+    return INGREDIENTS_TRANSLATIONS['banh-hanh-nhan-truyen-thong'][language] || ing
+  }
+  if (lower.includes('sữa dừa') || lower.includes('cốt dừa')) {
+    return INGREDIENTS_TRANSLATIONS['banh-sua-dua'][language] || ing
+  }
+  if (lower.includes('sữa đậu') || lower.includes('đậu nành')) {
+    return INGREDIENTS_TRANSLATIONS['banh-sua-dau'][language] || ing
+  }
+  if (lower.includes('gà') && lower.includes('lá chanh')) {
+    return INGREDIENTS_TRANSLATIONS['banh-trang-tron-ga-la-chanh'][language] || ing
+  }
+  if (lower.includes('sa tế tôm') || lower.includes('sa tế')) {
+    return INGREDIENTS_TRANSLATIONS['banh-trang-tron-vi-sa-te-tom'][language] || ing
+  }
+  if (lower.includes('thực cẩm') || lower.includes('dầu điều')) {
+    return INGREDIENTS_TRANSLATIONS['banh-trang-say-thuc-cam'][language] || ing
+  }
+  if (lower.includes('phô mai') || lower.includes('pho mai')) {
+    return INGREDIENTS_TRANSLATIONS['banh-trang-say-gion-phomai'][language] || ing
   }
   if (lower.includes('chà bông') || lower.includes('tra-bong')) {
-    return INGREDIENTS_TRANSLATIONS['bánh tráng sấy giòn vị chà bông'][language] || ing
+    return INGREDIENTS_TRANSLATIONS['banh-trang-say-gion-vi-tra-bong'][language] || ing
   }
   if (lower.includes('bò')) {
-    return INGREDIENTS_TRANSLATIONS['bánh tráng sấy giòn vị bò'][language] || ing
+    return INGREDIENTS_TRANSLATIONS['banh-trang-say-gion-vi-bo'][language] || ing
   }
-  if (lower.includes('tôm')) {
-    return INGREDIENTS_TRANSLATIONS['bánh tráng sấy giòn vị tôm'][language] || ing
+  if (lower.includes('tôm') || lower.includes('ruốc sấy')) {
+    return INGREDIENTS_TRANSLATIONS['banh-trang-say-gion-vi-tom'][language] || ing
   }
+
   return ing
 }
 
@@ -1181,6 +1901,40 @@ export function translateNewsCategory(category, language = 'vi') {
 }
 
 export const NEWS_I18N = {
+  'chien-luoc-toan-cau-hoa-dac-san-nong-san-viet-cua-nu-ceo-haq-da-vao-my-han-muc-tieu-ke-tiep-la-nhat-ban': {
+    en: {
+      title: "HAQ Female CEO's Strategy to Globalize Vietnamese Agri-Food Specialties: Entering US & Korea, Next Target Japan",
+      summary: "Exclusive interview with CEO Tong Thi Ngan on the inspiring journey of elevating crispy baked rice paper, fresh mung bean cakes, and Vietnamese specialties under ISO 22000 & HACCP standards into demanding international markets.",
+      author: 'Ngoc Tho - My Luong (Trang Trai Viet)',
+    },
+    ko: {
+      title: "베트남 농특산물 글로벌화에 나선 HAQ 여성 CEO의 전략: 미국·한국 진출에 이어 다음 목표는 일본",
+      summary: "통티응언(Tong Thi Ngan) 대표 독점 인터뷰: ISO 22000 및 HACCP 국제 인증을 바탕으로 베트남 특산 구운 라이스페이퍼와 신선 녹두 케이크로 까다로운 글로벌 유통 시장을 개척하는 혁신 스토리.",
+      author: '응옥토 - 미르엉 (Trang Trai Viet)',
+    },
+    zh: {
+      title: "HAQ 女性 CEO 的越南农特产品全球化战略：已成功进军美韩，下一步剑指日本",
+      summary: "独家专访河内 HAQ 股份公司总经理宋氏银（Tống Thị Ngân）：依托 ISO 22000 与 HACCP 国际食品认证体系，带领越南特色烘烤米纸、新鲜绿豆糕及农特零食征服严苛国际市场的出海征程。",
+      author: '玉寿 - 媚良 (Trang Trai Viet 报道)',
+    },
+  },
+  'adasdasd': {
+    en: {
+      title: "HAQ FOOD Corporate Update",
+      summary: "Latest operational activities and partner collaboration milestones at HAQ FOOD.",
+      author: 'HAQ FOOD Media Team',
+    },
+    ko: {
+      title: "HAQ FOOD 기업 소식",
+      summary: "HAQ FOOD의 최신 비즈니스 활동 및 파트너십 협력 소식.",
+      author: 'HAQ FOOD 미디어팀',
+    },
+    zh: {
+      title: "HAQ FOOD 企业最新动向",
+      summary: "HAQ FOOD 最新业务运营纪实与战略合作伙伴携手新动态。",
+      author: 'HAQ FOOD 官方媒体部',
+    },
+  },
   'hoi-cho-xuc-tien-thuong-mai-viet-trung-2025': {
     en: {
       title: 'HAQ FOOD Participates in the 2025 International Agri-Food Trade Promotion Expo',
