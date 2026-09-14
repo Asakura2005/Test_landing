@@ -1202,6 +1202,14 @@ export const PACKAGING_TRANSLATIONS = {
   'thùng carton': { en: 'Master Carton', ko: '카톤 박스', zh: '瓦楞纸箱' },
 }
 
+export function translateVariantPack(pack, language = 'vi') {
+  if (!pack || language === 'vi') return pack
+  const normalized = pack.trim().toLowerCase()
+  const match = PACKAGING_TRANSLATIONS[normalized]
+  if (match && match[language]) return match[language]
+  return pack
+}
+
 export const SHELF_LIFE_TRANSLATIONS = {
   '6 tháng': { en: '6 months', ko: '6개월', zh: '6 个月' },
   '3 tháng': { en: '3 months', ko: '3개월', zh: '3 个月' },
