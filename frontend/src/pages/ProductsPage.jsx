@@ -13,6 +13,7 @@ import {
 } from '../data/productCategories'
 import { getProducts, getCategories } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
 
@@ -40,6 +41,7 @@ function Reveal({ children, delay = 0, className = '' }) {
 /* ═══════════════════════════════════════════════════════════════ */
 export default function ProductsPage() {
   const { t, language } = useLanguage()
+  const { trackProductClick } = useAnalytics()
   const en = language === 'en', ko = language === 'ko', zh = language === 'zh'
   const [searchParams, setSearchParams] = useSearchParams()
   const currentCategorySlug = searchParams.get('category') || 'all'
@@ -281,6 +283,15 @@ export default function ProductsPage() {
                     <Reveal key={prod.id} delay={Math.min(idx * 60, 360)}>
                       <Link
                         to={getProductDetailUrl(detailSlug, language)}
+                        onClick={() => trackProductClick(prod, 'product_grid')}
+                        data-product-click="true"
+                        data-product-id={prod.id}
+                        data-product-slug={detailSlug}
+                        data-product-name={prod.name}
+                        data-product-canonical-name={prod.canonical_name || prod.name}
+                        data-product-category={prod.canonical_category || prod.categories?.name || activeRootCategory.name || 'HAQ FOOD'}
+                        data-product-price={prod.price_min || prod.variants?.[0]?.price || 0}
+                        data-product-location="product_grid"
                         className="group block bg-white rounded-2xl overflow-hidden border border-haq-border hover:border-haq-red/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full flex flex-col"
                       >
                         {/* Image */}

@@ -5,14 +5,19 @@ import {
   getCurrentTrackingContext,
   startProductSessionRecording,
   stopProductSessionRecording,
+  recordProductClick,
   getTopViewedProducts,
-  getProductViewsMap
+  getProductViewsMap,
+  CANONICAL_PRODUCT_NAMES
 } from '../services/posthog'
+import { useLanguage } from '../context/LanguageContext'
 
 /**
  * Custom Hook chuẩn hóa toàn bộ hành động Tracking trên HAQ FOOD
  */
 export function useAnalytics() {
+  const { language } = useLanguage()
+
   useEffect(() => {
     initPostHog()
   }, [])
@@ -26,6 +31,7 @@ export function useAnalytics() {
       const pContext = {
         id: product.id,
         name: product.name,
+        canonical_name: product.canonical_name || product.name,
         slug: product.slug,
         category: product.category || (product.categories && product.categories.name) || '',
         price_min: product.price_min || (product.variants && product.variants[0]?.price) || 0,
@@ -38,16 +44,11 @@ export function useAnalytics() {
     startProductSessionRecording(product)
   }, [])
 
-  // 2. Theo dõi khi người dùng click vào thẻ sản phẩm (Product Click)
-  const trackProductClick = useCallback((product, location = 'home_list') => {
+  // 2. Theo dõi khi người dùng click vào thẻ/link sản phẩm (Product Click)
+  const trackProductClick = useCallback((product, location = 'product_catalog', extraProps = {}) => {
     if (!product) return
-    captureEvent('product_click', {
-      product_id: product.id,
-      product_name: product.name,
-      product_slug: product.slug,
-      click_location: location,
-    })
-  }, [])
+    return recordProductClick(product, location, { language, ...extraProps })
+  }, [language])
 
   // 3. Theo dõi khi người dùng tìm kiếm sản phẩm (Product Search)
   const trackProductSearch = useCallback((keyword, resultsCount = 0) => {

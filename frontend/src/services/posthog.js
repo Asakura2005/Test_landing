@@ -1,8 +1,8 @@
 import posthog from 'posthog-js'
 
 // PostHog Configuration with Env Vars or Graceful Fallback
-const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY || 'phc_demo_haq_food_analytics_key'
-const POSTHOG_HOST = import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com'
+const POSTHOG_KEY = import.meta.env?.VITE_POSTHOG_KEY || 'phc_demo_haq_food_analytics_key'
+const POSTHOG_HOST = import.meta.env?.VITE_POSTHOG_HOST || 'https://us.i.posthog.com'
 
 let isInitialized = false
 
@@ -15,7 +15,7 @@ const ANALYTICS_COUNTERS_KEY = 'haq_analytics_realtime_counters_v1'
  */
 export function getRealtimeAnalyticsCounters() {
   if (typeof window === 'undefined') {
-    return { visitors: 0, productViews: 0, ctaStarts: 0, pageViews: 0 }
+    return { visitors: 0, productViews: 0, productClicks: 0, ctaStarts: 0, pageViews: 0 }
   }
   try {
     const raw = localStorage.getItem(ANALYTICS_COUNTERS_KEY)
@@ -26,15 +26,20 @@ export function getRealtimeAnalyticsCounters() {
       const initial = {
         visitors: initialPViewCount > 0 ? initialPViewCount + 2 : 1,
         productViews: initialPViewCount,
+        productClicks: 0,
         ctaStarts: 0,
         pageViews: 1,
       }
       localStorage.setItem(ANALYTICS_COUNTERS_KEY, JSON.stringify(initial))
       return initial
     }
-    return JSON.parse(raw)
+    const parsed = JSON.parse(raw)
+    if (parsed.productClicks === undefined) {
+      parsed.productClicks = 0
+    }
+    return parsed
   } catch (e) {
-    return { visitors: 0, productViews: 0, ctaStarts: 0, pageViews: 0 }
+    return { visitors: 0, productViews: 0, productClicks: 0, ctaStarts: 0, pageViews: 0 }
   }
 }
 
@@ -140,23 +145,115 @@ export function getTopViewedProducts(products = [], limit = 5) {
 }
 
 /**
+ * Danh mục chuẩn tên tiếng Việt (Canonical Names) cho toàn bộ sản phẩm
+ * Giúp PostHog ghi nhận đồng nhất dữ liệu click sản phẩm xuyên suốt mọi ngôn ngữ (vi, en, ko, zh)
+ */
+export const CANONICAL_PRODUCT_NAMES = {
+  // Bánh tráng sấy giòn vị chà bông (và các biến thể slug)
+  'banh-trang-say-gion-vi-cha-bong': 'Bánh Tráng Sấy Giòn Vị Chà Bông',
+  'banh-trang-say-gion-vi-tra-bong': 'Bánh Tráng Sấy Giòn Vị Chà Bông',
+  'banh-trang-say-gion-cha-bong': 'Bánh Tráng Sấy Giòn Vị Chà Bông',
+  'banh-trang-say-cha-bong': 'Bánh Tráng Sấy Giòn Vị Chà Bông',
+
+  // Bánh tráng sấy giòn vị bò
+  'banh-trang-say-gion-vi-bo': 'Bánh Tráng Sấy Giòn Vị Bò',
+  'banh-trang-say-gion-bo': 'Bánh Tráng Sấy Giòn Vị Bò',
+  'banh-trang-say-bo': 'Bánh Tráng Sấy Giòn Vị Bò',
+  'banh-trang-say-gion-vi-sa-te-bo': 'Bánh Tráng Sấy Giòn Vị Sa Tế Bò',
+  'banh-trang-tron-sa-te-bo': 'Bánh Tráng Trộn Sa Tế Bò',
+
+  // Bánh tráng sấy giòn vị tôm
+  'banh-trang-say-gion-vi-tom': 'Bánh Tráng Sấy Giòn Vị Tôm',
+  'banh-trang-say-gion-tom': 'Bánh Tráng Sấy Giòn Vị Tôm',
+  'banh-trang-say-tom': 'Bánh Tráng Sấy Giòn Vị Tôm',
+  'banh-trang-tron-vi-sa-te-tom': 'Bánh Tráng Trộn Sợi Sa Tế Tôm',
+  'banh-trang-tron-sa-te-tom': 'Bánh Tráng Trộn Sợi Sa Tế Tôm',
+  'banh-trang-cuon-sate-tom': 'Bánh Tráng Cuộn Sa Tế Tôm',
+
+  // Bánh tráng sấy giòn vị phô mai
+  'banh-trang-say-gion-phomai': 'Bánh Tráng Sấy Giòn Vị Phô Mai',
+  'banh-trang-say-gion-vi-pho-mai': 'Bánh Tráng Sấy Giòn Vị Phô Mai',
+  'banh-trang-say-thuc-cam': 'Bánh Tráng Sấy Thập Cẩm',
+  'banh-trang-say-thap-cam': 'Bánh Tráng Sấy Thập Cẩm',
+
+  // Bánh tráng trộn
+  'banh-trang-tron-ga-la-chanh': 'Bánh Tráng Trộn Gà Lá Chanh',
+  'banh-trang-tron-haq': 'Bánh Tráng Trộn HAQ',
+
+  // Bánh đậu xanh, hạnh nhân, sữa dừa, dẻo
+  'banh-dau-xanh-tuoi': 'Bánh Đậu Xanh Tươi',
+  'banh-dau-xanh-vi-la-dua': 'Bánh Đậu Xanh Vị Lá Dứa',
+  'banh-dau-xanh-tuoi-vi-dau-do': 'Bánh Đậu Xanh Tươi Vị Đậu Đỏ',
+  'banh-dau-xanh-mix-vi': 'Bánh Đậu Xanh Tươi Mix Vị',
+  'banh-dau-xanh-tuoi-mix-vi': 'Bánh Đậu Xanh Tươi Mix Vị',
+  'banh-hanh-nhan': 'Bánh Hạnh Nhân Thượng Hạng',
+  'banh-hanh-nhan-truyen-thong': 'Bánh Hạnh Nhân Truyền Thống',
+  'banh-hanh-nhan-tra-xanh': 'Bánh Hạnh Nhân Trà Xanh',
+  'banh-hanh-nhan-ca-cao': 'Bánh Hạnh Nhân Ca Cao',
+  'banh-hanh-nhan-hon-hop': 'Bánh Hạnh Nhân Hỗn Hợp',
+  'banh-sua-dua': 'Bánh Sữa Dừa Tươi',
+  'banh-sua-dau': 'Bánh Sữa Đậu',
+  'banh-cookies': 'Bánh Cookies Thượng Hạng',
+  'banh-cha': 'Bánh Chả Truyền Thống Hà Nội',
+  'banh-deo-khoai-mon-mochi-cha-bong-trung-muoi': 'Bánh Dẻo Khoai Môn Mochi Chà Bông Trứng Muối',
+  'banh-deo-trung-muoi': 'Bánh Dẻo Trứng Muối',
+
+  // Bắp rang bơ
+  'bap-rang-bo-caramel': 'Bắp Rang Bơ Caramel',
+  'bap-rang-bo-vi-pho-mai': 'Bắp Rang Bơ Phô Mai',
+  'bap-rang-bo-pho-mai': 'Bắp Rang Bơ Phô Mai',
+  'bap-rang-bo-matcha': 'Bắp Rang Bơ Matcha',
+  'bap-rang-bo-vi-truyen-thong': 'Bắp Rang Bơ Truyền Thống',
+
+  // Thịt sấy / khô bò
+  'thit-bo-kho-chay-toi': 'Thịt Bò Khô Cháy Tỏi',
+  'thit-heo-chay-toi': 'Thịt Heo Khô Cháy Tỏi',
+  'kho-bo-sot-chanh': 'Khô Bò Sốt Chanh',
+  'kho-vien-vi-bo': 'Khô Viên Vị Bò',
+  'kho-soi-vi-bo': 'Khô Sợi Vị Bò',
+}
+
+/**
+ * Chuyển slug thành Tên Tiêu Đề tiếng Việt không dấu chuẩn (Title Case) khi sản phẩm mới từ DB chưa có từ điển
+ */
+export function formatSlugToCanonicalTitle(slug) {
+  if (!slug || typeof slug !== 'string') return ''
+  const clean = slug.trim().toLowerCase()
+  if (CANONICAL_PRODUCT_NAMES[clean]) {
+    return CANONICAL_PRODUCT_NAMES[clean]
+  }
+  return clean
+    .split('-')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+}
+
+let lastTrackedProductClick = { key: '', time: 0, source: 'none' }
+let isGlobalListenerAttached = false
+
+/**
  * Khởi tạo PostHog
- * QUY TẮC BẢO MẬT & TỐI ƯU GHI HÌNH:
- * - TUYỆT ĐỐI KHÔNG ghi hình tại Trang chủ (Homepage: /) và Trang Admin (/admin/*).
- * - Mặc định TẮT hoàn toàn session recording (disable_session_recording: true).
- * - Chỉ bật ghi hình khi người dùng bấm vào xem chi tiết sản phẩm cụ thể.
+ * QUY TẮC BẢO MẬT & TỐI ƯU GHI HÌNH / THU THẬP SỰ KIỆN:
+ * - TUYỆT ĐỐI KHÔNG ghi hình tại Trang Admin (/admin/*).
+ * - TẮT Autocapture tự động toàn bộ trang web (autocapture: false) để tránh gây nhiễu dữ liệu.
+ * - CHỈ THU THẬP click và tương tác đối với sản phẩm (thông qua recordProductClick & global product listener).
+ * - disable_session_recording: true để không quay toàn bộ trang web một cách tự động, chỉ bật quay phiên khi có tương tác sản phẩm.
  */
 export function initPostHog() {
-  if (typeof window === 'undefined' || isInitialized) return posthog
+  if (typeof window === 'undefined' || isInitialized) {
+    initGlobalProductClickListener()
+    return posthog
+  }
 
   try {
     if (POSTHOG_KEY && POSTHOG_KEY !== 'phc_demo_haq_food_analytics_key') {
       posthog.init(POSTHOG_KEY, {
         api_host: POSTHOG_HOST,
-        autocapture: true, // Thu thập toàn bộ click trên nút, link, thẻ sản phẩm, menu
+        autocapture: false, // TẮT autocapture toàn web: chỉ ghi nhận click sản phẩm có chủ đích
         capture_pageview: 'always', // Tự động ghi nhận lượt xem trang
         capture_pageleave: true,
-        disable_session_recording: false, // Bật ghi hình phiên làm việc cho toàn bộ web
+        disable_session_recording: true, // Không tự động ghi hình toàn bộ trang web, chỉ ghi hình theo ngữ cảnh sản phẩm
         session_recording: {
           maskAllInputs: true, // Che thông tin nhạy cảm ở các ô nhập liệu
         },
@@ -172,6 +269,11 @@ export function initPostHog() {
             currentPath.startsWith('/admin') || 
             currentUrl.includes('/admin')
           ) {
+            return null
+          }
+
+          // 2. Chặn toàn bộ $autocapture generic clicks (loại bỏ nhiễu click ngoài sản phẩm)
+          if (event?.event === '$autocapture') {
             return null
           }
 
@@ -194,6 +296,7 @@ export function initPostHog() {
     console.warn('PostHog initialization warning:', err.message)
   }
 
+  initGlobalProductClickListener()
   captureAndPersistUTMs()
   return posthog
 }
@@ -205,7 +308,7 @@ export function trackPageView(pathname) {
   if (typeof window === 'undefined') return
   if (window.location.pathname.startsWith('/admin')) return
   try {
-    if (posthog && posthog.__loaded) {
+    if (posthog && typeof posthog.capture === 'function') {
       posthog.capture('$pageview', {
         $current_url: window.location.href,
         pathname: pathname || window.location.pathname,
@@ -230,7 +333,7 @@ export function startProductSessionRecording(product) {
     if (posthog && typeof posthog.startSessionRecording === 'function') {
       posthog.startSessionRecording()
     }
-    if (posthog && posthog.__loaded) {
+    if (posthog && typeof posthog.register === 'function') {
       posthog.register({
         last_product_viewed: product.name,
         last_product_slug: product.slug,
@@ -265,6 +368,197 @@ export function stopProductSessionRecording() {
 }
 
 /**
+ * Ghi nhận sự kiện click vào sản phẩm cụ thể (Product Click Event & Session Record)
+ * Thu thập chính xác thông tin click sản phẩm, phân tích đa ngôn ngữ và loại bỏ click rác toàn trang
+ */
+export function recordProductClick(product, location = 'product_catalog', extraProps = {}) {
+  if (!product || typeof window === 'undefined') return null
+  if (window.location.pathname.startsWith('/admin')) return null
+
+  const slug = String(product.slug || product.productId || (typeof product === 'string' ? product : '') || product.id || '').trim()
+  const id = String(product.id || product.productId || slug).trim()
+  const dedupeKey = slug || id
+  const callSource = extraProps?.source || (location === 'global_link' ? 'dom_fallback' : 'react')
+
+  // Cơ chế chống trùng lặp sự kiện click sản phẩm trong vòng 600ms
+  // Nếu lượt click trước là dom_fallback và lượt này đến từ React (dữ liệu phong phú hơn), cho phép ghi nhận đè
+  const now = Date.now()
+  if (dedupeKey && lastTrackedProductClick.key === dedupeKey && (now - lastTrackedProductClick.time < 600)) {
+    if (lastTrackedProductClick.source === 'dom_fallback' && callSource === 'react') {
+      // Cho phép React handler bổ sung / nâng cấp dữ liệu chuẩn
+    } else {
+      return null
+    }
+  }
+  if (dedupeKey) {
+    lastTrackedProductClick = { key: dedupeKey, time: now, source: callSource }
+  }
+
+  // Nhận diện ngôn ngữ hiện tại của người dùng
+  const detectedLanguage = extraProps?.language || 
+    (typeof window !== 'undefined' ? (
+      window.location.pathname.startsWith('/en') ? 'en' :
+      window.location.pathname.startsWith('/ko') ? 'ko' :
+      window.location.pathname.startsWith('/zh') ? 'zh' :
+      localStorage.getItem('haq_language') || 'vi'
+    ) : 'vi')
+
+  // Xác định tên hiển thị hiện tại theo ngôn ngữ
+  const localizedName = product.name || product.title || CANONICAL_PRODUCT_NAMES[slug] || formatSlugToCanonicalTitle(slug) || slug
+
+  // Xác định tên chuẩn tiếng Việt (Canonical Name) xuyên suốt mọi ngôn ngữ
+  // Tuyệt đối không để tên chuẩn tiếng Việt bị biến thành tiếng Anh/Hàn/Trung khi chuyển ngôn ngữ
+  const canonicalName = product.canonical_name || 
+    product._originalName || 
+    product.vi_name || 
+    CANONICAL_PRODUCT_NAMES[slug] || 
+    (detectedLanguage === 'vi' ? localizedName : formatSlugToCanonicalTitle(slug))
+
+  // Danh mục sản phẩm
+  const category = product.category || 
+    product.categories?.name || 
+    product.category_name || 
+    extraProps?.category || 
+    'Sản phẩm HAQ FOOD'
+
+  const canonicalCategory = product.canonical_category || 
+    product.categories?.name || 
+    category
+
+  // Đường dẫn đích
+  const targetUrl = product.href || 
+    extraProps?.target_url || 
+    (slug ? (
+      detectedLanguage === 'en' ? `/en/products/${slug}` :
+      detectedLanguage === 'ko' ? `/ko/products/${slug}` :
+      detectedLanguage === 'zh' ? `/zh/products/${slug}` :
+      `/san-pham/${slug}`
+    ) : window.location.pathname)
+
+  const payload = {
+    product_id: id,
+    product_slug: slug,
+    product_name: localizedName,
+    canonical_name: canonicalName,
+    category: category,
+    canonical_category: canonicalCategory,
+    language: detectedLanguage,
+    click_location: location,
+    target_url: targetUrl,
+    price_min: Number(product.price_min || product.variants?.[0]?.price || 0),
+    ...extraProps,
+  }
+
+  // 1. Tăng counter realtime productClicks
+  incrementAnalyticsCounter('productClicks', 1)
+
+  // 2. Kích hoạt PostHog Session Recording và register context
+  try {
+    if (posthog && typeof posthog.startSessionRecording === 'function') {
+      posthog.startSessionRecording()
+    }
+    if (posthog && typeof posthog.register === 'function') {
+      posthog.register({
+        last_product_clicked: canonicalName,
+        last_product_clicked_localized: localizedName,
+        last_product_slug: slug,
+        last_product_category: category,
+        last_click_location: location,
+      })
+    }
+  } catch (e) {
+    console.debug('PostHog product click session recording trigger:', e)
+  }
+
+  // 3. Lưu vào sessionStorage để lead form hoặc đơn hàng mang theo context
+  try {
+    sessionStorage.setItem('haq_last_viewed_product', JSON.stringify({
+      id: id,
+      name: localizedName,
+      canonical_name: canonicalName,
+      slug: slug,
+      category: category,
+      clicked_at: new Date().toISOString(),
+      location: location,
+    }))
+  } catch (e) {}
+
+  // 4. Bắn sự kiện product_click chuẩn hóa vào PostHog
+  return captureEvent('product_click', payload)
+}
+
+/**
+ * Trình lắng nghe click toàn cục chuyên biệt cho sản phẩm
+ * Tự động bắt mọi click vào thẻ sản phẩm, link sản phẩm mới thêm từ DB hoặc HTML,
+ * kể cả khi người dùng không gắn onClick thủ công.
+ */
+export function initGlobalProductClickListener() {
+  if (typeof window === 'undefined' || isGlobalListenerAttached) return
+  isGlobalListenerAttached = true
+
+  const handleDocumentClick = (event) => {
+    try {
+      const target = event.target
+      if (!target || typeof target.closest !== 'function') return
+      if (window.location.pathname.startsWith('/admin')) return
+
+      // Look for explicit product click element or product link
+      const productElement = target.closest('[data-product-click="true"], a[href*="/san-pham/"], a[href*="/products/"]')
+      if (!productElement) return
+
+      let slug = productElement.getAttribute('data-product-slug') || ''
+      const id = productElement.getAttribute('data-product-id') || ''
+      const name = productElement.getAttribute('data-product-name') || ''
+      const canonicalName = productElement.getAttribute('data-product-canonical-name') || ''
+      const category = productElement.getAttribute('data-product-category') || ''
+      const price = productElement.getAttribute('data-product-price') || ''
+      const location = productElement.getAttribute('data-product-location') || 'global_link'
+      const href = productElement.getAttribute('href') || ''
+
+      // If slug not explicitly on data-attribute, extract from href safely (removing hash, query, trailing slashes)
+      if (!slug && href) {
+        const cleanHref = href.split('?')[0].split('#')[0].replace(/\/+$/, '')
+        const match = cleanHref.match(/(?:\/san-pham|\/products)\/([^/?#]+)/)
+        if (match && match[1]) {
+          try {
+            slug = decodeURIComponent(match[1])
+          } catch (e) {
+            slug = match[1]
+          }
+        }
+      }
+
+      const dedupeKey = slug || id
+      if (!dedupeKey) return
+
+      // Deduplicate: if tracked in last 600ms, ignore
+      const now = Date.now()
+      if (lastTrackedProductClick.key === dedupeKey && (now - lastTrackedProductClick.time < 600)) {
+        return
+      }
+
+      const detectedName = name || productElement.querySelector('h3, h2, h4, .product-title')?.textContent?.trim() || slug
+
+      recordProductClick({
+        id: id || slug,
+        slug: slug,
+        name: detectedName,
+        canonical_name: canonicalName || undefined,
+        category: category,
+        price_min: price ? Number(price) : undefined,
+        href: href || undefined,
+      }, location, { source: 'dom_fallback' })
+    } catch (e) {
+      console.debug('[Analytics] Global product click tracking error:', e)
+    }
+  }
+
+  // Sử dụng Bubble phase ({ capture: false }) để React synthetic handler (đặt tại #root) chạy trước,
+  // ưu tiên các payload đầy đủ nhất từ React component. Listener này làm nhiệm vụ lưới bảo hiểm (safety net).
+  document.addEventListener('click', handleDocumentClick, { capture: false })
+}
+
+/**
  * Bắt các tham số UTM từ URL và lưu trữ vào localStorage & sessionStorage
  */
 export function captureAndPersistUTMs() {
@@ -294,7 +588,7 @@ export function captureAndPersistUTMs() {
     sessionStorage.setItem('haq_current_session_utm', JSON.stringify(foundUTMs))
 
     try {
-      if (posthog && posthog.__loaded) {
+      if (posthog && typeof posthog.register === 'function') {
         posthog.register(foundUTMs)
       }
     } catch (e) {}
@@ -364,7 +658,7 @@ export function captureEvent(eventName, properties = {}) {
   }
 
   try {
-    if (posthog && posthog.__loaded) {
+    if (posthog && typeof posthog.capture === 'function') {
       posthog.capture(eventName, payload)
     }
   } catch (err) {

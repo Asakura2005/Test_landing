@@ -2,7 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
-import { getProductsPageUrl, getContactUrl } from '../utils/routeI18n'
+import { getProductsPageUrl, getContactUrl, getProductDetailUrl } from '../utils/routeI18n'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 import signatureImg from '../assets/categories/category_banh_trang.jpg'
 const packImg1 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg'
@@ -101,6 +102,7 @@ const FEATURED_I18N = {
 
 export default function FeaturedProduct() {
   const { language } = useLanguage()
+  const { trackProductClick } = useAnalytics()
   const getText = (key) => FEATURED_I18N[key]?.[language] || FEATURED_I18N[key]?.vi || ''
 
   return (
@@ -146,27 +148,78 @@ export default function FeaturedProduct() {
 
             {/* Packaging Mini Carousel / Thumbnails */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-4">
-              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
-                <img src={packImg1} alt={getText('pack1_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
+              <Link
+                to={getProductDetailUrl('banh-trang-tron-sa-te-tom', language)}
+                onClick={() => trackProductClick({
+                  id: 'banh-trang-tron-sa-te-tom',
+                  slug: 'banh-trang-tron-sa-te-tom',
+                  name: getText('pack1_name'),
+                  canonical_name: 'Bánh Tráng Trộn Sợi Sa Tế Tôm',
+                  category: 'Bánh Tráng'
+                }, 'featured_spotlight')}
+                data-product-click="true"
+                data-product-id="banh-trang-tron-sa-te-tom"
+                data-product-slug="banh-trang-tron-sa-te-tom"
+                data-product-name={getText('pack1_name')}
+                data-product-canonical-name="Bánh Tráng Trộn Sợi Sa Tế Tôm"
+                data-product-category="Bánh Tráng"
+                data-product-location="featured_spotlight"
+                className="bg-haq-sage hover:bg-haq-sage/60 transition-colors rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3 group/pack cursor-pointer"
+              >
+                <img src={packImg1} alt={getText('pack1_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1 group-hover/pack:scale-105 transition-transform" />
                 <div className="text-xs font-heading leading-tight">
-                  <strong className="block text-haq-ink font-bold">{getText('pack1_name')}</strong>
+                  <strong className="block text-haq-ink group-hover/pack:text-[#16A34A] transition-colors font-bold">{getText('pack1_name')}</strong>
                   <span className="text-haq-text-secondary text-[11px]">{getText('pack1_size')}</span>
                 </div>
-              </div>
-              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
-                <img src={packImg2} alt={getText('pack2_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
+              </Link>
+              <Link
+                to={getProductDetailUrl('banh-trang-say-gion-vi-tom', language)}
+                onClick={() => trackProductClick({
+                  id: 'banh-trang-say-gion-vi-tom',
+                  slug: 'banh-trang-say-gion-vi-tom',
+                  name: getText('pack2_name'),
+                  canonical_name: 'Bánh Tráng Sấy Giòn Vị Tôm',
+                  category: 'Bánh Tráng'
+                }, 'featured_spotlight')}
+                data-product-click="true"
+                data-product-id="banh-trang-say-gion-vi-tom"
+                data-product-slug="banh-trang-say-gion-vi-tom"
+                data-product-name={getText('pack2_name')}
+                data-product-canonical-name="Bánh Tráng Sấy Giòn Vị Tôm"
+                data-product-category="Bánh Tráng"
+                data-product-location="featured_spotlight"
+                className="bg-haq-sage hover:bg-haq-sage/60 transition-colors rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3 group/pack cursor-pointer"
+              >
+                <img src={packImg2} alt={getText('pack2_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1 group-hover/pack:scale-105 transition-transform" />
                 <div className="text-xs font-heading leading-tight">
-                  <strong className="block text-haq-ink font-bold">{getText('pack2_name')}</strong>
+                  <strong className="block text-haq-ink group-hover/pack:text-[#16A34A] transition-colors font-bold">{getText('pack2_name')}</strong>
                   <span className="text-haq-text-secondary text-[11px]">{getText('pack2_size')}</span>
                 </div>
-              </div>
-              <div className="bg-haq-sage rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3">
-                <img src={packImg3} alt={getText('pack3_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1" />
+              </Link>
+              <Link
+                to={getProductDetailUrl('banh-trang-say-gion-vi-bo', language)}
+                onClick={() => trackProductClick({
+                  id: 'banh-trang-say-gion-vi-bo',
+                  slug: 'banh-trang-say-gion-vi-bo',
+                  name: getText('pack3_name'),
+                  canonical_name: 'Bánh Tráng Sấy Giòn Vị Bò',
+                  category: 'Bánh Tráng'
+                }, 'featured_spotlight')}
+                data-product-click="true"
+                data-product-id="banh-trang-say-gion-vi-bo"
+                data-product-slug="banh-trang-say-gion-vi-bo"
+                data-product-name={getText('pack3_name')}
+                data-product-canonical-name="Bánh Tráng Sấy Giòn Vị Bò"
+                data-product-category="Bánh Tráng"
+                data-product-location="featured_spotlight"
+                className="bg-haq-sage hover:bg-haq-sage/60 transition-colors rounded-2xl p-2 sm:p-3 border border-haq-border flex items-center gap-3 group/pack cursor-pointer"
+              >
+                <img src={packImg3} alt={getText('pack3_name')} className="w-12 h-12 object-contain rounded-xl bg-white p-1 group-hover/pack:scale-105 transition-transform" />
                 <div className="text-xs font-heading leading-tight">
-                  <strong className="block text-haq-ink font-bold">{getText('pack3_name')}</strong>
+                  <strong className="block text-haq-ink group-hover/pack:text-[#16A34A] transition-colors font-bold">{getText('pack3_name')}</strong>
                   <span className="text-haq-text-secondary text-[11px]">{getText('pack3_size')}</span>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
 

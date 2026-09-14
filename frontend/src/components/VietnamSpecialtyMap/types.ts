@@ -2,6 +2,7 @@ export type RegionName = "Miền Bắc" | "Miền Trung" | "Miền Nam";
 
 export interface Product {
   name: string;
+  canonical_name?: string;
   category?: string;
   description: string;
   image?: string;

@@ -159,6 +159,7 @@ export function useHaqSpecialtyMapData(
 
         const productModel: Product = {
           name: locItem.name || "HAQ FOOD",
+          canonical_name: locItem.canonical_name || item.name || locItem.name,
           category:
             locItem.categories?.name ||
             locItem.category_name ||

@@ -2150,7 +2150,14 @@ function findProductTranslation(product, language = 'vi') {
  */
 export function getLocalizedProduct(product, language = 'vi') {
   if (!product) return product
-  if (language === 'vi') return product
+  if (language === 'vi') {
+    return {
+      ...product,
+      canonical_name: product.canonical_name || product._originalName || product.vi_name || product.name,
+      canonical_slug: product.canonical_slug || product.slug,
+      canonical_category: product.canonical_category || product.categories?.name || product.category || '',
+    }
+  }
 
   const translation = findProductTranslation(product, language)
 
@@ -2187,6 +2194,9 @@ export function getLocalizedProduct(product, language = 'vi') {
     resolvedName = product.en_name
   }
 
+  // Preserve the raw Vietnamese name before translation as canonical_name
+  const canonicalName = product.canonical_name || product._originalName || product.vi_name || product.name || resolvedName
+
   // Determine localized description:
   let resolvedDesc = ''
   if (product.description && product.description.trim() !== '') {
@@ -2213,8 +2223,11 @@ export function getLocalizedProduct(product, language = 'vi') {
   return {
     ...product,
     name: resolvedName,
+    canonical_name: canonicalName,
+    canonical_slug: product.canonical_slug || product.slug,
     en_name: product.en_name || '',
     category: resolvedCategory,
+    canonical_category: product.canonical_category || product.categories?.name || product.category || resolvedCategory,
     description: resolvedDesc,
     short_description: resolvedDesc,
     tag: resolvedTag,

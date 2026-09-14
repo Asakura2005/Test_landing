@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Search, X, ArrowRight, Package, Sparkles } from 'lucide-react'
 import { getProducts } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { getLocalizedProduct } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
 
 export default function SearchOverlay({ isOpen, onClose }) {
   const { t, language } = useLanguage()
+  const { trackProductClick, trackProductSearch } = useAnalytics()
   const [query, setQuery] = useState('')
   const [products, setProducts] = useState([])
   const [results, setResults] = useState([])
@@ -60,6 +62,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
   if (!isOpen) return null
 
   const handleSelect = (item) => {
+    trackProductClick(item, 'search_overlay')
     onClose()
     if (item.slug) {
       navigate(getProductDetailUrl(item.slug, language))
@@ -162,6 +165,14 @@ export default function SearchOverlay({ isOpen, onClose }) {
                       <div
                         key={item.id}
                         onClick={() => handleSelect(locItem)}
+                        data-product-click="true"
+                        data-product-id={item.id}
+                        data-product-slug={item.slug || item.id}
+                        data-product-name={locItem.name}
+                        data-product-canonical-name={locItem.canonical_name || item.name}
+                        data-product-category={locItem.canonical_category || locItem.categories?.name || 'HAQ FOOD'}
+                        data-product-price={item.price_min || item.variants?.[0]?.price || 0}
+                        data-product-location="search_overlay"
                         className="py-3 px-3 rounded-2xl hover:bg-haq-sage/20 transition-colors flex items-center justify-between cursor-pointer group"
                       >
                         <div className="flex items-center gap-3">

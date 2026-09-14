@@ -10,6 +10,7 @@ import { worldToContainerPoint } from "./coordinateSystem";
 import { useHaqSpecialtyMapData } from "./useHaqSpecialtyMapData";
 import { SpecialtyData, RegionName, Product, ProvinceSpecialty } from "./types";
 import { useLanguage } from "../../context/LanguageContext";
+import { useAnalytics } from "../../hooks/useAnalytics";
 import { getProductViewsMap } from "../../services/posthog";
 
 interface VietnamSpecialtyMapProps {
@@ -24,6 +25,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   className = "",
 }) => {
   const { t, language } = useLanguage();
+  const { trackProductClick } = useAnalytics();
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
 
   const resolveProductLink = (p: Product) => {
@@ -33,6 +35,17 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     if (language === 'ko') return `/ko/products/${s}`;
     if (language === 'zh') return `/zh/products/${s}`;
     return `/san-pham/${s}`;
+  };
+
+  const handleProductClick = (p: Product) => {
+    trackProductClick({
+      id: p.productId || p.slug,
+      slug: p.slug || p.productId,
+      name: p.name,
+      canonical_name: p.canonical_name,
+      category: p.category,
+      href: resolveProductLink(p),
+    }, 'specialty_map');
   };
   const [hoveredProvince, setHoveredProvince] = useState<{
     id: string;
@@ -493,6 +506,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <Link
                             key={prod.productId || prod.slug || `${prod.name}-${idx}`}
                             to={resolveProductLink(prod)}
+                            onClick={() => handleProductClick(prod)}
+                            data-product-click="true"
+                            data-product-id={prod.productId || prod.slug}
+                            data-product-slug={prod.slug || prod.productId}
+                            data-product-name={prod.name}
+                            data-product-canonical-name={prod.canonical_name || prod.name}
+                            data-product-category={prod.category || defaultCategoryText}
+                            data-product-location="specialty_map_mobile_2col"
                             className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
                           >
                             {/* Image Box */}
@@ -542,6 +563,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         {/* Featured (Card 1) */}
                         <Link
                           to={resolveProductLink(showcaseProducts[0])}
+                          onClick={() => handleProductClick(showcaseProducts[0])}
+                          data-product-click="true"
+                          data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
+                          data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
+                          data-product-name={showcaseProducts[0].name}
+                          data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
+                          data-product-category={showcaseProducts[0].category || flagshipCategoryText}
+                          data-product-location="specialty_map_mobile_featured"
                           className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
                         >
                           <div className="w-24 h-24 sm:w-full sm:h-[150px] shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
@@ -580,6 +609,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             <Link
                               key={prod.productId || prod.slug || `${prod.name}-${idx}`}
                               to={resolveProductLink(prod)}
+                              onClick={() => handleProductClick(prod)}
+                              data-product-click="true"
+                              data-product-id={prod.productId || prod.slug}
+                              data-product-slug={prod.slug || prod.productId}
+                              data-product-name={prod.name}
+                              data-product-canonical-name={prod.canonical_name || prod.name}
+                              data-product-category={prod.category || defaultCategoryText}
+                              data-product-location="specialty_map_mobile_supporting"
                               className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
                             >
                               <div className="w-full h-[110px] sm:h-[150px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
@@ -612,6 +649,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                       /* 1 PRODUCT */
                       <Link
                         to={resolveProductLink(showcaseProducts[0])}
+                        onClick={() => handleProductClick(showcaseProducts[0])}
+                        data-product-click="true"
+                        data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
+                        data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
+                        data-product-name={showcaseProducts[0].name}
+                        data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
+                        data-product-category={showcaseProducts[0].category || defaultCategoryText}
+                        data-product-location="specialty_map_mobile_single"
                         className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-3 transition-all shadow-2xs group max-w-md"
                       >
                         <div className="w-24 h-24 shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden">
@@ -643,6 +688,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     {/* LEFT: FEATURED PRODUCT */}
                     <Link
                       to={resolveProductLink(featuredProduct)}
+                      onClick={() => handleProductClick(featuredProduct)}
+                      data-product-click="true"
+                      data-product-id={featuredProduct.productId || featuredProduct.slug}
+                      data-product-slug={featuredProduct.slug || featuredProduct.productId}
+                      data-product-name={featuredProduct.name}
+                      data-product-canonical-name={featuredProduct.canonical_name || featuredProduct.name}
+                      data-product-category={featuredProduct.category || flagshipCategoryText}
+                      data-product-location="specialty_map_desktop_featured"
                       className={`${
                         supportingProducts.length === 2
                           ? "col-span-7"
@@ -692,6 +745,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <Link
                             key={prod.productId || prod.slug || `${prod.name}-${idx}`}
                             to={resolveProductLink(prod)}
+                            onClick={() => handleProductClick(prod)}
+                            data-product-click="true"
+                            data-product-id={prod.productId || prod.slug}
+                            data-product-slug={prod.slug || prod.productId}
+                            data-product-name={prod.name}
+                            data-product-canonical-name={prod.canonical_name || prod.name}
+                            data-product-category={prod.category || defaultCategoryText}
+                            data-product-location="specialty_map_desktop_supporting"
                             className="flex-1 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2.5 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
                           >
                             <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-1.5 flex items-center justify-center overflow-hidden relative">
@@ -731,6 +792,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     ) : supportingProducts.length === 1 ? (
                       <Link
                         to={resolveProductLink(supportingProducts[0])}
+                        onClick={() => handleProductClick(supportingProducts[0])}
+                        data-product-click="true"
+                        data-product-id={supportingProducts[0].productId || supportingProducts[0].slug}
+                        data-product-slug={supportingProducts[0].slug || supportingProducts[0].productId}
+                        data-product-name={supportingProducts[0].name}
+                        data-product-canonical-name={supportingProducts[0].canonical_name || supportingProducts[0].name}
+                        data-product-category={supportingProducts[0].category || defaultCategoryText}
+                        data-product-location="specialty_map_desktop_single_supporting"
                         className="col-span-6 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
                       >
                         <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-3 flex items-center justify-center overflow-hidden relative">

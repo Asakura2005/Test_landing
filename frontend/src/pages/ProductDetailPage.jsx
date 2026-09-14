@@ -23,7 +23,7 @@ function resolveSafeProductImage(imgUrl) {
 export default function ProductDetailPage() {
   const { slug } = useParams()
   const { t, language } = useLanguage()
-  const { trackProductView, trackContactClick } = useAnalytics()
+  const { trackProductView, trackContactClick, trackProductClick } = useAnalytics()
   const [product, setProduct] = useState(null)
   const [recommended, setRecommended] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -554,6 +554,14 @@ export default function ProductDetailPage() {
                       href={marketplaceLinks.shopee}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackProductClick(localizedProduct, 'marketplace_shopee', { channel: 'shopee', outbound_url: marketplaceLinks.shopee })}
+                      data-product-click="true"
+                      data-product-id={product.id}
+                      data-product-slug={product.slug}
+                      data-product-name={localizedProduct.name}
+                      data-product-canonical-name={localizedProduct.canonical_name || product.name}
+                      data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
+                      data-product-location="marketplace_shopee"
                       className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EE4D2D] hover:bg-[#e03d1d] text-white text-xs font-heading font-semibold shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer select-none whitespace-nowrap"
                       title="Mua hàng trên Shopee"
                     >
@@ -570,6 +578,14 @@ export default function ProductDetailPage() {
                       href={marketplaceLinks.lazada}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackProductClick(localizedProduct, 'marketplace_lazada', { channel: 'lazada', outbound_url: marketplaceLinks.lazada })}
+                      data-product-click="true"
+                      data-product-id={product.id}
+                      data-product-slug={product.slug}
+                      data-product-name={localizedProduct.name}
+                      data-product-canonical-name={localizedProduct.canonical_name || product.name}
+                      data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
+                      data-product-location="marketplace_lazada"
                       className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F146D] hover:bg-[#0c1055] text-white text-xs font-heading font-semibold shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer select-none whitespace-nowrap"
                       title="Mua hàng trên Lazada"
                     >
@@ -602,6 +618,14 @@ export default function ProductDetailPage() {
                       href={marketplaceLinks.tiktok}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackProductClick(localizedProduct, 'marketplace_tiktok', { channel: 'tiktok', outbound_url: marketplaceLinks.tiktok })}
+                      data-product-click="true"
+                      data-product-id={product.id}
+                      data-product-slug={product.slug}
+                      data-product-name={localizedProduct.name}
+                      data-product-canonical-name={localizedProduct.canonical_name || product.name}
+                      data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
+                      data-product-location="marketplace_tiktok"
                       className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#000000] hover:bg-[#1a1a1a] text-white text-xs font-heading font-semibold shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer select-none whitespace-nowrap"
                       title="Mua hàng trên TikTok Shop"
                     >
@@ -620,6 +644,14 @@ export default function ProductDetailPage() {
                       href={marketplaceLinks.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackProductClick(localizedProduct, 'marketplace_facebook', { channel: 'facebook', outbound_url: marketplaceLinks.facebook })}
+                      data-product-click="true"
+                      data-product-id={product.id}
+                      data-product-slug={product.slug}
+                      data-product-name={localizedProduct.name}
+                      data-product-canonical-name={localizedProduct.canonical_name || product.name}
+                      data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
+                      data-product-location="marketplace_facebook"
                       className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs font-heading font-semibold shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer select-none whitespace-nowrap"
                       title="Đặt mua qua Facebook"
                     >
@@ -793,7 +825,20 @@ export default function ProductDetailPage() {
               {localizedRecommended.map(p => {
                 const recImg = resolveSafeProductImage(p.images?.[0] || p.variants?.[0]?.img || p.image_url || p.image)
                 return (
-                  <Link to={getProductDetailUrl(p.slug || p.id, language)} key={p.id} className="bg-white group overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 relative border border-haq-border hover:border-[#16A34A] flex flex-col h-full rounded-2xl">
+                  <Link 
+                    to={getProductDetailUrl(p.slug || p.id, language)} 
+                    key={p.id}
+                    onClick={() => trackProductClick(p, 'product_detail_similar')}
+                    data-product-click="true"
+                    data-product-id={p.id}
+                    data-product-slug={p.slug || p.id}
+                    data-product-name={p.name}
+                    data-product-canonical-name={p.canonical_name || p.name}
+                    data-product-category={p.canonical_category || p.categories?.name || p.category || ''}
+                    data-product-price={p.price_min || p.variants?.[0]?.price || 0}
+                    data-product-location="product_detail_similar"
+                    className="bg-white group overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-300 relative border border-haq-border hover:border-[#16A34A] flex flex-col h-full rounded-2xl"
+                  >
                     {p.tag && (
                       <div className="absolute top-3 left-3 bg-[#16A34A] text-white text-[10px] font-heading font-bold uppercase tracking-wider px-2 py-0.5 z-10 rounded-full shadow-2xs">
                         {p.tag}

@@ -20,6 +20,7 @@ import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 import SearchOverlay from './SearchOverlay'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 // Bộ đệm bộ nhớ (in-memory cache) cho danh mục và sản phẩm trên Header nhằm tăng tốc độ tải trang
 let cachedNavData = {
@@ -31,6 +32,7 @@ const NAV_CACHE_TTL = 5 * 60 * 1000 // 5 phút
 
 export default function StickyNav() {
   const { t, language, setLanguage, switchLanguage } = useLanguage()
+  const { trackProductClick } = useAnalytics()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileAccordion, setMobileAccordion] = useState(null)
@@ -625,7 +627,18 @@ export default function StickyNav() {
                               <Link
                                 key={p.id}
                                 to={language === 'en' ? `/en/products/${p.slug}` : language === 'ko' ? `/ko/products/${p.slug}` : language === 'zh' ? `/zh/products/${p.slug}` : `/san-pham/${p.slug}`}
-                                onClick={() => setActiveMenu(null)}
+                                onClick={() => {
+                                  trackProductClick(localizedProd, 'nav_megamenu')
+                                  setActiveMenu(null)
+                                }}
+                                data-product-click="true"
+                                data-product-id={p.id}
+                                data-product-slug={p.slug}
+                                data-product-name={localizedProd.name}
+                                data-product-canonical-name={localizedProd.canonical_name || p.name}
+                                data-product-category={hoveredCategory?.name || ''}
+                                data-product-price={p.price_min || p.variants?.[0]?.price || 0}
+                                data-product-location="nav_megamenu"
                                 className="group flex flex-col items-center gap-1 p-1.5 rounded-xl hover:bg-haq-soft/60 transition-colors"
                               >
                                 <div className="w-12 h-12 rounded-full overflow-hidden border border-haq-border shadow-2xs shrink-0 bg-white flex items-center justify-center">

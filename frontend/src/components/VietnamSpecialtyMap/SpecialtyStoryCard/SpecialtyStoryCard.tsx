@@ -5,6 +5,7 @@ import { ProductImage } from "./ProductImage";
 import { ProductNavigator } from "./ProductNavigator";
 import { cardAnimation, productContentAnimation } from "../animations";
 import { useLanguage } from "../../../context/LanguageContext";
+import { useAnalytics } from "../../../hooks/useAnalytics";
 import styles from "../styles.module.css";
 
 interface SpecialtyStoryCardProps {
@@ -31,6 +32,7 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
   cardRef,
 }) => {
   const { t, language } = useLanguage();
+  const { trackProductClick } = useAnalytics();
   const provinceLabel = specialty?.provinceLabel || provinceInfo?.name || "Tỉnh / Thành";
   const regionName = specialty?.region || provinceInfo?.region || "Việt Nam";
   const hasProducts = !isEmpty && specialty && specialty.products && specialty.products.length > 0;
@@ -100,12 +102,36 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
               className={styles.cardBody}
             >
               {/* Product Image */}
-              <ProductImage
-                src={currentProduct.image}
-                alt={currentProduct.imageAlt || currentProduct.name}
-                category={currentProduct.category}
-                provinceName={provinceLabel}
-              />
+              <div
+                onClick={() => {
+                  if (currentProduct.href && currentProduct.href !== "#") {
+                    trackProductClick({
+                      id: currentProduct.productId || currentProduct.slug,
+                      slug: currentProduct.slug || currentProduct.productId,
+                      name: currentProduct.name,
+                      canonical_name: currentProduct.canonical_name || currentProduct.name,
+                      category: currentProduct.category,
+                      href: currentProduct.href,
+                    }, 'specialty_map_story_image');
+                    window.location.href = currentProduct.href;
+                  }
+                }}
+                style={{ cursor: currentProduct.href && currentProduct.href !== "#" ? 'pointer' : 'default' }}
+                data-product-click="true"
+                data-product-id={currentProduct.productId || currentProduct.slug}
+                data-product-slug={currentProduct.slug || currentProduct.productId}
+                data-product-name={currentProduct.name}
+                data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+                data-product-category={currentProduct.category}
+                data-product-location="specialty_map_story_image"
+              >
+                <ProductImage
+                  src={currentProduct.image}
+                  alt={currentProduct.imageAlt || currentProduct.name}
+                  category={currentProduct.category}
+                  provinceName={provinceLabel}
+                />
+              </div>
 
               {/* Category Tag */}
               <div className={styles.cardCategory}>
@@ -113,7 +139,32 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
               </div>
 
               {/* Product Title */}
-              <h3 className={styles.cardProductTitle}>{currentProduct.name}</h3>
+              <h3 
+                className={styles.cardProductTitle}
+                onClick={() => {
+                  if (currentProduct.href && currentProduct.href !== "#") {
+                    trackProductClick({
+                      id: currentProduct.productId || currentProduct.slug,
+                      slug: currentProduct.slug || currentProduct.productId,
+                      name: currentProduct.name,
+                      canonical_name: currentProduct.canonical_name || currentProduct.name,
+                      category: currentProduct.category,
+                      href: currentProduct.href,
+                    }, 'specialty_map_story_title');
+                    window.location.href = currentProduct.href;
+                  }
+                }}
+                style={{ cursor: currentProduct.href ? 'pointer' : 'default' }}
+                data-product-click="true"
+                data-product-id={currentProduct.productId || currentProduct.slug}
+                data-product-slug={currentProduct.slug || currentProduct.productId}
+                data-product-name={currentProduct.name}
+                data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+                data-product-category={currentProduct.category}
+                data-product-location="specialty_map_story_title"
+              >
+                {currentProduct.name}
+              </h3>
 
               {/* Province Tagline / Short Story (if present) */}
               {specialty.shortDescription && (
@@ -133,10 +184,25 @@ export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
               href={currentProduct.href || (language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham')}
               className={styles.cardCta}
               onClick={(e) => {
+                trackProductClick({
+                  id: currentProduct.productId || currentProduct.slug,
+                  slug: currentProduct.slug || currentProduct.productId,
+                  name: currentProduct.name,
+                  canonical_name: currentProduct.canonical_name || currentProduct.name,
+                  category: currentProduct.category,
+                  href: currentProduct.href,
+                }, 'specialty_map_story_cta');
                 if (!currentProduct.href || currentProduct.href === "#") {
                   e.preventDefault();
                 }
               }}
+              data-product-click="true"
+              data-product-id={currentProduct.productId || currentProduct.slug}
+              data-product-slug={currentProduct.slug || currentProduct.productId}
+              data-product-name={currentProduct.name}
+              data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+              data-product-category={currentProduct.category}
+              data-product-location="specialty_map_story_cta"
             >
               <span>{t('home.specialty_map.card.explore_product', 'KHÁM PHÁ SẢN PHẨM')}</span>
               <span className={styles.ctaArrow} aria-hidden="true">→</span>
