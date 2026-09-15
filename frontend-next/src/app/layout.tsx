@@ -93,6 +93,7 @@ const organizationJsonLd = {
         streetAddress: 'Số 30 Ngõ 1 Phạm Tuấn Tài',
         addressLocality: 'Nghĩa Đô, Cầu Giấy',
         addressRegion: 'Hà Nội',
+        postalCode: '100000',
         addressCountry: 'VN',
       },
       contactPoint: {
