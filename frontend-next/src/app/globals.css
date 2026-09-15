@@ -1,0 +1,353 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── HAQ FOOD Fresh Green & White Design System Tokens ──────────────── */
+:root {
+  --color-primary-bg: #FFFFFF;      /* Pure White */
+  --color-secondary-bg: #F4F8F4;    /* Soft Sage White */
+  --color-soft-bg: #EBF3EC;         /* Soft Mint */
+  --color-dark: #0C1E15;            /* Deep Pine Charcoal */
+  --color-text: #11261B;            /* Deep Pine Ink */
+  --color-text-secondary: #52665A;  /* Muted Leaf Slate */
+  --color-brand-green: #0F5132;     /* HAQ Forest Emerald */
+  --color-brand-accent: #16A34A;    /* Fresh Leaf Green */
+  --color-brand-gold: #16A34A;      /* Brand Green Accent */
+  --color-border: #D8E5DA;          /* Soft Leaf Border */
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+html {
+  overflow-x: clip;
+  background-color: #0C1E15;
+}
+
+body {
+  font-family: var(--font-be-vietnam-pro), 'Be Vietnam Pro', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-text);
+  background-color: #0C1E15;
+  overflow-x: clip;
+}
+
+/* ── Korean Typography & Auto-fitting Word Boundaries ─ */
+html[lang="ko"] body {
+  font-family: var(--font-noto-sans-kr), 'Plus Jakarta Sans', 'Noto Sans KR', 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+html[lang="ko"] h1,
+html[lang="ko"] h2,
+html[lang="ko"] h3,
+html[lang="ko"] h4,
+html[lang="ko"] p,
+html[lang="ko"] button,
+html[lang="ko"] a,
+html[lang="ko"] .font-heading {
+  word-break: keep-all;
+}
+
+::selection {
+  background-color: #0F5132;
+  color: #FFFFFF;
+}
+
+/* Vietnamese diacritics safety — prevent clipping on bold headings */
+h1, h2, h3 {
+  overflow: visible !important;
+  -webkit-text-stroke: 0;
+}
+
+/* Hide floating contact buttons when mobile navigation drawer is open to prevent any UI overlap */
+body[data-mobile-nav-open="true"] aside[aria-label] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+::-webkit-scrollbar {
+  background: #F4F8F4;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #D8E5DA;
+  border-radius: 10px;
+  border: 2px solid #F4F8F4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #16A34A;
+}
+
+/* ── Reveal animation ─────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Product image transitions ───────────────────────── */
+.product-fade-image {
+  animation: product-fade-in 260ms ease-out;
+}
+
+@keyframes product-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── HAQ input style (lead form) ──────────────────────── */
+.haq-input {
+  width: 100%;
+  min-height: 48px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.65rem 0.9rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.haq-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.haq-input:focus {
+  border-color: #F26522;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.haq-input option {
+  color: #1A1A1A;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes partners-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-partners-marquee {
+  animation: partners-marquee 10s linear infinite !important;
+}
+
+/* Distribution logos move in the requested left-to-right direction. */
+@keyframes distribution-marquee {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.distribution-marquee {
+  animation: distribution-marquee 24s linear infinite !important;
+  will-change: transform;
+}
+
+.distribution-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ── Ambient Background Animation ───────────────────────── */
+@keyframes ambient-float {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.ambient-blob {
+  position: absolute;
+  filter: blur(80px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: ambient-float 20s ease-in-out infinite;
+}
+
+/* ── About Page: Counter Animation ────────────────────── */
+@keyframes count-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-animate {
+  animation: count-fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── About Page: Hero Scroll Indicator ────────────────── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ── About Page: Timeline Pulse Dot ───────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+}
+
+.timeline-dot-active {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ── About Page: Stagger fade in ──────────────────────── */
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-item {
+  opacity: 0;
+  animation: stagger-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── About Page: Hero gradient line ───────────────────── */
+@keyframes gradient-line {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-accent-line {
+  background: linear-gradient(90deg, #16A34A, #0F5132, #16A34A);
+  background-size: 200% 100%;
+  animation: gradient-line 3s ease-in-out infinite;
+}
+
+/* ── About Page: Card hover glow ──────────────────────── */
+.card-glow {
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.card-glow:hover {
+  box-shadow: 0 8px 40px rgba(22, 163, 74, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
+}
+
+/* ── About Page: Horizontal timeline scroll ───────────── */
+.timeline-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.timeline-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Reduced motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .product-fade-image {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .count-animate,
+  .scroll-indicator,
+  .timeline-dot-active,
+  .stagger-item,
+  .hero-accent-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .card-glow:hover {
+    transform: none;
+  }
+}
+
+/* ── Mobile-Safe Global Rules ────────────────────────── */
+
+/* Prevent embedded HTML content (tables, images, iframes) from breaking mobile layout */
+.prose img,
+.prose video {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.prose iframe {
+  max-width: 100%;
+}
+
+/* Reduce GPU-intensive blur effects on low-powered mobile devices */
+@media (max-width: 768px) {
+  .ambient-blob {
+    filter: blur(40px);
+  }
+}
+
+/* Scrollbar hiding utility for horizontal scroll tabs */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Mobile Menu Scroll Lock & Isolation ─────────────────── */
+body[data-mobile-nav-open="true"],
+html:has(body[data-mobile-nav-open="true"]) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: auto !important;
+}
+
+body[data-mobile-nav-open="true"] aside {
+  display: none !important;
+}
+

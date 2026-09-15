@@ -38,8 +38,11 @@ export default function BrandVisualSection() {
         <img
           src={exportVisualImg}
           alt="HAQ FOOD From Vietnam to Asia"
+          width="1920"
+          height="1080"
           className="w-full h-full object-cover opacity-25 filter grayscale-[20%]"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0C1E15] via-[#0C1E15]/90 to-[#0C1E15]/50" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0C1E15] via-transparent to-[#0C1E15]/80" />

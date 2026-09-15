@@ -23,6 +23,10 @@ export const ProductImage: React.FC<ProductImageProps> = ({
         <img
           src={src}
           alt={alt}
+          width="320"
+          height="320"
+          loading="lazy"
+          decoding="async"
           className={`${styles.productImage} ${loaded ? styles.imageLoaded : ""}`}
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}

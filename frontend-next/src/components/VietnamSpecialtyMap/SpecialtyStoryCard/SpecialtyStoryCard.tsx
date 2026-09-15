@@ -1,0 +1,285 @@
+'use client'
+
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ProvinceSpecialty, ProvinceInfo } from "../types";
+import { ProductImage } from "./ProductImage";
+import { ProductNavigator } from "./ProductNavigator";
+import { cardAnimation, productContentAnimation } from "../animations";
+import { useLanguage } from "../../../context/LanguageContext";
+import { useAnalytics } from "../../../hooks/useAnalytics";
+import styles from "../styles.module.css";
+
+interface SpecialtyStoryCardProps {
+  specialty?: ProvinceSpecialty | null;
+  provinceInfo?: ProvinceInfo | null;
+  productIndex: number;
+  isEmpty?: boolean;
+  isLoading?: boolean;
+  onPrevProduct: () => void;
+  onNextProduct: () => void;
+  onClose?: () => void;
+  cardRef: React.RefObject<HTMLDivElement>;
+}
+
+export const SpecialtyStoryCard: React.FC<SpecialtyStoryCardProps> = ({
+  specialty,
+  provinceInfo,
+  productIndex,
+  isEmpty = false,
+  isLoading = false,
+  onPrevProduct,
+  onNextProduct,
+  onClose,
+  cardRef,
+}) => {
+  const { t, language } = useLanguage();
+  const { trackProductClick } = useAnalytics();
+  const provinceLabel = specialty?.provinceLabel || provinceInfo?.name || "Tỉnh / Thành";
+  const regionName = specialty?.region || provinceInfo?.region || "Việt Nam";
+  const hasProducts = !isEmpty && specialty && specialty.products && specialty.products.length > 0;
+  const currentProduct = hasProducts ? specialty.products[productIndex] || specialty.products[0] : null;
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className={styles.storyCard}
+      data-scrollable-panel="true"
+      variants={cardAnimation}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      layout
+    >
+      {/* Visual Line Entrance Port (chỉ kích hoạt khi có sản phẩm để đón connection line) */}
+      {hasProducts && (
+        <div
+          data-card-anchor="true"
+          className={styles.cardAnchorPort}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Card Header */}
+      <div className={styles.cardHeader}>
+        <div className={styles.cardHeaderTitles}>
+          <span className={styles.cardProvinceName}>{provinceLabel}</span>
+          <span className={styles.cardRegionName}>{regionName.toUpperCase()}</span>
+        </div>
+
+        {onClose && (
+          <button
+            type="button"
+            className={styles.cardCloseBtn}
+            onClick={onClose}
+            aria-label={t('home.specialty_map.card.close', 'Đóng')}
+            title={t('home.specialty_map.card.close', 'Đóng')}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Loading Skeleton Mode */}
+      {isLoading ? (
+        <div className={styles.skeletonContainer}>
+          <div className={styles.skeletonImage} />
+          <div className={styles.skeletonTag} />
+          <div className={styles.skeletonTitle} />
+          <div className={styles.skeletonText} />
+        </div>
+      ) : hasProducts && currentProduct ? (
+        /* Has Products State */
+        <>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${specialty.province}-${productIndex}`}
+              variants={productContentAnimation}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className={styles.cardBody}
+            >
+              {/* Product Image */}
+              <div
+                onClick={() => {
+                  if (currentProduct.href && currentProduct.href !== "#") {
+                    trackProductClick({
+                      id: currentProduct.productId || currentProduct.slug,
+                      slug: currentProduct.slug || currentProduct.productId,
+                      name: currentProduct.name,
+                      canonical_name: currentProduct.canonical_name || currentProduct.name,
+                      category: currentProduct.category,
+                      href: currentProduct.href,
+                    }, 'specialty_map_story_image');
+                    window.location.href = currentProduct.href;
+                  }
+                }}
+                style={{ cursor: currentProduct.href && currentProduct.href !== "#" ? 'pointer' : 'default' }}
+                data-product-click="true"
+                data-product-id={currentProduct.productId || currentProduct.slug}
+                data-product-slug={currentProduct.slug || currentProduct.productId}
+                data-product-name={currentProduct.name}
+                data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+                data-product-category={currentProduct.category}
+                data-product-location="specialty_map_story_image"
+              >
+                <ProductImage
+                  src={currentProduct.image}
+                  alt={currentProduct.imageAlt || currentProduct.name}
+                  category={currentProduct.category}
+                  provinceName={provinceLabel}
+                />
+              </div>
+
+              {/* Category Tag */}
+              <div className={styles.cardCategory}>
+                {currentProduct.category || specialty.tag || "ĐẶC SẢN NGUYÊN BẢN"}
+              </div>
+
+              {/* Product Title */}
+              <h3 
+                className={styles.cardProductTitle}
+                onClick={() => {
+                  if (currentProduct.href && currentProduct.href !== "#") {
+                    trackProductClick({
+                      id: currentProduct.productId || currentProduct.slug,
+                      slug: currentProduct.slug || currentProduct.productId,
+                      name: currentProduct.name,
+                      canonical_name: currentProduct.canonical_name || currentProduct.name,
+                      category: currentProduct.category,
+                      href: currentProduct.href,
+                    }, 'specialty_map_story_title');
+                    window.location.href = currentProduct.href;
+                  }
+                }}
+                style={{ cursor: currentProduct.href ? 'pointer' : 'default' }}
+                data-product-click="true"
+                data-product-id={currentProduct.productId || currentProduct.slug}
+                data-product-slug={currentProduct.slug || currentProduct.productId}
+                data-product-name={currentProduct.name}
+                data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+                data-product-category={currentProduct.category}
+                data-product-location="specialty_map_story_title"
+              >
+                {currentProduct.name}
+              </h3>
+
+              {/* Province Tagline / Short Story (if present) */}
+              {specialty.shortDescription && (
+                <div style={{ fontSize: "11.5px", color: "#16a34a", fontStyle: "italic", marginBottom: "8px", fontWeight: 500 }}>
+                  &ldquo;{specialty.shortDescription}&rdquo;
+                </div>
+              )}
+
+              {/* Story Description */}
+              <p className={styles.cardStoryDescription}>{currentProduct.description}</p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Card Footer */}
+          <div className={styles.cardFooter}>
+            <a
+              href={currentProduct.href || (language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham')}
+              className={styles.cardCta}
+              onClick={(e) => {
+                trackProductClick({
+                  id: currentProduct.productId || currentProduct.slug,
+                  slug: currentProduct.slug || currentProduct.productId,
+                  name: currentProduct.name,
+                  canonical_name: currentProduct.canonical_name || currentProduct.name,
+                  category: currentProduct.category,
+                  href: currentProduct.href,
+                }, 'specialty_map_story_cta');
+                if (!currentProduct.href || currentProduct.href === "#") {
+                  e.preventDefault();
+                }
+              }}
+              data-product-click="true"
+              data-product-id={currentProduct.productId || currentProduct.slug}
+              data-product-slug={currentProduct.slug || currentProduct.productId}
+              data-product-name={currentProduct.name}
+              data-product-canonical-name={currentProduct.canonical_name || currentProduct.name}
+              data-product-category={currentProduct.category}
+              data-product-location="specialty_map_story_cta"
+            >
+              <span>{t('home.specialty_map.card.explore_product', 'KHÁM PHÁ SẢN PHẨM')}</span>
+              <span className={styles.ctaArrow} aria-hidden="true">→</span>
+            </a>
+
+            {specialty.products.length > 1 && (
+              <ProductNavigator
+                currentIndex={productIndex}
+                total={specialty.products.length}
+                onPrev={onPrevProduct}
+                onNext={onNextProduct}
+              />
+            )}
+          </div>
+        </>
+      ) : (
+        /* Empty State (Click province without product) */
+        <motion.div
+          key={`empty-${specialty?.province || 'unknown'}`}
+          variants={productContentAnimation}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className={styles.cardBody}
+        >
+          <div className={styles.emptyIllustrationBox}>
+            <div className={styles.emptyEmblemCircle}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <span className={styles.emptyBadgeText}>{t('home.specialty_map.card.in_development', 'ĐANG PHÁT TRIỂN')}</span>
+          </div>
+
+          <div className={styles.cardCategory}>
+            {t('home.specialty_map.card.local_culture', 'VĂN HÓA ẨM THỰC ĐỊA PHƯƠNG')}
+          </div>
+
+          <h3 className={styles.cardProductTitle}>
+            {provinceLabel.toUpperCase()}
+          </h3>
+
+          {/* Province Story from Database or Fallback */}
+          <p className={styles.cardStoryDescription}>
+            {specialty?.description || specialty?.shortDescription || (
+              language === 'en' ? (
+                <>
+                  HAQ FOOD is expanding its specialty ecosystem in <strong>{provinceLabel}</strong>. We continually source and develop authentic agricultural delicacies preserving original local flavors with verified food safety.
+                </>
+              ) : language === 'ko' ? (
+                <>
+                  HAQ FOOD는 <strong>{provinceLabel}</strong> 지역의 특산품 네트워크를 지속적으로 확장하고 있습니다. 철저한 위생 기준 아래 전통의 원초적 풍미를 간직한 농식품을 발굴하고 있습니다.
+                </>
+              ) : language === 'zh' ? (
+                <>
+                  HAQ FOOD 正在持续拓展 <strong>{provinceLabel}</strong> 的特色农产品生态网络。我们严把食品安全关，深度挖掘并研发保留原汁原味的地方传统特色美食。
+                </>
+              ) : (
+                <>
+                  HAQ FOOD đang mở rộng hệ sinh thái đặc sản tại <strong>{provinceLabel}</strong>. Chúng tôi liên tục tìm kiếm và phát triển các sản phẩm nông sản, ẩm thực truyền thống giữ trọn hương vị nguyên bản và an toàn vệ sinh thực phẩm.
+                </>
+              )
+            )}
+          </p>
+
+          <div className={styles.cardFooter}>
+            <a href={language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham'} className={styles.cardCta}>
+              <span>{t('home.specialty_map.card.view_all_products', 'XEM TẤT CẢ SẢN PHẨM')}</span>
+              <span className={styles.ctaArrow} aria-hidden="true">→</span>
+            </a>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};

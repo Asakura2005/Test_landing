@@ -1,10 +1,30 @@
-import posthog from 'posthog-js'
-
 // PostHog Configuration with Env Vars or Graceful Fallback
 const POSTHOG_KEY = import.meta.env?.VITE_POSTHOG_KEY || 'phc_demo_haq_food_analytics_key'
 const POSTHOG_HOST = import.meta.env?.VITE_POSTHOG_HOST || 'https://us.i.posthog.com'
 
+let posthog = null
+let posthogLoadingPromise = null
 let isInitialized = false
+
+/**
+ * Lazy async loader for PostHog client (eliminates 265KB from critical initial bundle)
+ */
+export async function getPostHogClient() {
+  if (posthog) return posthog
+  if (typeof window === 'undefined') return null
+  if (!posthogLoadingPromise) {
+    posthogLoadingPromise = import('posthog-js')
+      .then((mod) => {
+        posthog = mod.default || mod
+        return posthog
+      })
+      .catch((err) => {
+        console.warn('[PostHog] Dynamic load deferred:', err?.message || err)
+        return null
+      })
+  }
+  return posthogLoadingPromise
+}
 
 // Storage Key versioned to cleanly reset mock baseline to 100% real data
 const VIEWS_STORAGE_KEY = 'haq_product_views_real_v1'
@@ -240,20 +260,30 @@ let isGlobalListenerAttached = false
  * - CHỈ THU THẬP click và tương tác đối với sản phẩm (thông qua recordProductClick & global product listener).
  * - disable_session_recording: true để không quay toàn bộ trang web một cách tự động, chỉ bật quay phiên khi có tương tác sản phẩm.
  */
-export function initPostHog() {
+export async function initPostHog() {
   if (typeof window === 'undefined' || isInitialized) {
     initGlobalProductClickListener()
     return posthog
   }
 
+  const client = await getPostHogClient()
+  if (!client) {
+    initGlobalProductClickListener()
+    captureAndPersistUTMs()
+    return null
+  }
+
   try {
     if (POSTHOG_KEY && POSTHOG_KEY !== 'phc_demo_haq_food_analytics_key') {
-      posthog.init(POSTHOG_KEY, {
+      client.init(POSTHOG_KEY, {
         api_host: POSTHOG_HOST,
         autocapture: false, // TẮT autocapture toàn web: chỉ ghi nhận click sản phẩm có chủ đích
         capture_pageview: 'always', // Tự động ghi nhận lượt xem trang
         capture_pageleave: true,
         disable_session_recording: true, // Không tự động ghi hình toàn bộ trang web, chỉ ghi hình theo ngữ cảnh sản phẩm
+        disable_surveys: true, // Tắt tải surveys.js (tiết kiệm 34 KiB)
+        capture_dead_clicks: false, // Tắt dead clicks autocapture (tiết kiệm 8 KiB)
+        capture_performance: false, // Tắt web vitals polyfill script (tiết kiệm 6 KiB và loại bỏ array-at polyfill cũ)
         session_recording: {
           maskAllInputs: true, // Che thông tin nhạy cảm ở các ô nhập liệu
         },
@@ -298,7 +328,7 @@ export function initPostHog() {
 
   initGlobalProductClickListener()
   captureAndPersistUTMs()
-  return posthog
+  return client
 }
 
 /**

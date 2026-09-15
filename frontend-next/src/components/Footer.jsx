@@ -1,0 +1,299 @@
+'use client'
+
+import React from 'react'
+import Link from 'next/link'
+import { MapPin, Phone, Mail, ExternalLink, ArrowRight } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
+import {
+  getHomeUrl,
+  getContactUrl,
+  getAboutUrl,
+  getCapabilitiesUrl,
+  getHistoryUrl,
+  getNewsUrl,
+  getCareersUrl,
+  getProductsPageUrl,
+  getRefundPolicyUrl,
+  getPrivacyPolicyUrl,
+  getTermsUrl,
+  getPolicyUrl,
+} from '../utils/routeI18n'
+import logoImg from '../assets/logo-haq.jpg'
+const logoSrc = logoImg?.src || logoImg
+
+export default function Footer() {
+  const { t, language } = useLanguage()
+  const currentYear = new Date().getFullYear()
+
+  return (
+    <footer className="bg-[#0C1E15] text-white pt-10 sm:pt-16 pb-8 sm:pb-12 border-t border-[#1B4D3E]/40 select-none-text">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+        
+        {/* =========================================================================
+            1. BRAND AREA
+        ========================================================================= */}
+        <div className="pb-6 sm:pb-10 border-b border-white/10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+            <div className="flex items-center gap-3.5 sm:gap-4">
+              <Link href={getHomeUrl(language)} className="shrink-0 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white p-1.5 shadow-sm">
+                <img
+                  src={logoSrc}
+                  alt="HAQ FOOD Logo"
+                  className="h-full w-full object-contain"
+                />
+              </Link>
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-white leading-none">
+                    HAQ FOOD
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs font-heading font-bold tracking-wider text-white/90 uppercase mt-1">
+                  {t('home.footer.sub', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI')}
+                </p>
+                <p className="text-[11px] sm:text-xs text-white/70 mt-0.5 font-normal">
+                  {t('home.footer.desc', 'Sản xuất & phân phối đồ ăn vặt đóng gói mang hương vị Việt Nam vươn tầm thế giới.')}
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Contact Badge */}
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              <Link
+                href={getContactUrl(language)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#0F5132] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#16A34A] transition-all shadow-sm hover:shadow-md text-center border border-white/20"
+              >
+                <span>{t('home.footer.b2b_cta', 'LIÊN HỆ HỢP TÁC B2B')}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            2. THREE COLUMNS NAVIGATION: VỀ HAQ FOOD | SẢN PHẨM | LIÊN HỆ
+        ========================================================================= */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 py-8 sm:py-12 border-b border-white/10">
+          
+          {/* CỘT 1: VỀ HAQ FOOD (Spans 4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              <span>{t('home.footer.col1_title', 'VỀ HAQ FOOD')}</span>
+            </h3>
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
+              <li>
+                <Link href={getAboutUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link1', 'Giới thiệu Tổng quan Công ty')}
+                </Link>
+              </li>
+              <li>
+                <Link href={getCapabilitiesUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link2', 'Năng lực sản xuất & Nhà máy')}
+                </Link>
+              </li>
+              <li>
+                <Link href={getHistoryUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link3', 'Câu chuyện & Dấu mốc phát triển (2021 — 2026)')}
+                </Link>
+              </li>
+              <li>
+                <Link href={getNewsUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link4', 'Tin tức & Sự kiện Doanh nghiệp')}
+                </Link>
+              </li>
+              <li>
+                <Link href={getCareersUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link_careers', 'Cơ hội nghề nghiệp & Tuyển dụng')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`${getAboutUrl(language)}#van-hoa`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col1_link5', '5 Giá trị văn hóa cốt lõi')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* CỘT 2: SẢN PHẨM (Spans 4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              <span>{t('home.footer.col2_title', 'SẢN PHẨM TIÊU BIỂU')}</span>
+            </h3>
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
+              <li>
+                <Link href={getProductsPageUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
+                  {t('home.footer.col2_link1', 'Tất cả sản phẩm (HAQ Catalog) →')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`${getProductsPageUrl(language)}?category=banh-trang`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col2_link2', 'Bánh tráng sấy giòn & Bánh tráng trộn HOKI')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`${getProductsPageUrl(language)}?category=cac-loai-banh`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col2_link3', 'Bánh đậu xanh tươi & Các loại bánh truyền thống')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`${getProductsPageUrl(language)}?category=bap-rang-bo`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col2_link4', 'Bắp rang bơ sấy nổ công nghệ cao')}
+                </Link>
+              </li>
+              <li>
+                <Link href={`${getProductsPageUrl(language)}?category=thit-kho`} className="hover:text-white hover:translate-x-1 inline-block transition-all">
+                  {t('home.footer.col2_link5', 'Thịt sấy khô & Đồ ăn vặt hảo hạng')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* CỘT 3: LIÊN HỆ (Spans 4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              <span>{t('home.footer.col3_title', 'LIÊN HỆ CHÍNH THỨC')}</span>
+            </h3>
+            <ul className="space-y-3 text-xs sm:text-sm text-white/75">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />
+                <span>
+                  <strong className="text-white">{t('home.footer.address_label', 'Địa chỉ:')}</strong>{' '}
+                  <a
+                    href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-white/80 transition-colors"
+                  >
+                    30 Ng. 1 Phạm Tuấn Tài, Nghĩa Đô, Hà Nội, Việt Nam
+                  </a>
+                  </span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-white/70 shrink-0" />
+                <span>
+                  <strong className="text-white">{t('home.footer.hotline_label', 'Hotline / Zalo:')}</strong>{' '}
+                  <a href="tel:02423235656" className="text-white font-semibold hover:text-white/80 transition-colors">
+                    024 23 23 56 56
+                  </a>
+                </span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="w-4 h-4 text-white/70 shrink-0 flex items-center justify-center font-bold text-[10px] bg-white/10 rounded">
+                  Z
+                </span>
+                <span>
+                  <strong className="text-white">{t('home.footer.zalo_label', 'Zalo Doanh Nghiệp:')}</strong>{' '}
+                  <a
+                    href="https://zalo.me/1361851474644984696"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white font-semibold hover:text-white/80 transition-colors"
+                  >
+                    HAQ Hà Nội
+                  </a>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />
+                <div>
+                  <strong className="text-white">{t('home.footer.email_label', 'Email:')}</strong>{' '}
+                  <a href="mailto:info@haq.com.vn" className="text-white hover:text-white/80 transition-colors font-semibold">
+                    info@haq.com.vn
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* =========================================================================
+            3. THÔNG TIN PHÁP LÝ & CHÍNH SÁCH (COMPACT LEGAL & POLICIES)
+        ========================================================================= */}
+        <div className="py-6 border-b border-white/10 text-xs sm:text-sm text-white/80 space-y-2">
+          <p>
+            {t('home.footer.legal_license_label', 'Giấy phép đăng ký kinh doanh:')}{' '}
+            <a
+              href="https://masothue.com/0109547016-cong-ty-co-phan-haq-ha-noi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-white hover:text-[#16A34A] hover:underline inline-flex items-center gap-1 transition-colors"
+              title={t('home.footer.legal_lookup', 'Tra cứu thông tin doanh nghiệp')}
+            >
+              0109547016
+              <ExternalLink className="w-3 h-3 text-white/50" />
+            </a>
+            {'. '}
+            {t('home.footer.legal_license_detail', 'Ngày cấp: 11/03/2021 Sở KHĐT TP Hà Nội')}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80">
+            <Link
+              href={getRefundPolicyUrl(language)}
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_refund', 'Chính sách đổi trả hàng và hoàn tiền')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              href={getPrivacyPolicyUrl(language)}
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_privacy', 'Chính sách bảo mật')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              href={getTermsUrl(language)}
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_terms', 'Điều khoản sử dụng')}
+            </Link>
+            <span className="text-white/30">|</span>
+            <Link
+              href={getPolicyUrl(language)}
+              className="hover:text-white hover:underline transition-colors"
+            >
+              {t('home.footer.policy_compliance', 'Công bố sản phẩm')}
+            </Link>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            5. COPYRIGHT & SOCIAL MEDIA BAR
+        ========================================================================= */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/70">
+          <div>
+            © {currentYear} {t('home.footer.copyright_line', 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD). ALL RIGHTS RESERVED.')}
+          </div>
+
+          <div className="flex items-center gap-4 text-xs font-heading font-medium">
+            <a
+              href="https://zalo.me/1361851474644984696"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white/80 transition-colors inline-flex items-center gap-1.5"
+              aria-label="Liên hệ Zalo OA HAQ Hà Nội"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+              Zalo OA: HAQ Hà Nội
+            </a>
+            <span className="text-white/20">·</span>
+            <a
+              href="https://maps.app.goo.gl/yAYkH7bYurLEtenP7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white/80 transition-colors"
+              aria-label="Google Maps HAQ FOOD"
+            >
+              Google Maps
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </footer>
+  )
+}

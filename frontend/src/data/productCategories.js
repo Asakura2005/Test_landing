@@ -3,30 +3,31 @@ import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
 import catBanhImg from '../assets/categories/category_banh.jpg'
 import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
 import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
+import { optimizeSupabaseImageUrl } from '../utils/imageOptimizer'
 
 export const PRODUCT_IMAGE_MAP = {}
 
 /**
- * Hàm giải quyết ảnh sản phẩm an toàn và fallback nhiều cấp (Ưu tiên ảnh Supabase Storage)
+ * Hàm giải quyết ảnh sản phẩm an toàn và fallback nhiều cấp (Ưu tiên ảnh Supabase Storage tối ưu kích thước)
  */
-export function resolveProductImage(product, categorySlug = null) {
+export function resolveProductImage(product, categorySlug = null, options = { width: 360, quality: 80, resize: 'contain' }) {
   if (!product) return catAllImg
+  let rawUrl = ''
   if (product.image_url && typeof product.image_url === 'string' && product.image_url.startsWith('http')) {
-    return product.image_url
-  }
-  if (product.images && product.images[0] && typeof product.images[0] === 'string' && product.images[0].startsWith('http')) {
-    return product.images[0]
-  }
-  if (product.image && typeof product.image === 'string' && product.image.startsWith('http')) {
-    return product.image
-  }
-  if (categorySlug && CATEGORY_VISUALS[categorySlug]?.image) {
+    rawUrl = product.image_url
+  } else if (product.images && product.images[0] && typeof product.images[0] === 'string' && product.images[0].startsWith('http')) {
+    rawUrl = product.images[0]
+  } else if (product.image && typeof product.image === 'string' && product.image.startsWith('http')) {
+    rawUrl = product.image
+  } else if (categorySlug && CATEGORY_VISUALS[categorySlug]?.image) {
     return CATEGORY_VISUALS[categorySlug].image
-  }
-  if (product.categories?.slug && CATEGORY_VISUALS[product.categories.slug]?.image) {
+  } else if (product.categories?.slug && CATEGORY_VISUALS[product.categories.slug]?.image) {
     return CATEGORY_VISUALS[product.categories.slug].image
+  } else {
+    return catBanhTrangImg
   }
-  return catBanhTrangImg
+
+  return optimizeSupabaseImageUrl(rawUrl, options)
 }
 
 

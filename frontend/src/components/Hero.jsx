@@ -103,6 +103,11 @@ export default function Hero() {
       onTouchEnd={handleTouchEnd}
       className="relative w-full aspect-[16/9] sm:aspect-[2/1] lg:aspect-auto lg:h-[100dvh] bg-black overflow-hidden select-none"
     >
+      {/* Primary Accessible H1 for SEO & Heading Order Compliance */}
+      <h1 className="sr-only">
+        HAQ FOOD — Hệ Sinh Thái Nông Sản & Đặc Sản Thực Phẩm Việt Nam Chất Lượng Cao
+      </h1>
+
       {/* Seamless Direct Cross-Fade Slides (No background flash) */}
       {SLIDES.map((slide, idx) => {
         const isCurrent = idx === current
@@ -130,48 +135,51 @@ export default function Hero() {
             <img
               src={slide.image}
               alt={slide.alt}
+              width="1920"
+              height="1080"
               className="w-full h-full object-cover object-[center_35%]"
-              loading="eager"
-              decoding="async"
+              loading={idx === 0 ? "eager" : "lazy"}
+              fetchPriority={idx === 0 ? "high" : "low"}
+              decoding={idx === 0 ? "sync" : "async"}
             />
           </div>
         )
       })}
 
-      {/* Floating Prev Button */}
+      {/* Floating Prev Button — Accessible 48x48 touch target */}
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
         aria-label="Previous banner"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
 
-      {/* Floating Next Button */}
+      {/* Floating Next Button — Accessible 48x48 touch target */}
       <button
         type="button"
         onClick={next}
-        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
+        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-black/40 hover:bg-black/70 text-white hidden md:flex items-center justify-center backdrop-blur-xs border border-white/25 transition-all cursor-pointer shadow-xl hover:scale-110 active:scale-95 pointer-events-auto"
         aria-label="Next banner"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Clean Bottom Indicator Dots — Tiny solid round dots (Green active, White inactive) */}
-      <div className="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 sm:gap-1.5 pointer-events-auto">
+      {/* Clean Bottom Indicator Dots — Accessible 48x48 touch targets on all screen sizes */}
+      <div className="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center pointer-events-auto">
         {SLIDES.map((_, i) => (
           <button
             key={i}
             type="button"
             onClick={(e) => goTo(i, e)}
-            className="p-1 flex items-center justify-center cursor-pointer transition-transform hover:scale-125"
+            className="w-12 h-12 min-w-[48px] min-h-[48px] flex items-center justify-center cursor-pointer transition-transform hover:scale-110"
             aria-label={`Banner ${i + 1}`}
           >
             <span
-              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 block ${
+              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-200 block ${
                 i === current
-                  ? 'bg-[#16A34A] ring-1 ring-white/60'
+                  ? 'bg-[#16A34A] ring-2 ring-white/70 scale-110'
                   : 'bg-white/75 hover:bg-white shadow-xs'
               }`}
             />

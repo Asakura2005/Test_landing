@@ -29,9 +29,7 @@ export default function Home() {
         </section>
 
         {/* 2. Products / Fullscreen Vietnam Specialty Map */}
-        <section data-section="specialty-map">
-          <Products />
-        </section>
+        <Products />
 
         {/* 3. About Section (Concise Brand Teaser) */}
         <section data-section="brand-statement">

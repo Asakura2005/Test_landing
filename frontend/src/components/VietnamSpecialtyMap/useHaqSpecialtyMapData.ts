@@ -10,6 +10,7 @@ import { SpecialtyData, ProvinceSpecialty, Product, RegionName } from "./types";
 import { provinceCentroids } from "./mapData";
 import { useLanguage } from "../../context/LanguageContext";
 import { getLocalizedProvince, getLocalizedProduct } from "../../utils/i18nData";
+import { optimizeSupabaseImageUrl } from "../../utils/imageOptimizer";
 
 export interface HaqSpecialtyMapDataResult {
   specialties: SpecialtyData;
@@ -175,7 +176,7 @@ export function useHaqSpecialtyMapData(
             locItem.description ||
             locItem.short_description ||
             fallbackDesc,
-          image: imgUrl,
+          image: optimizeSupabaseImageUrl(imgUrl, { width: 360, quality: 80 }),
           imageAlt: locItem.name || currentProv.provinceLabel,
           region: currentProv.region,
           productId: locItem.id || locItem.slug,

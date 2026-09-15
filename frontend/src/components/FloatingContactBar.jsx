@@ -65,7 +65,8 @@ export default function FloatingContactBar() {
             href={item.href}
             target={item.href.startsWith('http') ? '_blank' : undefined}
             rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className={`group relative flex items-center justify-center w-10 h-10 rounded-full text-white shadow-md hover:scale-110 transition-all duration-200 pointer-events-auto ${item.color} ${item.extraClass || ''}`}
+            aria-label={item.title}
+            className={`group relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full text-white shadow-md hover:scale-110 transition-all duration-200 pointer-events-auto ${item.color} ${item.extraClass || ''}`}
             title={item.title}
           >
             {item.icon ? (
@@ -80,11 +81,11 @@ export default function FloatingContactBar() {
         ))}
       </div>
 
-      {/* Main Trigger Bubble (Bottom-right corner) */}
+      {/* Main Trigger Bubble (Bottom-right corner) — Accessible 48x48 target */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full text-white shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 pointer-events-auto ${
+        className={`relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-full text-white shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 pointer-events-auto ${
           isOpen ? 'bg-[#0C1E15]' : 'bg-[#0F5132]'
         }`}
         aria-label={isOpen ? (language === 'en' ? 'Collapse' : language === 'ko' ? '접기' : language === 'zh' ? '收起' : 'Thu nhỏ liên hệ') : (language === 'en' ? 'Open quick contact' : language === 'ko' ? '빠른 문의 열기' : language === 'zh' ? '展开快速咨询' : 'Mở liên hệ nhanh')}

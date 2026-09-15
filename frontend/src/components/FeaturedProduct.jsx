@@ -6,9 +6,11 @@ import { getProductsPageUrl, getContactUrl, getProductDetailUrl } from '../utils
 import { useAnalytics } from '../hooks/useAnalytics'
 
 import signatureImg from '../assets/categories/category_banh_trang.jpg'
-const packImg1 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg'
-const packImg2 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg'
-const packImg3 = 'https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg'
+import { optimizeSupabaseImageUrl } from '../utils/imageOptimizer'
+
+const packImg1 = optimizeSupabaseImageUrl('https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg', { width: 320, quality: 80 })
+const packImg2 = optimizeSupabaseImageUrl('https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg', { width: 320, quality: 80 })
+const packImg3 = optimizeSupabaseImageUrl('https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg', { width: 320, quality: 80 })
 
 const FEATURED_I18N = {
   badge: {

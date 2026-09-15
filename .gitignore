@@ -6,6 +6,9 @@ node_modules/
 # Build output
 frontend/dist/
 backend/dist/
+frontend-next/.next/
+frontend-next/build/
+frontend-next/out/
 
 # Environment
 .env
@@ -44,6 +47,7 @@ yarn-error.log*
 old_*.txt
 payload.json
 test.mjs
+*.docx
 
 # SQL migration files (contain sensitive seed data)
 supabase_*.sql
@@ -53,3 +57,4 @@ user_content_*.txt
 
 # Raw assets
 frontend/src/assets/*.mp4
+frontend-next/src/assets/*.mp4

@@ -58,7 +58,7 @@ export default function Footer() {
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               <Link
                 to={getContactUrl(language)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider hover:bg-[#13863d] transition-all shadow-xs hover:shadow-md text-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#15803d] hover:bg-[#166534] text-white text-xs font-heading font-bold uppercase tracking-wider transition-all shadow-sm hover:shadow-md text-center border border-[#16A34A]/60"
               >
                 <span>{t('home.footer.b2b_cta', 'LIÊN HỆ HỢP TÁC B2B')}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -74,10 +74,10 @@ export default function Footer() {
           
           {/* CỘT 1: VỀ HAQ FOOD (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col1_title', 'VỀ HAQ FOOD')}</span>
-            </h4>
+            </h3>
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
                 <Link to={getAboutUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all">
@@ -114,10 +114,10 @@ export default function Footer() {
 
           {/* CỘT 2: SẢN PHẨM (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col2_title', 'SẢN PHẨM TIÊU BIỂU')}</span>
-            </h4>
+            </h3>
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75">
               <li>
                 <Link to={getProductsPageUrl(language)} className="hover:text-white hover:translate-x-1 inline-block transition-all font-semibold text-white/90">
@@ -149,10 +149,10 @@ export default function Footer() {
 
           {/* CỘT 3: LIÊN HỆ (Spans 4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
               <span>{t('home.footer.col3_title', 'LIÊN HỆ CHÍNH THỨC')}</span>
-            </h4>
+            </h3>
             <ul className="space-y-3 text-xs sm:text-sm text-white/75">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-white/70 shrink-0 mt-0.5" />

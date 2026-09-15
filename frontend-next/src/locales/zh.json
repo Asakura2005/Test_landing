@@ -1,0 +1,441 @@
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于我们",
+    "overview": "企业概况",
+    "history": "发展历程与里程碑",
+    "capabilities": "生产设施与品质标准",
+    "products": "产品系列",
+    "news": "新闻与招聘",
+    "news_only": "新闻动态",
+    "careers": "招贤纳士",
+    "contact": "联系我们",
+    "cta": "获取批发报价"
+  },
+  "common": {
+    "read_more": "查看详情",
+    "contact_now": "立即咨询",
+    "close": "关闭",
+    "view_all": "查看全部",
+    "learn_more": "了解更多",
+    "explore": "探索详情",
+    "partner_b2b": "B2B 合作",
+    "spec": "技术规格",
+    "switch_language": "切换语言"
+  },
+  "profile": {
+    "hero_badge": "HAQ FOOD · 企业介绍",
+    "hero_location": "越南河内",
+    "hero_title": "HAQ FOOD",
+    "hero_sub": "越南食品制造与出口领先企业",
+    "hero_desc": "河内HAQ股份公司（HAQ FOOD）是越南知名的包装加工食品制造与分销企业。我们将本土优质农产品与现代化封闭式洁净烘干工艺相结合，严格遵循国际食品安全标准，致力于提升越南美食的全球价值。",
+    "hero_cta": "了解 HAQ FOOD",
+    "pillars": [
+      {
+        "tag": "优质原料",
+        "title": "天然精选",
+        "desc": "精选越南本土绿色农产品"
+      },
+      {
+        "tag": "生产工艺",
+        "title": "封闭无菌",
+        "desc": "现代化热风对流烘干技术"
+      },
+      {
+        "tag": "品质管理",
+        "title": "严格管控",
+        "desc": "全流程严控食品安全标准"
+      },
+      {
+        "tag": "战略导向",
+        "title": "全球拓展",
+        "desc": "推动越南地道美食走向世界"
+      }
+    ],
+    "sec1_badge": "01 — 企业概况",
+    "sec1_title": "河内 HAQ 股份公司 (HAQ FOOD HANOI JSC)",
+    "sec1_desc": "河内HAQ股份公司成立于2021年，是越南包装食品与特色休闲零食领域的领先生产与分销商，旗下两大核心支柱产品为烘烤米纸（米饼）与拌米纸。公司引进符合 ISO 22000 与 HACCP 标准的现代化生产线，恪守‘安全、透明、高品质’的郑重承诺。",
+    "fact_header": "企业注册与法定信息",
+    "fact_est": "成立于 2021 年",
+    "fact_legal_name_label": "法定公司名称",
+    "fact_legal_name": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI (河内 HAQ 股份公司)",
+    "fact_intl_name_label": "国际商业名称",
+    "fact_intl_name": "HAQ FOOD HANOI JOINT STOCK COMPANY",
+    "fact_tax_label": "税务识别码 / 企业营业执照",
+    "fact_tax_val": "0109675204",
+    "fact_tax_sub": "— 河内市计划与投资厅颁发",
+    "fact_hq_label": "总部地址",
+    "fact_hq_val": "越南河内市义都坊范俊才路1巷30号",
+    "fact_scope_label": "主要生产领域",
+    "fact_scope_val": "食品精深加工、烘干与保鲜：HOKI高端酥脆烘烤米纸、杏仁饼、椰奶饼、鲜绿豆糕及各类脱水农产品零食。",
+    "fact_dist_label": "分销网络与渠道",
+    "fact_dist_val": "现代零售连锁商超（WinMart、Circle K、GS25、百货绿色超市 Bách Hóa Xanh、K-Market...）、全国分销代理网络及官方正贸出口（韩国、中国台湾等）。",
+    "fact_coop_label": "B2B 合作模式",
+    "fact_coop_val": "大宗批发供应、代工定制（OEM/ODM）、自有品牌贴牌代加工（Private Label）。",
+    "photo_caption": "HAQ FOOD 位于河内的现代化生产基地：涵盖从原料精选、洁净烘干到铝箔无菌杀菌包装的全流程严格品控。",
+    "coop_box_title": "商务合作与 OEM 代工咨询",
+    "coop_box_desc": "承接大宗批发采购、贴牌代工合同与样品寄送需求。",
+    "core_caps": [
+      {
+        "num": "01 · 核心生产工艺",
+        "title": "全封闭洁净烘干",
+        "desc": "采用密闭循环对流热风烘干技术，精准控制温湿度，在杜绝油脂残留的同时完美锁住酥脆口感。"
+      },
+      {
+        "num": "02 · 绿色原料供应",
+        "title": "产地直采本土农产品",
+        "desc": "优先对接并采购越南清洁农产品原料，源头可追溯，定期进行微生物及重金属指标权威检测。"
+      },
+      {
+        "num": "03 · B2B 柔性供应能力",
+        "title": "灵活的 OEM / ODM 定制",
+        "desc": "从口味研发调配、样品打样、包装规格设计到合规备案文件，全流程一站式赋能连锁商超与海外买家。"
+      }
+    ],
+    "sec2_badge": "02 ── 品牌故事",
+    "sec2_title_1": "每一款产品",
+    "sec2_title_2": "皆始于",
+    "sec2_title_3": "自然之选",
+    "sec2_desc_1": "我们深信，优质的美食必须始于健康的原料、规范的工艺与高度负责的团队。HAQ FOOD 持续创新，致力于为消费者带来便捷、安全且保留越南地道风味的美味佳肴。",
+    "sec2_desc_2": "我们构建了从农业核心产区严选新鲜原料、全封闭对流烘烤到无菌铝箔密封包装的完整价值链，全面满足国内消费及出口市场的高标准要求。",
+    "sec2_photo_tag": "优质原料与精工制造",
+    "sec2_photo_title": "本土优质农产与现代洁净烘干技术的完美融合",
+    "sec2_values_tag": "经营哲学",
+    "sec2_values_title": "HAQ FOOD 核心价值观",
+    "sec3_badge": "03 — 生产实力与工厂设施",
+    "sec3_title_1": "从精选原料",
+    "sec3_title_2": "到国际化标杆成品",
+    "sec3_desc": "具备从原料初加工、精准温控熟化、对流烘干到符合国际出口标准的包装全套制造实力。",
+    "sec3_card_spec": "HAQ 技术标准规范",
+    "sec3_kcs_tag": "运营规范与品控体系 (QC)",
+    "sec3_kcs_title_1": "标准化流程",
+    "sec3_title_sub": "确保批次品质始终如一",
+    "sec3_kcs_title_2": "确保批次品质始终如一",
+    "sec3_kcs_desc": "HAQ FOOD 现代化工厂配备整套密闭烘干流水线设备、无菌配料车间和恒温恒湿仓储设施。",
+    "sec3_kcs_points": [
+      {
+        "title": "绝对食品卫生安全",
+        "desc": "从员工净化更衣、风淋系统到生产车间实行严格的层级卫生管控。"
+      },
+      {
+        "title": "高均匀度产品工艺",
+        "desc": "全自动化精准温控与干燥技术，确保不同批次产品色泽、风味与酥脆度高度一致。"
+      },
+      {
+        "title": "独立第三方质检 (QC)",
+        "desc": "所有批次出库前均须通过感官评定和权威微生物理化指标检测。"
+      }
+    ],
+    "sec4_badge": "04 — 封闭式生产规范",
+    "sec4_title": "7 道严苛生产工序",
+    "sec4_desc": "从原料入库验收、调味配比、密闭烘干、金属探测到无菌包装，全流程实施严密温湿度与卫生监控。",
+    "sec5_badge": "05 — 产品系列",
+    "sec5_title": "精选代表性产品系列",
+    "sec5_all_btn": "浏览所有产品",
+    "sec6_badge": "06 — 国际市场出口",
+    "sec6_title_1": "立足越南本土",
+    "sec6_title_2": "扬帆走向全球",
+    "sec6_desc": "HAQ FOOD 积极开拓国际贸易，将深具越南文化特色的高品质精深加工农特产品推向全球合作伙伴与消费者。",
+    "sec6_markets": [
+      {
+        "region": "本土市场",
+        "country": "越南"
+      },
+      {
+        "region": "东北亚",
+        "country": "韩国"
+      },
+      {
+        "region": "东亚",
+        "country": "中国台湾"
+      }
+    ],
+    "sec7_badge": "07 — 企业社会责任",
+    "sec7_title": "可持续发展责任与担当",
+    "sec7_desc": "对消费者、合作伙伴、员工以及越南本土农业经济的长期庄重承诺。",
+    "vision_mission": {
+      "badge": "03 — 愿景 · 使命 · 核心价值观",
+      "badge_en": "VISION · MISSION · CORE VALUES",
+      "heading_main": "战略导向与基石发展",
+      "heading_sub": "巩固在越南休闲食品市场的领航地位，全力拓展高标准国际市场。",
+      "vision_title": "企业愿景",
+      "vision_title_en": "VISION",
+      "vision_desc": "成为越南休闲食品制造与分销领域的领跑企业，全面拓展日本、韩国及其他亚洲高标准成熟市场。",
+      "vision_desc_en": "To become a leading pioneer in Vietnam’s snack manufacturing and distribution sector, expanding into high-standard markets such as Japan, South Korea, and other Asian countries.",
+      "mission_title": "企业使命",
+      "mission_title_en": "MISSION",
+      "mission_desc": "奉献美味、安全、达标的高品质食品，满足国内外消费者与合作伙伴不断升级的品质需求。",
+      "mission_desc_en": "To deliver delicious, safe, and certified-quality products that meet evolving consumer demands.",
+      "mission_points": [
+        { "title": "地道美味", "desc": "以传统秘制风味配方，保留浓郁酥脆口感" },
+        { "title": "安全健康", "desc": "零多余游离油残留，严格管控各项微生物指标" },
+        { "title": "国际标准", "desc": "全封闭标准化作业，通过 ISO 22000 与 HACCP 认证" }
+      ],
+      "values_badge": "企业文化基石",
+      "values_title": "核心价值观",
+      "values_title_en": "CORE VALUES",
+      "values_desc": "指引 HAQ FOOD 每一项生产决策、品质管控与商务合作的 5 大核心准则。",
+      "values": [
+        {
+          "key": "01",
+          "name": "品质为本",
+          "name_en": "Quality First",
+          "desc": "从原料甄选、热风烘烤到成品出厂，所有工序均将品质与食品安全作为第一准绳。"
+        },
+        {
+          "key": "02",
+          "name": "透明公开",
+          "name_en": "Transparency",
+          "desc": "原料来源透明合规，检测报告与资质文件公开齐全，与合作伙伴和消费者建立长久信任。"
+        },
+        {
+          "key": "03",
+          "name": "开拓创新",
+          "name_en": "Innovation",
+          "desc": "持续开展技术攻关，掌握现代闭环洁净烘干核心技术，丰富健康便捷休闲零食矩阵。"
+        },
+        {
+          "key": "04",
+          "name": "合作共赢",
+          "name_en": "Sustainable Partnership",
+          "desc": "恪守契约精神，真诚携手连锁商超、渠道代理商与种植农户实现长期互利共荣。"
+        },
+        {
+          "key": "05",
+          "name": "客户至上",
+          "name_en": "Customer-centric Approach",
+          "desc": "深刻倾听市场需求，关注大众健康饮食趋势，通过风味调配与包装改良持续创造卓越体验。"
+        }
+      ],
+      "expansion_badge": "市场规划",
+      "expansion_title": "战略性市场拓展路线图"
+    },
+    "cta_badge": "B2B 商务对接",
+    "cta_title_1": "携手同行",
+    "cta_title_2": "共创长远价值",
+    "cta_desc": "HAQ FOOD 竭诚期待与全球分销商、大型连锁商超及品牌商建立战略伙伴关系，提供灵活政策、过硬品质与稳定产能支持。",
+    "cta_btn": "提交商务合作意向"
+  },
+  "home": {
+    "hero": {
+      "slides": [
+        {
+          "eyebrow": "越南食品制造与分销领先品牌",
+          "title": "品质铸就信赖",
+          "subtext": "HAQ FOOD — 专注越南特色包装食品的现代化制造与分销，全系产品通过 ISO 22000 与 HACCP 国际双重认证。"
+        },
+        {
+          "eyebrow": "国际安全标准 · 封闭烘干科技",
+          "title": "为现代消费者打造地道越南风味",
+          "subtext": "全自动对流烘烤设备，结合传统秘制调味精粹与严格出厂检测体系。"
+        },
+        {
+          "eyebrow": "本土农产精髓 · 扬帆远航海外",
+          "title": "链接田间优质农产到现代化餐桌",
+          "subtext": "全面入驻越南头部大型商超连锁，正规出口至韩国、中国台湾等国际市场。"
+        }
+      ],
+      "cta_explore": "浏览精选产品",
+      "cta_about": "关于 HAQ FOOD",
+      "slide_prev": "上一张",
+      "slide_next": "下一张",
+      "slide_to": "切换至第"
+    },
+    "specialty_map": {
+      "eyebrow": "越南特产农业生态地图",
+      "title": "HAQ FOOD 产品生态网络",
+      "subtitle": "探索越南原产地风味特产 — 每一方水土，蕴育一方纯正本味",
+      "hint": "滚轮缩放 · 拖拽平移 · 点击省份探秘特色农产",
+      "regions": {
+        "all": "全国",
+        "north": "北部地区",
+        "central": "中部地区",
+        "south": "南部地区"
+      },
+      "card": {
+        "explore_product": "探索特产",
+        "view_all_products": "查看所有产品",
+        "in_development": "研发拓展中",
+        "local_culture": "原产地饮食文化",
+        "close": "关闭"
+      }
+    },
+    "brand_statement": {
+      "est": "创立于河内",
+      "badge": "关于 HAQ FOOD · 企业介绍",
+      "title": "制造与分销符合国际安全标准的优质食品",
+      "desc": "河内HAQ股份公司成立于2021年，专注食品制造与现代流通，致力于将安全、美味、高品质的越南农产与特色休闲零食呈现给本土及全球消费者。",
+      "cta": "进一步了解我们"
+    },
+    "quick_stats": {
+      "badge": "标准与实力",
+      "title": "坚实的现代食品制造基石",
+      "view_detail": "查看完整制造能力",
+      "learn_more": "了解更多",
+      "pillars": [
+        {
+          "num": "01",
+          "label": "优良品质",
+          "title": "批次高度均一",
+          "desc": "严格把控入厂原料，全封闭标准化流水作业，确保每一批次出厂产品色香味始终如一。"
+        },
+        {
+          "num": "02",
+          "label": "国际权威认证",
+          "title": "严苛食品安全",
+          "desc": "全面推行 ISO 22000 和 HACCP 国际质量管理体系，构筑全方位的食品安全防护网。"
+        },
+        {
+          "num": "03",
+          "label": "柔性代工服务",
+          "title": "OEM / ODM 定制方案",
+          "desc": "支持针对合作伙伴个性化需求，从配方研发、包装设计到合规备案提供全流程一站式解决方案。"
+        }
+      ]
+    },
+    "brand_visual": {
+      "badge": "国际化战略视野",
+      "title_1": "源自越南良田",
+      "title_2": "走向亚洲市场",
+      "markets": "越南 · 韩国 · 中国台湾",
+      "desc": "持续革新生产工艺与洁净封闭加工标准，HAQ FOOD 自豪地将蕴含越南特色的高品质健康零食带入亚洲高标准成熟市场。",
+      "cta": "了解分销网络"
+    },
+    "cta_banner": {
+      "badge": "HAQ FOOD · 携手共赢",
+      "title": "携手共铸可持续商业价值",
+      "desc": "与 HAQ FOOD 并肩同行，将安全、优质、美味的越南特色食品带给更广大的国内外消费者。",
+      "cta_contact": "商务洽谈",
+      "cta_explore": "浏览产品目录"
+    },
+    "footer": {
+      "sub": "河内 HAQ 股份公司 (HAQ FOOD HANOI JSC)",
+      "desc": "专注生产与分销地道越南风味包装零食，推动本土优质农产品迈向世界舞台。",
+      "b2b_cta": "B2B 商务与代工咨询",
+      "col1_title": "关于 HAQ FOOD",
+      "col1_link1": "公司概况与法定信息",
+      "col1_link2": "制造能力与工厂设施",
+      "col1_link3": "品牌故事与里程碑 (2021 — 2026)",
+      "col1_link4": "企业新闻与行业动态",
+      "col1_link5": "5 大核心价值观",
+      "col2_title": "核心特色产品",
+      "col2_link1": "全部产品总览 (HAQ Catalog) →",
+      "col2_link2": "HOKI 酥脆烘烤米纸 & 拌米纸",
+      "col2_link3": "海阳传统鲜绿豆糕 & 糕点礼盒",
+      "col2_link4": "高膨化度焦糖爆米花系列",
+      "col2_link5": "脱水肉干 & 经典休闲风味零食",
+      "col3_title": "官方联系方式",
+      "address_label": "地址：",
+      "hotline_label": "服务热线 / Zalo：",
+      "zalo_label": "官方企业 Zalo：",
+      "email_label": "商务合作邮箱：",
+      "tax_label": "统一税号：",
+      "rights": "版权所有 © 河内 HAQ 股份公司 (HAQ FOOD)。保留一切权利。",
+      "legal_badge": "企业合规与法人信息",
+      "legal_company": "CÔNG TY CỔ PHẦN HAQ HÀ NỘI (河内 HAQ 股份公司)",
+      "legal_cert": "企业营业执照登记认证",
+      "legal_authority": "发证机关：河内市计划与投资厅",
+      "legal_lookup": "官方企业信息查询",
+      "legal_license_label": "营业执照号码：",
+      "legal_license_detail": "签发日期：2021年03月11日 河内市计划与投资厅",
+      "policy_label": "政策与法律合规：",
+      "policy_refund": "退换货及退款政策",
+      "policy_privacy": "隐私保护政策",
+      "policy_terms": "服务与使用条款",
+      "policy_compliance": "食品安全合规备案",
+      "copyright_line": "HAQ FOOD HANOI JSC. ALL RIGHTS RESERVED."
+    }
+  },
+  "products_page": {
+    "breadcrumb_home": "首页",
+    "breadcrumb_products": "产品系列",
+    "eyebrow": "HAQ FOOD · 产品目录",
+    "all_products": "全部产品",
+    "all_desc": "HAQ FOOD 旗下全系列高品质包装加工食品与精选特色农产零食。",
+    "category_label": "产品品类：",
+    "view_details": "查看详情",
+    "quote_cta": "获取大宗批发报价",
+    "empty_title": "该品类暂无对应产品",
+    "empty_desc": "新批次特色产品正在加紧更新中，敬请期待。",
+    "all_tab": "全部"
+  },
+  "product_detail": {
+    "breadcrumb_home": "首页",
+    "breadcrumb_products": "产品系列",
+    "origin_title": "原料产地追溯：",
+    "origin_label": "原料产地追溯：",
+    "view_map": "在特产地图中查看 →",
+    "weight_label": "净含量",
+    "highlights_title": "产品亮点",
+    "packaging_title": "包装规格",
+    "weight": "净重",
+    "col_weight": "净重",
+    "packaging": "包装形式",
+    "col_spec": "包装形式",
+    "shelf_life": "保质期",
+    "col_shelf_life": "保质期",
+    "contact_moq": "商务咨询",
+    "updating_info": "资料更新中",
+    "spec_title": "产品理化与工艺特性",
+    "col_storage": "储存方式",
+    "col_cert": "权威认证",
+    "quote_btn": "索取 B2B 批发报价与样品",
+    "similar_title": "推荐同类产品",
+    "similar_products": "推荐同类产品",
+    "not_found_title": "产品未找到",
+    "not_found_desc": "该产品可能已下架或访问链接不正确，欢迎浏览其他热门零食。",
+    "back_home": "返回首页",
+    "no_image": "暂无图片",
+    "details_title": "产品详细规格参数",
+    "accordion_info": "基本信息",
+    "accordion_ingredients": "主要原料成分",
+    "accordion_storage": "食用说明与保存指南",
+    "manufacturing_date": "生产日期：",
+    "manufacturing_date_value": "标示于外包装上。",
+    "shelf_life_label": "保质期限：",
+    "certifications_label": "安全认证："
+  },
+  "capabilities": {
+    "badge": "生产能力与现代厂房",
+    "title": "符合国际高标准的现代化制造体系",
+    "subtitle": "密闭对流烘干线、无菌洁净车间、ISO 22000 & HACCP 国际认证，全面满足出口严苛标准。",
+    "process_title": "4 步闭环质量管控流程",
+    "cleanroom_title": "洁净车间与密闭烘烤流水线",
+    "cleanroom_desc": "车间配置专业空气净化、温度与湿度精密控制系统，确保零食保持天然纯正酥脆风味，彻底隔绝交叉污染风险。",
+    "oem_title": "OEM / ODM 贴牌代工与品牌定制服务",
+    "oem_desc": "HAQ FOOD 为海内外连锁品牌提供全流程代工解决方案，涵盖配方研发打样、专属包装定制及规模化量产交付。",
+    "cta_contact": "预约参观工厂 / OEM 合作咨询",
+    "cert_badge": "权威资质认证"
+  },
+  "history": {
+    "badge": "发展历程与里程碑",
+    "title": "传承与升华越南特色农产品的创新之路",
+    "subtitle": "从 2021 年的第一条密闭烘干流水线，到产品远销亚洲多个国家和地区的成熟供应链。",
+    "timeline_title": "重要发展足迹 (2021 — 2026)",
+    "stat_est": "创立年份",
+    "stat_partners": "大型零售合作方",
+    "stat_export": "海外出口市场",
+    "cta_partner": "成为 HAQ FOOD 合作伙伴"
+  },
+  "contact_page": {
+    "badge": "企业联系与商务洽谈",
+    "title": "与 HAQ FOOD 建立合作",
+    "subtitle": "我们随时恭候您的咨询，为您提供批发报价单、代理商政策与出口对接服务。",
+    "form_title": "发送商务咨询与报价申请",
+    "form_desc": "请填写下方基本信息，HAQ FOOD 资深业务代表将在 24 小时内与您取得联系。",
+    "name_label": "联系人姓名 *",
+    "phone_label": "联系电话 *",
+    "email_label": "企业邮箱 *",
+    "company_label": "公司名称 / 店铺 / 机构",
+    "need_label": "主要合作意向 *",
+    "note_label": "详细需求说明 / 预计采购量",
+    "submit_btn": "提交咨询申请",
+    "submitting": "正在提交中...",
+    "success_title": "信息提交成功！",
+    "success_desc": "衷心感谢您的关注，HAQ FOOD 商务团队将尽快与您联系沟通。",
+    "hq_title": "公司总部",
+    "factory_title": "制造工厂",
+    "hotline_title": "咨询热线",
+    "email_title": "合作邮箱"
+  }
+}

@@ -528,8 +528,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
+                                  width="160"
+                                  height="160"
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                   loading="lazy"
+                                  decoding="async"
                                 />
                               ) : (
                                 <span className="text-2xl opacity-60">🌾</span>
@@ -538,17 +541,15 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 
                             {/* Info */}
                             <div className="pt-2 flex flex-col flex-1 justify-between">
-                              <div>
-                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                  {prod.category || defaultCategoryText}
-                                </span>
-                                <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                                  {prod.name}
-                                </h4>
-                                <p className="text-[11px] text-haq-text-secondary line-clamp-2 font-light mt-0.5 hidden sm:block">
-                                  {prod.description || defaultProductDesc}
-                                </p>
-                              </div>
+                              <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                                {prod.category || defaultCategoryText}
+                              </span>
+                              <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                                {prod.name}
+                              </h4>
+                              <p className="text-[11px] text-haq-text-secondary line-clamp-2 font-light mt-0.5 hidden sm:block">
+                                {prod.description || defaultProductDesc}
+                              </p>
                               <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
                                 <span>{viewDetailText}</span>
                                 <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
@@ -583,19 +584,20 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             <img
                               src={showcaseProducts[0].image}
                               alt={showcaseProducts[0].name}
+                              width="240"
+                              height="240"
                               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
+                              decoding="async"
                             />
                           </div>
                           <div className="flex-1 min-w-0 sm:pt-2 flex flex-col justify-between">
-                            <div>
-                              <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {showcaseProducts[0].category || flagshipCategoryText}
-                              </span>
-                              <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                                {showcaseProducts[0].name}
-                              </h4>
-                            </div>
+                            <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                              {showcaseProducts[0].category || flagshipCategoryText}
+                            </span>
+                            <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                              {showcaseProducts[0].name}
+                            </h4>
                             <div className="mt-1 sm:mt-2 pt-1 sm:pt-1.5 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
                               <span>{viewDetailText}</span>
                               <span>→</span>
@@ -623,19 +625,20 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
+                                  width="150"
+                                  height="150"
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                   loading="lazy"
+                                  decoding="async"
                                 />
                               </div>
                               <div className="pt-2 flex flex-col flex-1 justify-between">
-                                <div>
-                                  <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                    {prod.category || defaultCategoryText}
-                                  </span>
-                                  <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                                    {prod.name}
-                                  </h4>
-                                </div>
+                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                                  {prod.category || defaultCategoryText}
+                                </span>
+                                <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
+                                  {prod.name}
+                                </h4>
                                 <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
                                   <span>{viewDetailText}</span>
                                   <span>→</span>
@@ -663,8 +666,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <img
                             src={showcaseProducts[0].image}
                             alt={showcaseProducts[0].name}
+                            width="120"
+                            height="120"
                             className="w-full h-full object-contain"
                             loading="lazy"
+                            decoding="async"
                           />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -716,8 +722,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <img
                             src={featuredProduct.image}
                             alt={featuredProduct.name}
+                            width="360"
+                            height="360"
                             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <span className="text-3xl opacity-60">🌾</span>
@@ -765,8 +774,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
+                                  width="160"
+                                  height="160"
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                   loading="lazy"
+                                  decoding="async"
                                 />
                               ) : (
                                 <span className="text-xl opacity-60">🌿</span>
@@ -813,8 +825,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             <img
                               src={supportingProducts[0].image}
                               alt={supportingProducts[0].name}
+                              width="360"
+                              height="360"
                               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <span className="text-3xl opacity-60">🌾</span>

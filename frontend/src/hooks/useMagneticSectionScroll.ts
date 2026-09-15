@@ -50,10 +50,23 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
   const animFrameIdRef = useRef<number | null>(null)
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lockTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const scrollRafIdRef = useRef<number | null>(null)
+
+  const activeSectionIdRef = useRef<string>('hero')
+  const cachedTopsRef = useRef<number[]>([])
+  const cachedFooterTopRef = useRef<number>(0)
+  const cachedSecIdsRef = useRef<string[]>([])
 
   const setInternalState = (state: ScrollState) => {
     scrollStateRef.current = state
     setScrollState(state)
+  }
+
+  const setInternalActiveSectionId = (id: string) => {
+    if (id && activeSectionIdRef.current !== id) {
+      activeSectionIdRef.current = id
+      setActiveSectionId(id)
+    }
   }
 
   // Dynamic header height calculation
@@ -86,10 +99,55 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     )
   }, [sectionSelector])
 
+  // Measure and cache geometric section positions once to eliminate forced layout thrashing
+  const recalculatePositions = useCallback(() => {
+    const sections = getSnapSections()
+    if (sections.length === 0) return
+
+    const hHeight = getHeaderHeight()
+    const tops: number[] = []
+    const ids: string[] = []
+
+    for (let i = 0; i < sections.length; i++) {
+      if (i === 0) {
+        tops.push(0)
+      } else {
+        const el = sections[i]
+        const rect = el.getBoundingClientRect()
+        tops.push(Math.max(0, Math.round(rect.top + window.scrollY - hHeight)))
+      }
+      const id = sections[i]?.getAttribute('data-section') || sections[i]?.id || ''
+      ids.push(id)
+    }
+
+    cachedTopsRef.current = tops
+    cachedSecIdsRef.current = ids
+
+    const footerEl = document.querySelector<HTMLElement>(footerSelector)
+    if (footerEl) {
+      const rect = footerEl.getBoundingClientRect()
+      cachedFooterTopRef.current = Math.max(0, Math.round(rect.top + window.scrollY - hHeight))
+    } else {
+      const lastSnap = sections[sections.length - 1]
+      if (lastSnap) {
+        const rect = lastSnap.getBoundingClientRect()
+        cachedFooterTopRef.current = Math.max(
+          0,
+          Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - hHeight)
+        )
+      } else {
+        cachedFooterTopRef.current = 0
+      }
+    }
+  }, [getSnapSections, getHeaderHeight, footerSelector])
+
   // Calculate target top for a snap section
   const getSectionTargetTop = useCallback(
-    (index: number, sections: HTMLElement[]): number => {
-      const hHeight = getHeaderHeight()
+    (index: number, sections: HTMLElement[], cachedHeaderHeight?: number): number => {
+      if (cachedTopsRef.current.length > index && cachedTopsRef.current[index] !== undefined) {
+        return cachedTopsRef.current[index]
+      }
+      const hHeight = cachedHeaderHeight !== undefined ? cachedHeaderHeight : getHeaderHeight()
       if (index <= 0 || !sections[index]) return 0
       const el = sections[index]
       const rect = el.getBoundingClientRect()
@@ -100,59 +158,75 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
   )
 
   // Get top position of Footer
-  const getFooterTop = useCallback((): number => {
-    const hHeight = getHeaderHeight()
-    const footerEl = document.querySelector<HTMLElement>(footerSelector)
-    if (footerEl) {
-      const rect = footerEl.getBoundingClientRect()
-      return Math.max(0, Math.round(rect.top + window.scrollY - hHeight))
-    }
-    const snapSections = getSnapSections()
-    const lastSnap = snapSections[snapSections.length - 1]
-    if (lastSnap) {
-      const rect = lastSnap.getBoundingClientRect()
-      return Math.max(0, Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - hHeight))
-    }
-    return 0
-  }, [getHeaderHeight, footerSelector, getSnapSections])
+  const getFooterTop = useCallback(
+    (cachedHeaderHeight?: number): number => {
+      if (cachedFooterTopRef.current > 0) {
+        return cachedFooterTopRef.current
+      }
+      const hHeight = cachedHeaderHeight !== undefined ? cachedHeaderHeight : getHeaderHeight()
+      const footerEl = document.querySelector<HTMLElement>(footerSelector)
+      if (footerEl) {
+        const rect = footerEl.getBoundingClientRect()
+        return Math.max(0, Math.round(rect.top + window.scrollY - hHeight))
+      }
+      const snapSections = getSnapSections()
+      const lastSnap = snapSections[snapSections.length - 1]
+      if (lastSnap) {
+        const rect = lastSnap.getBoundingClientRect()
+        return Math.max(0, Math.round(rect.top + window.scrollY + lastSnap.offsetHeight - hHeight))
+      }
+      return 0
+    },
+    [getHeaderHeight, footerSelector, getSnapSections]
+  )
 
   // Synchronize current section index with actual scroll position
   const syncCurrentIndex = useCallback(() => {
-    const sections = getSnapSections()
-    if (sections.length === 0) return
+    if (cachedTopsRef.current.length === 0) {
+      recalculatePositions()
+    }
+    const tops = cachedTopsRef.current
+    if (tops.length === 0) return
 
     const currentScroll = window.scrollY
-    const footerTop = getFooterTop()
+    const footerTop = cachedFooterTopRef.current
 
     // If scroll is in the Footer zone
     if (currentScroll >= footerTop - 15) {
-      currentSectionIndexRef.current = sections.length // Index = sections.length represents Footer
+      currentSectionIndexRef.current = tops.length // Index = tops.length represents Footer
       baseScrollYRef.current = footerTop
-      setActiveSectionId('footer')
+      setInternalActiveSectionId('footer')
       return
     }
 
     let closestIndex = 0
     let minDiff = Infinity
+    let closestTop = 0
 
-    for (let i = 0; i < sections.length; i++) {
-      const top = getSectionTargetTop(i, sections)
-      const diff = Math.abs(currentScroll - top)
+    for (let i = 0; i < tops.length; i++) {
+      const diff = Math.abs(currentScroll - tops[i])
       if (diff < minDiff) {
         minDiff = diff
         closestIndex = i
+        closestTop = tops[i]
       }
     }
 
     currentSectionIndexRef.current = closestIndex
-    baseScrollYRef.current = getSectionTargetTop(closestIndex, sections)
+    baseScrollYRef.current = closestTop
 
-    const secId =
-      sections[closestIndex]?.getAttribute('data-section') ||
-      sections[closestIndex]?.id ||
-      ''
-    if (secId) setActiveSectionId(secId)
-  }, [getSnapSections, getSectionTargetTop, getFooterTop])
+    const secId = cachedSecIdsRef.current[closestIndex] || ''
+    if (secId) setInternalActiveSectionId(secId)
+  }, [recalculatePositions])
+
+  // RAF-throttled synchronize to prevent forced reflow and layout thrashing
+  const scheduleSyncCurrentIndex = useCallback(() => {
+    if (scrollRafIdRef.current !== null) return
+    scrollRafIdRef.current = requestAnimationFrame(() => {
+      scrollRafIdRef.current = null
+      syncCurrentIndex()
+    })
+  }, [syncCurrentIndex])
 
   // Spring back animation
   const startSpringBack = useCallback(() => {
@@ -242,7 +316,7 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
               : sections[targetIndex]?.getAttribute('data-section') ||
                 sections[targetIndex]?.id ||
                 ''
-          if (secId) setActiveSectionId(secId)
+          if (secId) setInternalActiveSectionId(secId)
 
           setInternalState('LOCKED')
           if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
@@ -268,26 +342,13 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
 /**
  * Helper: Detects whether a DOM node is inside a scrollable child panel (e.g. Product Detail Panel / Modal / Card)
  * that currently possesses scrollable content (scrollHeight > clientHeight + 1).
+ * Uses fast element matching instead of walking ancestor chain with window.getComputedStyle.
  */
 function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
-  let el = target
-  while (el && el !== document.body && el !== document.documentElement) {
-    const isExplicit =
-      el.hasAttribute('data-scrollable-panel') ||
-      el.classList.contains('overflow-y-auto') ||
-      el.classList.contains('overflow-auto')
-
-    const style = window.getComputedStyle(el)
-    const isOverflowScrollable =
-      style.overflowY === 'auto' ||
-      style.overflowY === 'scroll' ||
-      isExplicit
-
-    if (isOverflowScrollable && el.scrollHeight > el.clientHeight + 1) {
-      return el
-    }
-
-    el = el.parentElement
+  if (!target) return null
+  const candidate = target.closest<HTMLElement>('[data-scrollable-panel], .overflow-y-auto, .overflow-auto')
+  if (candidate && candidate.scrollHeight > candidate.clientHeight + 1) {
+    return candidate
   }
   return null
 }
@@ -463,17 +524,26 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
 
     const handleScroll = () => {
       if (scrollStateRef.current === 'IDLE' && mediaQuery.matches) {
-        syncCurrentIndex()
+        scheduleSyncCurrentIndex()
+      }
+    }
+
+    const handleResize = () => {
+      if (mediaQuery.matches) {
+        recalculatePositions()
+        scheduleSyncCurrentIndex()
       }
     }
 
     const attachDesktopListeners = () => {
       if (isListening) return
       isListening = true
+      recalculatePositions()
       syncCurrentIndex()
       window.addEventListener('wheel', handleWheel, { passive: false })
       window.addEventListener('scroll', handleScroll, { passive: true })
-      window.addEventListener('resize', syncCurrentIndex)
+      window.addEventListener('resize', handleResize)
+      window.addEventListener('load', handleResize)
     }
 
     const detachDesktopListeners = () => {
@@ -481,10 +551,15 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
       isListening = false
       window.removeEventListener('wheel', handleWheel)
       window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', syncCurrentIndex)
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('load', handleResize)
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
       if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
       if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
+      if (scrollRafIdRef.current !== null) {
+        cancelAnimationFrame(scrollRafIdRef.current)
+        scrollRafIdRef.current = null
+      }
       pullOffsetRef.current = 0
       setInternalState('IDLE')
     }
@@ -512,6 +587,10 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
 
     return () => {
       detachDesktopListeners()
+      if (scrollRafIdRef.current !== null) {
+        cancelAnimationFrame(scrollRafIdRef.current)
+        scrollRafIdRef.current = null
+      }
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleBreakpointChange)
       } else {
@@ -528,7 +607,9 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
     getSnapSections,
     getSectionTargetTop,
     getFooterTop,
+    recalculatePositions,
     syncCurrentIndex,
+    scheduleSyncCurrentIndex,
     startCommitTransition,
     startSpringBack,
   ])

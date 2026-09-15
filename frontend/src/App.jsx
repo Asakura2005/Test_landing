@@ -1,20 +1,22 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from './pages/Home.jsx'
-import CompanyProfilePage from './pages/CompanyProfilePage.jsx'
-import HistoryPage from './pages/HistoryPage.jsx'
-import CapabilitiesPage from './pages/CapabilitiesPage.jsx'
-import ProductsPage from './pages/ProductsPage.jsx'
-import HeritagePage from './pages/HeritagePage.jsx'
-import NewsPage from './pages/NewsPage.jsx'
-import NewsDetailPage from './pages/NewsDetailPage.jsx'
-import ContactPage from './pages/ContactPage.jsx'
-import PolicyPage from './pages/PolicyPage.jsx'
-import RefundPolicyPage from './pages/RefundPolicyPage.jsx'
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx'
-import TermsOfServicePage from './pages/TermsOfServicePage.jsx'
-import Admin from './pages/Admin.jsx'
-import ProductDetailPage from './pages/ProductDetailPage.jsx'
+
+// Dynamic Route Splitting to avoid monolithic bundles and exclude Admin/heavy libraries from landing page
+const CompanyProfilePage = lazy(() => import('./pages/CompanyProfilePage.jsx'))
+const HistoryPage = lazy(() => import('./pages/HistoryPage.jsx'))
+const CapabilitiesPage = lazy(() => import('./pages/CapabilitiesPage.jsx'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'))
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage.jsx'))
+const HeritagePage = lazy(() => import('./pages/HeritagePage.jsx'))
+const NewsPage = lazy(() => import('./pages/NewsPage.jsx'))
+const NewsDetailPage = lazy(() => import('./pages/NewsDetailPage.jsx'))
+const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
+const PolicyPage = lazy(() => import('./pages/PolicyPage.jsx'))
+const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage.jsx'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage.jsx'))
+const Admin = lazy(() => import('./pages/Admin.jsx'))
 
 import { initPostHog, recordSessionVisit, trackPageView } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
@@ -68,9 +70,10 @@ function AppRoutes() {
       <SeoHead />
       <div className={`w-full overflow-x-clip relative min-h-screen ${containerBg}`}>
         <ErrorBoundary>
-          <Routes>
-            {/* ================= VIETNAMESE (Default) ================= */}
-            <Route path="/" element={<Home />} />
+          <Suspense fallback={<div className="min-h-screen bg-[#0C1E15]" />}>
+            <Routes>
+              {/* ================= VIETNAMESE (Default) ================= */}
+              <Route path="/" element={<Home />} />
             <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
             <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
@@ -175,7 +178,8 @@ function AppRoutes() {
           <Route path="/nangluc" element={<Navigate to="/nang-luc" replace />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+            </Routes>
+          </Suspense>
         </ErrorBoundary>
       </div>
     </>
@@ -184,7 +188,16 @@ function AppRoutes() {
 
 export default function App() {
   useEffect(() => {
-    initPostHog()
+    // Non-blocking deferred PostHog initialization
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        const handle = window.requestIdleCallback(() => initPostHog(), { timeout: 2000 })
+        return () => window.cancelIdleCallback(handle)
+      } else {
+        const timer = setTimeout(() => initPostHog(), 1000)
+        return () => clearTimeout(timer)
+      }
+    }
   }, [])
 
   return (
