@@ -86,7 +86,7 @@ const organizationJsonLd = {
       url: 'https://haq.com.vn/',
       logo: 'https://haq.com.vn/favicon.jpg',
       description:
-        'Nhà máy sản xuất, chế biến và gia công thực phẩm, đồ ăn vặt đóng gói đạt chuẩn ISO 22000 & HACCP tại Việt Nam.',
+        'Doanh nghiệp sản xuất và cung ứng các dòng sản phẩm đồ ăn vặt mang đậm hương vị truyền thống Việt Nam, phục vụ thị trường nội địa và xuất khẩu.',
       taxID: '0109547016',
       address: {
         '@type': 'PostalAddress',
