@@ -29,6 +29,12 @@ import { useLanguage } from '@/context/LanguageContext'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '@/utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '@/utils/routeI18n'
+import heroBanner1 from '@/assets/herobanner/hero_banner_1.jpg'
+
+const heroBannerFallback: string =
+  typeof heroBanner1 === 'object' && (heroBanner1 as any)?.src
+    ? (heroBanner1 as any).src
+    : String(heroBanner1 || '')
 
 const ITEMS_PER_PAGE = 12
 
@@ -125,8 +131,16 @@ export default function ProductsListingClient({
       if (root.slug === currentCategorySlug) return root
       if (root.children && root.children.some((c: any) => c.slug === currentCategorySlug)) return root
     }
-    return categoryTree[0] || { id: 'all', slug: 'all', name: 'Tất cả', shortName: 'Tất cả', children: [] }
-  }, [categoryTree, currentCategorySlug])
+    return (
+      categoryTree[0] || {
+        id: 'all',
+        slug: 'all',
+        name: en ? 'All Products' : ko ? '전체 제품' : zh ? '全部产品' : 'Tất cả sản phẩm',
+        shortName: 'Tất cả',
+        children: [],
+      }
+    )
+  }, [categoryTree, currentCategorySlug, en, ko, zh])
 
   const activeCategoryNode = useMemo(() => {
     const targetSlug = currentSubCategorySlug || currentCategorySlug
@@ -227,10 +241,17 @@ export default function ProductsListingClient({
     return processedProducts.slice(startIdx, startIdx + ITEMS_PER_PAGE)
   }, [processedProducts, currentPage])
 
-  // Reset page when search or sort changes
+  // Reset page when search, sort, or category filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, sortBy])
+  }, [searchQuery, sortBy, currentCategorySlug, currentSubCategorySlug])
+
+  // Safeguard: clamp currentPage if totalPages shrinks
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1)
+    }
+  }, [currentPage, totalPages])
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -269,7 +290,7 @@ export default function ProductsListingClient({
               >
                 {t('products_page.breadcrumb_products', 'Sản phẩm')}
               </Link>
-              {activeRootCategory.slug !== 'all' && (
+              {activeRootCategory?.slug !== 'all' && (
                 <>
                   <ChevronRight className="w-3 h-3 text-haq-border" />
                   <button
@@ -279,7 +300,7 @@ export default function ProductsListingClient({
                       !currentSubCategorySlug ? 'text-haq-red font-bold' : ''
                     }`}
                   >
-                    {activeRootCategory.name}
+                    {activeRootCategory?.name}
                   </button>
                 </>
               )}
@@ -297,7 +318,7 @@ export default function ProductsListingClient({
                 {t('products_page.eyebrow', 'HAQ FOOD · Danh mục sản phẩm')}
               </p>
               <h1 className="font-heading font-extrabold text-2xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug">
-                {activeCategoryNode.slug === 'all'
+                {activeCategoryNode?.slug === 'all'
                   ? en
                     ? 'All Products'
                     : ko
@@ -305,11 +326,11 @@ export default function ProductsListingClient({
                     : zh
                     ? '全部产品'
                     : 'Tất cả sản phẩm'
-                  : activeCategoryNode.name}
+                  : activeCategoryNode?.name}
               </h1>
               <p className="mt-2.5 text-xs sm:text-sm text-haq-text-secondary max-w-2xl leading-relaxed">
-                {activeCategoryNode.desc ||
-                  activeRootCategory.desc ||
+                {activeCategoryNode?.desc ||
+                  activeRootCategory?.desc ||
                   'Khám phá danh mục sản phẩm đồ ăn vặt đóng gói, hạt dinh dưỡng và nông sản chế biến đạt chuẩn ISO 22000 & HACCP.'}
               </p>
             </div>
@@ -318,7 +339,7 @@ export default function ProductsListingClient({
             <div className="pb-0">
               <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none border-b border-haq-border -mb-px">
                 {categoryTree.map((cat: any) => {
-                  const isSelected = activeRootCategory.slug === cat.slug
+                  const isSelected = activeRootCategory?.slug === cat.slug
                   return (
                     <button
                       key={cat.id}
@@ -341,7 +362,7 @@ export default function ProductsListingClient({
             </div>
 
             {/* Sub-category pills */}
-            {activeRootCategory.children && activeRootCategory.children.length > 0 && (
+            {activeRootCategory?.children && activeRootCategory.children.length > 0 && (
               <div className="py-3 flex items-center gap-2 overflow-x-auto scrollbar-none border-t border-haq-border/40">
                 <span className="text-[11px] font-heading font-bold text-haq-text-secondary uppercase mr-1 shrink-0 flex items-center gap-1">
                   <Layers className="w-3 h-3 text-haq-red" />
@@ -353,17 +374,17 @@ export default function ProductsListingClient({
                   onClick={() => handleSubCategoryChange(null)}
                   className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all cursor-pointer ${
                     !currentSubCategorySlug
-                      ? 'bg-haq-red text-white shadow-xs'
+                      ? 'bg-haq-red text-white shadow-sm'
                       : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/80 border border-haq-border'
                   }`}
                 >
                   {en
-                    ? `All ${activeRootCategory.name}`
+                    ? `All ${activeRootCategory?.name}`
                     : ko
-                    ? `${activeRootCategory.name} 전체`
+                    ? `${activeRootCategory?.name} 전체`
                     : zh
-                    ? `全部 ${activeRootCategory.name}`
-                    : `Tất cả ${activeRootCategory.name}`}
+                    ? `全部 ${activeRootCategory?.name}`
+                    : `Tất cả ${activeRootCategory?.name}`}
                 </button>
 
                 {activeRootCategory.children.map((child: any) => (
@@ -373,7 +394,7 @@ export default function ProductsListingClient({
                     onClick={() => handleSubCategoryChange(child.slug)}
                     className={`px-3 py-1.5 rounded-full text-xs font-heading font-bold whitespace-nowrap transition-all cursor-pointer ${
                       currentSubCategorySlug === child.slug
-                        ? 'bg-haq-red text-white shadow-xs'
+                        ? 'bg-haq-red text-white shadow-sm'
                         : 'bg-haq-cream text-haq-text-secondary hover:bg-haq-cream/80 border border-haq-border'
                     }`}
                   >
@@ -413,7 +434,8 @@ export default function ProductsListingClient({
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-haq-text-secondary hover:text-haq-ink transition-colors p-0.5"
+                    aria-label={en ? 'Clear search' : ko ? '검색어 지우기' : zh ? '清空搜索' : 'Xóa tìm kiếm'}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-haq-text-secondary hover:text-haq-ink transition-colors p-0.5 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red rounded"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -433,7 +455,8 @@ export default function ProductsListingClient({
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
-                    className="bg-white border border-haq-border rounded-lg px-2.5 py-1.5 text-xs text-haq-ink font-medium focus:outline-none focus:border-haq-red cursor-pointer"
+                    aria-label={en ? 'Sort products' : ko ? '제품 정렬' : zh ? '产品排序' : 'Sắp xếp sản phẩm'}
+                    className="bg-white border border-haq-border rounded-lg px-2.5 py-1.5 text-xs text-haq-ink font-medium focus:outline-none focus:border-haq-red focus-visible:ring-1 focus-visible:ring-haq-red cursor-pointer"
                   >
                     <option value="featured">
                       {en ? 'Featured' : ko ? '추천순' : zh ? '特色推荐' : 'Nổi bật'}
@@ -457,7 +480,7 @@ export default function ProductsListingClient({
         {/* ═══════════════════════════════════════════════════════════
             PRODUCTS GRID
             ═══════════════════════════════════════════════════════════ */}
-        <section ref={productsSectionRef} className="bg-haq-cream/30 py-10 sm:py-14">
+        <section ref={productsSectionRef} className="bg-haq-cream/30 py-10 sm:py-14 scroll-mt-20 sm:scroll-mt-24">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             {paginatedProducts.length === 0 ? (
               <div className="bg-white rounded-2xl p-8 sm:p-16 text-center border border-haq-border max-w-xl mx-auto">
@@ -500,7 +523,7 @@ export default function ProductsListingClient({
                   <button
                     type="button"
                     onClick={() => handleRootCategoryChange('all')}
-                    className="px-6 py-2.5 bg-haq-red text-white text-xs font-heading font-bold rounded-full hover:bg-haq-red/90 transition-colors cursor-pointer shadow-xs"
+                    className="px-6 py-2.5 bg-haq-red text-white text-xs font-heading font-bold rounded-full hover:bg-haq-red/90 transition-colors cursor-pointer shadow-sm"
                   >
                     {t('products_page.all_tab', 'Xem tất cả sản phẩm')}
                   </button>
@@ -508,7 +531,7 @@ export default function ProductsListingClient({
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
                   {paginatedProducts.map((prod: any, idx: number) => {
                     const currentCatSlug = activeCategoryNode?.slug || activeRootCategory?.slug || 'all'
                     const productImg =
@@ -516,11 +539,34 @@ export default function ProductsListingClient({
                       prod.images?.[0] ||
                       prod.image_url ||
                       prod.image ||
-                      '/herobanner/hero_banner_1.jpg'
+                      heroBannerFallback
                     const detailSlug = prod.slug || prod.id
+                    const rawWeight =
+                      (prod.variants &&
+                        prod.variants.length > 0 &&
+                        (prod.variants[0]?.size ||
+                          (prod.variants[0]?.name && prod.variants[0]?.name !== prod.name
+                            ? prod.variants[0]?.name
+                            : null))) ||
+                      prod.weight ||
+                      (prod.tag && !prod.is_pinned ? prod.tag : null)
+                    const rawWeightStr =
+                      typeof rawWeight === 'number' ? `${rawWeight}g` : String(rawWeight || '').trim()
+                    const weightBadge =
+                      rawWeightStr && rawWeightStr.length <= 20 ? rawWeightStr : null
+                    const provObj = Array.isArray(prod.provinces) ? prod.provinces[0] : prod.provinces
+                    const provName = provObj
+                      ? getLocalizedProvince(provObj, language)?.name || provObj.name || ''
+                      : ''
+                    const catObj = Array.isArray(prod.categories) ? prod.categories[0] : prod.categories
+                    const catLocalized = catObj ? getLocalizedCategory(catObj, language) : null
+                    const displayCategory =
+                      catLocalized?.name || catObj?.name || prod.category || activeRootCategory?.name || 'HAQ FOOD'
+                    const canonicalCategory =
+                      prod.canonical_category || catObj?.name || prod.category || activeRootCategory?.name || 'HAQ FOOD'
 
                     return (
-                      <Reveal key={prod.id} delay={Math.min(idx * 50, 300)}>
+                      <Reveal key={prod.id} delay={Math.min(idx * 50, 300)} className="h-full">
                         <Link
                           href={getProductDetailUrl(detailSlug, language)}
                           onClick={() => trackProductClick(prod, 'product_grid')}
@@ -529,50 +575,65 @@ export default function ProductsListingClient({
                           data-product-slug={detailSlug}
                           data-product-name={prod.name}
                           data-product-canonical-name={prod.canonical_name || prod.name}
-                          data-product-category={
-                            prod.canonical_category ||
-                            prod.categories?.name ||
-                            activeRootCategory.name ||
-                            'HAQ FOOD'
-                          }
+                          data-product-category={canonicalCategory}
                           data-product-price={prod.price_min || prod.variants?.[0]?.price || 0}
                           data-product-location="product_grid"
-                          className="group block bg-white rounded-2xl overflow-hidden border border-haq-border hover:border-haq-red/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full flex flex-col"
+                          className="group flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-haq-border hover:border-haq-red/40 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-2"
                         >
-                          {/* Image */}
-                          <div className="relative h-56 sm:h-60 bg-haq-cream/40 flex items-center justify-center p-6 overflow-hidden">
+                          {/* Image Container: 1:1 Aspect Ratio (aspect-square) */}
+                          <div className="relative w-full aspect-square bg-[#FAF9F6] overflow-hidden flex items-center justify-center">
                             <img
                               src={productImg}
-                              alt={prod.name}
-                              className="max-h-44 sm:max-h-48 w-auto max-w-full object-contain drop-shadow-xs transform group-hover:scale-105 transition-transform duration-500"
+                              alt={prod.name || 'HAQ FOOD'}
+                              onError={(e) => {
+                                e.currentTarget.onerror = null
+                                e.currentTarget.src = heroBannerFallback
+                              }}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                               loading="lazy"
                             />
-                            {prod.is_pinned && (
-                              <span className="absolute top-3 left-3 bg-[#16A34A] text-white font-heading text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
-                                {en ? 'Flagship' : ko ? '대표' : zh ? '核心' : 'Chủ lực'}
-                              </span>
-                            )}
+
+                            {/* Badges Overlay */}
+                            <div className="absolute top-2 sm:top-2.5 inset-x-2 sm:inset-x-2.5 flex items-start justify-between pointer-events-none z-10 gap-1.5">
+                              <div className="min-w-0 max-w-[70px] sm:max-w-[90px]">
+                                {prod.is_pinned && (
+                                  <span className="inline-flex items-center bg-[#16A34A] text-white font-heading text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shadow-sm max-w-full truncate">
+                                    {en ? 'Flagship' : ko ? '대표' : zh ? '核心' : 'Chủ lực'}
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="min-w-0 ml-auto max-w-[75px] sm:max-w-[110px] flex justify-end">
+                                {weightBadge && (
+                                  <span className="inline-flex items-center bg-white/90 backdrop-blur-sm text-haq-ink font-heading text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-haq-border/80 shadow-sm max-w-full truncate">
+                                    {weightBadge}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
 
                           {/* Content */}
-                          <div className="p-5 flex-1 flex flex-col">
-                            <div className="flex items-center justify-between gap-1.5 mb-2">
-                              <span className="text-[11px] font-heading font-bold text-haq-red uppercase tracking-wider truncate">
-                                {prod.categories?.name || activeRootCategory.name || 'HAQ FOOD'}
+                          <div className="p-3 sm:p-4 lg:p-5 flex-1 flex flex-col">
+                            <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2">
+                              <span className="text-[10px] sm:text-[11px] font-heading font-bold text-haq-red uppercase tracking-wider truncate">
+                                {displayCategory}
                               </span>
-                              {prod.provinces && (
-                                <span className="inline-flex items-center gap-1 text-[10px] text-haq-text-secondary font-medium bg-haq-cream px-2 py-0.5 rounded-full shrink-0">
-                                  <MapPin className="w-2.5 h-2.5" />{' '}
-                                  {getLocalizedProvince(prod.provinces, language).name}
+                              {provName && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] text-haq-text-secondary font-medium bg-haq-cream px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                                  <MapPin className="w-2.5 h-2.5 shrink-0" />{' '}
+                                  <span className="truncate max-w-[65px] sm:max-w-none">
+                                    {provName}
+                                  </span>
                                 </span>
                               )}
                             </div>
 
-                            <h3 className="font-heading font-bold text-base text-haq-ink group-hover:text-haq-red transition-colors leading-snug line-clamp-2 min-h-[2.75rem]">
+                            <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-haq-red transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] lg:min-h-[2.75rem]">
                               {prod.name}
                             </h3>
 
-                            <p className="mt-2 text-xs text-haq-text-secondary leading-relaxed line-clamp-2 min-h-[2.25rem]">
+                            <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-xs text-haq-text-secondary leading-relaxed line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem]">
                               {prod.description ||
                                 (en
                                   ? 'Safely packaged, certified for food safety ISO 22000 & HACCP.'
@@ -583,12 +644,12 @@ export default function ProductsListingClient({
                                   : 'Sản phẩm đóng gói an toàn, đạt chuẩn ATTP ISO 22000 & HACCP.')}
                             </p>
 
-                            <div className="mt-auto pt-4 flex items-center justify-between border-t border-haq-border/40">
-                              <span className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-haq-red group-hover:gap-2.5 transition-all">
+                            <div className="mt-auto pt-3 sm:pt-3.5 flex items-center justify-between border-t border-haq-border/40">
+                              <span className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-heading font-bold text-haq-red group-hover:gap-2 sm:group-hover:gap-2.5 transition-all">
                                 <span>
                                   {en ? 'View details' : ko ? '상세 보기' : zh ? '查看详情' : 'Xem chi tiết'}
                                 </span>
-                                <ArrowRight className="w-3.5 h-3.5" />
+                                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               </span>
                             </div>
                           </div>
@@ -617,8 +678,8 @@ export default function ProductsListingClient({
                         type="button"
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(currentPage - 1)}
-                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1"
-                        aria-label="Previous Page"
+                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
+                        aria-label={en ? 'Previous page' : ko ? '이전 페이지' : zh ? '上一页' : 'Trang trước'}
                       >
                         <ChevronLeft className="w-3.5 h-3.5" />
                         <span className="hidden sm:inline">
@@ -651,9 +712,11 @@ export default function ProductsListingClient({
                             key={pageNum}
                             type="button"
                             onClick={() => handlePageChange(pageNum)}
-                            className={`w-9 h-9 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer ${
+                            aria-label={`${en ? 'Page' : ko ? '페이지' : zh ? '第' : 'Trang'} ${pageNum}`}
+                            aria-current={isActive ? 'page' : undefined}
+                            className={`w-9 h-9 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1 ${
                               isActive
-                                ? 'bg-haq-red text-white shadow-xs'
+                                ? 'bg-haq-red text-white shadow-sm'
                                 : 'bg-white border border-haq-border text-haq-ink hover:border-haq-red/50'
                             }`}
                           >
@@ -667,8 +730,8 @@ export default function ProductsListingClient({
                         type="button"
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(currentPage + 1)}
-                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1"
-                        aria-label="Next Page"
+                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
+                        aria-label={en ? 'Next page' : ko ? '다음 페이지' : zh ? '下一页' : 'Trang sau'}
                       >
                         <span className="hidden sm:inline">
                           {en ? 'Next' : ko ? '다음' : zh ? '下一页' : 'Sau'}

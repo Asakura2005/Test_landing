@@ -7,6 +7,12 @@ export const metadata: Metadata = {
     'Các điều khoản chung, quyền và trách nhiệm của khách hàng, đối tác và HAQ FOOD khi sử dụng website và giao dịch thương mại.',
   alternates: {
     canonical: 'https://haq.com.vn/dieu-khoan-su-dung',
+    languages: {
+      vi: 'https://haq.com.vn/dieu-khoan-su-dung',
+      en: 'https://haq.com.vn/en/terms-of-service',
+      ko: 'https://haq.com.vn/ko/terms-of-service',
+      zh: 'https://haq.com.vn/zh/terms-of-service',
+    },
   },
   openGraph: {
     title: 'Điều Khoản Sử Dụng Dịch Vụ | HAQ FOOD',

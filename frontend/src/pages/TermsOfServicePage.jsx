@@ -37,16 +37,20 @@ export default function TermsOfServicePage() {
           </nav>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-haq-soft rounded-full text-haq-red text-xs font-mono font-bold tracking-wider uppercase mb-4 border border-haq-border">
-              <Scale className="w-3.5 h-3.5" />
-              <span>{data.badge}</span>
-            </div>
+            {data.badge ? (
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-haq-soft rounded-full text-haq-red text-xs font-mono font-bold tracking-wider uppercase mb-4 border border-haq-border">
+                <Scale className="w-3.5 h-3.5" />
+                <span>{data.badge}</span>
+              </div>
+            ) : null}
             <h1 className="text-2xl sm:text-4xl font-heading font-black text-haq-ink uppercase leading-snug">
               {data.title}
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed">
-              {data.intro}
-            </p>
+            {data.intro ? (
+              <p className="mt-4 text-sm sm:text-base text-haq-text-secondary leading-relaxed">
+                {data.intro}
+              </p>
+            ) : null}
           </div>
         </div>
       </section>
@@ -97,22 +101,44 @@ export default function TermsOfServicePage() {
             <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-10 border border-haq-border shadow-xs space-y-10">
               {data.sections.map((sec, idx) => (
                 <React.Fragment key={sec.id}>
-                  <section id={sec.id} className="space-y-3">
-                    <h2 className="text-lg sm:text-xl font-heading font-black text-haq-ink uppercase flex items-center gap-2">
-                      <span className="text-haq-red font-mono">{sec.num}.</span>
-                      <span>{sec.title}</span>
-                    </h2>
+                  <section id={sec.id} className="space-y-3 scroll-mt-28">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-haq-red uppercase tracking-wider">
+                        <span className="w-1.5 h-1.5 rounded-full bg-haq-red shrink-0" />
+                        <span>
+                          {language === 'en'
+                            ? `SECTION ${sec.num}`
+                            : language === 'ko'
+                            ? `제${sec.num}조`
+                            : language === 'zh'
+                            ? `第${sec.num}条`
+                            : `ĐIỀU ${sec.num}`}
+                        </span>
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-heading font-black text-haq-ink uppercase leading-snug">
+                        {sec.title}
+                      </h2>
+                    </div>
 
                     {sec.isContact ? (
                       <div className="p-4 bg-haq-cream rounded-2xl border border-haq-border text-xs sm:text-sm space-y-2 leading-relaxed">
                         <p>
                           <strong>{data.contactBox.company}</strong>
                         </p>
+                        {data.contactBox.taxCode && (
+                          <p>
+                            <strong>{data.contactBox.taxCodeLabel || 'Mã số thuế:'}</strong> {data.contactBox.taxCode}
+                          </p>
+                        )}
                         <p>
                           <strong>{data.contactBox.addressLabel}</strong> {data.contactBox.address}
                         </p>
                         <p>
-                          <strong>{data.contactBox.hotlineLabel}</strong> 024 23 23 56 56 |{' '}
+                          <strong>{data.contactBox.hotlineLabel}</strong>{' '}
+                          <a href="tel:02423235656" className="text-haq-red font-semibold hover:underline">
+                            024 23 23 56 56
+                          </a>{' '}
+                          |{' '}
                           <strong>{data.contactBox.zaloLabel}</strong>{' '}
                           <a
                             href="https://zalo.me/1361851474644984696"
@@ -125,7 +151,10 @@ export default function TermsOfServicePage() {
                           {data.contactBox.zaloNote}
                         </p>
                         <p>
-                          <strong>{data.contactBox.emailLabel}</strong> {data.contactBox.email}
+                          <strong>{data.contactBox.emailLabel}</strong>{' '}
+                          <a href={`mailto:${data.contactBox.email}`} className="text-haq-red hover:underline">
+                            {data.contactBox.email}
+                          </a>
                         </p>
                       </div>
                     ) : (
@@ -138,12 +167,12 @@ export default function TermsOfServicePage() {
                             return (
                               <ul key={cIdx} className="list-disc pl-5 space-y-1.5">
                                 {item.items.map((it, liIdx) => {
-                                  const parts = it.split(':')
-                                  if (parts.length > 1) {
+                                  const match = it.match(/^([^:：]+)[:：]([\s\S]*)$/)
+                                  if (match) {
                                     return (
                                       <li key={liIdx}>
-                                        <strong>{parts[0]}:</strong>
-                                        {parts.slice(1).join(':')}
+                                        <strong>{match[1]}:</strong>
+                                        {match[2]}
                                       </li>
                                     )
                                   }
@@ -156,12 +185,12 @@ export default function TermsOfServicePage() {
                             return (
                               <ol key={cIdx} className="list-decimal pl-5 space-y-2">
                                 {item.items.map((it, liIdx) => {
-                                  const parts = it.split(':')
-                                  if (parts.length > 1) {
+                                  const match = it.match(/^([^:：]+)[:：]([\s\S]*)$/)
+                                  if (match) {
                                     return (
                                       <li key={liIdx}>
-                                        <strong>{parts[0]}:</strong>
-                                        {parts.slice(1).join(':')}
+                                        <strong>{match[1]}:</strong>
+                                        {match[2]}
                                       </li>
                                     )
                                   }
