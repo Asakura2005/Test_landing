@@ -177,7 +177,20 @@ function AppRoutes() {
           <Route path="/tintuc" element={<Navigate to="/tin-tuc" replace />} />
           <Route path="/nangluc" element={<Navigate to="/nang-luc" replace />} />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Legacy & Direct English path redirects to canonical Vietnamese URLs */}
+          <Route path="/contact" element={<Navigate to="/lien-he" replace />} />
+          <Route path="/privacy-policy" element={<Navigate to="/chinh-sach-bao-mat" replace />} />
+          <Route path="/refund-policy" element={<Navigate to="/chinh-sach-doi-tra-hoan-tien" replace />} />
+          <Route path="/terms-of-service" element={<Navigate to="/dieu-khoan-su-dung" replace />} />
+          <Route path="/policy" element={<Navigate to="/chinh-sach" replace />} />
+          <Route path="/about" element={<Navigate to="/gioi-thieu" replace />} />
+          <Route path="/products" element={<Navigate to="/san-pham" replace />} />
+          <Route path="/news" element={<Navigate to="/tin-tuc" replace />} />
+          <Route path="/careers" element={<Navigate to="/tuyen-dung" replace />} />
+          <Route path="/capabilities" element={<Navigate to="/nang-luc" replace />} />
+          <Route path="/history" element={<Navigate to="/lich-su" replace />} />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>

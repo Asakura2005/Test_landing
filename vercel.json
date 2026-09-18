@@ -3,6 +3,19 @@
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "framework": "vite",
+  "redirects": [
+    { "source": "/contact", "destination": "/lien-he", "permanent": true },
+    { "source": "/privacy-policy", "destination": "/chinh-sach-bao-mat", "permanent": true },
+    { "source": "/refund-policy", "destination": "/chinh-sach-doi-tra-hoan-tien", "permanent": true },
+    { "source": "/terms-of-service", "destination": "/dieu-khoan-su-dung", "permanent": true },
+    { "source": "/policy", "destination": "/chinh-sach", "permanent": true },
+    { "source": "/about", "destination": "/gioi-thieu", "permanent": true },
+    { "source": "/products", "destination": "/san-pham", "permanent": true },
+    { "source": "/news", "destination": "/tin-tuc", "permanent": true },
+    { "source": "/careers", "destination": "/tuyen-dung", "permanent": true },
+    { "source": "/capabilities", "destination": "/nang-luc", "permanent": true },
+    { "source": "/history", "destination": "/lich-su", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],

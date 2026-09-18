@@ -147,6 +147,7 @@ export function getAlternateHreflangUrls(currentPath = '/', origin = 'https://ha
     en: `${origin}${getEquivalentRoute(currentPath, 'en')}`,
     ko: `${origin}${getEquivalentRoute(currentPath, 'ko')}`,
     zh: `${origin}${getEquivalentRoute(currentPath, 'zh')}`,
+    zhHans: `${origin}${getEquivalentRoute(currentPath, 'zh')}`,
     xDefault: `${origin}${getEquivalentRoute(currentPath, 'vi')}`,
   }
 }

@@ -300,7 +300,7 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
     saveStorageOptions(updated)
   }
 
-  // Danh sách ảnh có sẵn để gán cho biến thể (kết hợp thư viện ảnh sản phẩm + ảnh các biến thể khác + ảnh map cục bộ)
+  // Danh sách ảnh có sẵn để gán cho biến thể (kết hợp thư viện ảnh sản phẩm + ảnh các biến thể khác + ảnh mới tải lên)
   const availableGalleryImages = useMemo(() => {
     const list = []
     if (Array.isArray(formData.images)) {
@@ -308,11 +308,16 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         if (img && !list.includes(img)) list.push(img)
       })
     }
+    if (Array.isArray(galleryPreviews)) {
+      galleryPreviews.forEach(img => {
+        if (img && !list.includes(img)) list.push(img)
+      })
+    }
     variants.forEach(v => {
       if (v.img && !list.includes(v.img)) list.push(v.img)
     })
     return list
-  }, [formData.images, variants])
+  }, [formData.images, galleryPreviews, variants])
 
   // Lọc chỉ hiển thị các danh mục đang hoạt động (kèm danh mục hiện tại của sản phẩm nếu đang sửa)
   const activeCategories = useMemo(() => {
@@ -385,7 +390,26 @@ export default function ProductModal({ product, onClose, onSave, currentPinnedCo
         shelf_life: product.shelf_life !== undefined && product.shelf_life !== null ? product.shelf_life : '',
         certifications: product.certifications !== undefined && product.certifications !== null ? product.certifications : '',
         box_spec: product.box_spec || '',
-        images: Array.isArray(product.images) ? product.images : [],
+        images: (() => {
+          const list = []
+          if (Array.isArray(product.images)) {
+            product.images.forEach(img => {
+              if (img && typeof img === 'string' && !list.includes(img)) list.push(img)
+            })
+          }
+          if (Array.isArray(product.variants)) {
+            product.variants.forEach(v => {
+              if (v?.img && typeof v.img === 'string' && !list.includes(v.img)) list.push(v.img)
+            })
+          }
+          if (product.image_url && typeof product.image_url === 'string' && !list.includes(product.image_url)) {
+            list.push(product.image_url)
+          }
+          if (product.image && typeof product.image === 'string' && !list.includes(product.image)) {
+            list.push(product.image)
+          }
+          return list
+        })(),
         shopee_url: shopeeUrl,
         lazada_url: lazadaUrl,
         tiktok_url: tiktokUrl,

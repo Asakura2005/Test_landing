@@ -696,7 +696,7 @@ export const POLICY_TRANSLATIONS = {
               "type": "ul",
               "items": [
                 "Dữ liệu định danh & liên hệ: Họ và tên người đại diện, chức vụ, tên đơn vị/đại lý/siêu thị, số điện thoại, email, địa chỉ giao nhận hàng và trụ sở doanh nghiệp.",
-                "Thông tin thương mại B2B: Nhóm sản phẩm đồ ăn vặt quan tâm (Bánh tráng HOKI, Bánh đậu xanh tươi, Bắp rang bơ nổ công nghệ cao, Bò khô cay...), sản lượng dự kiến, thị trường phân phối và yêu cầu gia công OEM/ODM.",
+                "Thông tin thương mại B2B: Nhóm sản phẩm đồ ăn vặt quan tâm (Bánh tráng đóng gói, Bánh đậu xanh tươi, Bắp rang bơ nổ công nghệ cao, Bò khô cay...), sản lượng dự kiến, thị trường phân phối và yêu cầu gia công OEM/ODM.",
                 "Thông tin tài chính & thanh toán: Số tài khoản ngân hàng, chi nhánh mở tài khoản phục vụ đối soát công nợ, giao dịch thương mại hoặc hoàn tiền đổi trả theo quy định.",
                 "Dữ liệu kỹ thuật số tự động: Địa chỉ IP, loại trình duyệt, hệ điều hành thiết bị, thời gian truy cập và nhật ký tương tác ẩn danh nhằm tối ưu hóa hiệu năng website."
               ]
@@ -945,7 +945,7 @@ export const POLICY_TRANSLATIONS = {
               "type": "ul",
               "items": [
                 "Identity & Contact Details: Full name of representative, job title, company/distributor/supermarket name, phone number, email address, corporate registered address, delivery location.",
-                "B2B Commercial Requirements: Target packaged snack product lines (HOKI rice paper, fresh mung bean cake, gourmet popcorn, beef jerky...), estimated order volume, target market, custom OEM/ODM packaging requests.",
+                "B2B Commercial Requirements: Target packaged snack product lines (Packaged rice paper, fresh mung bean cake, gourmet popcorn, beef jerky...), estimated order volume, target market, custom OEM/ODM packaging requests.",
                 "Financial & Settlement Details: Corporate bank account numbers, branch details for billing reconciliation, electronic contract settlement, or verified refunds.",
                 "Automated Telemetry: IP address, browser type, operating system, timestamped session metrics, and aggregated navigational logs to optimize platform responsiveness."
               ]
@@ -1194,7 +1194,7 @@ export const POLICY_TRANSLATIONS = {
               "type": "ul",
               "items": [
                 "신원 및 연락처 정보: 담당자 성명, 직책, 회사/대리점/유통사명, 전화번호, 이메일, 사업장 및 납품 배송지 주소.",
-                "B2B 상거래 정보: 관심 스낵 식품군(HOKI 라이스페이퍼, 즉석 녹두 케이크, 하이테크 팝콘, 매콤 건조 소고기 등), 예상 발주량, 유통 국가, 맞춤형 라벨 OEM 요구 사양.",
+                "B2B 상거래 정보: 관심 스낵 식품군(포장 라이스페이퍼, 즉석 녹두 케이크, 하이테크 팝콘, 매콤 건조 소고기 등), 예상 발주량, 유통 국가, 맞춤형 라벨 OEM 요구 사양.",
                 "금융 및 정산 정보: 대금 정산, 거래 대조 및 반품 환불을 위한 은행명, 계좌번호 및 예금주 정보.",
                 "자동 수집 기술 로그: 웹 브라우징 최적화 및 보안 강화를 위한 접속 IP 주소, 브라우저 유형, 접속 시간 및 방문 경로 통계."
               ]
@@ -1427,7 +1427,7 @@ export const POLICY_TRANSLATIONS = {
               "type": "ul",
               "items": [
                 "身份与联系方式：业务负责人姓名、职务、企业/分销商名称、联系电话、电子邮箱、企业地址及货物交收地址。",
-                "B2B 商业合作需求：所关注的包装休闲食品系列（HOKI 拌米纸、鲜绿豆糕、高新膨化爆米花、风味辣牛肉干等）、预计采购量、目标销售区域、专属 OEM/ODM 贴牌定制要求。",
+                "B2B 商业合作需求：所关注的包装休闲食品系列（包装拌米纸、鲜绿豆糕、高新膨化爆米花、风味辣牛肉干等）、预计采购量、目标销售区域、专属 OEM/ODM 贴牌定制要求。",
                 "财务与结算信息：对公银行账户信息，用于对账结算、开具增值税专用发票或办理退换货退款。",
                 "网络自动化技术日志：为提升网页加载速度与防范黑客攻击所记录的访问 IP 地址、浏览器版本、操作系统及匿名访问行为数据。"
               ]
@@ -1642,11 +1642,11 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "Điều khoản Sử dụng này (\"Điều khoản\") cấu thành thỏa thuận pháp lý có hiệu lực ràng buộc giữa cá nhân, tổ chức truy cập, khai thác thông tin (\"Người dùng\" hoặc \"Khách hàng\") và CÔNG TY CỔ PHẦN HAQ HÀ NỘI (\"HAQ FOOD\") liên quan đến việc sử dụng website chính thức tại địa chỉ haq.com.vn, bao gồm toàn bộ các tên miền phụ, trang sản phẩm, dịch vụ tương tác trực tuyến và các cổng thông tin liên kết."
+            "text": "Bản Điều khoản sử dụng này là thỏa thuận pháp lý ràng buộc giữa cá nhân, tổ chức truy cập hoặc sử dụng website và CÔNG TY CỔ PHẦN HAQ HÀ NỘI (HAQ FOOD) liên quan đến việc khai thác website chính thức tại địa chỉ haq.com.vn, bao gồm các trang sản phẩm, dịch vụ tương tác trực tuyến và các cổng thông tin liên kết."
           },
           {
             "type": "p",
-            "text": "Bằng việc tiếp tục điều hướng, gửi yêu cầu báo giá, đăng ký nhận tài liệu sản phẩm hoặc xác lập giao dịch trên hệ thống, Người dùng xác nhận đã đọc kỹ, thấu hiểu và cam kết tuân thủ vô điều kiện toàn bộ quy định tại Điều khoản này. Trường hợp không đồng thuận với bất kỳ nội dung nào, Người dùng vui lòng chấm dứt ngay lập tức hành vi truy cập và khai thác website."
+            "text": "Bằng việc tiếp tục điều hướng, gửi yêu cầu báo giá, đăng ký nhận tài liệu sản phẩm hoặc xác lập giao dịch trên hệ thống, người dùng xác nhận đã đọc kỹ, hiểu rõ và đồng ý tuân thủ toàn bộ quy định tại Điều khoản này. Trường hợp không đồng ý với bất kỳ nội dung nào, quý khách vui lòng ngừng truy cập và sử dụng website."
           }
         ]
       },
@@ -1665,7 +1665,7 @@ export const POLICY_TRANSLATIONS = {
               "Tên pháp nhân: CÔNG TY CỔ PHẦN HAQ HÀ NỘI (Tên quốc tế: HAQ HANOI JOINT STOCK COMPANY; Tên viết tắt: HAQ FOOD).",
               "Mã số doanh nghiệp (MST): 0109547016 do Sở Kế hoạch và Đầu tư Thành phố Hà Nội cấp đăng ký lần đầu ngày 11/03/2021.",
               "Trụ sở chính: Số 30, Ngõ 1 Phạm Tuấn Tài, Phường Nghĩa Đô, Thành Phố Hà Nội, Việt Nam.",
-              "Lĩnh vực hoạt động cốt lõi: Sản xuất chế biến thực phẩm ăn liền chất lượng cao (bánh tráng HOKI, bắp rang bơ, bánh đậu xanh, bò khô), bán buôn B2B, gia công OEM/ODM và xuất khẩu thực phẩm."
+              "Lĩnh vực hoạt động cốt lõi: Sản xuất chế biến thực phẩm ăn liền chất lượng cao (bánh tráng cuộn, bánh tráng nướng, bắp rang bơ, bánh đậu xanh, bò khô), bán buôn B2B, gia công OEM/ODM và xuất khẩu thực phẩm."
             ]
           }
         ]
@@ -1677,7 +1677,7 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "Toàn bộ nội dung hiển thị trên website bao gồm nhưng không giới hạn ở: nhãn hiệu chữ, biểu trưng đồ họa HAQ FOOD, nhãn hiệu sản phẩm HOKI, slogan thương hiệu, hình ảnh chụp thực tế sản phẩm, video quy trình nhà máy, bao bì đóng gói thương phẩm, thiết kế giao diện đồ họa, mã nguồn và hệ thống cơ sở dữ liệu đều là tài sản trí tuệ độc quyền của HAQ FOOD hoặc bên cấp phép hợp pháp, được bảo hộ nghiêm ngặt theo Luật Sở hữu trí tuệ Việt Nam và các điều ước quốc tế về bản quyền."
+            "text": "Toàn bộ nội dung hiển thị trên website bao gồm nhưng không giới hạn ở: nhãn hiệu chữ, biểu trưng đồ họa và tên thương mại HAQ FOOD, slogan thương hiệu, hình ảnh chụp thực tế sản phẩm, video quy trình nhà máy, bao bì đóng gói thương phẩm, thiết kế giao diện đồ họa, mã nguồn và hệ thống cơ sở dữ liệu đều là tài sản trí tuệ độc quyền của HAQ FOOD hoặc bên cấp phép hợp pháp, được bảo hộ nghiêm ngặt theo Luật Sở hữu trí tuệ Việt Nam và các điều ước quốc tế về bản quyền."
           },
           {
             "type": "ul",
@@ -1703,7 +1703,7 @@ export const POLICY_TRANSLATIONS = {
               "Gian lận danh tính: Cung cấp thông tin doanh nghiệp giả mạo, mạo danh đại diện pháp luật của cá nhân/tổ chức khác khi đăng ký trở thành đại lý hoặc yêu cầu báo giá B2B.",
               "Xâm phạm an ninh mạng: Phát tán mã độc, virus, phần mềm độc hại, thực hiện các cuộc tấn công từ chối dịch vụ (DoS/DDoS) hoặc xâm nhập trái phép hạ tầng máy chủ website.",
               "Trích xuất tự động trái phép: Sử dụng robot, bot mạng, công cụ quét tự động để thu thập dữ liệu giá sỉ, thông tin sản phẩm hoặc cấu trúc cơ sở dữ liệu của HAQ FOOD.",
-              "Hành vi làm phương hại uy tín: Đăng tải hoặc lan truyền các thông tin xuyên tạc, bôi nhọ, cạnh tranh không lành mạnh gây ảnh hưởng tiêu cực đến danh dự, thương hiệu HAQ FOOD và các dòng sản phẩm bánh tráng HOKI."
+              "Hành vi làm phương hại uy tín: Đăng tải hoặc lan truyền các thông tin xuyên tạc, bôi nhọ, cạnh tranh không lành mạnh gây ảnh hưởng tiêu cực đến danh dự, thương hiệu HAQ FOOD và các dòng sản phẩm của công ty."
             ]
           }
         ]
@@ -1899,7 +1899,7 @@ export const POLICY_TRANSLATIONS = {
           },
           {
             "type": "p",
-            "text": "By continuing navigation, submitting price requests, requesting product dossiers, or engaging in commercial inquiries, the User confirms that they have thoroughly read, understood, and agreed to adhere unconditionally to these Terms. If you do not agree with any part of these Terms, please immediately cease access and use of this website."
+            "text": "By continuing navigation, submitting price requests, requesting product dossiers, or engaging in commercial inquiries, you confirm that you have thoroughly read, understood, and agreed to adhere to these Terms. If you do not agree with any part of these Terms, please cease access and use of this website."
           }
         ]
       },
@@ -1918,7 +1918,7 @@ export const POLICY_TRANSLATIONS = {
               "Legal Name: HAQ HANOI JOINT STOCK COMPANY (Trading Name: HAQ FOOD).",
               "Enterprise Registration / Tax ID: 0109547016, first issued on March 11, 2021, by the Hanoi Department of Planning and Investment.",
               "Head Office: No. 30, Alley 1 Pham Tuan Tai, Nghia Do Ward, Cau Giay District, Hanoi City, Vietnam.",
-              "Core Business: Industrial manufacturing of high-quality snack foods (HOKI rice paper rolls, popcorn, green bean cakes, beef jerky), B2B wholesale distribution, OEM/ODM contract manufacturing, and international food export."
+              "Core Business: Industrial manufacturing of high-quality snack foods (crispy rice paper snacks, popcorn, green bean cakes, beef jerky), B2B wholesale distribution, OEM/ODM contract manufacturing, and international food export."
             ]
           }
         ]
@@ -1930,7 +1930,7 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "All visual and informational content published on this website—including brand names, HAQ FOOD graphic logos, HOKI trademarks, brand slogans, product photography, factory production footage, commercial packaging designs, graphical layouts, source code, and databases—is the exclusive intellectual property of HAQ FOOD or licensed partners, rigorously protected under the Law on Intellectual Property of Vietnam and international copyright treaties."
+            "text": "All visual and informational content published on this website—including brand names, HAQ FOOD graphic logos, trade names, brand slogans, product photography, factory production footage, commercial packaging designs, graphical layouts, source code, and databases—is the exclusive intellectual property of HAQ FOOD or licensed partners, rigorously protected under the Law on Intellectual Property of Vietnam and international copyright treaties."
           },
           {
             "type": "ul",
@@ -1956,7 +1956,7 @@ export const POLICY_TRANSLATIONS = {
               "Identity Fraud: Providing deceptive corporate credentials or misrepresenting legal authorization when inquiring about wholesale distributor status or OEM production quotes.",
               "Cybersecurity Violations: Distributing malware, trojans, executing Denial of Service (DoS/DDoS) attacks, or attempting unauthorized intrusion into server infrastructure.",
               "Automated Scraping: Deploying automated spiders, bots, or data harvesting scripts to mine pricing indices, technical specifications, or corporate databases.",
-              "Defamatory Conduct: Disseminating fabricated, misleading, or unfair statements that disparage HAQ FOOD reputation or the HOKI product line."
+              "Defamatory Conduct: Disseminating fabricated, misleading, or unfair statements that disparage HAQ FOOD reputation or the company's product lines."
             ]
           }
         ]
@@ -2171,7 +2171,7 @@ export const POLICY_TRANSLATIONS = {
               "법인명: HAQ 하노이 주식회사 (HAQ HANOI JOINT STOCK COMPANY; 약칭: HAQ FOOD).",
               "사업자등록번호: 0109547016 (2021년 3월 11일 하노이시 기획투자국 최초 등록).",
               "본사 주소: 베트남 하노이시 까우저이군 응이어도동 팜뚜언따이 1골목 30호.",
-              "주요 사업 영역: 프리미엄 식품 제조 및 유통(HOKI 라이스페이퍼 롤, 팝콘, 녹두 케이크, 소고기 육포), B2B 도매 공급, OEM/ODM 위탁 제조 및 글로벌 수출."
+              "주요 사업 영역: 프리미엄 식품 제조 및 유통(라이스페이퍼 스낵, 팝콘, 녹두 케이크, 소고기 육포), B2B 도매 공급, OEM/ODM 위탁 제조 및 글로벌 수출."
             ]
           }
         ]
@@ -2183,7 +2183,7 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "본 웹사이트에 게재된 상표, HAQ FOOD 로고, HOKI 브랜드 명칭, 슬로건, 제품 실물 사진, 생산 공정 영상, 포장 디자인, 그래픽 인터페이스, 소스 코드 및 데이터베이스는 베트남 지적재산권법 및 국제 저작권 협약에 따라 보호되는 HAQ FOOD의 독점적 지적재산입니다."
+            "text": "본 웹사이트에 게재된 상표, HAQ FOOD 로고, 슬로건, 제품 실물 사진, 생산 공정 영상, 포장 디자인, 그래픽 인터페이스, 소스 코드 및 데이터베이스는 베트남 지적재산권법 및 국제 저작권 협약에 따라 보호되는 HAQ FOOD의 독점적 지적재산입니다."
           },
           {
             "type": "ul",
@@ -2209,7 +2209,7 @@ export const POLICY_TRANSLATIONS = {
               "정보 허위 기재: 대리점 신청 또는 OEM 견적 요청 시 허위 사업자 정보나 타인의 명의를 도용하는 행위.",
               "사이버 보안 침해: 악성 코드, 바이러스 유포, 서비스 거부(DoS/DDoS) 공격 및 서버 인프라에 대한 무단 침투 시도.",
               "자동화된 데이터 추출: 봇, 크롤러 등을 이용하여 도매 가격, 기술 사양 및 고객 데이터베이스를 무단 수집하는 행위.",
-              "명예 훼손 및 부정경쟁: HAQ FOOD 및 HOKI 브랜드에 대한 허위 사실 유포, 비방 및 공정한 거래 질서를 해치는 행위."
+              "명예 훼손 및 부정경쟁: HAQ FOOD 및 회사 제품군에 대한 허위 사실 유포, 비방 및 공정한 거래 질서를 해치는 행위."
             ]
           }
         ]
@@ -2401,7 +2401,7 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "本使用条款（以下简称“本条款”）构成访问、浏览或使用本网站信息的任何个人、企业机构（以下简称“用户”或“客户”）与河内 HAQ 股份公司（以下简称“HAQ FOOD”）之间具有法律约束力的正式协议，适用于官方主域名 haq.com.vn 及其所有二级域名、产品展示与在线互动业务系统。"
+            "text": "本使用条款构成访问、浏览或使用本网站信息的个人、企业用户与河内 HAQ 股份公司（HAQ FOOD）之间具有法律约束力的正式协议，适用于官方主域名 haq.com.vn 及其所有二级域名、产品展示与在线互动业务系统。"
           },
           {
             "type": "p",
@@ -2424,7 +2424,7 @@ export const POLICY_TRANSLATIONS = {
               "法人名称：河内 HAQ 股份公司（英文名称：HAQ HANOI JOINT STOCK COMPANY；商业品牌简称：HAQ FOOD）。",
               "统一社会信用税号：0109547016，于2021年3月11日由越南河内市计划投资局依法核准设立。",
               "法定总部地址：越南河内市纸桥郡义都坊范俊才街1巷30号。",
-              "核心经营范围：高品质休闲预包装食品研发与生产（HOKI 春卷皮/米纸卷、爆米花、绿豆糕、牛肉干）、大宗 B2B 批发分销、OEM/ODM 代工制造及国际食品进出口贸易。"
+              "核心经营范围：高品质休闲预包装食品研发与生产（酥脆米纸卷、爆米花、绿豆糕、牛肉干）、大宗 B2B 批发分销、OEM/ODM 代工制造及国际食品进出口贸易。"
             ]
           }
         ]
@@ -2436,7 +2436,7 @@ export const POLICY_TRANSLATIONS = {
         "content": [
           {
             "type": "p",
-            "text": "本网站发布的所有文字内容、图形标志、HAQ FOOD 注册商标、HOKI 产品商标、宣传标语、实拍商品影像、工厂标准化车间视频、商业包装装潢、网页界面设计、软件源代码及底层数据库，均属 HAQ FOOD 或合法授权合作方所有的排他性知识产权，受《越南知识产权法》及国际版权公约严格保护。"
+            "text": "本网站发布的所有文字内容、图形标志、HAQ FOOD 注册商标与商业名称、宣传标语、实拍商品影像、工厂标准化车间视频、商业包装装潢、网页界面设计、软件源代码及底层数据库，均属 HAQ FOOD 或合法授权合作方所有的排他性知识产权，受《越南知识产权法》及国际版权公约严格保护。"
           },
           {
             "type": "ul",
@@ -2462,7 +2462,7 @@ export const POLICY_TRANSLATIONS = {
               "身份信息欺诈：在申请代理资质或索取 B2B 批量报价时故意提交虚假企业资质或冒充他人法定代表人身份。",
               "网络攻击破坏：蓄意传播计算机病毒、木马程序，发起拒绝服务攻击（DoS/DDoS）或非法探测渗透服务器主机系统。",
               "恶意爬取数据：利用网络机器人、自动化爬虫脚本抓取批发定价阶梯、核心产品配方描述或商业客户数据库。",
-              "商业诋毁与不正当竞争：编造、散布虚假或误导性商业言论，损害 HAQ FOOD 企业商誉及 HOKI 系列产品的市场声誉。"
+              "商业诋毁与不正当竞争：编造、散布虚假或误导性商业言论，损害 HAQ FOOD 企业商誉及旗下各系列产品的市场声誉。"
             ]
           }
         ]

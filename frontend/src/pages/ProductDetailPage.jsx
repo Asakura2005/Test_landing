@@ -483,7 +483,7 @@ export default function ProductDetailPage() {
                   <span className="text-xs font-heading font-bold text-[#16A34A] uppercase tracking-wider block">{localizedCategory.name}</span>
                 )}
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-haq-ink leading-normal mb-3 uppercase">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-heading font-extrabold text-haq-ink !leading-[1.28] tracking-normal mb-3 uppercase">
                 {localizedProduct.name}
               </h1>
               {language === 'vi' ? (

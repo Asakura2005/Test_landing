@@ -52,10 +52,11 @@ html[lang="ko"] .font-heading {
   color: #FFFFFF;
 }
 
-/* Vietnamese diacritics safety — prevent clipping on bold headings */
-h1, h2, h3 {
+/* Vietnamese diacritics safety — prevent clipping and line collision on bold headings */
+h1, h2, h3, h4 {
   overflow: visible !important;
   -webkit-text-stroke: 0;
+  line-height: 1.28;
 }
 
 /* Hide floating contact buttons when mobile navigation drawer is open to prevent any UI overlap */

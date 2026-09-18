@@ -497,7 +497,7 @@ export default function ProductsManager({
           {/* Mobile View: Product List Cards (Hidden on md+) */}
           <div className="md:hidden divide-y divide-[#E2E8E4]">
             {paginatedProducts.map((p) => {
-              const mainImage = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : null
+              const mainImage = (Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : null) || p.variants?.find(v => v?.img)?.img || p.image_url || p.image || null
               const isSelected = selectedProductIds.includes(p.id)
               const isActive = p.is_active !== false
               const viewsCount = Number(viewsMap[p.slug] || viewsMap[p.id] || 0)
@@ -591,7 +591,7 @@ export default function ProductsManager({
 
               <tbody className="divide-y divide-[#E2E8E4] text-xs">
                 {paginatedProducts.map((p) => {
-                  const mainImage = Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : null
+                  const mainImage = (Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : null) || p.variants?.find(v => v?.img)?.img || p.image_url || p.image || null
                   const isSelected = selectedProductIds.includes(p.id)
                   const isActive = p.is_active !== false
                   const viewsCount = Number(viewsMap[p.slug] || viewsMap[p.id] || 0)

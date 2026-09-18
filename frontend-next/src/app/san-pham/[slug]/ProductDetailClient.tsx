@@ -350,7 +350,7 @@ export default function ProductDetailClient({
                   {localizedCategory.name}
                 </span>
               )}
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold text-haq-ink leading-tight mb-2 uppercase">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold text-haq-ink !leading-[1.28] tracking-normal mb-2 uppercase">
                 {localizedProduct.name}
               </h1>
               {language === 'vi' ? (

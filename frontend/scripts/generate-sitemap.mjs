@@ -149,14 +149,15 @@ function addMultilingualSectionEntries(entries, sec) {
     { lang: 'vi', href: `${SITE_ORIGIN}${sec.vi}` },
     { lang: 'en', href: `${SITE_ORIGIN}${sec.en}` },
     { lang: 'ko', href: `${SITE_ORIGIN}${sec.ko}` },
-    { lang: 'zh', href: `${SITE_ORIGIN}${sec.zh}` },
+    { lang: 'zh-Hans', href: `${SITE_ORIGIN}${sec.zh}` },
     { lang: 'x-default', href: `${SITE_ORIGIN}${sec.vi}` },
   ]
 
   const basePriority = parseFloat(sec.priority)
-  const variantPriority = Math.max(0.1, (basePriority - 0.1)).toFixed(1)
+  // Give international language variants lower priority (0.3 - 0.5) so Google clearly prioritizes Vietnamese in VN
+  const variantPriority = Math.max(0.2, (basePriority - 0.4)).toFixed(1)
 
-  // VI
+  // VI (Primary domestic market)
   entries.push(renderUrlEntry({
     loc: `${SITE_ORIGIN}${sec.vi}`,
     alternates,
@@ -164,28 +165,28 @@ function addMultilingualSectionEntries(entries, sec) {
     changefreq: sec.changefreq,
   }))
 
-  // EN
+  // EN (International B2B)
   entries.push(renderUrlEntry({
     loc: `${SITE_ORIGIN}${sec.en}`,
     alternates,
     priority: variantPriority,
-    changefreq: sec.changefreq,
+    changefreq: 'monthly',
   }))
 
-  // KO
+  // KO (Korea B2B)
   entries.push(renderUrlEntry({
     loc: `${SITE_ORIGIN}${sec.ko}`,
     alternates,
     priority: variantPriority,
-    changefreq: sec.changefreq,
+    changefreq: 'monthly',
   }))
 
-  // ZH
+  // ZH-HANS (China / Global Chinese B2B)
   entries.push(renderUrlEntry({
     loc: `${SITE_ORIGIN}${sec.zh}`,
     alternates,
     priority: variantPriority,
-    changefreq: sec.changefreq,
+    changefreq: 'monthly',
   }))
 }
 
@@ -238,11 +239,11 @@ async function generateSitemap() {
       { lang: 'vi', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
       { lang: 'en', href: `${SITE_ORIGIN}/en/products/${cleanSlug}` },
       { lang: 'ko', href: `${SITE_ORIGIN}/ko/products/${cleanSlug}` },
-      { lang: 'zh', href: `${SITE_ORIGIN}/zh/products/${cleanSlug}` },
+      { lang: 'zh-Hans', href: `${SITE_ORIGIN}/zh/products/${cleanSlug}` },
       { lang: 'x-default', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
     ]
 
-    // VI
+    // VI (Primary product page)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/san-pham/${cleanSlug}`,
       alternates,
@@ -251,31 +252,31 @@ async function generateSitemap() {
       priority: '0.8'
     }))
 
-    // EN
+    // EN (B2B Export variant)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/en/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
-      changefreq: 'weekly',
-      priority: '0.7'
+      changefreq: 'monthly',
+      priority: '0.4'
     }))
 
-    // KO
+    // KO (B2B Korea variant)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/ko/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
-      changefreq: 'weekly',
-      priority: '0.7'
+      changefreq: 'monthly',
+      priority: '0.4'
     }))
 
-    // ZH
+    // ZH-HANS (B2B China variant)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/zh/products/${cleanSlug}`,
       alternates,
       lastmod: pDate,
-      changefreq: 'weekly',
-      priority: '0.7'
+      changefreq: 'monthly',
+      priority: '0.4'
     }))
   }
 
@@ -288,11 +289,11 @@ async function generateSitemap() {
       { lang: 'vi', href: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}` },
       { lang: 'en', href: `${SITE_ORIGIN}/en/news/${cleanSlug}` },
       { lang: 'ko', href: `${SITE_ORIGIN}/ko/news/${cleanSlug}` },
-      { lang: 'zh', href: `${SITE_ORIGIN}/zh/news/${cleanSlug}` },
+      { lang: 'zh-Hans', href: `${SITE_ORIGIN}/zh/news/${cleanSlug}` },
       { lang: 'x-default', href: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}` },
     ]
 
-    // VI
+    // VI (Primary news article)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/tin-tuc/${cleanSlug}`,
       alternates,
@@ -301,31 +302,31 @@ async function generateSitemap() {
       priority: '0.8'
     }))
 
-    // EN
+    // EN (International release)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/en/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
-      priority: '0.7'
+      priority: '0.4'
     }))
 
-    // KO
+    // KO (Korea release)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/ko/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
-      priority: '0.7'
+      priority: '0.4'
     }))
 
-    // ZH
+    // ZH-HANS (China release)
     entries.push(renderUrlEntry({
       loc: `${SITE_ORIGIN}/zh/news/${cleanSlug}`,
       alternates,
       lastmod: nDate,
       changefreq: 'monthly',
-      priority: '0.7'
+      priority: '0.4'
     }))
   }
 

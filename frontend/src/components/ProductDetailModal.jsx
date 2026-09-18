@@ -189,7 +189,7 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
                 {product.category || product.categories?.name || 'HAQ FOOD'}
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-haq-ink uppercase leading-normal">
+            <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-haq-ink uppercase !leading-[1.28] tracking-normal">
               {product.name}
             </h2>
             {product.en_name && (
