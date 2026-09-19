@@ -318,7 +318,7 @@ export default function NewsManager({
                           {item.image_url ? (
                             <img 
                               src={item.image_url} 
-                              alt="" 
+                              alt={item.title ? `Hình ảnh bài viết: ${item.title}` : 'Hình ảnh bài viết tin tức HAQ FOOD'} 
                               className="w-full h-full object-cover" 
                               loading="lazy"
                             />
@@ -413,7 +413,11 @@ export default function NewsManager({
                 <div className="flex gap-3">
                   <div className="w-[72px] h-[48px] rounded border border-gray-200 bg-gray-100 overflow-hidden shrink-0">
                     {item.image_url ? (
-                      <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                      <img 
+                        src={item.image_url} 
+                        alt={item.title ? `Hình ảnh bài viết: ${item.title}` : 'Hình ảnh bài viết tin tức HAQ FOOD'} 
+                        className="w-full h-full object-cover" 
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">
                         <ImageIcon className="w-4 h-4" />

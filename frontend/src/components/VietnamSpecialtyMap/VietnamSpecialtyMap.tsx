@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { MapPin, ArrowRight, X, Sparkles, Navigation, Pin } from "lucide-react";
 import { provinceCentroids } from "./mapData";
 import { InteractiveMap } from "./InteractiveMap/InteractiveMap";
@@ -26,6 +26,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 }) => {
   const { t, language } = useLanguage();
   const { trackProductClick } = useAnalytics();
+  const shouldReduceMotion = useReducedMotion();
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
 
   const resolveProductLink = (p: Product) => {
@@ -174,24 +175,23 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   }, []);
 
   // Real-time product views map from posthog analytics
-  const viewsMap = useMemo(() => getProductViewsMap(), [selectedProvinceId, selectedRegion, specialties]);
+  const viewsMap = useMemo(() => getProductViewsMap(), []);
 
   // Active province data
   const activeProvinceInfo = selectedProvinceId ? provinceCentroids[selectedProvinceId] || null : null;
   const activeSpecialty = selectedProvinceId ? specialties[selectedProvinceId] || null : null;
-  const rawProvinceProducts = activeSpecialty?.products || [];
-
   // Pinned products prioritized first for selected province, followed by view count descending
   const provinceProducts = useMemo(() => {
-    if (!rawProvinceProducts.length) return [];
-    return [...rawProvinceProducts].sort((a, b) => {
+    const raw = activeSpecialty?.products;
+    if (!raw || !raw.length) return [];
+    return [...raw].sort((a, b) => {
       // 1. Pinned product in this province comes first!
       if (a.is_pinned && !b.is_pinned) return -1;
       if (!a.is_pinned && b.is_pinned) return 1;
       // 2. Then sort by view count descending
       return getProductViews(b, viewsMap) - getProductViews(a, viewsMap);
     });
-  }, [rawProvinceProducts, viewsMap, getProductViews]);
+  }, [activeSpecialty, viewsMap, getProductViews]);
 
   const hoveredProductCount = hoveredProvince
     ? specialties[hoveredProvince.id]?.products?.length || 0
@@ -318,7 +318,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         <div
           className="flex items-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-1"
           role="tablist"
-          aria-label="Khu vực"
+          aria-label={language === 'en' ? 'Region' : language === 'ko' ? '지역' : language === 'zh' ? '区域' : 'Khu vực'}
         >
           {[
             { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
@@ -423,7 +423,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
           <div
             className="hidden lg:flex items-center gap-6 sm:gap-7 border-b border-haq-border/60 pb-2 mb-3 shrink-0"
             role="tablist"
-            aria-label="Khu vực"
+            aria-label={language === 'en' ? 'Region' : language === 'ko' ? '지역' : language === 'zh' ? '区域' : 'Khu vực'}
           >
             {[
               { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
@@ -472,11 +472,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                 <button
                   type="button"
                   onClick={handleClearProvince}
-                  className="text-haq-text-secondary hover:text-haq-ink p-1 -mr-1 rounded transition-colors cursor-pointer"
-                  title="Trở lại toàn quốc"
-                  aria-label="Bỏ chọn tỉnh"
+                  className="text-haq-text-secondary hover:text-haq-ink p-2 -mr-2 min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132]"
+                  title={language === 'en' ? 'Back to nationwide' : language === 'ko' ? '전국 보기로 돌아가기' : language === 'zh' ? '返回全国视图' : 'Trở lại toàn quốc'}
+                  aria-label={language === 'en' ? 'Deselect province' : language === 'ko' ? '지역 선택 해제' : language === 'zh' ? '取消选择省市' : 'Bỏ chọn tỉnh'}
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -485,18 +485,16 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
             </p>
           </div>
 
-          </div>
-
           {/* 4. PRODUCT SHOWCASE (Editorial 4:3 Vertical Cards) */}
           <div className="w-full my-auto py-1">
             <AnimatePresence mode="wait">
               {featuredProduct ? (
                 <motion.div
                   key={selectedProvinceId || selectedRegion}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.15 }}
+                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                  transition={{ duration: shouldReduceMotion ? 0.05 : 0.15 }}
                   className="w-full"
                 >
                   {showcaseProducts.length === 2 ? (
@@ -512,15 +510,15 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           data-product-slug={prod.slug || prod.productId}
                           data-product-name={prod.name}
                           data-product-canonical-name={prod.canonical_name || prod.name}
-                          data-product-category={prod.category || (idx === 0 ? flagshipCategoryText : defaultCategoryText)}
+                          data-product-category={prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                           data-product-location={idx === 0 ? "specialty_map_featured" : "specialty_map_supporting"}
-                          className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
+                          className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
                         >
                           {/* Khung ảnh chuẩn 4:3 */}
                           <div className="w-full aspect-[4/3] bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2.5 sm:p-3 flex items-center justify-center overflow-hidden relative shrink-0">
                             {prod.is_pinned && (
                               <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                                <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
+                                <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
                                 {flagshipBadge}
                               </span>
                             )}
@@ -533,25 +531,31 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                 className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
                                 decoding="async"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLElement).style.display = 'none';
+                                  const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
+                                  if (fallback) (fallback as HTMLElement).classList.remove('hidden');
+                                }}
                               />
-                            ) : (
-                              <span className="text-2xl sm:text-3xl opacity-60">🌾</span>
-                            )}
+                            ) : null}
+                            <span aria-hidden="true" className={`product-fallback-icon text-2xl sm:text-3xl opacity-60 ${prod.image ? 'hidden' : ''}`}>
+                              {idx === 0 ? '🌾' : '🌿'}
+                            </span>
                           </div>
 
                           {/* Thông tin thẻ */}
-                          <div className="pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
+                          <div className="min-w-0 pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
                             <div>
                               <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {prod.category || (idx === 0 ? flagshipCategoryText : defaultCategoryText)}
+                                {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                               </span>
-                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
                                 {prod.name}
                               </h4>
                             </div>
                             <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
-                              <span>{viewDetailText}</span>
-                              <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                              <span className="whitespace-nowrap">{viewDetailText}</span>
+                              <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                             </div>
                           </div>
                         </Link>
@@ -559,7 +563,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     </div>
                   ) : showcaseProducts.length === 3 ? (
                     /* 3 PRODUCTS: 1 Featured top + 2 Supporting below on mobile (< sm), 3 equal columns on tablet & desktop */
-                    <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3.5 lg:gap-4">
+                    <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3 lg:gap-3.5 xl:gap-4">
                       {/* Featured (Card 1) */}
                       <Link
                         to={resolveProductLink(showcaseProducts[0])}
@@ -569,14 +573,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
                         data-product-name={showcaseProducts[0].name}
                         data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                        data-product-category={showcaseProducts[0].category || flagshipCategoryText}
+                        data-product-category={showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                         data-product-location="specialty_map_featured"
-                        className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
+                        className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-2.5 lg:p-2 xl:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
                       >
-                        <div className="w-28 sm:w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
+                        <div className="w-28 sm:w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2 lg:p-2 xl:p-3 flex items-center justify-center overflow-hidden relative">
                           {showcaseProducts[0].is_pinned && (
                             <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                              <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
+                              <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
                               {flagshipBadge}
                             </span>
                           )}
@@ -589,23 +593,29 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
                               decoding="async"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = 'none';
+                                const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
+                                if (fallback) (fallback as HTMLElement).classList.remove('hidden');
+                              }}
                             />
-                          ) : (
-                            <span className="text-2xl sm:text-3xl opacity-60">🌾</span>
-                          )}
+                          ) : null}
+                          <span aria-hidden="true" className={`product-fallback-icon text-2xl sm:text-3xl opacity-60 ${showcaseProducts[0].image ? 'hidden' : ''}`}>
+                            🌾
+                          </span>
                         </div>
-                        <div className="flex-1 min-w-0 sm:pt-2.5 flex flex-col justify-between">
+                        <div className="flex-1 min-w-0 self-stretch sm:self-auto sm:pt-2 flex flex-col justify-between">
                           <div>
                             <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                              {showcaseProducts[0].category || flagshipCategoryText}
+                              {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                             </span>
-                            <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                            <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-xs xl:text-sm 2xl:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.25rem] xl:min-h-[2.5rem] 2xl:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
                               {showcaseProducts[0].name}
                             </h4>
                           </div>
-                          <div className="mt-1.5 sm:mt-2 pt-1 sm:pt-2 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
-                            <span>{viewDetailText}</span>
-                            <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                          <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                            <span className="whitespace-nowrap">{viewDetailText}</span>
+                            <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                           </div>
                         </div>
                       </Link>
@@ -622,14 +632,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             data-product-slug={prod.slug || prod.productId}
                             data-product-name={prod.name}
                             data-product-canonical-name={prod.canonical_name || prod.name}
-                            data-product-category={prod.category || defaultCategoryText}
+                            data-product-category={prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                             data-product-location="specialty_map_supporting"
-                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
+                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-2.5 lg:p-2 xl:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
                           >
-                            <div className="w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
+                            <div className="w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2 lg:p-2 xl:p-3 flex items-center justify-center overflow-hidden relative">
                               {prod.is_pinned && (
                                 <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                                  <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
+                                  <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
                                   {flagshipBadge}
                                 </span>
                               )}
@@ -642,23 +652,29 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                   loading="lazy"
                                   decoding="async"
+                                  onError={(e) => {
+                                    (e.currentTarget as HTMLElement).style.display = 'none';
+                                    const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
+                                    if (fallback) (fallback as HTMLElement).classList.remove('hidden');
+                                  }}
                                 />
-                              ) : (
-                                <span className="text-xl sm:text-2xl opacity-60">🌿</span>
-                              )}
+                              ) : null}
+                              <span aria-hidden="true" className={`product-fallback-icon text-xl sm:text-2xl opacity-60 ${prod.image ? 'hidden' : ''}`}>
+                                🌿
+                              </span>
                             </div>
-                            <div className="pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
+                            <div className="min-w-0 pt-2 sm:pt-2 flex flex-col flex-1 justify-between">
                               <div>
                                 <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                  {prod.category || defaultCategoryText}
+                                  {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                                 </span>
-                                <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                                <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-xs xl:text-sm 2xl:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.25rem] xl:min-h-[2.5rem] 2xl:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
                                   {prod.name}
                                 </h4>
                               </div>
                               <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
-                                <span>{viewDetailText}</span>
-                                <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                                <span className="whitespace-nowrap">{viewDetailText}</span>
+                                <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                               </div>
                             </div>
                           </Link>
@@ -675,14 +691,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                       data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
                       data-product-name={showcaseProducts[0].name}
                       data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                      data-product-category={showcaseProducts[0].category || defaultCategoryText}
+                      data-product-category={showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                       data-product-location="specialty_map_single"
-                      className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group max-w-md w-full"
+                      className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group max-w-md w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
                     >
-                      <div className="w-28 sm:w-36 aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2.5 flex items-center justify-center overflow-hidden relative">
+                      <div className="w-28 sm:w-36 aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2.5 lg:p-3 flex items-center justify-center overflow-hidden relative">
                         {showcaseProducts[0].is_pinned && (
-                          <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
-                            <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
+                          <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
+                            <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
                             {flagshipBadge}
                           </span>
                         )}
@@ -695,23 +711,29 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"
                             decoding="async"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.display = 'none';
+                              const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
+                              if (fallback) (fallback as HTMLElement).classList.remove('hidden');
+                            }}
                           />
-                        ) : (
-                          <span className="text-2xl opacity-60">🌾</span>
-                        )}
+                        ) : null}
+                        <span aria-hidden="true" className={`product-fallback-icon text-2xl opacity-60 ${showcaseProducts[0].image ? 'hidden' : ''}`}>
+                          🌾
+                        </span>
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div className="flex-1 min-w-0 self-stretch flex flex-col justify-between">
                         <div>
                           <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                            {showcaseProducts[0].category || defaultCategoryText}
+                            {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                           </span>
-                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
                             {showcaseProducts[0].name}
                           </h4>
                         </div>
-                        <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
-                          <span>{viewDetailText}</span>
-                          <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                        <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                          <span className="whitespace-nowrap">{viewDetailText}</span>
+                          <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                         </div>
                       </div>
                     </Link>
@@ -725,7 +747,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                   exit={{ opacity: 0 }}
                   className="w-full flex flex-col items-center justify-center p-6 bg-[#FAF9F6] border border-haq-border/60 rounded-xl text-center my-auto"
                 >
-                  <span className="text-2xl mb-2">🌱</span>
+                  <span className="text-2xl mb-2" aria-hidden="true">🌱</span>
                   <p className="font-heading font-bold text-sm text-haq-ink mb-1">
                     {language === 'en'
                       ? `No products listed in ${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || 'this province'} yet`
@@ -757,10 +779,10 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
               const base = language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham';
               return selectedProvinceId ? `${base}?province=${selectedProvinceId}` : base;
             })()}
-            className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-[#0F5132] hover:text-[#16A34A] uppercase tracking-wider transition-colors group"
+            className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-[#0F5132] hover:text-[#16A34A] uppercase tracking-wider transition-colors group py-2 sm:py-1 px-1 -mx-1 min-h-[40px] sm:min-h-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-1 rounded-sm"
           >
             <span>{t('home.specialty_map.cta', 'XEM TẤT CẢ SẢN PHẨM')}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
         </div>
       </div>

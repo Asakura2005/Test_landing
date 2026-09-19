@@ -312,7 +312,11 @@ export default function CapabilitiesPage() {
         ────────────────────────────────────────── */}
         <section id="phan-phoi" className="bg-[#0C1E15] text-white py-20 sm:py-28 relative overflow-hidden">
           {/* Background image */}
-          <img src={distributionImg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <img
+            src={distributionImg}
+            alt={en ? 'HAQ FOOD distribution and export network' : ko ? 'HAQ FOOD 유통 및 수출 네트워크' : zh ? 'HAQ FOOD 渠道分销与出口网络' : 'Hệ thống phân phối và xuất khẩu HAQ FOOD'}
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+          />
           <div className="absolute inset-0 bg-[#0C1E15]/75" />
 
           <div className="relative z-10 mx-auto max-w-site px-4 sm:px-6 lg:px-12">

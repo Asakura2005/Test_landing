@@ -105,7 +105,7 @@ export function sanitizeInput(input) {
   return raw
     .trim()
     .substring(0, 1000)                              // Giới hạn độ dài
-    .replace(/<[^>]*>/g, '')                         // Loại bỏ tất cả HTML tags (<script>, <img>, ...)
+    .replace(/<[^>]*>/g, '')                         // Loại bỏ tất cả HTML tags (script, img, iframe...)
     .replace(/[<>]/g, '')                            // Loại bỏ triệt để ký tự < >
     .replace(/javascript\s*:/gi, '')                  // Chống javascript: URI
     .replace(/on\w+\s*=/gi, '')                       // Chống onclick=, onerror=, onload=...

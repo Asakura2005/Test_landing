@@ -427,6 +427,9 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
               
               {/* Left Column: 5 B2B Business Solution Cards with Smooth Accordion UI (Hidden on Mobile) */}
+              <h2 className="sr-only">
+                {language === 'en' ? 'Collaboration Solutions' : language === 'ko' ? '비즈니스 협력 솔루션' : language === 'zh' ? '商务合作模式' : 'Giải pháp hợp tác kinh doanh'}
+              </h2>
               <div className="hidden lg:block lg:col-span-5 space-y-2.5">
                 {topics.map((topic, idx) => {
                   const isExpanded = activeTopicId === topic.id
@@ -576,9 +579,9 @@ export default function ContactPage() {
                       </span>
                     </div>
 
-                    <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-3xl text-haq-ink uppercase mt-2.5 leading-snug">
+                    <h2 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-3xl text-haq-ink uppercase mt-2.5 leading-snug">
                       {t('contact_page.form_title', 'BẮT ĐẦU TRAO ĐỔI HỢP TÁC')}
-                    </h3>
+                    </h2>
                     <p className="text-xs sm:text-sm text-haq-text-secondary mt-1.5 leading-relaxed font-normal">
                       {t('contact_page.form_desc', 'Để lại thông tin để bộ phận chuyên trách gửi bảng giá, chính sách chiết khấu và hồ sơ năng lực phù hợp nhất.')}
                     </p>
@@ -590,9 +593,9 @@ export default function ContactPage() {
                       <div className="w-16 h-16 bg-emerald-50 text-[#16A34A] rounded-full flex items-center justify-center mx-auto border border-emerald-200 shadow-inner">
                         <CheckCircle2 className="w-10 h-10" />
                       </div>
-                      <h4 className="font-heading font-extrabold text-2xl text-haq-ink uppercase">
+                      <h3 className="font-heading font-extrabold text-2xl text-haq-ink uppercase">
                         {t('contact_page.success_title', 'CẢM ƠN QUÝ KHÁCH ĐÃ KẾT NỐI VỚI HAQ FOOD')}
-                      </h4>
+                      </h3>
                       <p className="text-sm text-haq-text-secondary max-w-md mx-auto leading-relaxed font-normal">
                         {language === 'en'
                           ? `Your inquiry has been routed to ${activeTopic.dept}. A dedicated specialist will reach out via phone or email within 24 business hours.`

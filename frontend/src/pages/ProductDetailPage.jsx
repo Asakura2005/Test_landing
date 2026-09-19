@@ -438,9 +438,9 @@ export default function ProductDetailPage() {
           <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mb-6 text-[#16A34A] shadow-sm">
             <Package className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-haq-green-dark mb-4">
+          <div role="heading" aria-level="1" className="text-3xl md:text-4xl font-heading font-extrabold text-haq-green-dark mb-4">
             {t('product_detail.not_found_title', 'Sản phẩm không tồn tại')}
-          </h1>
+          </div>
           <p className="mb-8 text-haq-text-secondary max-w-md">
             {t('product_detail.not_found_desc', 'Có thể sản phẩm đã bị xóa hoặc đường dẫn không chính xác. Mời bạn tham quan danh mục sản phẩm của HAQ FOOD.')}
           </p>
@@ -811,10 +811,10 @@ export default function ProductDetailPage() {
               {/* Điểm nổi bật (Highlights) */}
               {localizedProduct.highlights && localizedProduct.highlights.length > 0 && localizedProduct.highlights[0] !== '' && (
                 <div className="mb-6 bg-[#F8FAF8] p-4 rounded-xl border border-emerald-100">
-                  <h4 className="font-heading font-bold text-xs uppercase text-haq-ink mb-2.5 flex items-center gap-2">
+                  <div className="font-heading font-bold text-xs uppercase text-haq-ink mb-2.5 flex items-center gap-2">
                     <CheckCircle className="w-3.5 h-3.5 text-[#16A34A]" />
                     <span>{t('product_detail.highlights_title', 'Điểm nổi bật')}</span>
-                  </h4>
+                  </div>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-haq-text-secondary">
                     {localizedProduct.highlights.map((hl, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
@@ -843,10 +843,10 @@ export default function ProductDetailPage() {
         {/* === THÔNG TIN CHI TIẾT SẢN PHẨM: Đặt bên dưới form chính, phía trên Sản phẩm tương tự === */}
         {(localizedProduct.shelf_life || localizedProduct.certifications || localizedProduct.ingredients || localizedProduct.storage_guide) && (
           <div className="bg-white rounded-3xl border border-haq-border shadow-lg p-6 md:p-10 mb-16">
-            <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-haq-ink mb-6 uppercase tracking-tight flex items-center gap-2.5">
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-haq-ink mb-6 uppercase tracking-tight flex items-center gap-2.5">
               <span className="w-2.5 h-6 bg-[#16A34A] rounded-full inline-block" />
               {t('product_detail.details_title', 'Thông tin chi tiết sản phẩm')}
-            </h3>
+            </h2>
 
             <div className="space-y-4">
               {/* Accordion 1: Thông tin sản phẩm */}
@@ -961,9 +961,9 @@ export default function ProductDetailPage() {
         {localizedRecommended.length > 0 && (
           <div>
             <div className="text-center mb-10">
-              <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink mb-2 uppercase tracking-tight">
+              <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-haq-ink mb-2 uppercase tracking-tight">
                 {t('product_detail.similar_products', 'Sản phẩm tương tự')}
-              </h3>
+              </h2>
               <div className="w-12 h-1 bg-[#16A34A] mx-auto rounded-full"></div>
             </div>
             

@@ -413,6 +413,9 @@ export default function ProductsPage() {
             ═══════════════════════════════════════════════════════════ */}
         <section ref={productsSectionRef} className="bg-haq-cream/30 py-10 sm:py-14 scroll-mt-20 sm:scroll-mt-24">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <h2 className="sr-only">
+              {en ? 'HAQ FOOD Product Catalog' : ko ? 'HAQ FOOD 제품 카탈로그' : zh ? 'HAQ FOOD 产品目录' : 'Danh mục sản phẩm HAQ FOOD'}
+            </h2>
             {paginatedProducts.length === 0 ? (
               <div className="bg-white rounded-2xl p-8 sm:p-16 text-center border border-haq-border max-w-xl mx-auto">
                 <Package className="w-12 h-12 text-haq-border mx-auto mb-4" />

@@ -306,7 +306,7 @@ export default function NewsDetailPage() {
   if (!news) {
     return (
       <main className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-6 text-center">
-        <h1 className="text-4xl font-heading font-black text-[#11261B] mb-2 uppercase">404</h1>
+        <div role="heading" aria-level="1" className="text-4xl font-heading font-black text-[#11261B] mb-2 uppercase">404</div>
         <p className="text-[#52665A] text-sm mb-6 font-light">
           {language === 'en'
             ? 'Article not found or has been moved.'
@@ -480,9 +480,9 @@ export default function NewsDetailPage() {
           {/* Recruitment How to Apply Box */}
           {news.category === 'Tuyển dụng' && (
             <div className="mt-8 p-6 sm:p-8 bg-[#EBF3EC]/60 border border-[#0F5132]/25 rounded-2xl">
-              <h3 className="text-sm sm:text-base font-heading font-bold text-[#11261B] mb-2 uppercase tracking-wide">
+              <h2 className="text-sm sm:text-base font-heading font-bold text-[#11261B] mb-2 uppercase tracking-wide">
                 {language === 'en' ? 'HOW TO APPLY' : language === 'ko' ? '지원 방법' : language === 'zh' ? '应聘方式与简历投递' : 'CÁCH THỨC ỨNG TUYỂN & NỘP HỒ SƠ'}
-              </h3>
+              </h2>
               <p className="text-xs sm:text-sm text-[#52665A] leading-relaxed mb-4">
                 {language === 'en'
                   ? 'Interested candidates are welcome to send CV/resume to: hr@haqfood.com (Subject: [Position - Full Name]). Or contact hotline 0969 516 888 for immediate consultation.'
@@ -526,9 +526,9 @@ export default function NewsDetailPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#0F5132]" />
-                  <h3 className="font-heading font-bold text-base sm:text-lg text-[#11261B] uppercase tracking-tight">
+                  <h2 className="font-heading font-bold text-base sm:text-lg text-[#11261B] uppercase tracking-tight">
                     {language === 'en' ? 'Related Articles' : language === 'ko' ? '관련 기사' : language === 'zh' ? '相关文章' : 'Bài viết liên quan'}
-                  </h3>
+                  </h2>
                 </div>
                 <Link 
                   to={getNewsUrl(language)} 
@@ -565,9 +565,9 @@ export default function NewsDetailPage() {
                         <span className="text-[10px] font-mono text-[#52665A] block mb-1">
                           {new Date(item.published_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ko' ? 'ko-KR' : language === 'zh' ? 'zh-CN' : 'vi-VN')}
                         </span>
-                        <h4 className="font-heading font-semibold text-xs sm:text-sm text-[#11261B] group-hover:text-[#0F5132] transition-colors line-clamp-2 leading-snug">
+                        <h3 className="font-heading font-semibold text-xs sm:text-sm text-[#11261B] group-hover:text-[#0F5132] transition-colors line-clamp-2 leading-snug">
                           {item.title}
-                        </h4>
+                        </h3>
                       </div>
                       <div className="mt-3 pt-2 border-t border-[#E2E8E4]/60 flex items-center justify-between text-[11px] font-semibold text-[#0F5132]">
                         <span>{language === 'en' ? 'Read' : language === 'ko' ? '읽기' : language === 'zh' ? '阅读' : 'Đọc tiếp'}</span>
