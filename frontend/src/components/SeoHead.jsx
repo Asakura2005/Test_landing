@@ -189,7 +189,7 @@ export default function SeoHead() {
         return
       }
 
-      setMetaTag('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+      setMetaTag('name', 'robots', 'index, follow, max-image-preview:large')
 
       // 3. Determine the language represented by this URL path
       let routeLang = 'vi'

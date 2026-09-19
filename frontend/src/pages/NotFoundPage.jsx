@@ -57,7 +57,7 @@ export default function NotFoundPage() {
     // 2. CRITICAL FOR GOOGLE SEARCH CONSOLE:
     // Set robots to noindex, nofollow to prevent GSC "Soft 404" errors
     let robotsMeta = document.querySelector('meta[name="robots"]')
-    const originalRobots = robotsMeta ? robotsMeta.getAttribute('content') : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+    const originalRobots = robotsMeta ? robotsMeta.getAttribute('content') : 'index, follow, max-image-preview:large'
 
     if (!robotsMeta) {
       robotsMeta = document.createElement('meta')
@@ -74,7 +74,7 @@ export default function NotFoundPage() {
     return () => {
       // Restore normal indexing on navigation away
       if (robotsMeta) {
-        robotsMeta.setAttribute('content', originalRobots || 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+        robotsMeta.setAttribute('content', originalRobots || 'index, follow, max-image-preview:large')
       }
       if (originalCanonical) {
         let restored = document.querySelector('link[rel="canonical"]')

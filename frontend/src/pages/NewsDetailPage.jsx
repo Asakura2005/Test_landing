@@ -120,7 +120,7 @@ export default function NewsDetailPage() {
     // Ensure robots is indexable for valid article
     const robotsMeta = document.querySelector('meta[name="robots"]')
     if (robotsMeta) {
-      robotsMeta.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+      robotsMeta.setAttribute('content', 'index, follow, max-image-preview:large')
     }
 
     const articleTitle = (localizedNews?.title || news.title || 'Tin tức').trim()
@@ -275,7 +275,7 @@ export default function NewsDetailPage() {
       removeScript()
       const robots = document.querySelector('meta[name="robots"]')
       if (robots) {
-        robots.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+        robots.setAttribute('content', 'index, follow, max-image-preview:large')
       }
     }
   }, [news, localizedNews, slug, language, isLoading])
