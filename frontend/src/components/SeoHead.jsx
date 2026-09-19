@@ -173,22 +173,42 @@ export default function SeoHead() {
 
     const updateSeo = () => {
       const activePath = typeof window !== 'undefined' ? window.location.pathname : pathname
+      const rawClean = (activePath || '/').replace(/\/+$/, '')
+      const cleanPath = rawClean.length === 0 ? '/' : rawClean
 
       // 1. Update <html> lang attribute
       document.documentElement.lang = language === 'zh' ? 'zh-Hans' : language
 
-      // 2. Resolve section & update title & OpenGraph (skip detail pages which manage their own dynamic SEO & Schema)
-      const isDetailPage = /^\/(en|ko|zh)?\/?(san-pham|products|tin-tuc|news|tuyen-dung|careers)\/[^/]+$/i.test(activePath.replace(/\/$/, ''))
+      // 2. Robots tag handling: Exclude /admin from indexing & cleanly remove canonical/hreflang tags
+      if (cleanPath.startsWith('/admin')) {
+        setMetaTag('name', 'robots', 'noindex, nofollow')
+        const existingCanonical = document.querySelector('link[rel="canonical"]')
+        if (existingCanonical) existingCanonical.remove()
+        const existingAlternates = document.querySelectorAll('link[rel="alternate"][hreflang]')
+        existingAlternates.forEach(tag => tag.remove())
+        return
+      }
+
+      setMetaTag('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+
+      // 3. Determine the language represented by this URL path
+      let routeLang = 'vi'
+      if (cleanPath.startsWith('/en/') || cleanPath === '/en') routeLang = 'en'
+      else if (cleanPath.startsWith('/ko/') || cleanPath === '/ko') routeLang = 'ko'
+      else if (cleanPath.startsWith('/zh/') || cleanPath === '/zh') routeLang = 'zh'
+
+      // 4. Resolve section & update title & OpenGraph (skip detail pages which manage their own dynamic SEO & Schema)
+      const isDetailPage = /^\/(en|ko|zh)?\/?(san-pham|products|tin-tuc|news|tuyen-dung|careers)\/[^/]+$/i.test(cleanPath)
       if (!isDetailPage) {
-        const sectionKey = resolveSectionKey(activePath)
+        const sectionKey = resolveSectionKey(cleanPath)
         const titleObj = SEO_TITLES[sectionKey] || SEO_TITLES.home
         const pageTitle = titleObj[language] || titleObj.vi
         document.title = pageTitle
 
-        // 3. Update meta description & OG / Twitter
+        // Update meta description & OG / Twitter
         const descObj = SEO_DESCRIPTIONS[sectionKey] || SEO_DESCRIPTIONS.home
         const metaDesc = descObj[language] || descObj.vi
-        const pageUrl = `${SITE_ORIGIN}${activePath}`
+        const pageUrl = `${SITE_ORIGIN}${cleanPath}`
         const fallbackImage = 'https://haq.com.vn/favicon.jpg'
 
         setMetaTag('name', 'description', metaDesc)
@@ -204,8 +224,9 @@ export default function SeoHead() {
         setMetaTag('name', 'twitter:image', fallbackImage)
       }
 
-      // 4. Update Canonical URL
-      const canonicalHref = `${SITE_ORIGIN}${activePath}`
+      // 5. Update Canonical URL (Points to the official canonical path for the current route language, resolving aliases)
+      const canonicalPath = getEquivalentRoute(cleanPath, routeLang)
+      const canonicalHref = `${SITE_ORIGIN}${canonicalPath === '/' ? '/' : canonicalPath}`
       let canonicalLink = document.querySelector('link[rel="canonical"]')
       if (!canonicalLink) {
         canonicalLink = document.createElement('link')
@@ -214,13 +235,13 @@ export default function SeoHead() {
       }
       canonicalLink.setAttribute('href', canonicalHref)
 
-      // 5. Update hreflang alternate tags (vi, en, ko, zh-Hans, x-default)
-      const alternates = getAlternateHreflangUrls(activePath, SITE_ORIGIN)
+      // 6. Update hreflang alternate tags (vi, en, ko, zh-Hans, x-default)
+      const alternates = getAlternateHreflangUrls(cleanPath, SITE_ORIGIN)
       const hreflangConfigs = [
         { lang: 'vi', href: alternates.vi },
         { lang: 'en', href: alternates.en },
         { lang: 'ko', href: alternates.ko },
-        { lang: 'zh-Hans', href: alternates.zh },
+        { lang: 'zh-Hans', href: alternates.zh || alternates.zhHans },
         { lang: 'x-default', href: alternates.xDefault },
       ]
 

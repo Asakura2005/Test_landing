@@ -16,7 +16,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/about',
     ko: '/ko/about',
     zh: '/zh/about',
-    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu', '/zh/gioi-thieu'],
+    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu', '/zh/gioi-thieu', '/gioithieu', '/company-profile', '/about'],
   },
   {
     key: 'history',
@@ -24,7 +24,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/history',
     ko: '/ko/history',
     zh: '/zh/history',
-    aliases: ['/ve-chung-toi/lich-su', '/en/lich-su', '/ko/lich-su', '/zh/lich-su'],
+    aliases: ['/ve-chung-toi/lich-su', '/en/lich-su', '/ko/lich-su', '/zh/lich-su', '/history'],
   },
   {
     key: 'capabilities',
@@ -32,7 +32,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/capabilities',
     ko: '/ko/capabilities',
     zh: '/zh/capabilities',
-    aliases: ['/en/nang-luc', '/ko/nang-luc', '/zh/nang-luc'],
+    aliases: ['/en/nang-luc', '/ko/nang-luc', '/zh/nang-luc', '/nangluc', '/capabilities'],
   },
   {
     key: 'products',
@@ -40,7 +40,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/products',
     ko: '/ko/products',
     zh: '/zh/products',
-    aliases: ['/en/san-pham', '/ko/san-pham', '/zh/san-pham'],
+    aliases: ['/en/san-pham', '/ko/san-pham', '/zh/san-pham', '/sanpham', '/products'],
   },
   {
     key: 'news',
@@ -48,7 +48,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/news',
     ko: '/ko/news',
     zh: '/zh/news',
-    aliases: ['/en/tin-tuc', '/ko/tin-tuc', '/zh/tin-tuc'],
+    aliases: ['/en/tin-tuc', '/ko/tin-tuc', '/zh/tin-tuc', '/tintuc', '/news'],
   },
   {
     key: 'careers',
@@ -56,7 +56,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/careers',
     ko: '/ko/careers',
     zh: '/zh/careers',
-    aliases: ['/en/tuyen-dung', '/ko/tuyen-dung', '/zh/tuyen-dung'],
+    aliases: ['/en/tuyen-dung', '/ko/tuyen-dung', '/zh/tuyen-dung', '/careers'],
   },
   {
     key: 'contact',
@@ -64,7 +64,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/contact',
     ko: '/ko/contact',
     zh: '/zh/contact',
-    aliases: ['/en/lien-he', '/ko/lien-he', '/zh/lien-he'],
+    aliases: ['/en/lien-he', '/ko/lien-he', '/zh/lien-he', '/lienhe', '/contact'],
   },
   {
     key: 'policy',
@@ -72,6 +72,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/policy',
     ko: '/ko/policy',
     zh: '/zh/policy',
+    aliases: ['/policy'],
   },
   {
     key: 'privacy',
@@ -79,6 +80,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/privacy-policy',
     ko: '/ko/privacy-policy',
     zh: '/zh/privacy-policy',
+    aliases: ['/privacy-policy'],
   },
   {
     key: 'terms',
@@ -86,6 +88,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/terms-of-service',
     ko: '/ko/terms-of-service',
     zh: '/zh/terms-of-service',
+    aliases: ['/terms-of-service'],
   },
   {
     key: 'refund',
@@ -93,6 +96,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/refund-policy',
     ko: '/ko/refund-policy',
     zh: '/zh/refund-policy',
+    aliases: ['/refund-policy'],
   },
 ]
 
@@ -101,10 +105,11 @@ export const ROUTE_DEFINITIONS = [
  * compute the target pathname for seamless client-side navigation.
  */
 export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
-  const normalized = currentPath.replace(/\/$/, '') || '/'
+  const normalized = (currentPath || '/').replace(/\/+$/, '') || '/'
+  const lowerNormalized = normalized.toLowerCase()
 
   // 1. Check dynamic product detail (/san-pham/:slug, /en/products/:slug, /ko/products/:slug, /zh/products/:slug)
-  const productDetailMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/zh\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham|\/zh\/san-pham)\/([^/]+)$/)
+  const productDetailMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/zh\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham|\/zh\/san-pham)\/([^/]+)$/i)
   if (productDetailMatch) {
     const slug = productDetailMatch[1]
     if (targetLang === 'en') return `/en/products/${slug}`
@@ -114,7 +119,7 @@ export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
   }
 
   // 2. Check dynamic news detail (/tin-tuc/:slug, /en/news/:slug, /ko/news/:slug, /zh/news/:slug)
-  const newsDetailMatch = normalized.match(/^(?:\/en\/news|\/ko\/news|\/zh\/news|\/tin-tuc|\/en\/tin-tuc|\/ko\/tin-tuc|\/zh\/tin-tuc)\/([^/]+)$/)
+  const newsDetailMatch = normalized.match(/^(?:\/en\/news|\/ko\/news|\/zh\/news|\/tin-tuc|\/en\/tin-tuc|\/ko\/tin-tuc|\/zh\/tin-tuc)\/([^/]+)$/i)
   if (newsDetailMatch) {
     const slug = newsDetailMatch[1]
     if (targetLang === 'en') return `/en/news/${slug}`
@@ -123,15 +128,25 @@ export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
     return `/tin-tuc/${slug}`
   }
 
-  // 3. Match against static definitions
+  // 3. Check dynamic careers detail (/tuyen-dung/:slug, /en/careers/:slug, /ko/careers/:slug, /zh/careers/:slug)
+  const careersDetailMatch = normalized.match(/^(?:\/en\/careers|\/ko\/careers|\/zh\/careers|\/tuyen-dung|\/en\/tuyen-dung|\/ko\/tuyen-dung|\/zh\/tuyen-dung)\/([^/]+)$/i)
+  if (careersDetailMatch) {
+    const slug = careersDetailMatch[1]
+    if (targetLang === 'en') return `/en/careers/${slug}`
+    if (targetLang === 'ko') return `/ko/careers/${slug}`
+    if (targetLang === 'zh') return `/zh/careers/${slug}`
+    return `/tuyen-dung/${slug}`
+  }
+
+  // 4. Match against static definitions (case-insensitive)
   for (const def of ROUTE_DEFINITIONS) {
-    const matches = [def.vi, def.en, def.ko, def.zh, ...(def.aliases || [])]
-    if (matches.includes(normalized)) {
+    const matches = [def.vi, def.en, def.ko, def.zh, ...(def.aliases || [])].map(m => m.toLowerCase())
+    if (matches.includes(lowerNormalized)) {
       return def[targetLang] || def.vi
     }
   }
 
-  // 4. Default fallback: Home or language prefix
+  // 5. Default fallback: Home or language prefix
   if (targetLang === 'en') return '/en'
   if (targetLang === 'ko') return '/ko'
   if (targetLang === 'zh') return '/zh'
@@ -252,6 +267,17 @@ export function getCareersUrl(language = 'vi') {
   if (language === 'ko') return '/ko/careers'
   if (language === 'zh') return '/zh/careers'
   return '/tuyen-dung'
+}
+
+/**
+ * Helper sinh đường dẫn chi tiết bài đăng tuyển dụng theo ngôn ngữ
+ */
+export function getCareersDetailUrl(slug, language = 'vi') {
+  const cleanSlug = slug || ''
+  if (language === 'en') return `/en/careers/${cleanSlug}`
+  if (language === 'ko') return `/ko/careers/${cleanSlug}`
+  if (language === 'zh') return `/zh/careers/${cleanSlug}`
+  return `/tuyen-dung/${cleanSlug}`
 }
 
 /**

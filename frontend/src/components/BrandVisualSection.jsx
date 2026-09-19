@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Globe2, ArrowRight } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { getAboutUrl } from '../utils/routeI18n'
-import exportVisualImg from '../assets/distribution/distribution_export.jpg'
+import exportVisualImg from '../assets/distribution/distribution_export.webp'
 
 const MARKET_BADGES = [
   { flag: '🇻🇳', name: { vi: 'Việt Nam', en: 'Vietnam', ko: '베트남', zh: '越南' } },

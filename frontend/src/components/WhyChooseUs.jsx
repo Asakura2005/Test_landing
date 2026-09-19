@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Handshake, FileCheck, Boxes, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react'
-import b2bImg from '../assets/business/b2b_partnership.jpg'
+import b2bImg from '../assets/business/b2b_partnership.webp'
 
 export default function WhyChooseUs() {
   return (

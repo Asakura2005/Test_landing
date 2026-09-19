@@ -13,6 +13,11 @@ export default defineConfig({
     sourcemap: true,
     cssCodeSplit: true,
     chunkSizeWarningLimit: 600,
+    modulePreload: {
+      resolveDependencies(filename, deps) {
+        return deps.filter((dep) => !dep.includes('chunk-vietnam-map') && !dep.includes('vendor-supabase'))
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {

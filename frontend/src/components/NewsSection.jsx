@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Calendar } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { getNewsUrl, getNewsDetailUrl } from '../utils/routeI18n'
-import heroFactoryImg from '../assets/hero-factory.jpg'
-import catBanhImg from '../assets/categories/category_banh.jpg'
-import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
+import heroFactoryImg from '../assets/hero-factory.webp'
+import catBanhImg from '../assets/categories/category_banh.webp'
+import catDoAnVatImg from '../assets/categories/category_do_an_vat.webp'
 
 const NEWS_SECTION_I18N = {
   badge: {

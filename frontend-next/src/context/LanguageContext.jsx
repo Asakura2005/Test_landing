@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import vi from '../locales/vi.json'
@@ -40,17 +40,31 @@ export const LANGUAGES = [
 
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
-    // Check URL path first
+    // Check URL path first (SSR-safe, consistent initial state)
     if (typeof window !== 'undefined') {
       const path = window.location.pathname
       if (path.startsWith('/en')) return 'en'
       if (path.startsWith('/ko')) return 'ko'
       if (path.startsWith('/zh')) return 'zh'
-      const saved = localStorage.getItem('haq_language')
-      if (saved && ['vi', 'en', 'ko', 'zh'].includes(saved)) return saved
     }
     return 'vi'
   })
+
+  // Synchronize saved preference on client mount without triggering SSR hydration mismatch
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const path = window.location.pathname
+      if (!path.startsWith('/en') && !path.startsWith('/ko') && !path.startsWith('/zh') && !path.startsWith('/admin')) {
+        const saved = localStorage.getItem('haq_language')
+        if (saved && ['vi', 'en', 'ko', 'zh'].includes(saved) && saved !== 'vi') {
+          setLanguageState(saved)
+        }
+      }
+    } catch (e) {
+      // Ignore localStorage access errors in restricted iframe/browser modes
+    }
+  }, [])
 
   // Synchronize <html> lang attribute
   useEffect(() => {
@@ -100,10 +114,15 @@ export function LanguageProvider({ children }) {
 
     if (typeof window !== 'undefined') {
       const path = window.location.pathname || '/'
+      const search = window.location.search || ''
+      const hash = window.location.hash || ''
       const newPath = getEquivalentRoute(path, targetCode)
-      if (newPath !== path) {
-        window.history.replaceState(null, '', newPath)
-        window.dispatchEvent(new CustomEvent('haq_lang_changed', { detail: { lang: targetCode, path: newPath } }))
+      const targetUrl = `${newPath}${search}${hash}`
+      const currentUrl = `${path}${search}${hash}`
+
+      if (targetUrl !== currentUrl) {
+        window.history.replaceState(null, '', targetUrl)
+        window.dispatchEvent(new CustomEvent('haq_lang_changed', { detail: { lang: targetCode, path: newPath, fullPath: targetUrl } }))
       }
     }
   }, [setLanguage])

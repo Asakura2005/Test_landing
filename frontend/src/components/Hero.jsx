@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
-import heroBanner2 from '../assets/herobanner/hero_banner_2.jpg'
-import heroBanner3 from '../assets/herobanner/hero_banner_3.jpg'
+import heroBanner1 from '../assets/herobanner/hero_banner_1.webp'
+import heroBanner2 from '../assets/herobanner/hero_banner_2.webp'
+import heroBanner3 from '../assets/herobanner/hero_banner_3.webp'
 
 const SLIDES = [
   { image: heroBanner1, alt: 'HAQ FOOD - Hệ Sinh Thái Sản Phẩm' },

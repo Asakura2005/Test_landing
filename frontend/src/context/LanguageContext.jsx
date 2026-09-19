@@ -98,10 +98,15 @@ export function LanguageProvider({ children }) {
 
     if (typeof window !== 'undefined') {
       const path = window.location.pathname || '/'
+      const search = window.location.search || ''
+      const hash = window.location.hash || ''
       const newPath = getEquivalentRoute(path, targetCode)
-      if (newPath !== path) {
-        window.history.replaceState(null, '', newPath)
-        window.dispatchEvent(new CustomEvent('haq_lang_changed', { detail: { lang: targetCode, path: newPath } }))
+      const targetUrl = `${newPath}${search}${hash}`
+      const currentUrl = `${path}${search}${hash}`
+
+      if (targetUrl !== currentUrl) {
+        window.history.replaceState(null, '', targetUrl)
+        window.dispatchEvent(new CustomEvent('haq_lang_changed', { detail: { lang: targetCode, path: newPath, fullPath: targetUrl } }))
       }
     }
   }, [setLanguage])

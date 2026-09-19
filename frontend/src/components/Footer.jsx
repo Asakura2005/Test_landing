@@ -16,7 +16,7 @@ import {
   getTermsUrl,
   getPolicyUrl,
 } from '../utils/routeI18n'
-import logoImg from '../assets/logo-haq.jpg'
+import logoImg from '../assets/logo-haq.webp'
 
 export default function Footer() {
   const { t, language } = useLanguage()

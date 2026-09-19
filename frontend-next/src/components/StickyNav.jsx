@@ -15,6 +15,7 @@ import {
   Phone,
   MessageCircle,
   Globe,
+  Check,
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.jpg'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
@@ -26,7 +27,16 @@ import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 import SearchOverlay from './SearchOverlay'
+import { FlagIcon } from './LanguageSwitcher'
 import { useAnalytics } from '../hooks/useAnalytics'
+
+// Danh sách ngôn ngữ hỗ trợ cùng cờ quốc gia và tên hiển thị đầy đủ
+const LANGUAGE_OPTIONS = [
+  { code: 'vi', label: 'VI', name: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'en', label: 'EN', name: 'English', flag: '🇬🇧' },
+  { code: 'ko', label: 'KO', name: '한국어', flag: '🇰🇷' },
+  { code: 'zh', label: 'ZH', name: '中文', flag: '🇨🇳' },
+]
 
 // Bộ đệm bộ nhớ (in-memory cache) cho danh mục và sản phẩm trên Header nhằm tăng tốc độ tải trang
 let cachedNavData = {
@@ -45,12 +55,10 @@ export default function StickyNav() {
   const [mobileProductSubAccordion, setMobileProductSubAccordion] = useState(null)
   const [activeMenu, setActiveMenu] = useState(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth < 1024
-    }
-    return false
-  })
+  const [isLangOpen, setIsLangOpen] = useState(false)
+  const langDropdownRef = useRef(null)
+  const langTriggerRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   const pathname = usePathname()
   const isHomePage = pathname === '/' || pathname === '/en' || pathname === '/ko' || pathname === '/zh'
@@ -64,12 +72,89 @@ export default function StickyNav() {
     return () => mql.removeEventListener('change', handler)
   }, [])
 
-  // Tự động đóng mobile drawer khi chuyển trang
+  // Tự động đóng mobile drawer và dropdown ngôn ngữ khi chuyển trang
   useEffect(() => {
     setMobileOpen(false)
     setMobileAccordion(null)
     setMobileProductSubAccordion(null)
+    setIsLangOpen(false)
   }, [pathname])
+
+  // Đóng dropdown ngôn ngữ khi click ra ngoài, mất focus hoặc nhấn phím Escape
+  useEffect(() => {
+    if (!isLangOpen) return
+
+    const handleClickOutside = (e) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target)) {
+        setIsLangOpen(false)
+      }
+    }
+
+    const handleFocusChange = (e) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target)) {
+        setIsLangOpen(false)
+      }
+    }
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsLangOpen(false)
+        langTriggerRef.current?.focus()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside, { passive: true })
+    document.addEventListener('focusin', handleFocusChange)
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+      document.removeEventListener('focusin', handleFocusChange)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isLangOpen])
+
+  // Điều hướng bàn phím cho Globe Dropdown (WCAG 2.1 AA)
+  const handleTriggerKeyDown = (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      setIsLangOpen(true)
+      setTimeout(() => {
+        const panel = langDropdownRef.current
+        if (!panel) return
+        const activeOption = panel.querySelector('[aria-selected="true"]')
+        const firstOption = panel.querySelector('[role="option"]')
+        ;(activeOption || firstOption)?.focus()
+      }, 50)
+    }
+  }
+
+  const handleOptionKeyDown = (e, index) => {
+    const options = langDropdownRef.current?.querySelectorAll('[role="option"]')
+    if (!options || options.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      const next = (index + 1) % options.length
+      options[next]?.focus()
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      const prev = (index - 1 + options.length) % options.length
+      options[prev]?.focus()
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      options[0]?.focus()
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      options[options.length - 1]?.focus()
+    } else if (e.key === 'Escape') {
+      e.preventDefault()
+      setIsLangOpen(false)
+      langTriggerRef.current?.focus()
+    }
+  }
 
   // Khóa cuộn trang hoàn toàn trên mobile khi mobile drawer mở (chống lướt nền trên iOS/Android)
   useEffect(() => {
@@ -305,6 +390,7 @@ export default function StickyNav() {
         setActiveMenu(null)
         setMobileOpen(false)
         setIsSearchOpen(false)
+        setIsLangOpen(false)
       } else if ((e.metaKey || e.ctrlKey) && e.key?.toLowerCase() === 'k') {
         e.preventDefault()
         setIsSearchOpen(prev => !prev)
@@ -316,6 +402,7 @@ export default function StickyNav() {
 
   const handleMouseEnter = (menuKey) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setIsLangOpen(false)
     setActiveMenu(menuKey)
   }
 
@@ -409,11 +496,11 @@ export default function StickyNav() {
           : 'bg-white h-[72px] sm:h-[76px] border-b border-haq-border flex items-center'
       }`}
     >
-      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12 flex items-center justify-between w-full relative z-40">
+      <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-8 xl:px-12 flex items-center justify-between w-full relative z-40">
         {/* 1. Corporate Brand Logo */}
         <Link
           href={homePath}
-          className="hidden lg:flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
+          className="hidden lg:flex items-center gap-2.5 xl:gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
           title="HAQ FOOD"
         >
           <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
@@ -436,7 +523,7 @@ export default function StickyNav() {
         {/* 2. Desktop Navigation (Standard Corporate Architecture) */}
         <nav
           aria-label="Thanh điều hướng chính"
-          className="hidden lg:flex items-center gap-6 xl:gap-8"
+          className="hidden lg:flex items-center gap-5 xl:gap-8"
           onMouseLeave={handleMouseLeave}
         >
           {/* VỀ CHÚNG TÔI (Mega Dropdown 3 Chuyên Mục Con) */}
@@ -449,7 +536,7 @@ export default function StickyNav() {
               aria-expanded={activeMenu === 've-chung-toi'}
               aria-haspopup="true"
               onClick={() => router.push(aboutSubpages[0].path)}
-              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
+              className={`relative py-2 text-[13px] xl:text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1 xl:gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
                 activeMenu === 've-chung-toi' || isAboutActive
                   ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
                   : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
@@ -515,7 +602,7 @@ export default function StickyNav() {
             <Link
               href={getProductsPath('all')}
               aria-current={isProductsActive ? 'page' : undefined}
-              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
+              className={`relative py-2 text-[13px] xl:text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1 xl:gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
                 activeMenu === 'san-pham' || isProductsActive
                   ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
                   : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
@@ -683,7 +770,7 @@ export default function StickyNav() {
               aria-expanded={activeMenu === 'tin-tuc-tuyen-dung'}
               aria-haspopup="true"
               onClick={() => router.push(newsPath)}
-              className={`relative py-2 text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
+              className={`relative py-2 text-[13px] xl:text-sm font-heading font-semibold tracking-wide inline-flex items-center gap-1 xl:gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded cursor-pointer ${
                 activeMenu === 'tin-tuc-tuyen-dung' || isNewsActive
                   ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
                   : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
@@ -754,7 +841,7 @@ export default function StickyNav() {
           <Link
             href={contactPath}
             aria-current={isContactActive ? 'page' : undefined}
-            className={`relative py-2 text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
+            className={`relative py-2 text-[13px] xl:text-sm font-heading font-semibold tracking-wide transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded ${
               isContactActive
                 ? (isTransparent ? 'text-[#16A34A] font-bold' : 'text-haq-green-dark font-bold')
                 : (isTransparent ? 'text-white/90 hover:text-white' : 'text-haq-ink hover:text-haq-green-dark')
@@ -767,43 +854,99 @@ export default function StickyNav() {
           </Link>
         </nav>
 
-        {/* 3. CTA & Header B2B Language Switcher (Desktop) */}
-        <div className="hidden lg:flex items-center gap-3.5 shrink-0">
-          {/* Minimal B2B Segmented Switcher */}
-          <div
-            className={`inline-flex items-center p-0.5 rounded-full text-xs font-mono font-bold tracking-wider transition-colors ${
-              isTransparent
-                ? 'bg-black/30 border border-white/20 text-white'
-                : 'bg-haq-soft/80 border border-haq-border'
-            }`}
-            role="group"
-            aria-label="Language selection"
-          >
-            {LANGUAGES.map((lang, idx) => {
-              const isActive = language === lang.code
-              return (
-                <React.Fragment key={lang.code}>
-                  {idx > 0 && <span className={`${isTransparent ? 'text-white/30' : 'text-haq-border'} select-none text-[10px] px-0.5`}>|</span>}
-                  <button
-                    type="button"
-                    onClick={() => switchLanguage(lang.code, navigate, pathname)}
-                    className={`px-2 py-1 rounded-full text-[11px] transition-all cursor-pointer ${
-                      isActive
-                        ? 'bg-haq-green-dark text-white shadow-2xs font-bold'
-                        : (isTransparent ? 'text-white/80 hover:text-white' : 'text-haq-text-secondary hover:text-haq-ink')
-                    }`}
-                    aria-pressed={isActive}
-                  >
-                    {lang.label}
-                  </button>
-                </React.Fragment>
-              )
-            })}
+        {/* 3. CTA & Header Globe Language Dropdown (Desktop) */}
+        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3.5 shrink-0">
+          {/* Globe Language Dropdown */}
+          <div className="relative" ref={langDropdownRef}>
+            <button
+              type="button"
+              ref={langTriggerRef}
+              id="haq-lang-dropdown-btn"
+              onClick={() => {
+                setActiveMenu(null)
+                setIsLangOpen((prev) => !prev)
+              }}
+              onKeyDown={handleTriggerKeyDown}
+              aria-label="Chọn ngôn ngữ / Select language"
+              aria-expanded={isLangOpen}
+              aria-haspopup="listbox"
+              aria-controls="haq-lang-dropdown-panel"
+              className={`h-9 px-2 rounded-full inline-flex items-center justify-center gap-1 transition-all duration-200 cursor-pointer text-xs font-mono font-bold select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark touch-manipulation relative before:absolute before:-inset-1 before:content-[''] before:rounded-full ${
+                isTransparent
+                  ? isLangOpen
+                    ? 'bg-black/60 border border-white/40 text-white ring-2 ring-white/25 shadow-sm'
+                    : 'bg-black/30 hover:bg-black/45 border border-white/20 text-white/95 hover:text-white'
+                  : isLangOpen
+                    ? 'bg-haq-sage/60 border border-[#16A34A]/40 text-[#16A34A] ring-2 ring-[#16A34A]/20 shadow-xs'
+                    : 'bg-haq-soft/80 hover:bg-haq-sage/60 border border-haq-border text-haq-ink hover:text-[#16A34A]'
+              }`}
+            >
+              <Globe className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                isTransparent ? 'text-white' : (isLangOpen ? 'text-[#16A34A]' : 'text-haq-text-secondary')
+              }`} />
+              <span className="tracking-wider uppercase">{(language || 'vi').toUpperCase()}</span>
+              <ChevronDown className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
+                isLangOpen ? 'rotate-180' : ''
+              } ${isTransparent ? 'text-white/70' : 'text-haq-text-secondary'}`} />
+            </button>
+
+            {/* Dropdown Panel - Bo góc rounded-2xl, đổ bóng shadow-xl theo tiêu chuẩn R1 */}
+            {isLangOpen && (
+              <div
+                id="haq-lang-dropdown-panel"
+                role="listbox"
+                aria-labelledby="haq-lang-dropdown-btn"
+                className="absolute right-0 top-full mt-2 w-48 max-h-[85vh] overflow-y-auto bg-white rounded-2xl shadow-xl border border-haq-border p-1.5 z-50 animate-in fade-in duration-150"
+              >
+                <div className="space-y-1">
+                  {LANGUAGE_OPTIONS.map((item, idx) => {
+                    const isActive = language === item.code
+                    return (
+                      <button
+                        key={item.code}
+                        type="button"
+                        role="option"
+                        aria-selected={isActive}
+                        tabIndex={isLangOpen ? 0 : -1}
+                        onKeyDown={(e) => handleOptionKeyDown(e, idx)}
+                        onClick={() => {
+                          switchLanguage(item.code, router?.push, pathname)
+                          setIsLangOpen(false)
+                          langTriggerRef.current?.focus()
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark ${
+                          isActive
+                            ? 'bg-haq-sage/30 text-[#16A34A] font-bold border border-[#16A34A]/20 shadow-2xs'
+                            : 'text-haq-ink hover:bg-haq-soft/80 hover:text-haq-green-dark border border-transparent'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <FlagIcon code={item.code} className="w-4.5 h-3 shrink-0" />
+                          <div className="flex items-baseline gap-1.5 truncate">
+                            <span className="truncate text-left font-medium">
+                              {item.name}
+                            </span>
+                            <span className={`text-[10px] font-mono shrink-0 uppercase ${
+                              isActive ? 'text-[#16A34A]/80 font-bold' : 'text-haq-text-secondary/80 font-normal'
+                            }`}>
+                              ({item.label})
+                            </span>
+                          </div>
+                        </div>
+                        {isActive && (
+                          <Check className="w-3.5 h-3.5 text-[#16A34A] shrink-0 ml-1.5" aria-hidden="true" />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           <Link
             href={contactPath}
-            className="inline-flex items-center gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-xs font-heading font-bold tracking-wider px-5 py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none shrink-0"
+            className="inline-flex items-center gap-1.5 xl:gap-2 bg-haq-green-dark hover:bg-haq-green text-white text-[11px] xl:text-xs font-heading font-bold tracking-wider px-3.5 xl:px-4.5 py-2 xl:py-2.5 rounded-full transition-all duration-200 shadow-2xs hover:shadow-md focus:outline-none shrink-0 active:scale-95"
           >
             <span>{t('nav.cta', 'LIÊN HỆ BÁO GIÁ')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -1161,7 +1304,10 @@ export default function StickyNav() {
                     <button
                       key={item.code}
                       type="button"
-                      onClick={() => switchLanguage(item.code, navigate, pathname)}
+                      onClick={() => {
+                        switchLanguage(item.code, router?.push, pathname)
+                        setMobileOpen(false)
+                      }}
                       className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer ${
                         language === item.code
                           ? 'bg-amber-400 text-[#0C1E15] shadow-xs'

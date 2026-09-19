@@ -5,9 +5,11 @@ import { Check } from 'lucide-react'
 
 // High-fidelity SVG Flags (avoids Windows emoji fallback to "KR / VN / US")
 export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
-  if (code === 'vi') {
+  const c = (code || '').toLowerCase()
+
+  if (c === 'vi') {
     return (
-      <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 30 20" overflow="hidden" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
         <rect width="30" height="20" fill="#DA251D" />
         <polygon
           points="15,4 16.5,8.8 21.5,8.8 17.5,11.8 19,16.5 15,13.5 11,16.5 12.5,11.8 8.5,8.8 13.5,8.8"
@@ -17,9 +19,9 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
     )
   }
 
-  if (code === 'ko') {
+  if (c === 'ko') {
     return (
-      <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 30 20" overflow="hidden" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
         <rect width="30" height="20" fill="#FFFFFF" />
         {/* Taegeuk circle */}
         <path d="M15,6 A4,4 0 0,1 15,14 A2,2 0 0,1 15,10 A2,2 0 0,0 15,6" fill="#CD2E3A" />
@@ -47,9 +49,9 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
     )
   }
 
-  if (code === 'zh') {
+  if (c === 'zh') {
     return (
-      <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 30 20" overflow="hidden" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
         <rect width="30" height="20" fill="#DE2910" />
         {/* Big star centered at (5, 5) */}
         <polygon
@@ -73,31 +75,22 @@ export function FlagIcon({ code, className = 'w-5 h-3.5' }) {
     )
   }
 
-  // en (USA)
+  // en (UK - 🇬🇧) or fallback
   return (
-    <svg viewBox="0 0 30 20" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
-      {/* 13 Stripes */}
-      {Array.from({ length: 13 }).map((_, i) => (
-        <rect
-          key={i}
-          x="0"
-          y={(i * 20) / 13}
-          width="30"
-          height={20 / 13}
-          fill={i % 2 === 0 ? '#B22234' : '#FFFFFF'}
-        />
-      ))}
-      {/* Blue Canton */}
-      <rect width="12" height={(7 * 20) / 13} fill="#3C3B6E" />
-      {/* White dots for stars */}
-      <circle cx="3" cy="2.5" r="0.7" fill="#FFFFFF" />
-      <circle cx="6" cy="2.5" r="0.7" fill="#FFFFFF" />
-      <circle cx="9" cy="2.5" r="0.7" fill="#FFFFFF" />
-      <circle cx="4.5" cy="5.2" r="0.7" fill="#FFFFFF" />
-      <circle cx="7.5" cy="5.2" r="0.7" fill="#FFFFFF" />
-      <circle cx="3" cy="8" r="0.7" fill="#FFFFFF" />
-      <circle cx="6" cy="8" r="0.7" fill="#FFFFFF" />
-      <circle cx="9" cy="8" r="0.7" fill="#FFFFFF" />
+    <svg viewBox="0 0 30 20" overflow="hidden" className={`rounded-[2px] object-cover shadow-2xs ${className}`} aria-hidden="true">
+      <rect width="30" height="20" fill="#012169" />
+      {/* White diagonal saltire */}
+      <line x1="0" y1="0" x2="30" y2="20" stroke="#FFFFFF" strokeWidth="4" />
+      <line x1="30" y1="0" x2="0" y2="20" stroke="#FFFFFF" strokeWidth="4" />
+      {/* Red diagonal saltire */}
+      <line x1="0" y1="0" x2="30" y2="20" stroke="#C8102E" strokeWidth="2.4" />
+      <line x1="30" y1="0" x2="0" y2="20" stroke="#C8102E" strokeWidth="2.4" />
+      {/* White cross */}
+      <rect x="12" y="0" width="6" height="20" fill="#FFFFFF" />
+      <rect x="0" y="7" width="30" height="6" fill="#FFFFFF" />
+      {/* Red cross */}
+      <rect x="13.2" y="0" width="3.6" height="20" fill="#C8102E" />
+      <rect x="0" y="8.2" width="30" height="3.6" fill="#C8102E" />
     </svg>
   )
 }

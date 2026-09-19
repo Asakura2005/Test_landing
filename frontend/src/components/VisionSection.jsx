@@ -1,7 +1,7 @@
 import React from 'react'
 import { useReveal } from '../hooks/useReveal'
 import { useLanguage } from '../context/LanguageContext'
-import coreValuesPentagonImg from '../assets/core_values_pentagon.jpg'
+import coreValuesPentagonImg from '../assets/core_values_pentagon.webp'
 
 export default function VisionSection({ className = '' }) {
   const ref = useReveal()

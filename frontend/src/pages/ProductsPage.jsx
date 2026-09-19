@@ -28,7 +28,7 @@ import { useAnalytics } from '../hooks/useAnalytics'
 import { getLocalizedCategory, getLocalizedProduct, getLocalizedProvince } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl } from '../utils/routeI18n'
 
-import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
+import heroBanner1 from '../assets/herobanner/hero_banner_1.webp'
 
 const ITEMS_PER_PAGE = 12
 

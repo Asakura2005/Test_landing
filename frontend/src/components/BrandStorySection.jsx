@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ShieldCheck, Factory, Award } from 'lucide-react'
 import { useReveal } from '../hooks/useReveal'
-import factoryImg from '../assets/hero-factory.jpg'
+import factoryImg from '../assets/hero-factory.webp'
 
 export default function BrandStorySection() {
   const ref = useReveal()

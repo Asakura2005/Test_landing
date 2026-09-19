@@ -11,12 +11,12 @@ import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
 import { useMagneticSectionScroll } from '../hooks/useMagneticSectionScroll'
 
-import factoryImg from '../assets/business/congtac.jpeg'
-import b2bImg from '../assets/business/trung-bay-sp.jpeg'
-import exportImg from '../assets/factory/thanh-pham.jpg'
-import heroBanner1 from '../assets/herobanner/hero_banner_1.jpg'
-import nhaXuong2021Img from '../assets/factory/nha-xuong-2021.jpg'
-import catBanhImg from '../assets/categories/category_banh.jpg'
+import factoryImg from '../assets/business/congtac.webp'
+import b2bImg from '../assets/business/trung-bay-sp.webp'
+import exportImg from '../assets/factory/thanh-pham.webp'
+import heroBanner1 from '../assets/herobanner/hero_banner_1.webp'
+import nhaXuong2021Img from '../assets/factory/nha-xuong-2021.webp'
+import catBanhImg from '../assets/categories/category_banh.webp'
 
 
 /* ───────────────────────────────────────────────────────────────────

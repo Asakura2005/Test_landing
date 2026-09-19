@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { getProductsPageUrl, getContactUrl, getProductDetailUrl } from '../utils/routeI18n'
 import { useAnalytics } from '../hooks/useAnalytics'
 
-import signatureImg from '../assets/categories/category_banh_trang.jpg'
+import signatureImg from '../assets/categories/category_banh_trang.webp'
 import { optimizeSupabaseImageUrl } from '../utils/imageOptimizer'
 
 const packImg1 = optimizeSupabaseImageUrl('https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg', { width: 320, quality: 80 })

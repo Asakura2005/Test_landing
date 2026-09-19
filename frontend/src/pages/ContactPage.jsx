@@ -368,12 +368,12 @@ export default function ContactPage() {
       setErrorMessage(
         err?.message ||
         (language === 'zh'
-          ? '暂时无法提交信息。请通过热线电话 024 23 23 56 56 或 Zalo 0993 308 319 直接联系我们。'
+          ? '暂时无法提交信息。请通过热线电话 024 23 23 56 56 或 Zalo 0969 508 208 直接联系我们。'
           : language === 'ko'
-          ? '현재 문의를 접수할 수 없습니다. 대표번호 024 23 23 56 56 또는 Zalo 0993 308 319로 문의해 주시기 바랍니다.'
+          ? '현재 문의를 접수할 수 없습니다. 대표번호 024 23 23 56 56 또는 Zalo 0969 508 208로 문의해 주시기 바랍니다.'
           : language === 'en'
-          ? 'Unable to submit your inquiry at this moment. Please contact us via hotline 024 23 23 56 56 or Zalo 0993 308 319 for direct support.'
-          : 'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0993 308 319 để được hỗ trợ trực tiếp.')
+          ? 'Unable to submit your inquiry at this moment. Please contact us via hotline 024 23 23 56 56 or Zalo 0969 508 208 for direct support.'
+          : 'Không thể gửi thông tin vào lúc này. Quý khách vui lòng liên hệ hotline 024 23 23 56 56 hoặc Zalo 0969 508 208 để được hỗ trợ trực tiếp.')
       )
     } finally {
       setIsSubmitting(false)
@@ -537,17 +537,17 @@ export default function ContactPage() {
                         <span className="text-xs text-haq-text-secondary">
                           Hotline:{' '}
                           <a
-                            href="tel:0993308319"
+                            href="tel:0969508208"
                             className="text-haq-ink hover:text-[#16A34A] font-mono font-bold hover:underline"
-                            title="Gọi hotline 0993 308 319"
+                            title="Gọi hotline 0969 508 208"
                           >
-                            0993 308 319
+                            0969 508 208
                           </a>
                         </span>
                       </div>
                     </div>
                     <a
-                      href="tel:0993308319"
+                      href="tel:0969508208"
                       className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase text-[#16A34A] hover:underline"
                     >
                       <span>{language === 'en' ? 'Call Directly' : language === 'ko' ? '직접 전화 문의' : language === 'zh' ? '直接致电' : 'Gọi trực tiếp'}</span>

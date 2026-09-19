@@ -1,13 +1,13 @@
 import React from 'react'
 
 // Real verified retail partners of HAQ FOOD
-import winmartLogo from '../assets/pictures_doitac/winmart.png'
-import goLogo from '../assets/pictures_doitac/go!.png'
-import circleKLogo from '../assets/pictures_doitac/circle_k.png'
-import gs25Logo from '../assets/pictures_doitac/gs25.png'
+import winmartLogo from '../assets/pictures_doitac/winmart.webp'
+import goLogo from '../assets/pictures_doitac/go!.webp'
+import circleKLogo from '../assets/pictures_doitac/Circle_K.webp'
+import gs25Logo from '../assets/pictures_doitac/gs25.webp'
 import kmartLogo from '../assets/pictures_doitac/k-market.webp'
-import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.png'
-import lotteLogo from '../assets/pictures_doitac/lotte.png'
+import bachHoaXanhLogo from '../assets/pictures_doitac/bach_hoa_xanh.webp'
+import lotteLogo from '../assets/pictures_doitac/lotte.webp'
 
 const RETAIL_PARTNERS = [
   { name: 'WinMart & WinMart+', logo: winmartLogo, note: 'Hệ thống siêu thị toàn quốc' },

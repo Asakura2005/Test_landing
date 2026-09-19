@@ -1,8 +1,8 @@
-import catAllImg from '../assets/herobanner/hero_banner_1.jpg'
-import catBanhTrangImg from '../assets/categories/category_banh_trang.jpg'
-import catBanhImg from '../assets/categories/category_banh.jpg'
-import catDoAnVatImg from '../assets/categories/category_do_an_vat.jpg'
-import catDoAnKhoImg from '../assets/categories/category_do_an_kho.jpg'
+import catAllImg from '../assets/herobanner/hero_banner_1.webp'
+import catBanhTrangImg from '../assets/categories/category_banh_trang.webp'
+import catBanhImg from '../assets/categories/category_banh.webp'
+import catDoAnVatImg from '../assets/categories/category_do_an_vat.webp'
+import catDoAnKhoImg from '../assets/categories/category_do_an_kho.webp'
 import { optimizeSupabaseImageUrl } from '../utils/imageOptimizer'
 
 export const PRODUCT_IMAGE_MAP = {}

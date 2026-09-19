@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShieldCheck, Cpu, Factory, Award, ArrowRight, CheckCircle2 } from 'lucide-react'
-import factoryImg from '../assets/factory/factory_production.jpg'
+import factoryImg from '../assets/factory/factory_production.webp'
 
 export default function CapabilitiesSection() {
   return (

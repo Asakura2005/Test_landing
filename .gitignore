@@ -58,3 +58,6 @@ user_content_*.txt
 # Raw assets
 frontend/src/assets/*.mp4
 frontend-next/src/assets/*.mp4
+
+# Agent work artifacts
+.agents/

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import ProductDetailClient from './ProductDetailClient'
 import { getProductBySlug, getProducts } from '@/services/supabase'
+import { generateProductSchema } from '@/utils/productSchema'
 
 export const revalidate = 3600
 
@@ -145,65 +146,20 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     console.warn('Error fetching recommended products:', recErr)
   }
 
-  // Construct Schema.org Product JSON-LD
-  let prodImage =
-    product.variants?.[0]?.img ||
-    product.images?.[0] ||
-    product.image_url ||
-    product.image ||
-    'https://haq.com.vn/herobanner/hero_banner_1.jpg'
-
-  if (prodImage && !prodImage.startsWith('http://') && !prodImage.startsWith('https://')) {
-    prodImage = `https://haq.com.vn${prodImage.startsWith('/') ? '' : '/'}${prodImage}`
-  }
-
+  // Construct Schema.org Product JSON-LD conforming to Google Search Console rich snippet requirements
   const currentUrl = `https://haq.com.vn/san-pham/${slug}`
-  const defaultDesc = `${product.name} — Sản phẩm chất lượng cao đạt chuẩn ISO 22000 & HACCP từ HAQ FOOD.`
-  const candidateDesc =
-    (product.description && product.description.trim().length > 5 ? product.description : '') ||
-    (product.short_description && product.short_description.trim().length > 5 ? product.short_description : '') ||
-    defaultDesc
-  const cleanDesc = candidateDesc.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim()
-
-  const productSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    image: [prodImage],
-    description: cleanDesc,
-    sku: product.slug || String(product.id),
-    category: product.categories?.name || product.category || 'Đồ ăn vặt',
-    brand: {
-      '@type': 'Brand',
-      name: 'HAQ FOOD',
-    },
-    manufacturer: {
-      '@type': 'Organization',
-      name: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI',
-      url: 'https://haq.com.vn/',
-    },
-    offers: {
-      '@type': 'Offer',
-      url: currentUrl,
-      priceCurrency: 'VND',
-      price: product.price_min || product.variants?.[0]?.price || '0',
-      priceValidUntil: '2027-12-31',
-      itemCondition: 'https://schema.org/NewCondition',
-      availability: 'https://schema.org/InStock',
-      seller: {
-        '@type': 'Organization',
-        name: 'HAQ FOOD',
-      },
-    },
-    url: currentUrl,
-  }
+  const productSchema = generateProductSchema(product, {
+    currentUrl,
+  })
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
+      {productSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+      )}
       <ProductDetailClient initialProduct={product} recommendedProducts={recommended} />
     </>
   )

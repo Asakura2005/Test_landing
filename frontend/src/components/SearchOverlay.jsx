@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, X, ArrowRight, Package, Sparkles } from 'lucide-react'
-import { getProducts } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { getLocalizedProduct } from '../utils/i18nData'
@@ -20,9 +19,12 @@ export default function SearchOverlay({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100)
-      getProducts().then((data) => {
-        if (data) setProducts(data)
-      })
+      import('../services/supabase')
+        .then(({ getProducts }) => getProducts())
+        .then((data) => {
+          if (data) setProducts(data)
+        })
+        .catch((err) => console.error('Failed to load products for search:', err))
     } else {
       setQuery('')
       setResults([])

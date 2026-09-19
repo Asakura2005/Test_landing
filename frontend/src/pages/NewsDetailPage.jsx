@@ -145,7 +145,9 @@ export default function NewsDetailPage() {
       articleImage = `https://haq.com.vn${articleImage.startsWith('/') ? '' : '/'}${articleImage}`
     }
 
-    const currentUrl = typeof window !== 'undefined' ? window.location.href : `https://haq.com.vn/tin-tuc/${news.slug}`
+    const currentUrl = typeof window !== 'undefined'
+      ? `https://haq.com.vn${window.location.pathname.replace(/\/+$/, '')}`
+      : `https://haq.com.vn/tin-tuc/${news.slug}`
 
     updateMetaTag('property', 'og:title', pageTitle)
     updateMetaTag('property', 'og:description', finalDesc)

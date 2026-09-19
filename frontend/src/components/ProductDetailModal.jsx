@@ -122,24 +122,33 @@ export default function ProductDetailModal({ product: rawProduct, onClose }) {
 
         {/* Left: Image Gallery */}
         <div className="w-full md:w-2/5 lg:w-1/2 bg-white p-4 md:p-8 flex flex-col items-center justify-center relative min-h-[200px] md:min-h-0 border-b md:border-b-0 md:border-r border-haq-border">
-          {/* Tag */}
-          {product.tag && (
-            <div className="absolute top-4 left-4 z-20 bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-sm">
-              {product.tag}
-            </div>
-          )}
+          {/* Main Image Frame (Square 1:1) */}
+          <div className="relative w-full max-h-[38vh] max-w-[38vh] md:max-h-none md:max-w-none aspect-square rounded-2xl overflow-hidden bg-white border border-haq-border flex items-center justify-center shadow-sm">
+            {/* Tag */}
+            {product.tag && (
+              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-30 bg-[#16A34A] text-white text-xs font-heading font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md pointer-events-none select-none">
+                {product.tag}
+              </div>
+            )}
 
-          {activeImage ? (
-            <img 
-              src={activeImage} 
-              alt={product.name} 
-              className="relative z-10 w-full max-h-[28vh] md:max-h-[50vh] object-contain drop-shadow-xl transition-all duration-200" 
-            />
-          ) : (
-            <div className="relative z-10 text-haq-text-secondary font-bold border-2 border-dashed border-haq-border p-8 rounded-xl flex items-center justify-center w-full h-48">
-              {t('product_detail.no_image', 'Chưa có hình ảnh')}
-            </div>
-          )}
+            {activeImage ? (
+              <img 
+                src={activeImage} 
+                alt={product.name} 
+                onError={(e) => {
+                  const fallback = PRODUCT_IMAGE_MAP[product?.slug]
+                  if (fallback && e.currentTarget.src !== fallback) {
+                    e.currentTarget.src = fallback
+                  }
+                }}
+                className="w-full h-full object-contain p-2 sm:p-4 transition-all duration-200" 
+              />
+            ) : (
+              <div className="relative z-10 text-haq-text-secondary/50 italic text-sm p-8 flex items-center justify-center">
+                {t('product_detail.no_image', 'Chưa có hình ảnh')}
+              </div>
+            )}
+          </div>
 
           {/* Modal Gallery Thumbnails */}
           {modalGalleryImages.length > 1 && (
