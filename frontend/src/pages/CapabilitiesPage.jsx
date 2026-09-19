@@ -118,6 +118,8 @@ export default function CapabilitiesPage() {
                   src={heroFactoryImg} 
                   alt="Dây chuyền đóng gói khép kín HAQ FOOD" 
                   className="w-full aspect-[16/9] sm:aspect-[21/9] object-cover" 
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </Reveal>
@@ -213,7 +215,7 @@ export default function CapabilitiesPage() {
                     poster={factoryImg}
                     controls={isPlaying}
                     playsInline
-                    preload="metadata"
+                    preload="none"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => {}}
                     onEnded={() => setIsPlaying(false)}

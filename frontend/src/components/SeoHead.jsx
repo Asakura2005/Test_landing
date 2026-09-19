@@ -25,7 +25,7 @@ const SEO_TITLES = {
     zh: '发展历程与关键里程碑 2021 — 2026 | HAQ FOOD',
   },
   capabilities: {
-    vi: 'Năng Lực Sản Xuất & Tiêu Chuẩn Phòng Sạch ISO/HACCP | HAQ FOOD',
+    vi: 'Năng Lực Sản Xuất & Tiêu Chuẩn ISO/HACCP | HAQ FOOD',
     en: 'Manufacturing Capabilities & Cleanroom Standards (ISO/HACCP) | HAQ FOOD',
     ko: '제조 역량 및 ISO/HACCP 클린룸 생산 설비 | HAQ FOOD',
     zh: '制造产能与 ISO/HACCP 洁净车间生产标准 | HAQ FOOD',
