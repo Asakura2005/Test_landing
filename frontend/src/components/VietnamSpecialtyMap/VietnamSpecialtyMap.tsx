@@ -485,8 +485,10 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
             </p>
           </div>
 
-          {/* 4. PRODUCT SHOWCASE (Responsive: Mobile Carousel / Desktop Editorial Grid) */}
-          <div className="flex-1 min-h-0 flex flex-col justify-start">
+          </div>
+
+          {/* 4. PRODUCT SHOWCASE (Editorial 4:3 Vertical Cards) */}
+          <div className="w-full my-auto py-1">
             <AnimatePresence mode="wait">
               {featuredProduct ? (
                 <motion.div
@@ -495,161 +497,70 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="flex-1 min-h-0 flex flex-col"
+                  className="w-full"
                 >
-                  {/* MOBILE & TABLET VIEW (< lg): Responsive Grid that fills 100% width evenly without blank space */}
-                  <div className="block lg:hidden w-full">
-                    {showcaseProducts.length === 2 ? (
-                      /* 2 PRODUCTS: 2 equal-width columns filling 100% width */
-                      <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full">
-                        {showcaseProducts.map((prod, idx) => (
-                          <Link
-                            key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                            to={resolveProductLink(prod)}
-                            onClick={() => handleProductClick(prod)}
-                            data-product-click="true"
-                            data-product-id={prod.productId || prod.slug}
-                            data-product-slug={prod.slug || prod.productId}
-                            data-product-name={prod.name}
-                            data-product-canonical-name={prod.canonical_name || prod.name}
-                            data-product-category={prod.category || defaultCategoryText}
-                            data-product-location="specialty_map_mobile_2col"
-                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
-                          >
-                            {/* Image Box */}
-                            <div className="w-full h-[120px] sm:h-[160px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
-                              {prod.is_pinned && (
-                                <span className="absolute top-1.5 left-1.5 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
-                                  <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
-                                  {flagshipBadge}
-                                </span>
-                              )}
-                              {prod.image ? (
-                                <img
-                                  src={prod.image}
-                                  alt={prod.name}
-                                  width="160"
-                                  height="160"
-                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                              ) : (
-                                <span className="text-2xl opacity-60">🌾</span>
-                              )}
-                            </div>
-
-                            {/* Info */}
-                            <div className="pt-2 flex flex-col flex-1 justify-between">
-                              <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {prod.category || defaultCategoryText}
-                              </span>
-                              <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                                {prod.name}
-                              </h4>
-                              <p className="text-[11px] text-haq-text-secondary line-clamp-2 font-light mt-0.5 hidden sm:block">
-                                {prod.description || defaultProductDesc}
-                              </p>
-                              <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
-                                <span>{viewDetailText}</span>
-                                <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    ) : showcaseProducts.length === 3 ? (
-                      /* 3 PRODUCTS: 1 Featured top + 2 Supporting below on mobile, 3 equal cols on tablet */
-                      <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4">
-                        {/* Featured (Card 1) */}
+                  {showcaseProducts.length === 2 ? (
+                    /* 2 PRODUCTS: 2 equal-width columns side by side */
+                    <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full">
+                      {showcaseProducts.map((prod, idx) => (
                         <Link
-                          to={resolveProductLink(showcaseProducts[0])}
-                          onClick={() => handleProductClick(showcaseProducts[0])}
+                          key={prod.productId || prod.slug || `${prod.name}-${idx}`}
+                          to={resolveProductLink(prod)}
+                          onClick={() => handleProductClick(prod)}
                           data-product-click="true"
-                          data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
-                          data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
-                          data-product-name={showcaseProducts[0].name}
-                          data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                          data-product-category={showcaseProducts[0].category || flagshipCategoryText}
-                          data-product-location="specialty_map_mobile_featured"
-                          className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
+                          data-product-id={prod.productId || prod.slug}
+                          data-product-slug={prod.slug || prod.productId}
+                          data-product-name={prod.name}
+                          data-product-canonical-name={prod.canonical_name || prod.name}
+                          data-product-category={prod.category || (idx === 0 ? flagshipCategoryText : defaultCategoryText)}
+                          data-product-location={idx === 0 ? "specialty_map_featured" : "specialty_map_supporting"}
+                          className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
                         >
-                          <div className="w-24 h-24 sm:w-full sm:h-[150px] shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
-                            {showcaseProducts[0].is_pinned && (
-                              <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
-                                <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
+                          {/* Khung ảnh chuẩn 4:3 */}
+                          <div className="w-full aspect-[4/3] bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2.5 sm:p-3 flex items-center justify-center overflow-hidden relative shrink-0">
+                            {prod.is_pinned && (
+                              <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
+                                <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
                                 {flagshipBadge}
                               </span>
                             )}
-                            <img
-                              src={showcaseProducts[0].image}
-                              alt={showcaseProducts[0].name}
-                              width="240"
-                              height="240"
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                              decoding="async"
-                            />
+                            {prod.image ? (
+                              <img
+                                src={prod.image}
+                                alt={prod.name}
+                                width="320"
+                                height="240"
+                                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            ) : (
+                              <span className="text-2xl sm:text-3xl opacity-60">🌾</span>
+                            )}
                           </div>
-                          <div className="flex-1 min-w-0 sm:pt-2 flex flex-col justify-between">
-                            <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                              {showcaseProducts[0].category || flagshipCategoryText}
-                            </span>
-                            <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                              {showcaseProducts[0].name}
-                            </h4>
-                            <div className="mt-1 sm:mt-2 pt-1 sm:pt-1.5 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
+
+                          {/* Thông tin thẻ */}
+                          <div className="pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
+                            <div>
+                              <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                                {prod.category || (idx === 0 ? flagshipCategoryText : defaultCategoryText)}
+                              </span>
+                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                                {prod.name}
+                              </h4>
+                            </div>
+                            <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
                               <span>{viewDetailText}</span>
-                              <span>→</span>
+                              <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
                             </div>
                           </div>
                         </Link>
-
-                        {/* Supporting (Cards 2 & 3) — 2 cols on mobile */}
-                        <div className="grid grid-cols-2 gap-2.5 sm:contents">
-                          {showcaseProducts.slice(1).map((prod, idx) => (
-                            <Link
-                              key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                              to={resolveProductLink(prod)}
-                              onClick={() => handleProductClick(prod)}
-                              data-product-click="true"
-                              data-product-id={prod.productId || prod.slug}
-                              data-product-slug={prod.slug || prod.productId}
-                              data-product-name={prod.name}
-                              data-product-canonical-name={prod.canonical_name || prod.name}
-                              data-product-category={prod.category || defaultCategoryText}
-                              data-product-location="specialty_map_mobile_supporting"
-                              className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all shadow-2xs group w-full"
-                            >
-                              <div className="w-full h-[110px] sm:h-[150px] bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden relative">
-                                <img
-                                  src={prod.image}
-                                  alt={prod.name}
-                                  width="150"
-                                  height="150"
-                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                              </div>
-                              <div className="pt-2 flex flex-col flex-1 justify-between">
-                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                  {prod.category || defaultCategoryText}
-                                </span>
-                                <h4 className="font-heading font-bold text-xs sm:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] mt-0.5 leading-snug">
-                                  {prod.name}
-                                </h4>
-                                <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132]">
-                                  <span>{viewDetailText}</span>
-                                  <span>→</span>
-                                </div>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      /* 1 PRODUCT */
+                      ))}
+                    </div>
+                  ) : showcaseProducts.length === 3 ? (
+                    /* 3 PRODUCTS: 1 Featured top + 2 Supporting below on mobile (< sm), 3 equal columns on tablet & desktop */
+                    <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3.5 lg:gap-4">
+                      {/* Featured (Card 1) */}
                       <Link
                         to={resolveProductLink(showcaseProducts[0])}
                         onClick={() => handleProductClick(showcaseProducts[0])}
@@ -658,99 +569,50 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                         data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
                         data-product-name={showcaseProducts[0].name}
                         data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                        data-product-category={showcaseProducts[0].category || defaultCategoryText}
-                        data-product-location="specialty_map_mobile_single"
-                        className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-3 transition-all shadow-2xs group max-w-md"
+                        data-product-category={showcaseProducts[0].category || flagshipCategoryText}
+                        data-product-location="specialty_map_featured"
+                        className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
                       >
-                        <div className="w-24 h-24 shrink-0 bg-[#FAF9F6] rounded-lg border border-haq-border/40 p-2 flex items-center justify-center overflow-hidden">
-                          <img
-                            src={showcaseProducts[0].image}
-                            alt={showcaseProducts[0].name}
-                            width="120"
-                            height="120"
-                            className="w-full h-full object-contain"
-                            loading="lazy"
-                            decoding="async"
-                          />
+                        <div className="w-28 sm:w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
+                          {showcaseProducts[0].is_pinned && (
+                            <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
+                              <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
+                              {flagshipBadge}
+                            </span>
+                          )}
+                          {showcaseProducts[0].image ? (
+                            <img
+                              src={showcaseProducts[0].image}
+                              alt={showcaseProducts[0].name}
+                              width="320"
+                              height="240"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          ) : (
+                            <span className="text-2xl sm:text-3xl opacity-60">🌾</span>
+                          )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block">
-                            {showcaseProducts[0].category || defaultCategoryText}
-                          </span>
-                          <h4 className="font-heading font-bold text-sm text-haq-ink line-clamp-2 leading-snug mt-0.5">
-                            {showcaseProducts[0].name}
-                          </h4>
-                          <span className="inline-flex items-center gap-1 text-xs font-heading font-bold text-[#0F5132] mt-2">
+                        <div className="flex-1 min-w-0 sm:pt-2.5 flex flex-col justify-between">
+                          <div>
+                            <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                              {showcaseProducts[0].category || flagshipCategoryText}
+                            </span>
+                            <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                              {showcaseProducts[0].name}
+                            </h4>
+                          </div>
+                          <div className="mt-1.5 sm:mt-2 pt-1 sm:pt-2 sm:border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
                             <span>{viewDetailText}</span>
-                            <span>→</span>
-                          </span>
+                            <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                          </div>
                         </div>
                       </Link>
-                    )}
-                  </div>
 
-                  {/* DESKTOP VIEW (≥ lg): Curated Editorial 7/5 Grid */}
-                  <div className="hidden lg:grid grid-cols-12 gap-3.5 flex-1 min-h-0">
-                    {/* LEFT: FEATURED PRODUCT */}
-                    <Link
-                      to={resolveProductLink(featuredProduct)}
-                      onClick={() => handleProductClick(featuredProduct)}
-                      data-product-click="true"
-                      data-product-id={featuredProduct.productId || featuredProduct.slug}
-                      data-product-slug={featuredProduct.slug || featuredProduct.productId}
-                      data-product-name={featuredProduct.name}
-                      data-product-canonical-name={featuredProduct.canonical_name || featuredProduct.name}
-                      data-product-category={featuredProduct.category || flagshipCategoryText}
-                      data-product-location="specialty_map_desktop_featured"
-                      className={`${
-                        supportingProducts.length === 2
-                          ? "col-span-7"
-                          : supportingProducts.length === 1
-                          ? "col-span-6"
-                          : "col-span-12"
-                      } flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0`}
-                    >
-                      {/* Large Featured Product Image */}
-                      <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-3 flex items-center justify-center overflow-hidden relative">
-                        {featuredProduct.is_pinned && (
-                          <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
-                            <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
-                            {flagshipBadge}
-                          </span>
-                        )}
-                        {featuredProduct.image ? (
-                          <img
-                            src={featuredProduct.image}
-                            alt={featuredProduct.name}
-                            width="360"
-                            height="360"
-                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <span className="text-3xl opacity-60">🌾</span>
-                        )}
-                      </div>
-
-                      {/* Featured Info */}
-                      <div className="pt-2 flex flex-col shrink-0">
-                        <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold">
-                          {featuredProduct.category || flagshipCategoryText}
-                        </span>
-                        <span className="font-heading font-bold text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 mt-0.5">
-                          {featuredProduct.name}
-                        </span>
-                        <p className="text-[11px] text-haq-text-secondary line-clamp-1 font-light mt-0.5">
-                          {featuredProduct.description || defaultProductDesc}
-                        </p>
-                      </div>
-                    </Link>
-
-                    {/* RIGHT: SUPPORTING PRODUCTS */}
-                    {supportingProducts.length === 2 ? (
-                      <div className="col-span-5 flex flex-col gap-3 flex-1 min-h-0 justify-between">
-                        {supportingProducts.map((prod, idx) => (
+                      {/* Supporting (Cards 2 & 3) — 2 cols on mobile, unwrapped on tablet & desktop */}
+                      <div className="grid grid-cols-2 gap-2.5 sm:contents">
+                        {showcaseProducts.slice(1).map((prod, idx) => (
                           <Link
                             key={prod.productId || prod.slug || `${prod.name}-${idx}`}
                             to={resolveProductLink(prod)}
@@ -761,95 +623,99 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             data-product-name={prod.name}
                             data-product-canonical-name={prod.canonical_name || prod.name}
                             data-product-category={prod.category || defaultCategoryText}
-                            data-product-location="specialty_map_desktop_supporting"
-                            className="flex-1 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-2.5 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
+                            data-product-location="specialty_map_supporting"
+                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full"
                           >
-                            <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-1.5 flex items-center justify-center overflow-hidden relative">
+                            <div className="w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-3 flex items-center justify-center overflow-hidden relative">
                               {prod.is_pinned && (
-                                <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.2 rounded">
-                                  <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
+                                <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
+                                  <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" />
+                                  {flagshipBadge}
                                 </span>
                               )}
                               {prod.image ? (
                                 <img
                                   src={prod.image}
                                   alt={prod.name}
-                                  width="160"
-                                  height="160"
+                                  width="280"
+                                  height="210"
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                   loading="lazy"
                                   decoding="async"
                                 />
                               ) : (
-                                <span className="text-xl opacity-60">🌿</span>
+                                <span className="text-xl sm:text-2xl opacity-60">🌿</span>
                               )}
                             </div>
-
-                            <div className="pt-1.5 flex flex-col shrink-0">
-                              <span className="font-heading font-semibold text-xs text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 leading-snug">
-                                {prod.name}
-                              </span>
-                              <div className="flex items-center justify-between mt-0.5">
-                                <span className="text-[10px] text-haq-text-secondary truncate font-light">
+                            <div className="pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
+                              <div>
+                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
                                   {prod.category || defaultCategoryText}
                                 </span>
-                                <span className="text-[10px] text-[#0F5132] font-semibold ml-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
-                                  →
-                                </span>
+                                <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                                  {prod.name}
+                                </h4>
+                              </div>
+                              <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                                <span>{viewDetailText}</span>
+                                <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
                               </div>
                             </div>
                           </Link>
                         ))}
                       </div>
-                    ) : supportingProducts.length === 1 ? (
-                      <Link
-                        to={resolveProductLink(supportingProducts[0])}
-                        onClick={() => handleProductClick(supportingProducts[0])}
-                        data-product-click="true"
-                        data-product-id={supportingProducts[0].productId || supportingProducts[0].slug}
-                        data-product-slug={supportingProducts[0].slug || supportingProducts[0].productId}
-                        data-product-name={supportingProducts[0].name}
-                        data-product-canonical-name={supportingProducts[0].canonical_name || supportingProducts[0].name}
-                        data-product-category={supportingProducts[0].category || defaultCategoryText}
-                        data-product-location="specialty_map_desktop_single_supporting"
-                        className="col-span-6 flex flex-col justify-between bg-white rounded-lg border border-haq-border/70 hover:border-[#0F5132]/40 p-3 transition-all duration-200 shadow-2xs group overflow-hidden min-h-0"
-                      >
-                        <div className="w-full flex-1 min-h-0 bg-[#FAF9F6] rounded-md border border-haq-border/40 p-3 flex items-center justify-center overflow-hidden relative">
-                          {supportingProducts[0].is_pinned && (
-                            <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 bg-[#0F5132] text-white text-[9px] font-semibold px-2 py-0.5 rounded shadow-2xs">
-                              <Pin className="w-2.5 h-2.5 fill-[#16A34A] text-[#16A34A]" />
-                              {flagshipBadge}
-                            </span>
-                          )}
-                          {supportingProducts[0].image ? (
-                            <img
-                              src={supportingProducts[0].image}
-                              alt={supportingProducts[0].name}
-                              width="360"
-                              height="360"
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          ) : (
-                            <span className="text-3xl opacity-60">🌾</span>
-                          )}
-                        </div>
-
-                        <div className="pt-2 flex flex-col shrink-0">
-                          <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold">
-                            {supportingProducts[0].category || defaultCategoryText}
+                    </div>
+                  ) : (
+                    /* 1 PRODUCT */
+                    <Link
+                      to={resolveProductLink(showcaseProducts[0])}
+                      onClick={() => handleProductClick(showcaseProducts[0])}
+                      data-product-click="true"
+                      data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
+                      data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
+                      data-product-name={showcaseProducts[0].name}
+                      data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
+                      data-product-category={showcaseProducts[0].category || defaultCategoryText}
+                      data-product-location="specialty_map_single"
+                      className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group max-w-md w-full"
+                    >
+                      <div className="w-28 sm:w-36 aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2.5 flex items-center justify-center overflow-hidden relative">
+                        {showcaseProducts[0].is_pinned && (
+                          <span className="absolute top-1 left-1 z-10 inline-flex items-center gap-0.5 bg-[#0F5132] text-white text-[8px] font-semibold px-1.5 py-0.5 rounded shadow-2xs">
+                            <Pin className="w-2 h-2 fill-[#16A34A] text-[#16A34A]" />
+                            {flagshipBadge}
                           </span>
-                          <span className="font-heading font-bold text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-1 mt-0.5">
-                            {supportingProducts[0].name}
+                        )}
+                        {showcaseProducts[0].image ? (
+                          <img
+                            src={showcaseProducts[0].image}
+                            alt={showcaseProducts[0].name}
+                            width="180"
+                            height="135"
+                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ) : (
+                          <span className="text-2xl opacity-60">🌾</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0 flex flex-col justify-between">
+                        <div>
+                          <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
+                            {showcaseProducts[0].category || defaultCategoryText}
                           </span>
-                          <p className="text-[11px] text-haq-text-secondary line-clamp-1 font-light mt-0.5">
-                            {supportingProducts[0].description || defaultProductDesc}
-                          </p>
+                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] mt-0.5 leading-snug">
+                            {showcaseProducts[0].name}
+                          </h4>
                         </div>
-                      </Link>
-                    ) : null}
-                  </div>
+                        <div className="mt-2 pt-1.5 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                          <span>{viewDetailText}</span>
+                          <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
                 </motion.div>
               ) : (
                 <motion.div
@@ -857,7 +723,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="h-full flex flex-col items-center justify-center p-6 bg-[#FAF9F6] border border-haq-border/60 rounded-lg text-center"
+                  className="w-full flex flex-col items-center justify-center p-6 bg-[#FAF9F6] border border-haq-border/60 rounded-xl text-center my-auto"
                 >
                   <span className="text-2xl mb-2">🌱</span>
                   <p className="font-heading font-bold text-sm text-haq-ink mb-1">

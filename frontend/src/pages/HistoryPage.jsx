@@ -103,11 +103,11 @@ export default function HistoryPage() {
             <div className="flex items-center justify-between py-2.5 sm:py-3 gap-4">
               <div className="flex items-center gap-2.5 shrink-0">
                 <span className="w-2 h-2 rounded-full bg-haq-red" />
-                <span className="font-heading font-bold text-sm sm:text-base text-haq-ink tracking-tight">
-                  {language === 'en' ? 'GROWTH JOURNEY' : language === 'ko' ? '성장의 여정' : language === 'zh' ? '企业发展历程' : 'HÀNH TRÌNH PHÁT TRIỂN'}
-                </span>
-                <span className="text-haq-text-secondary/40 text-xs hidden sm:inline">•</span>
-                <span className="text-xs text-haq-text-secondary font-medium hidden sm:inline">2021 — 2026</span>
+                <h1 className="font-heading font-bold text-sm sm:text-base text-haq-ink tracking-tight m-0 flex items-center gap-2">
+                  <span>{language === 'en' ? 'GROWTH JOURNEY' : language === 'ko' ? '성장의 여정' : language === 'zh' ? '企业发展历程' : 'HÀNH TRÌNH PHÁT TRIỂN'}</span>
+                  <span className="text-haq-text-secondary/40 text-xs hidden sm:inline">•</span>
+                  <span className="text-xs text-haq-text-secondary font-medium hidden sm:inline">2021 — 2026</span>
+                </h1>
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5">
@@ -150,8 +150,7 @@ export default function HistoryPage() {
               <div className="absolute inset-0 z-0 select-none pointer-events-none block lg:hidden overflow-hidden">
                 <img
                   src={chap.image}
-                  alt=""
-                  aria-hidden="true"
+                  alt={`${chap.year} - ${chap.title} - HAQ FOOD`}
                   className={`w-full h-full object-cover ${chap.imagePosition || 'object-center'} opacity-[0.22] contrast-[1.05]`}
                   loading="lazy"
                 />
@@ -205,9 +204,9 @@ export default function HistoryPage() {
                     </Reveal>
 
                     <Reveal delay={200}>
-                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-[26px] xl:text-[28px] text-haq-ink leading-snug mb-2">
+                      <h2 className="font-heading font-extrabold text-xl sm:text-2xl lg:text-[26px] xl:text-[28px] text-haq-ink leading-snug mb-2">
                         {chap.title}
-                      </h3>
+                      </h2>
                     </Reveal>
 
                     <Reveal delay={280}>
