@@ -553,17 +553,6 @@ export default function ProductsPage() {
                               {prod.name}
                             </h3>
 
-                            <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-xs text-haq-text-secondary leading-relaxed line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem]">
-                              {prod.description ||
-                                (en
-                                  ? 'Safely packaged, certified for food safety ISO 22000 & HACCP.'
-                                  : ko
-                                  ? '안전 포장 및 ISO 22000, HACCP 식품 안전 인증.'
-                                  : zh
-                                  ? '安全卫生包装，符合 ISO 22000 & HACCP 严苛食品安全标准。'
-                                  : 'Sản phẩm đóng gói an toàn, đạt chuẩn ATTP ISO 22000 & HACCP.')}
-                            </p>
-
                             <div className="mt-auto pt-3 sm:pt-3.5 flex items-center justify-between border-t border-haq-border/40">
                               <span className="inline-flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs font-heading font-bold text-haq-red group-hover:gap-2 sm:group-hover:gap-2.5 transition-all">
                                 <span>{en ? 'View details' : ko ? '상세 보기' : zh ? '查看详情' : 'Xem chi tiết'}</span>
