@@ -562,8 +562,7 @@ export default function CompanyProfilePage() {
           {/* Background image — watercolor texture */}
           <img
             src={visionBgImg}
-            alt=""
-            aria-hidden="true"
+            alt="Tầm nhìn & sứ mệnh phát triển HAQ FOOD"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
           />
@@ -577,9 +576,9 @@ export default function CompanyProfilePage() {
                   <p className="text-xs sm:text-[13px] font-heading font-bold tracking-widest text-[#0F5132] uppercase mb-2">
                     {getText('vision_eyebrow')}
                   </p>
-                  <h3 className="font-heading font-black text-lg sm:text-xl xl:text-2xl text-[#0C1E15] leading-snug mb-3.5">
+                  <h2 className="font-heading font-black text-lg sm:text-xl xl:text-2xl text-[#0C1E15] leading-snug mb-3.5">
                     {getText('vision_headline')}
-                  </h3>
+                  </h2>
                   <div className="h-px w-full bg-[#0C1E15]/15 mb-3.5" />
                   <ul className="space-y-2.5">
                     {[
@@ -605,9 +604,9 @@ export default function CompanyProfilePage() {
                   <p className="text-xs sm:text-[13px] font-heading font-bold tracking-widest text-[#0F5132] uppercase mb-2">
                     {getText('mission_eyebrow')}
                   </p>
-                  <h3 className="font-heading font-black text-lg sm:text-xl xl:text-2xl text-[#0C1E15] leading-snug mb-3.5">
+                  <h2 className="font-heading font-black text-lg sm:text-xl xl:text-2xl text-[#0C1E15] leading-snug mb-3.5">
                     {getText('mission_headline')}
-                  </h3>
+                  </h2>
                   <div className="h-px w-full bg-[#0C1E15]/15 mb-3.5" />
                   <ul className="space-y-2.5">
                     {[
@@ -702,16 +701,14 @@ export default function CompanyProfilePage() {
               {/* Background texture thảo mộc xanh (Desktop) */}
               <img
                 src={loiTheBgImg}
-                alt=""
-                aria-hidden="true"
+                alt="Lợi thế cạnh tranh và cam kết chất lượng HAQ FOOD"
                 className="hidden lg:block absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
                 loading="lazy"
               />
               {/* Background ảnh hợp tác đối tác chìm mờ (Mobile) */}
               <img
                 src={b2bPartnershipImg}
-                alt=""
-                aria-hidden="true"
+                alt="Hợp tác đối tác B2B và chuỗi cung ứng nông sản sạch HAQ FOOD"
                 className="lg:hidden absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
                 loading="lazy"
               />
@@ -740,7 +737,7 @@ export default function CompanyProfilePage() {
                             {String(i + 1).padStart(2, '0')}
                           </span>
                           <div>
-                            <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-[15px] text-[#0C1E15] leading-snug">{title}</h4>
+                            <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-[15px] text-[#0C1E15] leading-snug">{title}</h3>
                             <p className="text-[11px] sm:text-xs lg:text-[13.5px] text-[#16291e] font-medium mt-0.5 leading-relaxed">{desc}</p>
                           </div>
                         </div>
