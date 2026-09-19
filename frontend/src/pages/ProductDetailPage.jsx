@@ -193,7 +193,7 @@ export default function ProductDetailPage() {
     // Ensure robots is indexable for valid product
     const robotsMeta = document.querySelector('meta[name="robots"]')
     if (robotsMeta) {
-      robotsMeta.setAttribute('content', 'index, follow, max-image-preview:large')
+      robotsMeta.setAttribute('content', 'index, follow')
     }
 
     const prodName = (localizedProduct.name || product.name || 'Sản phẩm').trim()
@@ -330,7 +330,7 @@ export default function ProductDetailPage() {
       removeScript()
       const robots = document.querySelector('meta[name="robots"]')
       if (robots) {
-        robots.setAttribute('content', 'index, follow, max-image-preview:large')
+        robots.setAttribute('content', 'index, follow')
       }
     }
   }, [product, localizedProduct, activeImage, selectedVariantIndex, slug, language, isLoading])

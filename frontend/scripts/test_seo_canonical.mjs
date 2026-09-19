@@ -41,7 +41,7 @@ it('index.html must NOT contain hardcoded static hreflang alternate links', () =
 
 it('index.html must contain meta robots allowing indexation with full snippets', () => {
   assert.ok(
-    indexHtml.includes('name="robots" content="index, follow, max-image-preview:large"'),
+    indexHtml.includes('name="robots" content="index, follow"'),
     'index.html is missing standard robots meta tag'
   )
 })
@@ -250,7 +250,7 @@ function simulateSeoHeadRun(head, pathname, language = 'vi') {
     return
   }
 
-  robotsTag.setAttribute('content', 'index, follow, max-image-preview:large')
+  robotsTag.setAttribute('content', 'index, follow')
 
   // 3. Determine the language represented by this URL path
   let routeLang = 'vi'
