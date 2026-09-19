@@ -16,12 +16,10 @@ import {
 } from 'lucide-react'
 import logoImg from '../assets/logo-haq.webp'
 import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterProductsByDbCategory } from '../data/productCategories'
-import catBanhTrangImg from '../assets/categories/category_banh_trang.webp'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
 import { FlagIcon } from './LanguageSwitcher'
 import { useAnalytics } from '../hooks/useAnalytics'
-import { getCategories, getProducts } from '../services/supabase'
 
 const SearchOverlay = lazy(() => import('./SearchOverlay'))
 

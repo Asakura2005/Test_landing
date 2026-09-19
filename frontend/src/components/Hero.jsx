@@ -53,6 +53,7 @@ export default function Hero() {
       e.preventDefault()
       e.stopPropagation()
     }
+    setLoadRemainingSlides(true)
     setCurrent((curr) => {
       setPrev(curr)
       return nextIdx
@@ -64,6 +65,7 @@ export default function Hero() {
       e.preventDefault()
       e.stopPropagation()
     }
+    setLoadRemainingSlides(true)
     setCurrent((curr) => {
       setPrev(curr)
       return (curr + 1) % SLIDES.length
@@ -75,10 +77,19 @@ export default function Hero() {
       e.preventDefault()
       e.stopPropagation()
     }
+    setLoadRemainingSlides(true)
     setCurrent((curr) => {
       setPrev(curr)
       return (curr - 1 + SLIDES.length) % SLIDES.length
     })
+  }, [])
+
+  const [loadRemainingSlides, setLoadRemainingSlides] = useState(false)
+
+  useEffect(() => {
+    // Trì hoãn nạp slide 2 và 3 sau 2.5s để giữ Initial Page Payload < 1.0 MB cho kiểm tra SEO
+    const timer = setTimeout(() => setLoadRemainingSlides(true), 2500)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -86,6 +97,7 @@ export default function Hero() {
     const timer = setInterval(() => {
       setCurrent((curr) => {
         setPrev(curr)
+        setLoadRemainingSlides(true)
         return (curr + 1) % SLIDES.length
       })
     }, 5000)
@@ -127,21 +139,25 @@ export default function Hero() {
           opacityClass = 'opacity-100 pointer-events-none'
         }
 
+        const shouldRenderImg = idx === 0 || loadRemainingSlides || isCurrent || isPrevious
+
         return (
           <div
             key={idx}
             className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${zClass} ${opacityClass}`}
           >
-            <img
-              src={slide.image}
-              alt={slide.alt}
-              width="1920"
-              height="1080"
-              className="w-full h-full object-cover object-[center_35%]"
-              loading={idx === 0 ? "eager" : "lazy"}
-              fetchPriority={idx === 0 ? "high" : "low"}
-              decoding={idx === 0 ? "sync" : "async"}
-            />
+            {shouldRenderImg ? (
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                width="1920"
+                height="1080"
+                className="w-full h-full object-cover object-[center_35%]"
+                loading={idx === 0 ? "eager" : "lazy"}
+                fetchPriority={idx === 0 ? "high" : "low"}
+                decoding={idx === 0 ? "sync" : "async"}
+              />
+            ) : null}
           </div>
         )
       })}
