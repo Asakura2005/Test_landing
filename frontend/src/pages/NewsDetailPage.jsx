@@ -18,7 +18,7 @@ import Footer from '../components/Footer'
 import { getNewsBySlug, getNews } from '../services/supabase'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedNews, translateNewsCategory } from '../utils/i18nData'
-import { getNewsUrl, getNewsDetailUrl, getCareersUrl } from '../utils/routeI18n'
+import { getNewsUrl, getNewsDetailUrl, getCareersUrl, getHomeUrl } from '../utils/routeI18n'
 import DOMPurify from 'dompurify'
 
 function getReadTime(item, language) {
@@ -97,17 +97,30 @@ export default function NewsDetailPage() {
   // Dynamic SEO Meta Tags & Schema.org NewsArticle Structured Data
   useEffect(() => {
     const SCRIPT_ID = 'news-article-schema-ld'
+    const BREADCRUMB_SCRIPT_ID = 'news-breadcrumb-ld'
     const removeScript = () => {
       const el = document.getElementById(SCRIPT_ID)
       if (el) el.remove()
+      const bEl = document.getElementById(BREADCRUMB_SCRIPT_ID)
+      if (bEl) bEl.remove()
     }
 
     if (!news) {
       removeScript()
       if (!isLoading) {
         document.title = `${language === 'en' ? 'Article Not Found' : language === 'ko' ? '기사를 찾을 수 없습니다' : language === 'zh' ? '文章不存在' : 'Bài viết không tồn tại'} | HAQ FOOD`
+        const robotsMeta = document.querySelector('meta[name="robots"]')
+        if (robotsMeta) {
+          robotsMeta.setAttribute('content', 'noindex, nofollow')
+        }
       }
       return
+    }
+
+    // Ensure robots is indexable for valid article
+    const robotsMeta = document.querySelector('meta[name="robots"]')
+    if (robotsMeta) {
+      robotsMeta.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
     }
 
     const articleTitle = (localizedNews?.title || news.title || 'Tin tức').trim()
@@ -140,7 +153,7 @@ export default function NewsDetailPage() {
 
     // 2. Open Graph & Twitter Card Image
     const fallbackImage = 'https://haq.com.vn/favicon.jpg'
-    let articleImage = news.image_url || fallbackImage
+    let articleImage = localizedNews?.image_url || news.image_url || fallbackImage
     if (articleImage && !articleImage.startsWith('http://') && !articleImage.startsWith('https://')) {
       articleImage = `https://haq.com.vn${articleImage.startsWith('/') ? '' : '/'}${articleImage}`
     }
@@ -214,8 +227,56 @@ export default function NewsDetailPage() {
     }
     scriptEl.textContent = JSON.stringify(newsSchema)
 
+    // 4. Schema.org BreadcrumbList JSON-LD Script
+    const homeName = language === 'en' ? 'Home' : language === 'ko' ? '홈' : language === 'zh' ? '首页' : 'Trang chủ'
+    const isRecruitment = news?.category === 'Tuyển dụng'
+    const sectionName = isRecruitment
+      ? (language === 'en' ? 'Careers' : language === 'ko' ? '채용' : language === 'zh' ? '人才招聘' : 'Tuyển dụng')
+      : (language === 'en' ? 'News' : language === 'ko' ? '뉴스' : language === 'zh' ? '企业动态' : 'Tin tức')
+    const sectionUrl = isRecruitment
+      ? `https://haq.com.vn${getCareersUrl(language)}`
+      : `https://haq.com.vn${getNewsUrl(language)}`
+
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: homeName,
+          item: `https://haq.com.vn${getHomeUrl(language)}`
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: sectionName,
+          item: sectionUrl
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: articleTitle,
+          item: currentUrl
+        }
+      ]
+    }
+
+    let bScriptEl = document.getElementById(BREADCRUMB_SCRIPT_ID)
+    if (!bScriptEl) {
+      bScriptEl = document.createElement('script')
+      bScriptEl.id = BREADCRUMB_SCRIPT_ID
+      bScriptEl.type = 'application/ld+json'
+      document.head.appendChild(bScriptEl)
+    }
+    bScriptEl.textContent = JSON.stringify(breadcrumbSchema)
+
     return () => {
       removeScript()
+      const robots = document.querySelector('meta[name="robots"]')
+      if (robots) {
+        robots.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+      }
     }
   }, [news, localizedNews, slug, language, isLoading])
 

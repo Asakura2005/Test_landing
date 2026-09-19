@@ -82,7 +82,7 @@ const SEO_TITLES = {
 
 const SEO_DESCRIPTIONS = {
   home: {
-    vi: 'CÔNG TY CỔ PHẦN HAQ HÀ NỘI — nhà sản xuất và phân phối thực phẩm đóng gói đạt chuẩn ISO 22000 & HACCP. Giới thiệu công ty, năng lực sản xuất, sản phẩm OEM/ODM và báo giá sỉ B2B.',
+    vi: 'HAQ FOOD — Nhà sản xuất & gia công thực phẩm đóng gói chuẩn ISO 22000, HACCP. Cung cấp sỉ B2B và OEM/ODM uy tín, chất lượng toàn quốc.',
     en: 'HAQ FOOD HANOI JSC — Certified ISO 22000 & HACCP food manufacturer and distributor in Vietnam. Explore our corporate profile, advanced convective drying capabilities, OEM/ODM solutions, and B2B catalog.',
     ko: 'HAQ 하노이 주식회사 — ISO 22000 및 HACCP 인증 베트남 가공식품 제조 및 유통 전문 기업. 기업 프로필, 첨단 열풍 건조 설비, OEM/ODM 맞춤 수탁 생산 및 B2B 도매 공급 안내.',
     zh: '河内 HAQ 股份公司 — 荣获 ISO 22000 与 HACCP 认证的越南包装食品制造与分销商。探索企业概况、先进热风干燥产能、OEM/ODM 定制解决方案及 B2B 批发目录。',

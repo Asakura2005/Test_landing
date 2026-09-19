@@ -17,6 +17,7 @@ const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage.jsx'))
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage.jsx'))
 const Admin = lazy(() => import('./pages/Admin.jsx'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'))
 
 import { initPostHog, recordSessionVisit, trackPageView } from './services/posthog'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
@@ -190,7 +191,7 @@ function AppRoutes() {
           <Route path="/capabilities" element={<Navigate to="/nang-luc" replace />} />
           <Route path="/history" element={<Navigate to="/lich-su" replace />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>

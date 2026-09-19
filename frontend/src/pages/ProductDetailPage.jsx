@@ -170,17 +170,30 @@ export default function ProductDetailPage() {
   // Dynamic SEO Meta Tags & Schema.org Product Structured Data
   useEffect(() => {
     const SCRIPT_ID = 'product-schema-ld'
+    const BREADCRUMB_SCRIPT_ID = 'product-breadcrumb-ld'
     const removeScript = () => {
       const el = document.getElementById(SCRIPT_ID)
       if (el) el.remove()
+      const bEl = document.getElementById(BREADCRUMB_SCRIPT_ID)
+      if (bEl) bEl.remove()
     }
 
     if (!product || !localizedProduct) {
       removeScript()
       if (!isLoading) {
         document.title = `${language === 'en' ? 'Product Not Found' : language === 'ko' ? '제품을 찾을 수 없습니다' : language === 'zh' ? '产品不存在' : 'Sản phẩm không tồn tại'} | HAQ FOOD`
+        const robotsMeta = document.querySelector('meta[name="robots"]')
+        if (robotsMeta) {
+          robotsMeta.setAttribute('content', 'noindex, nofollow')
+        }
       }
       return
+    }
+
+    // Ensure robots is indexable for valid product
+    const robotsMeta = document.querySelector('meta[name="robots"]')
+    if (robotsMeta) {
+      robotsMeta.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
     }
 
     const prodName = (localizedProduct.name || product.name || 'Sản phẩm').trim()
@@ -262,8 +275,63 @@ export default function ProductDetailPage() {
       removeScript()
     }
 
+    // 4. Schema.org BreadcrumbList JSON-LD Script
+    const homeName = language === 'en' ? 'Home' : language === 'ko' ? '홈' : language === 'zh' ? '首页' : 'Trang chủ'
+    const productsName = language === 'en' ? 'Products' : language === 'ko' ? '제품' : language === 'zh' ? '产品' : 'Sản phẩm'
+    const locCat = localizedProduct?.categories ? getLocalizedCategory(localizedProduct.categories, language) : null
+
+    const breadcrumbItems = [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: homeName,
+        item: `https://haq.com.vn${getHomeUrl(language)}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: productsName,
+        item: `https://haq.com.vn${getProductsPageUrl(language)}`
+      }
+    ]
+
+    if (locCat?.name) {
+      breadcrumbItems.push({
+        '@type': 'ListItem',
+        position: breadcrumbItems.length + 1,
+        name: locCat.name,
+        item: `https://haq.com.vn${getProductsPageUrl(language)}`
+      })
+    }
+
+    breadcrumbItems.push({
+      '@type': 'ListItem',
+      position: breadcrumbItems.length + 1,
+      name: prodName,
+      item: currentUrl
+    })
+
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbItems
+    }
+
+    let bScriptEl = document.getElementById(BREADCRUMB_SCRIPT_ID)
+    if (!bScriptEl) {
+      bScriptEl = document.createElement('script')
+      bScriptEl.id = BREADCRUMB_SCRIPT_ID
+      bScriptEl.type = 'application/ld+json'
+      document.head.appendChild(bScriptEl)
+    }
+    bScriptEl.textContent = JSON.stringify(breadcrumbSchema)
+
     return () => {
       removeScript()
+      const robots = document.querySelector('meta[name="robots"]')
+      if (robots) {
+        robots.setAttribute('content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+      }
     }
   }, [product, localizedProduct, activeImage, selectedVariantIndex, slug, language, isLoading])
 
