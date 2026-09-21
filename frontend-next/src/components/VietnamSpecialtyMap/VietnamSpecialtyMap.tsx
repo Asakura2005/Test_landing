@@ -552,11 +552,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                               <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
                                 {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                               </span>
-                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
+                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
                                 {prod.name}
                               </h4>
                             </div>
-                            <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                            <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
                               <span className="whitespace-nowrap">{viewDetailText}</span>
                               <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                             </div>
@@ -612,11 +612,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                             <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
                               {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                             </span>
-                            <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-xs xl:text-sm 2xl:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.25rem] xl:min-h-[2.5rem] 2xl:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
+                            <h4 className="font-heading font-bold text-xs sm:text-xs lg:text-[11px] xl:text-xs 2xl:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-3 min-h-[2.8rem] sm:min-h-[3rem] lg:min-h-[3.2rem] xl:min-h-[3.4rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
                               {showcaseProducts[0].name}
                             </h4>
                           </div>
-                          <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                          <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
                             <span className="whitespace-nowrap">{viewDetailText}</span>
                             <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                           </div>
@@ -671,11 +671,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                                 <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
                                   {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
                                 </span>
-                                <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-xs xl:text-sm 2xl:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.25rem] xl:min-h-[2.5rem] 2xl:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
+                                <h4 className="font-heading font-bold text-xs sm:text-xs lg:text-[11px] xl:text-xs 2xl:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-3 min-h-[2.8rem] sm:min-h-[3rem] lg:min-h-[3.2rem] xl:min-h-[3.4rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
                                   {prod.name}
                                 </h4>
                               </div>
-                              <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                              <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
                                 <span className="whitespace-nowrap">{viewDetailText}</span>
                                 <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                               </div>
@@ -730,11 +730,11 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                           <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
                             {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
                           </span>
-                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words">
+                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
                             {showcaseProducts[0].name}
                           </h4>
                         </div>
-                        <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132]">
+                        <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
                           <span className="whitespace-nowrap">{viewDetailText}</span>
                           <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
                         </div>

@@ -52,11 +52,20 @@ html[lang="ko"] .font-heading {
   color: #FFFFFF;
 }
 
-/* Vietnamese diacritics safety — prevent clipping and line collision on bold headings */
-h1, h2, h3, h4 {
-  overflow: visible !important;
+/* Vietnamese diacritics safety — prevent clipping and line collision on bold headings while respecting line-clamp/truncate */
+h1:not([class*="line-clamp"]):not([class*="truncate"]):not(.overflow-hidden),
+h2:not([class*="line-clamp"]):not([class*="truncate"]):not(.overflow-hidden),
+h3:not([class*="line-clamp"]):not([class*="truncate"]):not(.overflow-hidden),
+h4:not([class*="line-clamp"]):not([class*="truncate"]):not(.overflow-hidden) {
+  overflow: visible;
   -webkit-text-stroke: 0;
   line-height: 1.28;
+}
+
+[class*="line-clamp"] {
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
 }
 
 /* Hide floating contact buttons when mobile navigation drawer is open to prevent any UI overlap */
