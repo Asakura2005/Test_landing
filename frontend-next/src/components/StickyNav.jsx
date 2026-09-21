@@ -628,11 +628,14 @@ export default function StickyNav() {
                         <span>{language === 'en' ? 'PRODUCT CATEGORIES' : language === 'ko' ? '제품 카테고리' : language === 'zh' ? '产品类别' : 'DANH MỤC SẢN PHẨM'}</span>
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         {categoryTree.map((cat) => {
-                          const isHovered = (hoveredCategory?.id === cat.id) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
+                          const isDirectHovered = (hoveredCategory?.id === cat.id) || (hoveredCategory?.slug === cat.slug) || (!hoveredCategory && cat.id === categoryTree[0]?.id)
+                          const isChildActive = Boolean(cat.children?.some(c => c.id === hoveredCategory?.id || c.slug === hoveredCategory?.slug))
+                          const isParentActive = isDirectHovered || isChildActive
+
                           return (
-                            <div key={cat.id} className="space-y-0.5">
+                            <div key={cat.id} className="space-y-1">
                               <Link
                                 href={cat.slug === 'all' ? getProductsPath('all') : getProductsPath(cat.slug)}
                                 onClick={() => {
@@ -640,20 +643,31 @@ export default function StickyNav() {
                                   window.scrollTo(0, 0)
                                 }}
                                 onMouseEnter={() => setHoveredCategory(cat)}
-                                className={`px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer flex items-center justify-between group/cat ${
-                                  isHovered ? 'bg-haq-sage/50 border-[#16A34A]/25' : 'border-transparent hover:bg-haq-sage/20'
+                                className={`px-3 py-2 rounded-xl border transition-all cursor-pointer flex items-center justify-between group/cat ${
+                                  isParentActive
+                                    ? 'bg-haq-sage/60 border-[#16A34A]/30 shadow-2xs'
+                                    : 'border-transparent hover:bg-haq-sage/25'
                                 }`}
                               >
                                 <span className={`flex-1 font-heading text-xs font-bold uppercase tracking-wider transition-colors ${
-                                  isHovered ? 'text-haq-green-dark' : 'text-haq-ink group-hover/cat:text-[#16A34A]'
+                                  isParentActive ? 'text-haq-green-dark' : 'text-haq-ink group-hover/cat:text-[#16A34A]'
                                 }`}>
                                   {cat.name}
                                 </span>
+                                {cat.children && cat.children.length > 0 && (
+                                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full transition-colors ${
+                                    isParentActive
+                                      ? 'bg-[#16A34A]/15 text-haq-green-dark'
+                                      : 'bg-haq-soft/80 text-haq-text-secondary/80 group-hover/cat:bg-haq-sage group-hover/cat:text-haq-green-dark'
+                                  }`}>
+                                    {cat.children.length}
+                                  </span>
+                                )}
                               </Link>
 
-                              {/* Danh mục con (Subcategories) */}
+                              {/* Danh mục con (Subcategories) - Tối ưu giao diện sạch đẹp, bỏ mũi tên ↳ */}
                               {cat.children && cat.children.length > 0 && (
-                                <div className="pl-3 pr-1 py-0.5 flex flex-wrap gap-1">
+                                <div className="pl-3.5 pr-1 py-1 flex flex-wrap gap-1.5">
                                   {cat.children.map((child) => {
                                     const isChildHovered = hoveredCategory?.id === child.id || hoveredCategory?.slug === child.slug
                                     return (
@@ -665,13 +679,13 @@ export default function StickyNav() {
                                           setActiveMenu(null)
                                           window.scrollTo(0, 0)
                                         }}
-                                        className={`inline-flex items-center gap-1 text-[10px] font-heading font-semibold px-2 py-0.5 rounded-md transition-colors border ${
+                                        className={`inline-flex items-center text-[11px] font-medium px-2.5 py-1 rounded-full transition-all duration-150 border cursor-pointer select-none ${
                                           isChildHovered
-                                            ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-2xs'
-                                            : 'text-haq-ink/80 hover:text-haq-green-dark bg-haq-soft hover:bg-haq-green/10 border-haq-border'
+                                            ? 'bg-haq-green-dark text-white border-haq-green-dark shadow-xs font-semibold scale-[1.02]'
+                                            : 'text-stone-700 hover:text-haq-green-dark bg-[#F4F6F4] hover:bg-emerald-50/90 border-[#E2E8E2] hover:border-[#16A34A]/40'
                                         }`}
                                       >
-                                        <span>↳ {child.name}</span>
+                                        <span>{child.name}</span>
                                       </Link>
                                     )
                                   })}
