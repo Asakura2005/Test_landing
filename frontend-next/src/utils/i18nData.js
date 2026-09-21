@@ -2070,6 +2070,18 @@ export function getLocalizedCategory(category, language = 'vi') {
       translation = CATEGORY_I18N['banh-hanh-nhan']?.[language]
     } else if (nameLower.includes('bánh sữa')) {
       translation = CATEGORY_I18N['banh-sua']?.[language]
+    } else if (nameLower.includes('bánh dẻo') || nameLower.includes('banh-deo')) {
+      translation = CATEGORY_I18N['banh-deo']?.[language]
+    } else if (nameLower.includes('chả') || nameLower.includes('banh-cha')) {
+      translation = CATEGORY_I18N['banh-cha']?.[language]
+    } else if (nameLower.includes('cookie')) {
+      translation = CATEGORY_I18N['banh-cookies']?.[language]
+    } else if (nameLower.includes('cách tân') || nameLower.includes('cach-tan')) {
+      translation = CATEGORY_I18N['do-an-vat-cach-tan']?.[language]
+    } else if (nameLower.includes('hiện đại') || nameLower.includes('hien-dai')) {
+      translation = CATEGORY_I18N['do-an-vat-hien-dai']?.[language]
+    } else if (nameLower.includes('truyền thống') || nameLower.includes('truyen-thong')) {
+      translation = CATEGORY_I18N['do-an-vat-truyen-thong']?.[language]
     }
   }
 

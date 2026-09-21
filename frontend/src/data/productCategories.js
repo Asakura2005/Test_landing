@@ -101,21 +101,68 @@ export const CATEGORY_VISUALS = {
     featured: 'Thịt bò khô hảo hạng',
     featuredDesc: 'Thịt tươi tẩm ướp gia vị sả ớt truyền thống, bảo quản an toàn.',
   },
+  'do-an-vat-cach-tan': {
+    image: catDoAnVatImg,
+    desc: 'Các dòng sản phẩm đồ ăn vặt sáng tạo, bánh tráng sấy giòn, bánh tráng trộn đậm vị Việt Nam.',
+    featured: 'Bánh tráng trộn HAQ 2021',
+    featuredDesc: 'Sợi bánh tráng dẻo thơm hòa quyện khô gà cay cay và hương sa tế tôm đậm đà.',
+  },
+  'do-an-vat-hien-dai': {
+    image: catBanhImg,
+    desc: 'Đồ ăn vặt hiện đại chuẩn vị, kết hợp tinh hoa truyền thống và công nghệ sấy khép kín.',
+    featured: 'Bánh chả cổ truyền',
+    featuredDesc: 'Bánh chả lá chanh giòn rụm, hương thơm nồng nàn lưu giữ tinh hoa ẩm thực Hà Thành.',
+  },
+  'do-an-vat-truyen-thong': {
+    image: catDoAnVatImg,
+    desc: 'Đồ ăn vặt và bánh ngọt truyền thống tuyển chọn từ các vùng miền nông sản Việt Nam.',
+    featured: 'Bắp rang bơ Caramel',
+    featuredDesc: 'Hạt bắp nổ giòn xốp vàng óng, quyện sốt bơ caramel béo ngậy thơm lừng.',
+  },
+  'banh-cookies': {
+    image: catBanhImg,
+    desc: 'Bánh cookies và bánh quy bơ thơm bùi giòn xốp, đạt tiêu chuẩn xuất khẩu sang các thị trường quốc tế.',
+    featured: 'Bánh Cookies hạt cà phê',
+    featuredDesc: 'Thơm lừng hương vị cà phê nguyên chất, giòn tan đậm đà khó cưỡng.',
+  },
+  'banh-cha': {
+    image: catBanhImg,
+    desc: 'Bánh chả truyền thống Hà Nội thơm hương lá chanh, mứt bí và thịt mỡ đường giòn bùi.',
+    featured: 'Bánh chả hương vị cổ truyền',
+    featuredDesc: 'Vị giòn rụm đậm đà khó quên, món quà ẩm thực truyền thống Việt Nam.',
+  },
+  'banh-dau-xanh': {
+    image: catBanhImg,
+    desc: 'Bánh đậu xanh ngọt thanh, thơm dịu tan ngay nơi đầu lưỡi từ đậu xanh nguyên chất hảo hạng.',
+    featured: 'Bánh đậu xanh tươi',
+    featuredDesc: 'Ngọt bùi thanh tao, thưởng thức trọn vẹn cùng chén trà sen ấm nóng.',
+  },
 }
 
 /**
- * Danh mục mặc định (Fallback khi chưa tải được từ DB)
+ * Danh mục mặc định (Đồng bộ chuẩn xác theo Cây danh mục Supabase Database)
  */
 export const DEFAULT_DB_CATEGORIES = [
-  { id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', name: 'Bánh Tráng', slug: 'banh-trang', parent_id: null, sort_order: 0 },
-  { id: '89affdd7-e480-4a0d-8db1-b15e8d619df9', name: 'Bánh tráng sấy', slug: 'banh-trang-say', parent_id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', sort_order: 0 },
-  { id: 'd0feed03-78e6-4325-86a1-b27a9411c205', name: 'Bánh Tráng trộn', slug: 'banh-trang-tron', parent_id: '01bdfbc2-bc45-4f8b-aba0-e4d47fe70966', sort_order: 1 },
-  { id: '69b66cf7-e253-44d1-9037-cb6d6fe7dfb6', name: 'Bắp Rang Bơ', slug: 'bap-rang-bo', parent_id: null, sort_order: 1 },
-  { id: '7b16741d-a09a-485b-9242-ecb1132eb146', name: 'Bánh Hạnh Nhân', slug: 'banh-hanh-nhan', parent_id: null, sort_order: 2 },
-  { id: '23901975-7129-4130-9a54-d7d6e4bc7532', name: 'Bánh Sữa', slug: 'banh-sua', parent_id: null, sort_order: 3 },
-  { id: 'a5f914f4-da3f-4afa-9e44-5b1192465c71', name: 'Bánh Dẻo', slug: 'banh-deo', parent_id: null, sort_order: 4 },
-  { id: 'aea0547a-4522-4af9-9adc-9ccfb4ad5619', name: 'Bánh Khác', slug: 'banh-khac', parent_id: null, sort_order: 5 },
-  { id: 'e77a7f3a-48db-4777-82d8-60ff6f2a1ac5', name: 'Thịt khô', slug: 'thot-kho', parent_id: null, sort_order: 6 },
+  // 3 Danh mục Gốc (Root Categories - parent_id: null)
+  { id: '1e953d88-e338-4eba-baf7-246c25a70ba9', name: 'Đồ Ăn Vặt Cách Tân', slug: 'do-an-vat-cach-tan', parent_id: null, sort_order: 0 },
+  { id: '299ff047-323a-4802-aef4-fdb93c8aa9ae', name: 'Đồ Ăn Vặt Hiện Đại', slug: 'do-an-vat-hien-dai', parent_id: null, sort_order: 1 },
+  { id: 'f3209c71-5042-4492-baa7-3ca48e48b480', name: 'Đồ Ăn Vặt Truyền Thống', slug: 'do-an-vat-truyen-thong', parent_id: null, sort_order: 2 },
+
+  // Danh mục Con của "Đồ Ăn Vặt Cách Tân"
+  { id: '80bc73cb-630d-4e41-a693-160a97e8625d', name: 'Bánh Tráng Trộn', slug: 'banh-trang-tron', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 0 },
+  { id: '62a1f64e-b304-4812-885d-5bc2bc2661c2', name: 'Bánh Tráng Sấy', slug: 'banh-trang-say', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 1 },
+  { id: '9edbf52d-f370-44a3-928b-9543994330a7', name: 'Bánh Cookies', slug: 'banh-cookies', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 2 },
+  { id: '4585f70d-2887-4dd0-9f9c-08efad2cc324', name: 'Bánh Sữa', slug: 'banh-sua', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 3 },
+  { id: 'c6eb5d6e-afc8-4cac-87af-f5e114dd5424', name: 'Bánh Dẻo', slug: 'banh-deo', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 4 },
+  { id: '47daa91e-063c-45c4-a686-598e551033d3', name: 'Thịt Khô', slug: 'thit-kho', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 5 },
+
+  // Danh mục Con của "Đồ Ăn Vặt Hiện Đại"
+  { id: '46d23453-12b5-46e8-b3af-74aca32d42bf', name: 'Bánh Chả', slug: 'banh-cha', parent_id: '299ff047-323a-4802-aef4-fdb93c8aa9ae', sort_order: 0 },
+
+  // Danh mục Con của "Đồ Ăn Vặt Truyền Thống"
+  { id: 'a6be5c29-23f8-443f-92c8-fd5124913ba2', name: 'Bắp Rang Bơ', slug: 'bap-rang-bo', parent_id: 'f3209c71-5042-4492-baa7-3ca48e48b480', sort_order: 0 },
+  { id: '56b49304-66b3-4aed-bef0-a8d96cb652c0', name: 'Bánh Đậu xanh', slug: 'banh-dau-xanh', parent_id: 'f3209c71-5042-4492-baa7-3ca48e48b480', sort_order: 1 },
+  { id: '1dc82d4c-80f9-4f45-8c39-a6e2a84261f6', name: 'Bánh Hạnh Nhân', slug: 'banh-hanh-nhan', parent_id: 'f3209c71-5042-4492-baa7-3ca48e48b480', sort_order: 2 },
 ]
 
 /**
@@ -244,12 +291,18 @@ export function filterProductsByDbCategory(products = [], activeSlug = 'all', su
     if (p.categories) {
       if (matchingIds && matchingIds.includes(p.categories.id)) return true
       if (p.categories.slug === effectiveSlug) return true
+      if (effectiveSlug === 'do-an-vat-cach-tan' && ['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho'].includes(p.categories.slug)) return true
+      if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha'].includes(p.categories.slug)) return true
+      if (effectiveSlug === 'do-an-vat-truyen-thong' && ['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan'].includes(p.categories.slug)) return true
       if (effectiveSlug === 'banh-trang' && (p.categories.slug === 'banh-trang-say' || p.categories.slug === 'banh-trang-say-gion' || p.categories.slug === 'banh-trang-tron' || p.categories.slug === 'bnh-trng-trn')) return true
       if (effectiveSlug === 'cac-loai-banh' && (p.categories.slug === 'banh-dau-xanh' || p.categories.slug === 'banh-hanh-nhan' || p.categories.slug === 'banh-sua' || p.categories.slug === 'banh-deo' || p.categories.slug === 'banh-khac')) return true
     }
 
     // 3. Fallback theo chuỗi slug trực tiếp
     if (p.category === effectiveSlug) return true
+    if (effectiveSlug === 'do-an-vat-cach-tan' && ['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho'].includes(p.category)) return true
+    if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha'].includes(p.category)) return true
+    if (effectiveSlug === 'do-an-vat-truyen-thong' && ['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan'].includes(p.category)) return true
     if (effectiveSlug === 'banh-trang' && (p.category === 'banh-trang-say' || p.category === 'banh-trang-say-gion' || p.category === 'banh-trang-tron' || p.category === 'bnh-trng-trn')) return true
     if (effectiveSlug === 'cac-loai-banh' && (p.category === 'banh-dau-xanh' || p.category === 'banh-hanh-nhan' || p.category === 'banh-sua' || p.category === 'banh-deo' || p.category === 'banh-khac')) return true
 
@@ -264,7 +317,9 @@ export function filterProductsByDbCategory(products = [], activeSlug = 'all', su
     if ((effectiveSlug === 'banh-dau-xanh' || effectiveSlug === 'banh-dau-xanh-tuoi') && (nameLower.includes('đậu xanh') || nameLower.includes('dau xanh'))) return true
     if (effectiveSlug === 'banh-sua' && (nameLower.includes('sữa dừa') || nameLower.includes('bánh sữa'))) return true
     if (effectiveSlug === 'banh-deo' && nameLower.includes('dẻo')) return true
-    if (effectiveSlug === 'cac-loai-banh' && (nameLower.includes('hạnh nhân') || nameLower.includes('đậu xanh') || nameLower.includes('sữa dừa') || nameLower.includes('bánh dẻo'))) return true
+    if (effectiveSlug === 'banh-cha' && (nameLower.includes('bánh chả') || nameLower.includes('banh cha'))) return true
+    if (effectiveSlug === 'banh-cookies' && (nameLower.includes('cookie') || nameLower.includes('bánh quy'))) return true
+    if (effectiveSlug === 'cac-loai-banh' && (nameLower.includes('hạnh nhân') || nameLower.includes('đậu xanh') || nameLower.includes('sữa dừa') || nameLower.includes('bánh dẻo') || nameLower.includes('bánh chả') || nameLower.includes('cookie'))) return true
 
     return false
   })
