@@ -32,7 +32,7 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     maxPullOffset = 120,
     springDuration = 260,
     commitDuration = 480,
-    lockDuration = 220,
+    lockDuration = 600,
     inactivityTimeout = 200,
     desktopBreakpoint = 1024,
     sectionSelector,
@@ -94,7 +94,7 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     }
     return Array.from(
       document.querySelectorAll<HTMLElement>(
-        '[data-section="hero"], [data-section="specialty-map"], [data-section="brand-statement"], [data-section="quick-stats"], [data-section="brand-visual"], [data-section="cta-banner"]'
+        '[data-section="hero"], [data-section="featured-products"], [data-section="specialty-map"], [data-section="about-haq"], [data-section="global-cta"]'
       )
     )
   }, [sectionSelector])
@@ -141,12 +141,9 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     }
   }, [getSnapSections, getHeaderHeight, footerSelector])
 
-  // Calculate target top for a snap section
+  // Calculate target top for a snap section dynamically from DOM
   const getSectionTargetTop = useCallback(
     (index: number, sections: HTMLElement[], cachedHeaderHeight?: number): number => {
-      if (cachedTopsRef.current.length > index && cachedTopsRef.current[index] !== undefined) {
-        return cachedTopsRef.current[index]
-      }
       const hHeight = cachedHeaderHeight !== undefined ? cachedHeaderHeight : getHeaderHeight()
       if (index <= 0 || !sections[index]) return 0
       const el = sections[index]
@@ -181,6 +178,7 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
   )
 
   // Synchronize current section index with actual scroll position
+  // Uses RANGE-BASED detection: you're in section N when scrollY is between tops[N] and tops[N+1]
   const syncCurrentIndex = useCallback(() => {
     if (cachedTopsRef.current.length === 0) {
       recalculatePositions()
@@ -199,23 +197,19 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
       return
     }
 
-    let closestIndex = 0
-    let minDiff = Infinity
-    let closestTop = 0
-
-    for (let i = 0; i < tops.length; i++) {
-      const diff = Math.abs(currentScroll - tops[i])
-      if (diff < minDiff) {
-        minDiff = diff
-        closestIndex = i
-        closestTop = tops[i]
+    // Range-based: find which section range [tops[i], tops[i+1]) contains currentScroll
+    let foundIndex = 0
+    for (let i = tops.length - 1; i >= 0; i--) {
+      if (currentScroll >= tops[i] - 15) {
+        foundIndex = i
+        break
       }
     }
 
-    currentSectionIndexRef.current = closestIndex
-    baseScrollYRef.current = closestTop
+    currentSectionIndexRef.current = foundIndex
+    baseScrollYRef.current = tops[foundIndex]
 
-    const secId = cachedSecIdsRef.current[closestIndex] || ''
+    const secId = cachedSecIdsRef.current[foundIndex] || ''
     if (secId) setInternalActiveSectionId(secId)
   }, [recalculatePositions])
 
@@ -318,9 +312,11 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
                 ''
           if (secId) setInternalActiveSectionId(secId)
 
+          pullOffsetRef.current = 0
           setInternalState('LOCKED')
           if (lockTimerRef.current) clearTimeout(lockTimerRef.current)
           lockTimerRef.current = setTimeout(() => {
+            pullOffsetRef.current = 0
             setInternalState('IDLE')
           }, lockDuration)
         }
@@ -338,6 +334,7 @@ export function useMagneticSectionScroll(options: MagneticScrollOptions = {}) {
     const mediaQuery = window.matchMedia(`(min-width: ${desktopBreakpoint}px)`)
 
     let isListening = false
+    let resizeObserver: ResizeObserver | null = null
 
 /**
  * Helper: Detects whether a DOM node is inside a scrollable child panel (e.g. Product Detail Panel / Modal / Card)
@@ -378,17 +375,12 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
       }
 
       // 2. BOUNDARY-AWARE PRODUCT DETAIL / INTERNAL SCROLLABLE PANEL HANDLING:
-      // Product Detail panel/modal has its own internal scrollbar.
-      // - If panel can continue scrolling in the wheel direction -> allow native scroll (do NOT preventDefault)
-      // - If panel reaches boundary (top on wheel UP, bottom on wheel DOWN) or has no overflow:
-      //   -> allow wheel event to propagate to Magnetic Section Scroll
       const scrollablePanel = findScrollableParent(target)
       if (scrollablePanel) {
         const scrollTop = scrollablePanel.scrollTop
         const clientHeight = scrollablePanel.clientHeight
         const scrollHeight = scrollablePanel.scrollHeight
 
-        // Tolerance for subpixel floating point values
         const atTop = scrollTop <= 1.5
         const atBottom = scrollTop + clientHeight >= scrollHeight - 1.5
 
@@ -396,22 +388,16 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
         const isScrollingUp = e.deltaY < 0
 
         if ((isScrollingDown && !atBottom) || (isScrollingUp && !atTop)) {
-          // Panel CAN continue scrolling internally in this direction
           if (scrollStateRef.current === 'RESISTING') {
             startSpringBack()
           }
-          return // Consume wheel inside panel, DO NOT engage Magnetic Section Scroll
+          return
         }
-
-        // When atTop (wheel UP) or atBottom (wheel DOWN), do NOT return!
-        // Release wheel control so Magnetic Section Scroll takes over seamlessly.
       }
 
       // 2. FOOTER NATURAL SCROLL ZONE:
       if (currentY >= footerTop - 15) {
-        // If scrolling DOWN, or scrolling UP inside the footer:
         if (e.deltaY > 0 || currentY > footerTop + 10) {
-          // 100% Native free scroll inside Footer
           if (scrollStateRef.current !== 'IDLE') {
             setInternalState('IDLE')
           }
@@ -419,11 +405,11 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
           return
         }
 
-        // If user is at top edge of Footer (currentY <= footerTop + 10) and scrolls UP:
         if (e.deltaY < 0) {
           e.preventDefault()
 
           if (scrollStateRef.current === 'LOCKED' || scrollStateRef.current === 'COMMITTING') {
+            pullOffsetRef.current = 0
             return
           }
 
@@ -441,7 +427,7 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
 
           if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
             if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
-            startCommitTransition(sections.length - 1) // Commit back up to CtaBanner (Index 5)
+            startCommitTransition(sections.length - 1)
             return
           }
 
@@ -459,19 +445,106 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
         }
       }
 
-      // 3. 100VH SECTIONS ZONE (HERO -> MAP -> GIỚI THIỆU -> NĂNG LỰC -> TẦM NHÌN QUỐC TẾ -> CTA BANNER)
+      // 3. SNAP SECTIONS ZONE
       if (scrollStateRef.current === 'LOCKED' || scrollStateRef.current === 'COMMITTING') {
         e.preventDefault()
+        pullOffsetRef.current = 0
         return
       }
 
+      const currentIndex = currentSectionIndexRef.current
+      const currentSection = sections[currentIndex]
+
+      // ──── TALL SECTION HANDLING ────
+      // If current section is taller than viewport, allow free scroll within it.
+      // Only engage magnetic snap at section boundaries (top/bottom).
+      if (currentSection) {
+        const sectionRect = currentSection.getBoundingClientRect()
+        const hHeight = getHeaderHeight()
+        const viewportH = window.innerHeight - hHeight
+        const sectionH = currentSection.offsetHeight
+
+        if (sectionH > viewportH + 50) {
+          // Section taller than viewport → allow internal scroll
+          const sectionTop = sectionRect.top + window.scrollY - hHeight
+          const sectionBottom = sectionTop + sectionH
+          const atSectionTop = currentY <= sectionTop + 5
+          const atSectionBottom = currentY + viewportH >= sectionBottom - 5
+
+          const scrollingDown = e.deltaY > 0
+          const scrollingUp = e.deltaY < 0
+
+          // Can still scroll inside section → let it scroll freely
+          if ((scrollingDown && !atSectionBottom) || (scrollingUp && !atSectionTop)) {
+            if (scrollStateRef.current === 'RESISTING') {
+              startSpringBack()
+            }
+            return // Native free scroll inside tall section
+          }
+
+          // At boundary → engage magnetic snap
+          if ((scrollingDown && atSectionBottom) || (scrollingUp && atSectionTop)) {
+            e.preventDefault()
+
+            if (scrollStateRef.current === 'SPRING_BACK' && animFrameIdRef.current) {
+              cancelAnimationFrame(animFrameIdRef.current)
+            }
+
+            baseScrollYRef.current = scrollingDown
+              ? sectionBottom - viewportH
+              : sectionTop
+
+            const isAtTopBoundary = currentIndex === 0 && scrollingUp
+            let damping = 1 - Math.min(0.8, Math.abs(pullOffsetRef.current) / (maxPullOffset * 1.5))
+            if (isAtTopBoundary) damping *= 0.15
+
+            const delta = e.deltaY * resistance * damping
+            pullOffsetRef.current = Math.max(-maxPullOffset, Math.min(maxPullOffset, pullOffsetRef.current + delta))
+
+            const visualY = baseScrollYRef.current + pullOffsetRef.current
+            window.scrollTo(0, Math.max(0, visualY))
+            setInternalState('RESISTING')
+
+            if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
+              if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+              const direction = pullOffsetRef.current > 0 ? 1 : -1
+              const nextIndex = currentIndex + direction
+              if (nextIndex >= 0 && nextIndex <= sections.length) {
+                startCommitTransition(nextIndex)
+              } else {
+                startSpringBack()
+              }
+              return
+            }
+
+            if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+            inactivityTimerRef.current = setTimeout(() => {
+              if (scrollStateRef.current === 'RESISTING') {
+                if (Math.abs(pullOffsetRef.current) >= commitThreshold) {
+                  const direction = pullOffsetRef.current > 0 ? 1 : -1
+                  const nextIndex = currentIndex + direction
+                  if (nextIndex >= 0 && nextIndex <= sections.length) {
+                    startCommitTransition(nextIndex)
+                  } else {
+                    startSpringBack()
+                  }
+                } else {
+                  startSpringBack()
+                }
+              }
+            }, inactivityTimeout)
+            return
+          }
+        }
+      }
+
+      // ──── STANDARD 100VH SECTION SNAP (original logic) ────
       e.preventDefault()
 
       if (scrollStateRef.current === 'SPRING_BACK' && animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current)
       }
 
-      const currentIndex = currentSectionIndexRef.current
       if (currentIndex < sections.length) {
         baseScrollYRef.current = getSectionTargetTop(currentIndex, sections)
       } else {
@@ -544,11 +617,22 @@ function findScrollableParent(target: HTMLElement | null): HTMLElement | null {
       window.addEventListener('scroll', handleScroll, { passive: true })
       window.addEventListener('resize', handleResize)
       window.addEventListener('load', handleResize)
+
+      if (typeof ResizeObserver !== 'undefined') {
+        resizeObserver = new ResizeObserver(() => {
+          recalculatePositions()
+        })
+        resizeObserver.observe(document.body)
+      }
     }
 
     const detachDesktopListeners = () => {
       if (!isListening) return
       isListening = false
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+        resizeObserver = null
+      }
       window.removeEventListener('wheel', handleWheel)
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)

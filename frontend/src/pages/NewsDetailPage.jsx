@@ -168,6 +168,9 @@ export default function NewsDetailPage() {
     updateMetaTag('property', 'og:type', 'article')
     updateMetaTag('property', 'og:url', currentUrl)
 
+    const localeMap = { vi: 'vi_VN', en: 'en_US', ko: 'ko_KR', zh: 'zh_CN' }
+    updateMetaTag('property', 'og:locale', localeMap[language] || 'vi_VN')
+
     updateMetaTag('name', 'twitter:card', 'summary_large_image')
     updateMetaTag('name', 'twitter:title', pageTitle)
     updateMetaTag('name', 'twitter:description', finalDesc)

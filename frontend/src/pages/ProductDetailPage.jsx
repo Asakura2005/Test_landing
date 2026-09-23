@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getProductBySlug, getProducts } from '../services/supabase'
+import { getProductBySlug, getProducts, createLead } from '../services/supabase'
 import { useAnalytics } from '../hooks/useAnalytics'
-import { CheckCircle, Package, Calendar, Truck, ArrowRight, Home, ChevronRight, Plus, Minus, Search, X } from 'lucide-react'
+import { CheckCircle, Package, Calendar, ArrowRight, Home, ChevronRight, Plus, Minus, Search, X, Download, FileText, CheckCircle2, Building2, Phone, Mail } from 'lucide-react'
 import Footer from '../components/Footer'
 import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
@@ -47,17 +47,79 @@ export default function ProductDetailPage() {
   const [backgroundPosition, setBackgroundPosition] = useState('0% 0%')
   const [isZooming, setIsZooming] = useState(false)
   const imageRef = useRef(null)
-  const [openAccordion, setOpenAccordion] = useState(null) // null | 'info' | 'ingredients' | 'storage'
+  const [openAccordion, setOpenAccordion] = useState(null) // null | 'info' | 'ingredients' | 'nutrition' | 'packaging' | 'storage'
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
+  // RFQ B2B Wholesale Modal States
+  const [isRfqModalOpen, setIsRfqModalOpen] = useState(false)
+  const [rfqForm, setRfqForm] = useState({
+    name: '',
+    company: '',
+    phone: '',
+    email: '',
+    quantity: '10 - 50 thùng',
+    need: 'Báo giá sỉ đại lý',
+    note: ''
+  })
+  const [isSubmittingRfq, setIsSubmittingRfq] = useState(false)
+  const [rfqSubmitted, setRfqSubmitted] = useState(false)
+  const [rfqError, setRfqError] = useState('')
+
+  const handleDownloadCatalog = () => {
+    trackContactClick('catalogue_download', { product_slug: slug, product_name: localizedProduct?.name })
+    const link = document.createElement('a')
+    link.href = '/assets/stitch/logo_haq.png'
+    link.download = 'HAQ_FOOD_B2B_Catalog_2025.png'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const handleSubmitRfq = async (e) => {
+    e.preventDefault()
+    if (!rfqForm.name || !rfqForm.phone) {
+      setRfqError('Vui lòng điền họ tên và số điện thoại liên hệ.')
+      return
+    }
+    setIsSubmittingRfq(true)
+    setRfqError('')
+    try {
+      await createLead({
+        full_name: rfqForm.name,
+        company: rfqForm.company,
+        phone: rfqForm.phone,
+        email: rfqForm.email,
+        need: `${rfqForm.need} (${rfqForm.quantity})`,
+        note: rfqForm.note,
+        last_product_id: product?.id,
+        last_product_name: localizedProduct?.name || product?.name,
+        source: 'product_detail_rfq'
+      })
+      trackContactClick('b2b_rfq_submit', {
+        product_slug: slug,
+        product_name: localizedProduct?.name,
+        company: rfqForm.company
+      })
+      setRfqSubmitted(true)
+    } catch (err) {
+      console.error('Lỗi gửi yêu cầu báo giá:', err)
+      setRfqError(err?.message || 'Có lỗi xảy ra, vui lòng liên hệ hotline/Zalo trực tiếp.')
+    } finally {
+      setIsSubmittingRfq(false)
+    }
+  }
+
   useEffect(() => {
-    if (!isLightboxOpen) return
+    if (!isLightboxOpen && !isRfqModalOpen) return
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsLightboxOpen(false)
+      if (e.key === 'Escape') {
+        setIsLightboxOpen(false)
+        setIsRfqModalOpen(false)
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isLightboxOpen])
+  }, [isLightboxOpen, isRfqModalOpen])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -247,6 +309,9 @@ export default function ProductDetailPage() {
     updateMetaTag('property', 'og:image', prodImage)
     updateMetaTag('property', 'og:type', 'product')
     updateMetaTag('property', 'og:url', currentUrl)
+
+    const localeMap = { vi: 'vi_VN', en: 'en_US', ko: 'ko_KR', zh: 'zh_CN' }
+    updateMetaTag('property', 'og:locale', localeMap[language] || 'vi_VN')
 
     updateMetaTag('name', 'twitter:card', 'summary_large_image')
     updateMetaTag('name', 'twitter:title', pageTitle)
@@ -827,14 +892,29 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* CTA: Liên hệ tư vấn */}
-            <div className="pt-4 border-t border-haq-border/60">
+            {/* CTA: Nhận báo giá hoặc Tư vấn */}
+            <div className="pt-5 border-t border-haq-border/60 flex flex-col sm:flex-row gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setRfqSubmitted(false)
+                  setRfqError('')
+                  setIsRfqModalOpen(true)
+                }}
+                className="flex-1 inline-flex bg-[#16A34A] hover:bg-[#13863d] text-white py-3.5 px-6 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide transition-all shadow-md hover:shadow-lg items-center justify-center gap-2 group hover:-translate-y-0.5 cursor-pointer"
+              >
+                <FileText className="w-4 h-4" />
+                <span>{language === 'vi' ? 'Nhận báo giá' : language === 'en' ? 'Get a Quote' : language === 'ko' ? '견적 요청' : '获取报价'}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
               <Link
                 to={getContactUrl(language)}
-                className="w-full sm:w-auto inline-flex bg-[#16A34A] hover:bg-[#13863d] text-white py-3.5 px-8 rounded-full font-heading font-bold text-sm tracking-wide transition-all shadow-md hover:shadow-lg items-center justify-center gap-2 group hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex bg-neutral-100 hover:bg-neutral-200 text-haq-ink py-3.5 px-6 rounded-xl font-heading font-bold text-xs sm:text-sm tracking-wide transition-all items-center justify-center gap-2 border border-neutral-200/80 cursor-pointer"
+                title="Tư vấn hotline/Zalo trực tiếp"
               >
-                <span>{t('product_detail.contact_btn', 'Liên hệ tư vấn')}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <Phone className="w-4 h-4 text-[#16A34A]" />
+                <span>{language === 'vi' ? 'Tư vấn' : language === 'en' ? 'Consultation' : language === 'ko' ? '상담 문의' : '咨询'}</span>
               </Link>
             </div>
           </div>
@@ -1041,6 +1121,183 @@ export default function ProductDetailPage() {
               alt={localizedProduct.name}
               className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl"
             />
+          </div>
+        </div>
+      )}
+
+      {/* RFQ B2B Wholesale Quote Modal */}
+      {isRfqModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setIsRfqModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-haq-border max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setIsRfqModalOpen(false)}
+              className="absolute top-5 right-5 w-9 h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 text-haq-ink flex items-center justify-center transition-colors cursor-pointer"
+              title="Đóng"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {rfqSubmitted ? (
+              <div className="text-center py-6">
+                <div className="w-14 h-14 bg-emerald-100 text-[#16A34A] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="font-heading font-extrabold text-xl text-haq-ink mb-2">
+                  Gửi yêu cầu báo giá thành công!
+                </h3>
+                <p className="text-xs sm:text-sm text-haq-text-secondary max-w-sm mx-auto mb-6 leading-relaxed">
+                  Đội ngũ B2B HAQ FOOD đã tiếp nhận thông tin về sản phẩm <strong>{localizedProduct.name}</strong> và sẽ liên hệ gửi bảng giá qua SĐT/Zalo trong vòng 2 giờ làm việc.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
+                  <button
+                    type="button"
+                    onClick={handleDownloadCatalog}
+                    className="inline-flex items-center justify-center gap-2 bg-[#16A34A] hover:bg-[#13863d] text-white py-2.5 px-5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Tải Catalog B2B (PDF)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsRfqModalOpen(false)}
+                    className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-xs font-bold text-haq-ink bg-neutral-100 hover:bg-neutral-200 transition-colors"
+                  >
+                    Đóng cửa sổ
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-heading font-bold text-[#16A34A] uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full mb-2">
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>Kết nối đối tác B2B &amp; Đại lý</span>
+                </div>
+                <h3 className="font-heading font-black text-xl sm:text-2xl text-haq-ink mb-1">
+                  Yêu Cầu Báo Giá Sỉ
+                </h3>
+                <p className="text-xs text-haq-text-secondary mb-4">
+                  Sản phẩm: <span className="font-bold text-haq-ink">{localizedProduct.name}</span>
+                </p>
+
+                {rfqError && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
+                    {rfqError}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmitRfq} className="space-y-3.5">
+                  <div>
+                    <label className="block text-xs font-bold text-haq-ink mb-1">
+                      Họ và tên người liên hệ <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ví dụ: Nguyễn Văn A"
+                      value={rfqForm.name}
+                      onChange={(e) => setRfqForm({ ...rfqForm, name: e.target.value })}
+                      className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-haq-ink mb-1">
+                        Số điện thoại / Zalo <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="0912 345 678"
+                        value={rfqForm.phone}
+                        onChange={(e) => setRfqForm({ ...rfqForm, phone: e.target.value })}
+                        className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-haq-ink mb-1">
+                        Tên doanh nghiệp / Đại lý
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Công ty / Cửa hàng"
+                        value={rfqForm.company}
+                        onChange={(e) => setRfqForm({ ...rfqForm, company: e.target.value })}
+                        className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-haq-ink mb-1">
+                        Email nhận bảng giá
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="partner@company.com"
+                        value={rfqForm.email}
+                        onChange={(e) => setRfqForm({ ...rfqForm, email: e.target.value })}
+                        className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-haq-ink mb-1">
+                        Sản lượng dự kiến
+                      </label>
+                      <select
+                        value={rfqForm.quantity}
+                        onChange={(e) => setRfqForm({ ...rfqForm, quantity: e.target.value })}
+                        className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none"
+                      >
+                        <option value="10 - 50 thùng">10 - 50 thùng</option>
+                        <option value="50 - 200 thùng">50 - 200 thùng</option>
+                        <option value="Theo Pallet (500+ thùng)">Theo Pallet (500+ thùng)</option>
+                        <option value="Container xuất khẩu (FCL/LCL)">Container xuất khẩu (FCL/LCL)</option>
+                        <option value="Gia công OEM/ODM nhãn riêng">Gia công OEM/ODM nhãn riêng</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-haq-ink mb-1">
+                      Ghi chú / Yêu cầu quy cách
+                    </label>
+                    <textarea
+                      rows={2}
+                      placeholder="Thị trường phân phối, yêu cầu gửi mẫu thử..."
+                      value={rfqForm.note}
+                      onChange={(e) => setRfqForm({ ...rfqForm, note: e.target.value })}
+                      className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-haq-border bg-white text-haq-ink focus:border-[#16A34A] focus:ring-1 focus:ring-[#16A34A] outline-none resize-none"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmittingRfq}
+                      className="w-full py-3 px-6 bg-[#16A34A] hover:bg-[#13863d] disabled:bg-neutral-400 text-white font-heading font-bold text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      {isSubmittingRfq ? (
+                        <span>Đang gửi thông tin...</span>
+                      ) : (
+                        <>
+                          <span>Gửi yêu cầu báo giá B2B ngay</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}

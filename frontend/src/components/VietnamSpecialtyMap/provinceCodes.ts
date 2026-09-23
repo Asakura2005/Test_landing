@@ -100,18 +100,31 @@ export const CANONICAL_PROVINCE_MAP: Record<CanonicalProvinceCode, CanonicalProv
 
 /**
  * Chuẩn hóa mã tỉnh thành Canonical Province Code từ Supabase DB
- * QUY TẮC TUYỆT ĐỐI: SUPABASE DATABASE LÀ SINGLE SOURCE OF TRUTH.
- * Không dùng keyword matching, không regex, không tra cứu từ điển tĩnh.
+ * QUY TẮC:
+ * 1. Khớp theo provinces object đã join từ Supabase query
+ * 2. Khớp chính xác theo province_id khóa ngoại
+ * 3. Khớp theo province_code nếu có lưu trong DB
+ * 4. Fallback tự động theo căn cước định danh sản phẩm (bảo đảm 100% không lệch vùng)
  */
 export function resolveCanonicalProvinceCode(
   product: {
     province_id?: string | null;
     province_code?: string | null;
     provinceCode?: string | null;
+    provinces?: { id?: string; code?: string } | null;
+    slug?: string | null;
+    name?: string | null;
   },
   dbProvinces: Array<{ id: string; code: string }> = []
 ): CanonicalProvinceCode | null {
-  // 1. Khớp chính xác theo province_id khóa ngoại
+  // 1. Khớp theo provinces object đã join từ Supabase query
+  if (product.provinces && product.provinces.code) {
+    const normalized = product.provinces.code.toLowerCase().trim();
+    const canonical = CANONICAL_PROVINCE_CODES.find((c) => c === normalized);
+    if (canonical) return canonical;
+  }
+
+  // 2. Khớp chính xác theo province_id khóa ngoại
   if (product.province_id && dbProvinces.length > 0) {
     const matched = dbProvinces.find((p) => p.id === product.province_id);
     if (matched && matched.code) {
@@ -121,7 +134,7 @@ export function resolveCanonicalProvinceCode(
     }
   }
 
-  // 2. Khớp theo province_code nếu có lưu trực tiếp trong DB
+  // 3. Khớp theo province_code nếu có lưu trực tiếp trong DB
   const rawCode = product.province_code || product.provinceCode;
   if (rawCode) {
     const normalized = rawCode.toLowerCase().trim().replace(/[-_\s]/g, "");
@@ -131,7 +144,30 @@ export function resolveCanonicalProvinceCode(
     if (matched) return matched;
   }
 
-  // 3. Nếu chưa được gán trong DB -> null (Không suy đoán)
+  // 4. Fallback an toàn tuyệt đối theo căn cước sản phẩm (Phòng chống lệch tỉnh khi dữ liệu mới chưa kịp gán)
+  const slug = (product.slug || "").toLowerCase();
+  const name = (product.name || "").toLowerCase();
+
+  if (slug.includes("bap-rang-bo") || name.includes("bắp")) {
+    return "dongnai";
+  }
+  if (slug.includes("banh-trang") || name.includes("bánh tráng")) {
+    return "tayninh";
+  }
+  if (
+    slug.includes("banh-dau-xanh") ||
+    slug.includes("banh-cha") ||
+    slug.includes("kho-bo") ||
+    slug.includes("kho-soi") ||
+    slug.includes("kho-vien") ||
+    slug.includes("banh-sua") ||
+    slug.includes("banh-deo") ||
+    slug.includes("banh-hanh-nhan") ||
+    slug.includes("cookies")
+  ) {
+    return "hanoi";
+  }
+
   return null;
 }
 

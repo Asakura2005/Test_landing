@@ -361,3 +361,36 @@ body[data-mobile-nav-open="true"] aside {
   display: none !important;
 }
 
+/* ── Stitch Flagship Edition Visual Tokens & Keyframes ── */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.08); }
+}
+@keyframes radarWave {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+.radar-ring {
+  position: absolute;
+  border-radius: 9999px;
+  animation: radarWave 2.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+.gold-shimmer {
+  background: linear-gradient(135deg, #ffdcc3 0%, #fe932c 45%, #ffd7a0 70%, #ffb77d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gold-border-gradient {
+  border-image: linear-gradient(135deg, rgba(254, 147, 44, 0.6), rgba(16, 185, 129, 0.4), rgba(254, 147, 44, 0.2)) 1;
+}
+

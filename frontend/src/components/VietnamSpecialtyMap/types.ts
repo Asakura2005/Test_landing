@@ -13,6 +13,9 @@ export interface Product {
   is_pinned?: boolean;
   views?: number;
   href?: string;
+  weight?: string | number;
+  provinceName?: string;
+  variants?: any[];
 }
 
 export interface ProvinceSpecialty {

@@ -26,10 +26,19 @@ export default {
         'haq-text-primary': '#11261B',
         'haq-text-secondary': '#52665A',
         'haq-border': '#D8E5DA',
+        // Homepage redesign — warm gold palette
+        'gold': '#C8A355',
+        'gold-light': '#E8D5A8',
+        'gold-pale': '#F5ECD4',
+        'soft-cream': '#F5F0E1',
+        'warm-bg': '#FFFAF2',
+        'warm-cream': '#FFF8EE',
+        'deep': '#0C1E15',
       },
       fontFamily: {
         heading: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
         mono: ['"Plus Jakarta Sans"', 'ui-monospace', 'monospace'],
       },
       maxWidth: {
@@ -44,10 +53,15 @@ export default {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        partnerScroll: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
         ticker: 'ticker 40s linear infinite',
         marquee: 'marquee 20s linear infinite',
+        'partner-scroll': 'partnerScroll 28s linear infinite',
       },
     },
   },

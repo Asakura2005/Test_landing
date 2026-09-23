@@ -251,6 +251,7 @@ export function formatSlugToCanonicalTitle(slug) {
 
 let lastTrackedProductClick = { key: '', time: 0, source: 'none' }
 let isGlobalListenerAttached = false
+let initPromise = null
 
 /**
  * Khởi tạo PostHog
@@ -261,74 +262,86 @@ let isGlobalListenerAttached = false
  * - disable_session_recording: true để không quay toàn bộ trang web một cách tự động, chỉ bật quay phiên khi có tương tác sản phẩm.
  */
 export async function initPostHog() {
-  if (typeof window === 'undefined' || isInitialized) {
+  if (typeof window === 'undefined') return null
+  if (isInitialized && posthog) {
     initGlobalProductClickListener()
     return posthog
   }
+  if (initPromise) return initPromise
 
-  const client = await getPostHogClient()
-  if (!client) {
+  initPromise = (async () => {
+    const client = await getPostHogClient()
+    if (!client) {
+      initGlobalProductClickListener()
+      captureAndPersistUTMs()
+      return null
+    }
+
+    try {
+      if (client.__loaded || isInitialized) {
+        isInitialized = true
+        initGlobalProductClickListener()
+        return client
+      }
+
+      if (POSTHOG_KEY && POSTHOG_KEY !== 'phc_demo_haq_food_analytics_key') {
+        client.init(POSTHOG_KEY, {
+          api_host: POSTHOG_HOST,
+          autocapture: false, // TẮT autocapture toàn web: chỉ ghi nhận click sản phẩm có chủ đích
+          capture_pageview: 'always', // Tự động ghi nhận lượt xem trang
+          capture_pageleave: true,
+          disable_session_recording: true, // Không tự động ghi hình toàn bộ trang web, chỉ ghi hình theo ngữ cảnh sản phẩm
+          disable_surveys: true, // Tắt tải surveys.js (tiết kiệm 34 KiB)
+          capture_dead_clicks: false, // Tắt dead clicks autocapture (tiết kiệm 8 KiB)
+          capture_performance: false, // Tắt web vitals polyfill script (tiết kiệm 6 KiB và loại bỏ array-at polyfill cũ)
+          session_recording: {
+            maskAllInputs: true, // Che thông tin nhạy cảm ở các ô nhập liệu
+          },
+          persistence: 'localStorage+cookie',
+          before_send: (event) => {
+            const path = typeof window !== 'undefined' ? window.location.pathname : ''
+            const currentUrl = event?.properties?.['$current_url'] || ''
+            const currentPath = event?.properties?.['$pathname'] || ''
+
+            // 1. Loại trừ hoàn toàn 100% trang Admin để bảo mật dữ liệu quản trị
+            if (
+              path.startsWith('/admin') || 
+              currentPath.startsWith('/admin') || 
+              currentUrl.includes('/admin')
+            ) {
+              return null
+            }
+
+            // 2. Chặn toàn bộ $autocapture generic clicks (loại bỏ nhiễu click ngoài sản phẩm)
+            if (event?.event === '$autocapture') {
+              return null
+            }
+
+            return event
+          },
+          loaded: (ph) => {
+            try {
+              const host = window.location.hostname
+              ph.register({
+                site_domain: host,
+                is_production: host.includes('haq.com.vn'),
+              })
+            } catch (e) {}
+            captureAndPersistUTMs()
+          },
+        })
+      }
+      isInitialized = true
+    } catch (err) {
+      console.warn('PostHog initialization warning:', err?.message || err)
+    }
+
     initGlobalProductClickListener()
     captureAndPersistUTMs()
-    return null
-  }
+    return client
+  })()
 
-  try {
-    if (POSTHOG_KEY && POSTHOG_KEY !== 'phc_demo_haq_food_analytics_key') {
-      client.init(POSTHOG_KEY, {
-        api_host: POSTHOG_HOST,
-        autocapture: false, // TẮT autocapture toàn web: chỉ ghi nhận click sản phẩm có chủ đích
-        capture_pageview: 'always', // Tự động ghi nhận lượt xem trang
-        capture_pageleave: true,
-        disable_session_recording: true, // Không tự động ghi hình toàn bộ trang web, chỉ ghi hình theo ngữ cảnh sản phẩm
-        disable_surveys: true, // Tắt tải surveys.js (tiết kiệm 34 KiB)
-        capture_dead_clicks: false, // Tắt dead clicks autocapture (tiết kiệm 8 KiB)
-        capture_performance: false, // Tắt web vitals polyfill script (tiết kiệm 6 KiB và loại bỏ array-at polyfill cũ)
-        session_recording: {
-          maskAllInputs: true, // Che thông tin nhạy cảm ở các ô nhập liệu
-        },
-        persistence: 'localStorage+cookie',
-        before_send: (event) => {
-          const path = typeof window !== 'undefined' ? window.location.pathname : ''
-          const currentUrl = event?.properties?.['$current_url'] || ''
-          const currentPath = event?.properties?.['$pathname'] || ''
-
-          // 1. Loại trừ hoàn toàn 100% trang Admin để bảo mật dữ liệu quản trị
-          if (
-            path.startsWith('/admin') || 
-            currentPath.startsWith('/admin') || 
-            currentUrl.includes('/admin')
-          ) {
-            return null
-          }
-
-          // 2. Chặn toàn bộ $autocapture generic clicks (loại bỏ nhiễu click ngoài sản phẩm)
-          if (event?.event === '$autocapture') {
-            return null
-          }
-
-          return event
-        },
-        loaded: (ph) => {
-          try {
-            const host = window.location.hostname
-            ph.register({
-              site_domain: host,
-              is_production: host.includes('haq.com.vn'),
-            })
-          } catch (e) {}
-          captureAndPersistUTMs()
-        },
-      })
-    }
-    isInitialized = true
-  } catch (err) {
-    console.warn('PostHog initialization warning:', err.message)
-  }
-
-  initGlobalProductClickListener()
-  captureAndPersistUTMs()
-  return client
+  return initPromise
 }
 
 /**

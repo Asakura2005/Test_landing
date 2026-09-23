@@ -158,6 +158,18 @@ export function useHaqSpecialtyMapData(
             ? "由 HAQ FOOD 精选当地新鲜优质原料匠心打造的特色地道风味食品。"
             : "Sản phẩm đặc sản cao cấp được HAQ FOOD tuyển chọn kỹ lưỡng từ nguồn nguyên liệu tươi ngon tại địa phương.";
 
+        const rawWeight =
+          (locItem.variants &&
+            locItem.variants.length > 0 &&
+            (locItem.variants[0]?.size ||
+              (locItem.variants[0]?.name && locItem.variants[0]?.name !== locItem.name
+                ? locItem.variants[0]?.name
+                : null))) ||
+          locItem.weight ||
+          (locItem.tag && !locItem.is_pinned ? locItem.tag : null);
+        const rawWeightStr = typeof rawWeight === 'number' ? `${rawWeight}g` : String(rawWeight || '').trim();
+        const weightBadge = rawWeightStr && rawWeightStr.length <= 20 ? rawWeightStr : undefined;
+
         const productModel: Product = {
           name: locItem.name || "HAQ FOOD",
           canonical_name: locItem.canonical_name || item.name || locItem.name,
@@ -179,6 +191,9 @@ export function useHaqSpecialtyMapData(
           image: optimizeSupabaseImageUrl(imgUrl, { width: 360, quality: 80 }),
           imageAlt: locItem.name || currentProv.provinceLabel,
           region: currentProv.region,
+          provinceName: currentProv.provinceLabel,
+          weight: weightBadge,
+          variants: locItem.variants,
           productId: locItem.id || locItem.slug,
           slug: locItem.slug,
           is_pinned: Boolean(locItem.is_pinned),

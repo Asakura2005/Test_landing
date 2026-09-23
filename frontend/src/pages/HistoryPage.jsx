@@ -16,7 +16,7 @@ import b2bImg from '../assets/business/trung-bay-sp.webp'
 import exportImg from '../assets/factory/thanh-pham.webp'
 import heroBanner1 from '../assets/herobanner/hero_banner_1.webp'
 import nhaXuong2021Img from '../assets/factory/nha-xuong-2021.webp'
-import catBanhImg from '../assets/categories/category_banh.webp'
+import catBanhImg from '../assets/factory/san-xuat-banh-nuong.webp'
 
 
 /* ───────────────────────────────────────────────────────────────────

@@ -16,7 +16,7 @@ export const ROUTE_DEFINITIONS = [
     en: '/en/about',
     ko: '/ko/about',
     zh: '/zh/about',
-    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu', '/zh/gioi-thieu', '/gioithieu', '/company-profile', '/about'],
+    aliases: ['/ve-chung-toi', '/ve-chung-toi/gioi-thieu', '/en/gioi-thieu', '/ko/gioi-thieu', '/zh/gioi-thieu', '/gioithieu', '/company-profile', '/about', '/ho-so-cong-ty'],
   },
   {
     key: 'history',
@@ -319,5 +319,16 @@ export function getPolicyUrl(language = 'vi') {
   if (language === 'zh') return '/zh/policy'
   return '/chinh-sach'
 }
+
+/**
+ * Helper sinh đường dẫn trang liên hệ theo ngôn ngữ
+ */
+export function getContactPageUrl(language = 'vi') {
+  if (language === 'en') return '/en/contact'
+  if (language === 'ko') return '/ko/contact'
+  if (language === 'zh') return '/zh/contact'
+  return '/lien-he'
+}
+
 
 

@@ -8,11 +8,11 @@ const VietnamSpecialtyMap = lazy(() =>
 
 function MapFallback() {
   return (
-    <div className="w-full h-full min-h-[480px] flex items-center justify-center bg-[#FAF9F6] animate-pulse">
+    <div className="w-full min-h-[640px] flex items-center justify-center bg-[#011e16] text-white animate-pulse">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-[#16A34A]/30 border-t-[#16A34A] animate-spin" />
-        <span className="text-sm font-heading font-medium text-haq-text-secondary">
-          Đang tải hệ sinh thái sản phẩm & bản đồ đặc sản...
+        <div className="w-8 h-8 rounded-full border-2 border-[#fe932c]/30 border-t-[#fe932c] animate-spin" />
+        <span className="text-sm font-medium text-white/70">
+          Đang nạp hệ sinh thái bản đồ đặc sản Việt Nam...
         </span>
       </div>
     </div>
@@ -24,7 +24,12 @@ export default function Products() {
   const [inView, setInView] = useState(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
       const hash = window.location.hash.toLowerCase()
-      if (hash.includes('san-pham') || hash.includes('specialty-map') || hash.includes('vietnam')) {
+      if (
+        hash.includes('san-pham') ||
+        hash.includes('specialty-map') ||
+        hash.includes('vietnam') ||
+        hash.includes('he-sinh-thai-dac-san')
+      ) {
         return true
       }
     }
@@ -50,7 +55,7 @@ export default function Products() {
         }
       },
       {
-        rootMargin: '400px 0px', // Preload 400px before user reaches the map
+        rootMargin: '400px 0px',
         threshold: 0,
       }
     )
@@ -60,22 +65,14 @@ export default function Products() {
   }, [inView])
 
   return (
-    <section
-      ref={containerRef}
-      id="vietnam-specialty-map"
-      data-section="specialty-map"
-      className="w-full bg-white border-b border-haq-border relative flex flex-col justify-center py-0 lg:h-[calc(100vh-72px)] overflow-hidden"
-    >
-      <div id="san-pham" className="w-full h-full max-w-[1440px] mx-auto px-0 sm:px-4 lg:px-8 flex flex-col">
-        {/* Fullscreen Interactive Vietnam Specialty Map Experience */}
-        {inView ? (
-          <Suspense fallback={<MapFallback />}>
-            <VietnamSpecialtyMap className="w-full h-full flex-1 min-h-0" />
-          </Suspense>
-        ) : (
-          <MapFallback />
-        )}
-      </div>
-    </section>
+    <div ref={containerRef} id="he-sinh-thai-dac-san" className="w-full">
+      {inView ? (
+        <Suspense fallback={<MapFallback />}>
+          <VietnamSpecialtyMap />
+        </Suspense>
+      ) : (
+        <MapFallback />
+      )}
+    </div>
   )
 }

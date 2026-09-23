@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MapPin, ArrowRight, X, Sparkles, Navigation, Pin } from "lucide-react";
+import { ArrowRight, X, Navigation, Pin, Globe, MapPin } from "lucide-react";
 import { provinceCentroids } from "./mapData";
 import { InteractiveMap } from "./InteractiveMap/InteractiveMap";
 import { ProvinceTooltip } from "./InteractiveMap/ProvinceTooltip";
@@ -26,28 +25,31 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
 }) => {
   const { t, language } = useLanguage();
   const { trackProductClick } = useAnalytics();
-  const shouldReduceMotion = useReducedMotion();
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
 
   const resolveProductLink = (p: Product) => {
     if (p.href) return p.href;
-    const s = p.slug || p.productId || '';
-    if (language === 'en') return `/en/products/${s}`;
-    if (language === 'ko') return `/ko/products/${s}`;
-    if (language === 'zh') return `/zh/products/${s}`;
+    const s = p.slug || p.productId || "";
+    if (language === "en") return `/en/products/${s}`;
+    if (language === "ko") return `/ko/products/${s}`;
+    if (language === "zh") return `/zh/products/${s}`;
     return `/san-pham/${s}`;
   };
 
   const handleProductClick = (p: Product) => {
-    trackProductClick({
-      id: p.productId || p.slug,
-      slug: p.slug || p.productId,
-      name: p.name,
-      canonical_name: p.canonical_name,
-      category: p.category,
-      href: resolveProductLink(p),
-    }, 'specialty_map');
+    trackProductClick(
+      {
+        id: p.productId || p.slug,
+        slug: p.slug || p.productId,
+        name: p.name,
+        canonical_name: p.canonical_name,
+        category: p.category,
+        href: resolveProductLink(p),
+      },
+      "specialty_map"
+    );
   };
+
   const [hoveredProvince, setHoveredProvince] = useState<{
     id: string;
     name: string;
@@ -60,7 +62,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Hook connect real data from Supabase / data layer
+  // Hook connect real data from Supabase
   const {
     specialties: fetchedSpecialties,
     hasSpecialtiesMap: fetchedHasMap,
@@ -79,7 +81,9 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     return fetchedHasMap;
   }, [specialtyDataOverride, fetchedHasMap]);
 
-  const [selectedRegion, setSelectedRegion] = useState<"ALL" | "Miền Bắc" | "Miền Trung" | "Miền Nam">("ALL");
+  const [selectedRegion, setSelectedRegion] = useState<
+    "ALL" | "Miền Bắc" | "Miền Trung" | "Miền Nam"
+  >("ALL");
 
   // Pointer-invariant Mouse Zoom & Gesture Hook
   const {
@@ -98,11 +102,14 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     focusOnRegion,
   } = useMapTransform({ svgRef, containerRef: mapContainerRef });
 
-  const handleSelectRegion = useCallback((region: "ALL" | "Miền Bắc" | "Miền Trung" | "Miền Nam") => {
-    setSelectedRegion(region);
-    setSelectedProvinceId(null);
-    focusOnRegion(region);
-  }, [focusOnRegion]);
+  const handleSelectRegion = useCallback(
+    (region: "ALL" | "Miền Bắc" | "Miền Trung" | "Miền Nam") => {
+      setSelectedRegion(region);
+      setSelectedProvinceId(null);
+      focusOnRegion(region);
+    },
+    [focusOnRegion]
+  );
 
   const handleHoverProvince = useCallback(
     (e: React.MouseEvent<SVGElement>, id: string) => {
@@ -120,17 +127,16 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         svgRef.current,
         experienceRef.current
       );
-      if (!screenPt) return;
 
       setHoveredProvince({
         id,
-        name: specialties[id]?.provinceLabel || info.name,
-        region: specialties[id]?.region || info.region,
+        name: info.name,
+        region: info.region,
         x: screenPt.x,
         y: screenPt.y,
       });
     },
-    [isDragging, transform, selectedProvinceId, specialties]
+    [isDragging, transform, selectedProvinceId]
   );
 
   const handleLeaveProvince = useCallback(() => {
@@ -149,9 +155,13 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
         if (info) {
           focusOnProvince(info);
         }
-        // Synchronize active region tab with this province's region
         const provRegion = specialties[id]?.region || info?.region;
-        if (provRegion && (provRegion === "Miền Bắc" || provRegion === "Miền Trung" || provRegion === "Miền Nam")) {
+        if (
+          provRegion &&
+          (provRegion === "Miền Bắc" ||
+            provRegion === "Miền Trung" ||
+            provRegion === "Miền Nam")
+        ) {
           setSelectedRegion(provRegion as any);
         }
       }
@@ -166,29 +176,41 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     setHoveredProvince(null);
   }, [resetTransform]);
 
+  const handleClearProvince = useCallback(() => {
+    setSelectedProvinceId(null);
+    setHoveredProvince(null);
+    resetTransform();
+  }, [resetTransform]);
+
   // Helper to extract view count
-  const getProductViews = useCallback((p: Product | null | undefined, map: Record<string, number>) => {
-    if (!p) return 0;
-    const slug = p.slug || '';
-    const id = p.productId || '';
-    return Number(map[slug] || (id ? map[id] : 0) || p.views || 0);
-  }, []);
+  const getProductViews = useCallback(
+    (p: Product | null | undefined, map: Record<string, number>) => {
+      if (!p) return 0;
+      const slug = p.slug || "";
+      const id = p.productId || "";
+      return Number(map[slug] || (id ? map[id] : 0) || p.views || 0);
+    },
+    []
+  );
 
   // Real-time product views map from posthog analytics
   const viewsMap = useMemo(() => getProductViewsMap(), []);
 
   // Active province data
-  const activeProvinceInfo = selectedProvinceId ? provinceCentroids[selectedProvinceId] || null : null;
-  const activeSpecialty = selectedProvinceId ? specialties[selectedProvinceId] || null : null;
-  // Pinned products prioritized first for selected province, followed by view count descending
+  const activeProvinceInfo = selectedProvinceId
+    ? provinceCentroids[selectedProvinceId] || null
+    : null;
+  const activeSpecialty = selectedProvinceId
+    ? specialties[selectedProvinceId] || null
+    : null;
+
+  // Products belonging to the selected province
   const provinceProducts = useMemo(() => {
     const raw = activeSpecialty?.products;
     if (!raw || !raw.length) return [];
     return [...raw].sort((a, b) => {
-      // 1. Pinned product in this province comes first!
       if (a.is_pinned && !b.is_pinned) return -1;
       if (!a.is_pinned && b.is_pinned) return 1;
-      // 2. Then sort by view count descending
       return getProductViews(b, viewsMap) - getProductViews(a, viewsMap);
     });
   }, [activeSpecialty, viewsMap, getProductViews]);
@@ -197,15 +219,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     ? specialties[hoveredProvince.id]?.products?.length || 0
     : 0;
 
-  // Clear province selection to return to region/nationwide overview
-  const handleClearProvince = useCallback(() => {
-    setSelectedProvinceId(null);
-    setHoveredProvince(null);
-    resetTransform();
-  }, [resetTransform]);
-
-  // Curated products when no province is selected:
-  // Filtered by selected region and sorted strictly by view count descending!
+  // Products when no province is selected (sorted by views)
   const regionFeaturedProducts = useMemo(() => {
     const list: Product[] = [];
     const seen = new Set<string>();
@@ -224,566 +238,363 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
       }
     });
 
-    // Sort strictly by view count descending!
     return list.sort((a, b) => {
       const vA = getProductViews(a, viewsMap);
       const vB = getProductViews(b, viewsMap);
-      if (vB !== vA) {
-        return vB - vA;
-      }
-      // If view count is equal, prioritize pinned products
+      if (vB !== vA) return vB - vA;
       if (a.is_pinned && !b.is_pinned) return -1;
       if (!a.is_pinned && b.is_pinned) return 1;
       return 0;
     });
   }, [specialties, selectedRegion, viewsMap, getProductViews]);
 
-  // Showcase list:
-  // - When province selected: ONLY products of that specific province!
-  // - When no province selected: top 3 products of the active region / nationwide (sorted by view count)
-  const showcaseProducts = useMemo(() => {
+  // Guaranteed up to 3 showcase products:
+  // - Khi chọn tỉnh cụ thể: CHỈ hiển thị sản phẩm của đúng tỉnh đó (tối đa 3 sản phẩm)
+  // - Khi không chọn tỉnh (Toàn quốc/Toàn vùng): hiển thị sản phẩm đặc trưng hàng đầu của vùng
+  const displayProducts = useMemo(() => {
     if (selectedProvinceId) {
       return provinceProducts.slice(0, 3);
     }
     return regionFeaturedProducts.slice(0, 3);
   }, [selectedProvinceId, provinceProducts, regionFeaturedProducts]);
 
-  const featuredProduct = showcaseProducts[0] || null;
-  const supportingProducts = showcaseProducts.slice(1, 3);
-
-  const provinceTitle = selectedProvinceId
-    ? activeSpecialty?.provinceLabel || activeProvinceInfo?.name || (language === 'en' ? 'Province' : language === 'ko' ? '지역' : language === 'zh' ? '省市' : 'Tỉnh thành')
-    : (language === 'en' ? 'FEATURED SPECIALTIES' : language === 'ko' ? '대표 특산물' : language === 'zh' ? '特色招牌产品' : 'SẢN PHẨM NỔI BẬT');
-
-  const regionBadge = selectedProvinceId
-    ? activeSpecialty?.region || activeProvinceInfo?.region || (
-        selectedRegion === 'Miền Bắc' ? (language === 'en' ? 'Northern Vietnam' : language === 'ko' ? '베트남 북부' : language === 'zh' ? '越南北部' : 'Miền Bắc') :
-        selectedRegion === 'Miền Trung' ? (language === 'en' ? 'Central Vietnam' : language === 'ko' ? '베트남 중부' : language === 'zh' ? '越南中部' : 'Miền Trung') :
-        selectedRegion === 'Miền Nam' ? (language === 'en' ? 'Southern Vietnam' : language === 'ko' ? '베트남 남부' : language === 'zh' ? '越南南部' : 'Miền Nam') : null
-      )
-    : null;
-
   const provinceDesc = selectedProvinceId
     ? activeSpecialty?.shortDescription ||
       activeSpecialty?.description ||
-      (language === 'en'
-        ? 'Origin of local agricultural ingredients partnered with HAQ FOOD international standard processing.'
-        : language === 'ko'
-        ? 'HAQ FOOD의 국제 표준 가공 라인과 연계된 베트남 청정 농산물 원산지.'
-        : language === 'zh'
-        ? 'HAQ FOOD 国际标准现代加工产业链深度合作的优质越南原生态农产区。'
-        : 'Vùng nông sản nguyên bản liên kết chế biến chuẩn quốc tế của HAQ FOOD.')
-    : selectedRegion === "ALL"
-    ? (language === 'en'
-        ? 'Most searched and favored Vietnamese specialty snacks across the HAQ FOOD ecosystem.'
-        : language === 'ko'
-        ? 'HAQ FOOD 생태계에서 전국적으로 가장 인기 있는 베트남 특산 스낵 제품군.'
-        : language === 'zh'
-        ? 'HAQ FOOD 越南全国生态系统中最受采购商与消费者青睐的精选特色零食。'
-        : 'Sản phẩm được quan tâm nhiều nhất toàn quốc trên hệ sinh thái HAQ FOOD.')
-    : (language === 'en'
-        ? `Most popular specialties in ${selectedRegion === 'Miền Bắc' ? 'Northern Vietnam' : selectedRegion === 'Miền Trung' ? 'Central Vietnam' : 'Southern Vietnam'} across HAQ FOOD.`
-        : language === 'ko'
-        ? `HAQ FOOD 생태계 내 ${selectedRegion === 'Miền Bắc' ? '베트남 북부' : selectedRegion === 'Miền Trung' ? '베트남 중부' : '베트남 남부'} 지역 대표 인기 특산품.`
-        : language === 'zh'
-        ? `HAQ FOOD ${selectedRegion === 'Miền Bắc' ? '越南北部' : selectedRegion === 'Miền Trung' ? '越南中部' : '越南南部'}地区最受关注的特色代表产品。`
-        : `Sản phẩm được quan tâm nhiều nhất tại ${selectedRegion} trên hệ sinh thái HAQ FOOD.`);
+      "Vùng nông sản nguyên bản liên kết chế biến chuẩn quốc tế của HAQ FOOD."
+    : "Mỗi sản phẩm HAQ Food mang trong mình căn cước địa lý rõ ràng: từ thổ nhưỡng trù phú Tây Ninh, cao nguyên Đồng Nai đến thủ phủ nghiên cứu Hà Nội.";
 
-  const flagshipBadge = language === 'en' ? 'Flagship' : language === 'ko' ? '대표상품' : language === 'zh' ? '核心主打' : 'Chủ lực';
-  const viewDetailText = language === 'en' ? 'View Details' : language === 'ko' ? '상세보기' : language === 'zh' ? '查看详情' : 'Xem chi tiết';
-  const defaultCategoryText = language === 'en' ? 'Specialty' : language === 'ko' ? '특산물' : language === 'zh' ? '特色特产' : 'Sản phẩm';
-  const flagshipCategoryText = language === 'en' ? 'Flagship Specialty' : language === 'ko' ? '대표 특산물' : language === 'zh' ? '核心主打产品' : 'Sản phẩm chủ lực';
-  const defaultProductDesc = language === 'en'
-    ? 'Authentic natural taste carefully selected from local agricultural origins.'
-    : language === 'ko'
-    ? '현지 청정 농산물 원산지에서 엄선한 본연의 풍미.'
-    : language === 'zh'
-    ? '精选自越南本地特色原料产区的地道天然风味。'
-    : 'Hương vị nguyên bản tuyển chọn từ nguồn nông sản địa phương.';
+  // Terroir Story details (faithful to Stitch Screen 1)
+  const terroirData = useMemo(() => {
+    if (
+      selectedProvinceId === "tayninh" ||
+      (!selectedProvinceId && selectedRegion === "ALL")
+    ) {
+      return {
+        code: "VN-TN-72",
+        title: "ĐẶC SẢN TÂY NINH - NGUỒN GỐC & VÙNG NGUYÊN LIỆU",
+        desc: "Tây Ninh được mệnh danh là thánh địa ẩm thực của bánh tráng phơi sương Trảng Bàng và muối tôm trứ danh. HAQ Food đã chuẩn hóa công nghệ sấy giòn khép kín vô trùng hiện đại, giữ vẹn nguyên hương vị đậm đà thơm cay đặc trưng của nông sản bản địa kết hợp độ giòn xốp ròn rã đạt tiêu chuẩn xuất khẩu chính ngạch sang Hàn Quốc, Đài Loan và toàn cầu.",
+      };
+    }
+    if (selectedProvinceId === "dongnai") {
+      return {
+        code: "VN-DN-39",
+        title: "ĐẶC SẢN ĐỒNG NAI - VÙNG BẮP HẠT SẠCH NON-GMO",
+        desc: "Đồng Nai là vùng đất đỏ bazan màu mỡ nổi tiếng với vùng trồng bắp hạt sạch Non-GMO đạt chuẩn VietGAP. HAQ Food ứng dụng dây chuyền sấy nổ công nghệ cao vô trùng, mang đến dòng bắp rang bơ bung tròn tơi xốp hảo hạng phủ caramel và phô mai béo ngậy.",
+      };
+    }
+    if (selectedProvinceId === "hanoi") {
+      return {
+        code: "VN-HN-01",
+        title: "HÀ NỘI - THỦ PHỦ R&D & TINH HOA BÁNH ĐẬU XANH TƯƠI",
+        desc: "Hà Nội là trung tâm nghiên cứu công thức độc quyền và điều phối chuỗi cung ứng của HAQ Food. Nơi đây gìn giữ tinh hoa ẩm thực truyền thống như bánh đậu xanh tươi, kết hợp dây chuyền tiệt trùng khép kín hiện đại đạt chuẩn quốc tế ISO 22000 & HACCP.",
+      };
+    }
+
+    const provName =
+      activeSpecialty?.provinceLabel || activeProvinceInfo?.name || selectedRegion;
+    const provCode = selectedProvinceId
+      ? `VN-${selectedProvinceId.slice(0, 2).toUpperCase()}-99`
+      : "VN-NAT-00";
+    return {
+      code: provCode,
+      title: `ĐẶC SẢN ${provName.toUpperCase()} - NGUỒN GỐC & VÙNG NGUYÊN LIỆU`,
+      desc:
+        activeSpecialty?.description ||
+        activeSpecialty?.shortDescription ||
+        provinceDesc,
+    };
+  }, [
+    selectedProvinceId,
+    selectedRegion,
+    activeSpecialty,
+    activeProvinceInfo,
+    provinceDesc,
+  ]);
+
+  const currentSelectedLabel =
+    activeProvinceInfo?.name ||
+    (selectedRegion === "ALL"
+      ? "Tây Ninh (Vùng Chủ Lực Quốc Gia)"
+      : `${selectedRegion} (Toàn Vùng)`);
 
   return (
     <section
       ref={experienceRef}
-      className={`w-full h-full lg:h-[calc(100vh-72px)] flex flex-col lg:flex-row overflow-hidden bg-[#FAF9F5]/40 select-none ${className}`}
+      id="he-sinh-thai-dac-san"
+      aria-label="Hệ Sinh Thái Đặc Sản & Bản Đồ Vùng Nguyên Liệu"
+      className={`py-16 sm:py-24 bg-[#011e16] text-white relative overflow-hidden select-none ${className}`}
     >
-      {/* =========================================================================
-          MOBILE-ONLY HEADER: Placed at the top above the map
-          ========================================================================= */}
-      <div className="block lg:hidden px-4 pt-4 pb-2.5 bg-white border-b border-haq-border/70 shrink-0">
-        <h2 className="font-heading font-bold text-base sm:text-lg text-haq-ink uppercase leading-snug mb-2">
-          {t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}
-        </h2>
+      {/* Background Ambient Glow & Grid lines chuẩn Stitch */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#064e3b]/40 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#fe932c]/20 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
-        {/* Region tabs on mobile */}
-        <div
-          className="flex items-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none pb-1"
-          role="tablist"
-          aria-label={language === 'en' ? 'Region' : language === 'ko' ? '지역' : language === 'zh' ? '区域' : 'Khu vực'}
-        >
-          {[
-            { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
-            { id: "Miền Bắc", label: t('home.specialty_map.regions.north', 'MIỀN BẮC') },
-            { id: "Miền Trung", label: t('home.specialty_map.regions.central', 'MIỀN TRUNG') },
-            { id: "Miền Nam", label: t('home.specialty_map.regions.south', 'MIỀN NAM') },
-          ].map((r) => {
-            const isActive = selectedRegion === r.id;
-            return (
-              <button
-                key={r.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => handleSelectRegion(r.id as any)}
-                className={`relative text-[11px] tracking-[0.12em] uppercase transition-colors whitespace-nowrap cursor-pointer pb-1 ${
-                  isActive
-                    ? "text-[#0F5132] font-bold"
-                    : "text-haq-text-secondary hover:text-haq-ink font-normal"
-                }`}
-              >
-                {r.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#0F5132]" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* =========================================================================
-          LEFT SIDE: 55–58% Width — LARGE VIETNAM INTERACTIVE MAP (Primary Visual)
-          ========================================================================= */}
-      <div className="w-full lg:w-[57%] h-[340px] sm:h-[480px] lg:h-full relative flex items-center justify-center p-2 sm:p-4 lg:p-6 bg-[#FAF9F6] border-b lg:border-b-0 lg:border-r border-haq-border/70 overflow-hidden shrink-0">
-        {/* Subtle Map Atlas Watermark Hint */}
-        <div className="absolute top-3 left-3 z-10 hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-haq-border/60 text-[10px] font-heading font-medium text-haq-text-secondary shadow-2xs pointer-events-none">
-          <Navigation className="w-3 h-3 text-[#0F5132]" />
-          <span>
-            {language === 'en'
-              ? 'Scroll to zoom · Drag to pan map'
-              : language === 'ko'
-              ? '스크롤하여 확대/축소 · 드래그하여 지도 이동'
-              : language === 'zh'
-              ? '滚动滚轮缩放 · 按住拖拽平移地图'
-              : 'Cuộn chuột để thu phóng · Kéo để xoay bản đồ'}
-          </span>
-        </div>
-
-        {/* Large Prominent SVG Map Container */}
-        <div className="w-full h-full flex items-center justify-center relative">
-          <InteractiveMap
-            selectedProvinceId={selectedProvinceId}
-            hoveredProvinceId={hoveredProvince?.id ?? null}
-            hasSpecialtiesMap={hasSpecialtiesMap}
-            specialties={specialties}
-            onHoverProvince={handleHoverProvince}
-            onLeaveProvince={handleLeaveProvince}
-            onSelectProvince={handleSelectProvince}
-            svgRef={svgRef}
-            mapContainerRef={mapContainerRef}
-            transform={transform}
-            isDragging={isDragging}
-            isAnimated={isAnimated}
-            onWheel={handleWheel}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onZoomIn={zoomIn}
-            onZoomOut={zoomOut}
-            onReset={handleReset}
-          />
-        </div>
-
-        {/* Floating Hover Tooltip */}
-        <ProvinceTooltip
-          name={hoveredProvince?.name || ""}
-          region={hoveredProvince?.region}
-          productCount={hoveredProductCount}
-          x={hoveredProvince?.x || 0}
-          y={hoveredProvince?.y || 0}
-          visible={
-            hoveredProvince !== null &&
-            !isDragging &&
-            hoveredProvince.id !== selectedProvinceId
-          }
-        />
-      </div>
-
-      {/* =========================================================================
-          RIGHT SIDE: 42–45% Width — CONTENT PANEL (Curated Editorial Showcase)
-          ========================================================================= */}
-      <div className="w-full lg:w-[43%] h-auto lg:h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-visible lg:overflow-hidden bg-white shrink-0">
-        <div className="flex flex-col flex-1 min-h-0">
-          {/* 1. MAIN HEADING (Desktop only — on mobile it sits above the map) */}
-          <h2 className="hidden lg:block font-heading font-bold text-lg sm:text-xl lg:text-[21px] text-haq-ink uppercase leading-snug mb-2.5 shrink-0">
-            {t('home.specialty_map.title', 'HỆ SINH THÁI SẢN PHẨM HAQ FOOD')}
-          </h2>
-
-          {/* 2. REGION NAVIGATION (Desktop only — on mobile it sits above the map) */}
-          <div
-            className="hidden lg:flex items-center gap-6 sm:gap-7 border-b border-haq-border/60 pb-2 mb-3 shrink-0"
-            role="tablist"
-            aria-label={language === 'en' ? 'Region' : language === 'ko' ? '지역' : language === 'zh' ? '区域' : 'Khu vực'}
-          >
-            {[
-              { id: "ALL", label: t('home.specialty_map.regions.all', 'TOÀN QUỐC') },
-              { id: "Miền Bắc", label: t('home.specialty_map.regions.north', 'MIỀN BẮC') },
-              { id: "Miền Trung", label: t('home.specialty_map.regions.central', 'MIỀN TRUNG') },
-              { id: "Miền Nam", label: t('home.specialty_map.regions.south', 'MIỀN NAM') },
-            ].map((r) => {
-              const isActive = selectedRegion === r.id;
-              return (
-                <button
-                  key={r.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => handleSelectRegion(r.id as any)}
-                  className={`relative text-[11px] sm:text-xs tracking-[0.14em] uppercase transition-colors cursor-pointer ${
-                    isActive
-                      ? "text-[#0F5132] font-semibold"
-                      : "text-haq-text-secondary hover:text-haq-ink font-normal"
-                  }`}
-                >
-                  {r.label}
-                  {isActive && (
-                    <span className="absolute -bottom-2 left-0 right-0 h-[1.5px] bg-[#0F5132]" />
-                  )}
-                </button>
-              );
-            })}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 relative z-10">
+        {/* ==================== SECTION HEADER (NỀN XANH CHUẨN STITCH) ==================== */}
+        <div className="pb-6 border-b border-white/10">
+          <div className="max-w-2xl lg:max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[#fe932c] text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3">
+              <Globe className="w-4 h-4 text-[#fe932c]" />
+              <span>Bản Đồ Nguồn Gốc &amp; Hệ Sinh Thái Nông Sản Quốc Gia</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+              HỆ SINH THÁI ĐẶC SẢN &amp;{' '}
+              <span className="bg-gradient-to-r from-[#ffdcc3] via-[#fe932c] to-[#ffd7a0] bg-clip-text text-transparent block sm:inline">
+                BẢN ĐỒ VÙNG NGUYÊN LIỆU
+              </span>
+            </h2>
+            <p className="text-white/80 text-xs sm:text-sm lg:text-base mt-2.5 sm:mt-3 leading-relaxed font-light">
+              Mỗi sản phẩm HAQ Food mang trong mình căn cước địa lý rõ ràng: từ thổ nhưỡng trù phú Tây Ninh, cao nguyên Đồng Nai đến thủ phủ nghiên cứu Hà Nội. Chọn từng vùng để khám phá chuỗi giá trị và quy cách xuất khẩu.
+            </p>
           </div>
 
-          {/* 3. SELECTED REGION / PROVINCE */}
-          <div className="mb-3 shrink-0">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base sm:text-lg font-heading font-bold uppercase tracking-tight text-haq-ink">
-                  {provinceTitle}
-                </h3>
-                {selectedProvinceId && regionBadge && (
-                  <span className="text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-sm bg-[#0F5132]/8 text-[#0F5132] font-medium border border-[#0F5132]/15">
-                    {regionBadge}
-                  </span>
-                )}
-              </div>
+          {/* Region Filter Tabs Toolbar */}
+          <div className="mt-5 sm:mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-[#fe932c] animate-pulse" />
+              <span className="text-xs uppercase font-bold tracking-wider text-white/70">
+                Lọc theo vùng nông sản:
+              </span>
+            </div>
 
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none overscroll-x-contain">
+              {[
+                { id: "ALL", label: "TOÀN QUỐC" },
+                { id: "Miền Bắc", label: "MIỀN BẮC" },
+                { id: "Miền Trung", label: "MIỀN TRUNG" },
+                { id: "Miền Nam", label: "MIỀN NAM - TÂY NAM BỘ" },
+              ].map((r) => {
+                const isActive = selectedRegion === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => handleSelectRegion(r.id as any)}
+                    className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer select-none ${
+                      isActive
+                        ? "bg-gradient-to-r from-[#fe932c] to-[#e07b1a] text-white shadow-lg shadow-[#fe932c]/20"
+                        : "bg-white/10 hover:bg-white/20 text-white/80 hover:text-white"
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ==================== 2 COLUMNS EXHIBITION LAYOUT ==================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 pt-6 sm:pt-10 items-stretch">
+          {/* CỘT TRÁI (5 CỘT): KHUNG BẢN ĐỒ KÍNH NGỌC BÍCH CAO CẤP ĐỒNG BỘ CHUẨN STITCH (DỊU MẮT, KHÔNG CHÓI) */}
+          <div className="lg:col-span-5 bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 border border-white/10 shadow-2xl flex flex-col justify-between relative overflow-hidden group min-h-[460px] sm:min-h-[580px]">
+            {/* Map Tools Bar */}
+            <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 relative z-20">
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#95d3ba] bg-[#064e3b]/50 border border-[#10b981]/30 px-2.5 sm:px-3 py-1.5 rounded-lg shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
+                <span className="font-semibold">Chạm điểm sáng để đổi vùng</span>
+              </div>
               {selectedProvinceId && (
                 <button
                   type="button"
                   onClick={handleClearProvince}
-                  className="text-haq-text-secondary hover:text-haq-ink p-2 -mr-2 min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-md transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132]"
-                  title={language === 'en' ? 'Back to nationwide' : language === 'ko' ? '전국 보기로 돌아가기' : language === 'zh' ? '返回全国视图' : 'Trở lại toàn quốc'}
-                  aria-label={language === 'en' ? 'Deselect province' : language === 'ko' ? '지역 선택 해제' : language === 'zh' ? '取消选择省市' : 'Bỏ chọn tỉnh'}
+                  className="text-xs font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  title="Xem toàn quốc"
                 >
-                  <X className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
+                  ↺ Toàn quốc
                 </button>
               )}
             </div>
-            <p className="text-xs text-haq-text-secondary mt-0.5 line-clamp-2 leading-relaxed font-light">
-              {provinceDesc}
-            </p>
+
+            {/* BẢN ĐỒ TƯƠNG TÁC SVG CỦA USER */}
+            <div className="relative w-full h-[380px] sm:h-[500px] flex items-center justify-center my-2 rounded-2xl overflow-hidden">
+              <InteractiveMap
+                selectedProvinceId={selectedProvinceId}
+                hoveredProvinceId={hoveredProvince?.id ?? null}
+                hasSpecialtiesMap={hasSpecialtiesMap}
+                specialties={specialties}
+                onHoverProvince={handleHoverProvince}
+                onLeaveProvince={handleLeaveProvince}
+                onSelectProvince={handleSelectProvince}
+                svgRef={svgRef}
+                mapContainerRef={mapContainerRef}
+                transform={transform}
+                isDragging={isDragging}
+                isAnimated={isAnimated}
+                onWheel={handleWheel}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onZoomIn={zoomIn}
+                onZoomOut={zoomOut}
+                onReset={handleReset}
+              />
+
+              {/* Floating Hover Tooltip */}
+              <ProvinceTooltip
+                name={hoveredProvince?.name || ""}
+                region={hoveredProvince?.region}
+                productCount={hoveredProductCount}
+                x={hoveredProvince?.x || 0}
+                y={hoveredProvince?.y || 0}
+                visible={
+                  hoveredProvince !== null &&
+                  !isDragging &&
+                  hoveredProvince.id !== selectedProvinceId
+                }
+              />
+            </div>
+
+            {/* Map Footnote */}
+            <div className="pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/70">
+              <span className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#fe932c] animate-ping" />
+                <span className="truncate max-w-[210px] sm:max-w-none">
+                  Vùng đang chọn:{" "}
+                  <strong className="text-white font-bold">{currentSelectedLabel}</strong>
+                </span>
+              </span>
+              {selectedProvinceId && (
+                <button
+                  type="button"
+                  onClick={handleClearProvince}
+                  className="text-xs text-[#fe932c] hover:underline cursor-pointer font-semibold shrink-0"
+                >
+                  Xem toàn quốc
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* 4. PRODUCT SHOWCASE (Editorial 4:3 Vertical Cards) */}
-          <div className="w-full my-auto py-1">
-            <AnimatePresence mode="wait">
-              {featuredProduct ? (
-                <motion.div
-                  key={selectedProvinceId || selectedRegion}
-                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
-                  animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
-                  transition={{ duration: shouldReduceMotion ? 0.05 : 0.15 }}
-                  className="w-full"
-                >
-                  {showcaseProducts.length === 2 ? (
-                    /* 2 PRODUCTS: 2 equal-width columns side by side */
-                    <div className="grid grid-cols-2 gap-2.5 sm:gap-4 w-full">
-                      {showcaseProducts.map((prod, idx) => (
-                        <Link
-                          key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                          to={resolveProductLink(prod)}
-                          onClick={() => handleProductClick(prod)}
-                          data-product-click="true"
-                          data-product-id={prod.productId || prod.slug}
-                          data-product-slug={prod.slug || prod.productId}
-                          data-product-name={prod.name}
-                          data-product-canonical-name={prod.canonical_name || prod.name}
-                          data-product-category={prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                          data-product-location={idx === 0 ? "specialty_map_featured" : "specialty_map_supporting"}
-                          className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
-                        >
-                          {/* Khung ảnh chuẩn 4:3 */}
-                          <div className="w-full aspect-[4/3] bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2.5 sm:p-3 flex items-center justify-center overflow-hidden relative shrink-0">
-                            {prod.is_pinned && (
-                              <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                                <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
-                                {flagshipBadge}
-                              </span>
-                            )}
-                            {prod.image ? (
-                              <img
-                                src={prod.image}
-                                alt={prod.name}
-                                width="320"
-                                height="240"
-                                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                loading="lazy"
-                                decoding="async"
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLElement).style.display = 'none';
-                                  const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
-                                  if (fallback) (fallback as HTMLElement).classList.remove('hidden');
-                                }}
-                              />
-                            ) : null}
-                            <span aria-hidden="true" className={`product-fallback-icon text-2xl sm:text-3xl opacity-60 ${prod.image ? 'hidden' : ''}`}>
-                              {idx === 0 ? '🌾' : '🌿'}
-                            </span>
-                          </div>
+          {/* CỘT PHẢI (7 CỘT): TERROIR STORY BOX + 3 THẺ SẢN PHẨM ĐẶC SẢN CHUẨN STITCH */}
+          <div className="lg:col-span-7 flex flex-col justify-between gap-6">
+            {/* 1. TERROIR STORY BOX */}
+            <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-white/15 relative overflow-hidden shadow-2xl">
+              <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight uppercase leading-snug">
+                {terroirData.title}
+              </h3>
+              <p className="text-xs sm:text-base text-white/80 leading-relaxed mt-2 sm:mt-2.5 font-light">
+                {terroirData.desc}
+              </p>
+            </div>
 
-                          {/* Thông tin thẻ */}
-                          <div className="min-w-0 pt-2 sm:pt-2.5 flex flex-col flex-1 justify-between">
-                            <div>
-                              <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                              </span>
-                              <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
-                                {prod.name}
-                              </h4>
-                            </div>
-                            <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
-                              <span className="whitespace-nowrap">{viewDetailText}</span>
-                              <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  ) : showcaseProducts.length === 3 ? (
-                    /* 3 PRODUCTS: 1 Featured top + 2 Supporting below on mobile (< sm), 3 equal columns on tablet & desktop */
-                    <div className="w-full space-y-2.5 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3 lg:gap-3.5 xl:gap-4">
-                      {/* Featured (Card 1) */}
+            {/* 2. 3 FEATURED PRODUCTS: TOUCH-SWIPE ROW ON MOBILE, 3-COL GRID ON SM+ */}
+            <div className="relative">
+              {displayProducts.length > 0 ? (
+                <div className="flex sm:grid sm:grid-cols-3 gap-3.5 sm:gap-4 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 snap-x snap-mandatory scrollbar-none overscroll-x-contain -mx-1 px-1 sm:mx-0 sm:px-0">
+                  {displayProducts.map((prod, idx) => {
+                    const prodImg =
+                      prod.image || "/assets/stitch/product_showcase_1.png";
+                    const prodProvName =
+                      prod.provinceName || activeProvinceInfo?.name || "";
+                    const catName = prod.category || "HAQ FOOD";
+                    const weightBadge = prod.weight ? String(prod.weight) : "";
+
+                    return (
                       <Link
-                        to={resolveProductLink(showcaseProducts[0])}
-                        onClick={() => handleProductClick(showcaseProducts[0])}
-                        data-product-click="true"
-                        data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
-                        data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
-                        data-product-name={showcaseProducts[0].name}
-                        data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                        data-product-category={showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                        data-product-location="specialty_map_featured"
-                        className="flex sm:flex-col items-center sm:items-stretch gap-3 sm:gap-0 justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-2.5 lg:p-2 xl:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
+                        key={prod.productId || prod.slug || idx}
+                        to={resolveProductLink(prod)}
+                        onClick={() => handleProductClick(prod)}
+                        className="group flex flex-col bg-[#011e16] rounded-2xl overflow-hidden border border-white/15 hover:border-[#fe932c]/60 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-white focus:outline-none w-[78vw] max-w-[280px] sm:w-auto sm:max-w-none shrink-0 sm:shrink snap-center"
                       >
-                        <div className="w-28 sm:w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2 lg:p-2 xl:p-3 flex items-center justify-center overflow-hidden relative">
-                          {showcaseProducts[0].is_pinned && (
-                            <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                              <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
-                              {flagshipBadge}
-                            </span>
+                        {/* Image Box 1:1 Aspect Ratio (Square) */}
+                        <div className="relative w-full aspect-square bg-white/[0.04] overflow-hidden flex items-center justify-center">
+                          <img
+                            alt={prod.name}
+                            src={prodImg}
+                            width="300"
+                            height="300"
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src =
+                                "/assets/stitch/product_showcase_1.png";
+                            }}
+                          />
+                          {weightBadge && (
+                            <div className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 z-10 pointer-events-none">
+                              <span className="inline-flex items-center bg-black/60 backdrop-blur-sm text-white font-heading text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full border border-white/20 shadow-xs">
+                                {weightBadge}
+                              </span>
+                            </div>
                           )}
-                          {showcaseProducts[0].image ? (
-                            <img
-                              src={showcaseProducts[0].image}
-                              alt={showcaseProducts[0].name}
-                              width="320"
-                              height="240"
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                              decoding="async"
-                              onError={(e) => {
-                                (e.currentTarget as HTMLElement).style.display = 'none';
-                                const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
-                                if (fallback) (fallback as HTMLElement).classList.remove('hidden');
-                              }}
-                            />
-                          ) : null}
-                          <span aria-hidden="true" className={`product-fallback-icon text-2xl sm:text-3xl opacity-60 ${showcaseProducts[0].image ? 'hidden' : ''}`}>
-                            🌾
-                          </span>
                         </div>
-                        <div className="flex-1 min-w-0 self-stretch sm:self-auto sm:pt-2 flex flex-col justify-between">
+
+                        {/* Content Details */}
+                        <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between bg-[#011e16]">
                           <div>
-                            <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                              {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                            </span>
-                            <h4 className="font-heading font-bold text-xs sm:text-xs lg:text-[11px] xl:text-xs 2xl:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-3 min-h-[2.8rem] sm:min-h-[3rem] lg:min-h-[3.2rem] xl:min-h-[3.4rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
-                              {showcaseProducts[0].name}
+                            <div className="flex items-center justify-between gap-1 mb-1.5">
+                              <span className="text-[10px] sm:text-[11px] font-heading font-bold text-[#fe932c] uppercase tracking-wider truncate">
+                                {catName}
+                              </span>
+                              {prodProvName && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] text-white/80 font-medium bg-white/10 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0 border border-white/10">
+                                  <MapPin className="w-2.5 h-2.5 shrink-0 text-[#fe932c]" />
+                                  <span className="truncate max-w-[70px] sm:max-w-none">
+                                    {prodProvName}
+                                  </span>
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="font-heading font-bold text-xs sm:text-sm text-white group-hover:text-[#fe932c] transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem]">
+                              {prod.name}
                             </h4>
                           </div>
-                          <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
-                            <span className="whitespace-nowrap">{viewDetailText}</span>
-                            <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
+
+                          {/* Footer Link */}
+                          <div className="mt-3 pt-3 flex items-center justify-between border-t border-white/10">
+                            <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-heading font-bold text-[#fe932c] group-hover:gap-2 transition-all">
+                              <span>
+                                {language === "en"
+                                  ? "View details"
+                                  : language === "ko"
+                                  ? "상세 보기"
+                                  : language === "zh"
+                                  ? "查看详情"
+                                  : "Xem chi tiết"}
+                              </span>
+                              <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                            </span>
                           </div>
                         </div>
                       </Link>
-
-                      {/* Supporting (Cards 2 & 3) — 2 cols on mobile, unwrapped on tablet & desktop */}
-                      <div className="grid grid-cols-2 gap-2.5 sm:contents">
-                        {showcaseProducts.slice(1).map((prod, idx) => (
-                          <Link
-                            key={prod.productId || prod.slug || `${prod.name}-${idx}`}
-                            to={resolveProductLink(prod)}
-                            onClick={() => handleProductClick(prod)}
-                            data-product-click="true"
-                            data-product-id={prod.productId || prod.slug}
-                            data-product-slug={prod.slug || prod.productId}
-                            data-product-name={prod.name}
-                            data-product-canonical-name={prod.canonical_name || prod.name}
-                            data-product-category={prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                            data-product-location="specialty_map_supporting"
-                            className="flex flex-col justify-between bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-2.5 lg:p-2 xl:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
-                          >
-                            <div className="w-full aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2 lg:p-2 xl:p-3 flex items-center justify-center overflow-hidden relative">
-                              {prod.is_pinned && (
-                                <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                                  <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
-                                  {flagshipBadge}
-                                </span>
-                              )}
-                              {prod.image ? (
-                                <img
-                                  src={prod.image}
-                                  alt={prod.name}
-                                  width="280"
-                                  height="210"
-                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                  loading="lazy"
-                                  decoding="async"
-                                  onError={(e) => {
-                                    (e.currentTarget as HTMLElement).style.display = 'none';
-                                    const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
-                                    if (fallback) (fallback as HTMLElement).classList.remove('hidden');
-                                  }}
-                                />
-                              ) : null}
-                              <span aria-hidden="true" className={`product-fallback-icon text-xl sm:text-2xl opacity-60 ${prod.image ? 'hidden' : ''}`}>
-                                🌿
-                              </span>
-                            </div>
-                            <div className="min-w-0 pt-2 sm:pt-2 flex flex-col flex-1 justify-between">
-                              <div>
-                                <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                                  {prod.category || (prod.is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                                </span>
-                                <h4 className="font-heading font-bold text-xs sm:text-xs lg:text-[11px] xl:text-xs 2xl:text-sm text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-3 min-h-[2.8rem] sm:min-h-[3rem] lg:min-h-[3.2rem] xl:min-h-[3.4rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
-                                  {prod.name}
-                                </h4>
-                              </div>
-                              <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
-                                <span className="whitespace-nowrap">{viewDetailText}</span>
-                                <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
-                              </div>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    /* 1 PRODUCT */
-                    <Link
-                      to={resolveProductLink(showcaseProducts[0])}
-                      onClick={() => handleProductClick(showcaseProducts[0])}
-                      data-product-click="true"
-                      data-product-id={showcaseProducts[0].productId || showcaseProducts[0].slug}
-                      data-product-slug={showcaseProducts[0].slug || showcaseProducts[0].productId}
-                      data-product-name={showcaseProducts[0].name}
-                      data-product-canonical-name={showcaseProducts[0].canonical_name || showcaseProducts[0].name}
-                      data-product-category={showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                      data-product-location="specialty_map_single"
-                      className="flex flex-row items-center gap-3.5 bg-white rounded-xl border border-haq-border/80 hover:border-[#0F5132]/40 p-2.5 sm:p-3 transition-all duration-200 shadow-2xs hover:shadow-xs group max-w-md w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-2"
-                    >
-                      <div className="w-28 sm:w-36 aspect-[4/3] shrink-0 bg-[#FAF9F6] rounded-xl border border-haq-border/40 p-2 sm:p-2.5 lg:p-3 flex items-center justify-center overflow-hidden relative">
-                        {showcaseProducts[0].is_pinned && (
-                          <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 bg-[#0F5132] text-white text-[8px] sm:text-[9px] font-semibold px-1.5 sm:px-2 py-0.5 rounded shadow-2xs">
-                            <Pin className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-[#16A34A] text-[#16A34A]" aria-hidden="true" />
-                            {flagshipBadge}
-                          </span>
-                        )}
-                        {showcaseProducts[0].image ? (
-                          <img
-                            src={showcaseProducts[0].image}
-                            alt={showcaseProducts[0].name}
-                            width="180"
-                            height="135"
-                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                            decoding="async"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fallback = e.currentTarget.parentElement?.querySelector('.product-fallback-icon');
-                              if (fallback) (fallback as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span aria-hidden="true" className={`product-fallback-icon text-2xl opacity-60 ${showcaseProducts[0].image ? 'hidden' : ''}`}>
-                          🌾
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0 self-stretch flex flex-col justify-between">
-                        <div>
-                          <span className="text-[10px] tracking-wider uppercase text-[#0F5132] font-semibold block truncate">
-                            {showcaseProducts[0].category || (showcaseProducts[0].is_pinned ? flagshipCategoryText : defaultCategoryText)}
-                          </span>
-                          <h4 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors line-clamp-2 min-h-[2.5rem] lg:min-h-[2.75rem] mt-0.5 leading-snug tracking-tight break-words overflow-hidden">
-                            {showcaseProducts[0].name}
-                          </h4>
-                        </div>
-                        <div className="mt-2 pt-1.5 sm:pt-2 border-t border-haq-border/40 flex items-center justify-between text-[10px] sm:text-[11px] lg:text-xs font-heading font-bold text-[#0F5132] shrink-0">
-                          <span className="whitespace-nowrap">{viewDetailText}</span>
-                          <span className="text-xs group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
-                        </div>
-                      </div>
-                    </Link>
-                  )}
-                </motion.div>
+                    );
+                  })}
+                </div>
               ) : (
-                <motion.div
-                  key="empty-state"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full flex flex-col items-center justify-center p-6 bg-[#FAF9F6] border border-haq-border/60 rounded-xl text-center my-auto"
-                >
-                  <span className="text-2xl mb-2" aria-hidden="true">🌱</span>
-                  <p className="font-heading font-bold text-sm text-haq-ink mb-1">
-                    {language === 'en'
-                      ? `No products listed in ${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || 'this province'} yet`
-                      : language === 'ko'
-                      ? `${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || '해당 지역'}에는 아직 등록된 제품이 없습니다`
-                      : language === 'zh'
-                      ? `${activeSpecialty?.provinceLabel || activeProvinceInfo?.name || '该地区'}暂未上架直营特色产品`
-                      : `Chưa có sản phẩm tại ${activeProvinceInfo?.name || activeSpecialty?.provinceLabel || "địa phương này"}`}
+                <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 text-center backdrop-blur-md">
+                  <p className="text-sm sm:text-base text-white/80 font-medium">
+                    {language === "en"
+                      ? `HAQ Food is currently surveying local specialties in ${currentSelectedLabel}. Contact us for OEM/ODM cooperation.`
+                      : language === "ko"
+                      ? `HAQ Food는 현재 ${currentSelectedLabel}의 특산품을 발굴 및 기획 중입니다.`
+                      : language === "zh"
+                      ? `HAQ Food 正在对 ${currentSelectedLabel} 特色产区进行深度调研开发，敬请期待。`
+                      : `HAQ Food đang tiếp tục khảo sát và liên kết phát triển vùng nguyên liệu đặc sản tại ${currentSelectedLabel}.`}
                   </p>
-                  <p className="text-xs text-haq-text-secondary max-w-xs leading-relaxed font-light">
-                    {language === 'en'
-                      ? 'HAQ FOOD is currently researching and developing local agricultural partnerships in this region.'
-                      : language === 'ko'
-                      ? 'HAQ FOOD는 현재 이 지역의 농산물 연계 생산 라인을 지속적으로 조사 및 개발하고 있습니다.'
-                      : language === 'zh'
-                      ? 'HAQ FOOD 正在对该省市的特色农产品供应链进行实地考察与联合开发。'
-                      : 'HAQ FOOD đang trong quá trình khảo sát và phát triển các dòng sản phẩm liên kết tại địa phương này.'}
-                  </p>
-                </motion.div>
+                  <Link
+                    to={language === "en" ? "/en/contact" : "/lien-he"}
+                    className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-full bg-[#fe932c] hover:bg-[#e07f20] text-white font-bold text-xs uppercase tracking-wider transition-colors"
+                  >
+                    <span>{language === "en" ? "OEM/ODM Cooperation" : "Liên hệ hợp tác vùng nguyên liệu"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               )}
-            </AnimatePresence>
-          </div>
-        </div>
 
-        {/* 5. ONLY ONE CTA AT BOTTOM */}
-        <div className="pt-2.5 mt-2 border-t border-haq-border/60 flex items-center justify-end shrink-0">
-          <Link
-            to={(() => {
-              const base = language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham';
-              return selectedProvinceId ? `${base}?province=${selectedProvinceId}` : base;
-            })()}
-            className="inline-flex items-center gap-1.5 text-xs font-heading font-bold text-[#0F5132] hover:text-[#16A34A] uppercase tracking-wider transition-colors group py-2 sm:py-1 px-1 -mx-1 min-h-[40px] sm:min-h-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5132] focus-visible:ring-offset-1 rounded-sm"
-          >
-            <span>{t('home.specialty_map.cta', 'XEM TẤT CẢ SẢN PHẨM')}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-          </Link>
+              {/* Mobile Swipe Indicators Cue */}
+              {displayProducts.length > 0 && (
+                <div className="sm:hidden flex items-center justify-between text-[11px] text-white/50 px-1 pt-1.5">
+                  <span className="flex items-center gap-1">
+                    <span>👈 Vuốt ngang xem {displayProducts.length} sản phẩm 👉</span>
+                  </span>
+                  <span className="font-mono text-white/40">{displayProducts.length} đặc sản</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

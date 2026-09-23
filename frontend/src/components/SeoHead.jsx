@@ -218,6 +218,11 @@ export default function SeoHead() {
         setMetaTag('property', 'og:url', pageUrl)
         setMetaTag('property', 'og:image', fallbackImage)
 
+        // Open Graph Locale
+        const localeMap = { vi: 'vi_VN', en: 'en_US', ko: 'ko_KR', zh: 'zh_CN' }
+        const currentLocale = localeMap[language] || 'vi_VN'
+        setMetaTag('property', 'og:locale', currentLocale)
+
         setMetaTag('name', 'twitter:card', 'summary_large_image')
         setMetaTag('name', 'twitter:title', pageTitle)
         setMetaTag('name', 'twitter:description', metaDesc)

@@ -109,6 +109,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       ref={mapContainerRef}
       data-map-viewport="true"
       data-consume-wheel="true"
+      data-zoomed={transform.scale > 1.05 ? "true" : "false"}
     >
       <svg
         ref={svgRef}

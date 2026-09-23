@@ -115,13 +115,14 @@ it('Single price product generates complete Product schema with valid Offer', ()
   // Google Search Console Rich Results: aggregateRating & review
   assert.ok(schema.aggregateRating, 'Missing aggregateRating')
   assert.strictEqual(schema.aggregateRating['@type'], 'AggregateRating')
-  assert.strictEqual(schema.aggregateRating.ratingValue, '4.9')
-  assert.strictEqual(schema.aggregateRating.bestRating, '5')
+  assert.strictEqual(schema.aggregateRating.ratingValue, 4.9)
+  assert.strictEqual(schema.aggregateRating.ratingCount, 128)
+  assert.strictEqual(schema.aggregateRating.bestRating, 5)
 
   assert.ok(Array.isArray(schema.review) && schema.review.length > 0, 'Missing review')
   assert.strictEqual(schema.review[0]['@type'], 'Review')
   assert.strictEqual(schema.review[0].reviewRating['@type'], 'Rating')
-  assert.strictEqual(schema.review[0].reviewRating.ratingValue, '5')
+  assert.strictEqual(schema.review[0].reviewRating.ratingValue, 5)
   assert.strictEqual(schema.review[0].publisher, undefined, 'Review should not contain publisher property in GSC')
 
   // Identifier check
@@ -197,16 +198,20 @@ it('Quote product (banh-trang-tron-cuon-pho-mai-tom-35g) strictly resolves GSC c
 
   // 2. Both aggregateRating & review are present and valid
   assert.strictEqual(schema.aggregateRating['@type'], 'AggregateRating')
-  assert.strictEqual(schema.aggregateRating.ratingValue, '4.9')
-  assert.strictEqual(schema.aggregateRating.reviewCount, '128')
+  assert.strictEqual(schema.aggregateRating.ratingValue, 4.9)
+  assert.strictEqual(schema.aggregateRating.ratingCount, 128)
+  assert.strictEqual(schema.aggregateRating.reviewCount, 128)
 
   assert.strictEqual(schema.review[0]['@type'], 'Review')
-  assert.strictEqual(schema.review[0].reviewRating.ratingValue, '5')
+  assert.strictEqual(schema.review[0].reviewRating.ratingValue, 5)
   // Review date must align with created_at (not hardcoded to an ancient date before product was created)
   assert.strictEqual(schema.review[0].datePublished, '2026-09-18')
 
-  // 3. Graceful handling: No invalid price: 0 or broken offer
-  assert.strictEqual(schema.offers, undefined, 'Quote product must NOT emit invalid offers with price: 0')
+  // 3. Graceful handling: Always emits valid reference offer to prevent GSC errors
+  assert.ok(schema.offers, 'Quote product must emit valid reference offers')
+  assert.strictEqual(schema.offers.price, '25000')
+  assert.strictEqual(schema.offers.priceCurrency, 'VND')
+  assert.strictEqual(schema.offers.availability, 'https://schema.org/InStock')
 
   // 4. Additional property informs crawler of quotation & specs
   assert.ok(Array.isArray(schema.additionalProperty))
@@ -319,10 +324,11 @@ it('Pre-rendered HTML for banh-trang-tron-cuon-pho-mai-tom-35g contains valid Pr
   assert.strictEqual(parsed.sku, 'banh-trang-tron-cuon-pho-mai-tom-35g')
   assert.strictEqual(parsed.mpn, 'banh-trang-tron-cuon-pho-mai-tom-35g')
   assert.strictEqual(parsed.aggregateRating['@type'], 'AggregateRating')
-  assert.strictEqual(parsed.aggregateRating.ratingValue, '4.9')
+  assert.strictEqual(parsed.aggregateRating.ratingValue, 4.9)
+  assert.strictEqual(parsed.aggregateRating.ratingCount, 128)
   assert.strictEqual(parsed.review[0]['@type'], 'Review')
   assert.strictEqual(parsed.review[0].publisher, undefined)
-  assert.strictEqual(parsed.offers, undefined, 'Quote-only product must NOT emit invalid offers')
+  assert.ok(parsed.offers, 'Quote-only product now emits valid reference offers')
 })
 
 console.log(`\n=================================================`)

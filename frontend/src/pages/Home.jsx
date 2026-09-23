@@ -1,58 +1,46 @@
 import React from 'react'
 import StickyNav from '../components/StickyNav'
 import Hero from '../components/Hero'
+import TrustMarquee from '../components/TrustMarquee'
 import Products from '../components/Products'
-import BrandStatement from '../components/BrandStatement'
-import QuickStats from '../components/QuickStats'
-import BrandVisualSection from '../components/BrandVisualSection'
-import CtaBanner from '../components/CtaBanner'
+import DbFeaturedProducts from '../components/flagship/DbFeaturedProducts'
+import FlagshipOemCapabilities from '../components/flagship/FlagshipOemCapabilities'
+import PartnersScroll from '../components/PartnersScroll'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
-import { useMagneticSectionScroll } from '../hooks/useMagneticSectionScroll'
 
 export default function Home() {
-  // Initialize Progressive Magnetic / Resistance Section Scroll
-  useMagneticSectionScroll({ headerHeight: 72 })
-
   return (
-    <div className="min-h-screen bg-haq-cream text-haq-text-primary font-sans flex flex-col relative selection:bg-haq-red selection:text-white">
-      {/* 0. Sticky Minimal Header */}
+    <div className="min-h-screen bg-[#FAF9F6] text-[#11261B] font-body flex flex-col relative selection:bg-[#16A34A] selection:text-white scroll-smooth">
+      {/* 1. Thanh điều hướng chính */}
       <StickyNav />
 
-      {/* Floating Quick Action Contacts */}
+      {/* 2. Thanh liên hệ nhanh nổi */}
       <FloatingContactBar />
 
-      <main className="flex-1">
-        {/* 1. Hero Section (Cinematic Visual Impact) */}
+      <main className="flex-1 w-full overflow-x-hidden">
+        {/* 3. Banner Hero của User (Carousel ảnh thật kết hợp thiết kế Stitch) */}
         <section data-section="hero" className="pt-[72px] lg:pt-0">
           <Hero />
         </section>
 
-        {/* 2. Products / Fullscreen Vietnam Specialty Map */}
+        {/* 4. Dải Tín Hiệu Tín Nhiệm & Chứng Chỉ ISO */}
+        <TrustMarquee />
+
+        {/* 5. Bản Đồ Hệ Sinh Thái Nông Sản & Vùng Nguyên Liệu GIS Bố Cục Chuẩn Stitch */}
         <Products />
 
-        {/* 3. About Section (Concise Brand Teaser) */}
-        <section data-section="brand-statement">
-          <BrandStatement />
-        </section>
+        {/* 6. Sản Phẩm Nổi Bật Lấy Từ Database Thật & Banner Tải Catalog 2025 */}
+        <DbFeaturedProducts />
 
-        {/* 4. Quality & Capability (3 Core Pillars) */}
-        <section data-section="quick-stats">
-          <QuickStats />
-        </section>
+        {/* 7. 4 Trụ Cột Năng Lực OBM & ODM (Chuẩn Stitch) */}
+        <FlagshipOemCapabilities />
 
-        {/* 5. International & Brand Visual ("FROM VIETNAM TO ASIA") */}
-        <section data-section="brand-visual">
-          <BrandVisualSection />
-        </section>
-
-        {/* 6. Final Partnership CTA */}
-        <section data-section="cta-banner">
-          <CtaBanner />
-        </section>
+        {/* 8. Dải Đối Tác Chuỗi Siêu Thị Bán Lẻ */}
+        <PartnersScroll />
       </main>
 
-      {/* Corporate Footer */}
+      {/* 9. Chân Trang Doanh Nghiệp */}
       <footer data-section="footer">
         <Footer />
       </footer>

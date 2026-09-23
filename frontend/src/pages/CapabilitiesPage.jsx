@@ -4,7 +4,20 @@ import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
 import Certifications from '../components/Certifications'
-import { Play } from 'lucide-react'
+import {
+  Play,
+  ThermometerSnowflake,
+  Droplets,
+  Zap,
+  Wind,
+  CheckCircle2,
+  Sparkles,
+  Layers,
+  FileCheck2,
+  Lock,
+  Check,
+  ArrowRight,
+} from 'lucide-react'
 
 import heroFactoryImg from '../assets/kiem-soat-chat-luong.webp'
 import factoryHqImg from '../assets/may-tron-banh-trang.webp'
@@ -304,9 +317,448 @@ export default function CapabilitiesPage() {
         </section>
 
         {/* ──────────────────────────────────────────
+            THÔNG SỐ KỸ THUẬT DÂY CHUYỀN SẤY GIÒN KHÉP KÍN
+        ────────────────────────────────────────── */}
+        <section className="py-20 sm:py-24 bg-[#FAF8F5] border-y border-[#E5DECF]" id="cong-nghe-say-gion">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <Reveal>
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-[#D5CDBC] gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-2 mb-2">
+                    <span className="w-5 h-[2px] bg-[#D97706]" />
+                    <span className="font-heading text-xs font-bold text-[#D97706] uppercase tracking-[0.2em]">
+                      {en ? 'CORE DRYING TECHNOLOGY' : ko ? '핵심 건조 기술 규격' : zh ? '核心烘干工艺参数' : 'CÔNG NGHỆ SẤY GIÒN ĐỘC QUYỀN'}
+                    </span>
+                  </div>
+                  <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 tracking-tight">
+                    {en 
+                      ? 'Closed-Loop Crispy Dehydration Technical Specifications' 
+                      : ko 
+                      ? '밀폐형 바삭 열풍·저온 건조 라인 핵심 기술 제원' 
+                      : zh 
+                      ? '全封闭式酥脆干燥流水线专业技术规格' 
+                      : 'Thông số kỹ thuật dây chuyền sấy giòn khép kín'}
+                  </h2>
+                </div>
+                <p className="max-w-md text-xs sm:text-sm text-slate-600 font-serif italic">
+                  {en
+                    ? 'Engineered to maximize crispy texture, maintain natural aroma, and ensure zero harmful frying oil residues.'
+                    : ko
+                    ? '바삭한 식감을 극대화하고 천연 풍미를 보존하며 잔류 기름 걱정 없는 친환경 저온·열풍 건조 시스템입니다.'
+                    : zh
+                    ? '精密控制温湿度与热风循环，极致激发酥脆口感，全面杜绝劣质高温煎炸油残留。'
+                    : 'Thiết kế tối ưu độ giòn rụm, giữ nguyên hương vị tự nhiên và kiên quyết loại bỏ dầu chiên tồn dư độc hại.'}
+                </p>
+              </div>
+            </Reveal>
+
+            {/* 4 Technical Metric Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Spec 1: Dải nhiệt độ */}
+              <Reveal delay={60}>
+                <div className="bg-white border border-[#D5CDBC] p-6 sm:p-7 rounded-xl shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#D97706] mb-5 group-hover:scale-110 transition-transform">
+                      <ThermometerSnowflake className="w-6 h-6" />
+                    </div>
+                    <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B45309]">
+                      {en ? 'TEMPERATURE CONTROL' : ko ? '정밀 제어 온도' : zh ? '烘烤干燥温区' : 'DẢI NHIỆT ĐỘ KIỂM SOÁT'}
+                    </div>
+                    <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 font-mono">
+                      45°C - 85°C
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      {en
+                        ? 'Soft convective low-temperature drying preserves natural colors, nutrients, and prevents caramelization or acrylamide risk.'
+                        : ko
+                        ? '온화한 저온 대류 건조 방식으로 고유 색상과 영양소를 보존하며 타거나 아크릴아마이드가 발생하는 것을 방지합니다.'
+                        : zh
+                        ? '低温微风对流干燥，有效锁住天然色泽与活性营养，避免高温焦化或有害丙烯酰胺产生。'
+                        : 'Sấy đối lưu tuần hoàn nhiệt thấp giữ trọn màu sắc tự nhiên, vi chất dinh dưỡng và chống biến tính cháy cạnh.'}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-[#064E3B] font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{en ? 'Zero residual oil' : ko ? '무잔류 튀김유' : zh ? '非高温油炸' : 'Không chiên ngập dầu'}</span>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Spec 2: Độ ẩm */}
+              <Reveal delay={120}>
+                <div className="bg-white border border-[#D5CDBC] p-6 sm:p-7 rounded-xl shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="w-12 h-12 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#064E3B] mb-5 group-hover:scale-110 transition-transform">
+                      <Droplets className="w-6 h-6" />
+                    </div>
+                    <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#064E3B]">
+                      {en ? 'FINAL MOISTURE RATE' : ko ? '완제품 수분율' : zh ? '成品含水率指标' : 'ĐỘ ẨM THÀNH PHẨM'}
+                    </div>
+                    <div className="text-3xl sm:text-4xl font-extrabold text-[#064E3B] mt-2 font-mono">
+                      &lt; 3.0%
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      {en
+                        ? 'Ultra-low moisture threshold suppresses microbiological growth, achieving 9-12 months shelf-life without chemical preservatives.'
+                        : ko
+                        ? '3.0% 미만의 극저수분율로 미생물 번식을 차단하여 방부제 없이 9~12개월의 유통기한을 확보합니다.'
+                        : zh
+                        ? '极限控制含水率低于 3.0%，彻底抑制霉菌与微生物滋生，无需添加化学防腐剂即达 9-12 个月保质期。'
+                        : 'Độ ẩm siêu thấp dưới 3% ngăn chặn triệt để nấm mốc phát triển, đảm bảo hạn sử dụng 9 - 12 tháng không cần chất bảo quản.'}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-[#064E3B] font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{en ? '9 - 12 months shelf-life' : ko ? '유통기한 9~12개월' : zh ? '9-12个月常温货架期' : 'Bảo quản tự nhiên 9-12 tháng'}</span>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Spec 3: Công suất */}
+              <Reveal delay={180}>
+                <div className="bg-white border border-[#D5CDBC] p-6 sm:p-7 rounded-xl shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="w-12 h-12 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-[#D97706] mb-5 group-hover:scale-110 transition-transform">
+                      <Zap className="w-6 h-6" />
+                    </div>
+                    <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B45309]">
+                      {en ? 'RATED DAILY CAPACITY' : ko ? '일일 생산 처리량' : zh ? '设计日产能' : 'CÔNG SUẤT ĐỊNH MỨC'}
+                    </div>
+                    <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 font-mono">
+                      10 - 15 <span className="text-base font-normal text-slate-500 font-sans">tấn/ngày</span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      {en
+                        ? 'Multi-tiered continuous drying tunnels operating 24/7 to satisfy nationwide retail replenishment and export volume.'
+                        : ko
+                        ? '24시간 연속 가동 다단식 건조 터널로 전국 대형 유통망 납품과 대규모 수출 컨테이너 물량을 안정 공급합니다.'
+                        : zh
+                        ? '多层连续式自动化干燥隧道 24/7 稳定运行，高效满足全国商超快消补货与大宗海外货柜出口需求。'
+                        : 'Buồng sấy liên hoàn nhiều tầng vận hành 24/7 đáp ứng đồng thời đơn hàng bán lẻ toàn quốc và các lô hàng container xuất khẩu.'}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-[#064E3B] font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{en ? 'Continuous supply capability' : ko ? '대용량 상시 공급' : zh ? '大宗订单持续供应' : 'Cung ứng liên tục số lượng lớn'}</span>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Spec 4: Phòng sạch */}
+              <Reveal delay={240}>
+                <div className="bg-white border border-[#D5CDBC] p-6 sm:p-7 rounded-xl shadow-xs hover:shadow-md transition-all flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="w-12 h-12 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#064E3B] mb-5 group-hover:scale-110 transition-transform">
+                      <Wind className="w-6 h-6" />
+                    </div>
+                    <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#064E3B]">
+                      {en ? 'CLEANROOM RATING' : ko ? '클린룸 청정 규격' : zh ? '无尘洁净车间等级' : 'TIÊU CHUẨN PHÒNG SẠCH'}
+                    </div>
+                    <div className="text-2xl sm:text-3xl font-extrabold text-[#064E3B] mt-2 font-mono">
+                      ISO Class 8
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      {en
+                        ? 'HEPA H14 positive pressure air filtration with automated UV-C sterilization for clean, sterile packaging environment.'
+                        : ko
+                        ? 'HEPA H14 필터를 통한 양압 공조 시스템과 UV-C 자외선 살균으로 멸균 상태의 포장 환경을 유지합니다.'
+                        : zh
+                        ? '采用 HEPA H14 高效正压空气过滤系统并结合 UV-C 紫外线杀菌，全面保障无菌作业环境。'
+                        : 'Hệ thống cấp khí tươi màng lọc HEPA H14 áp suất dương kết hợp đèn diệt khuẩn tia cực tím UV-C trước khi đóng gói.'}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-[#064E3B] font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{en ? 'ISO 14644-1 & HACCP' : ko ? 'ISO 14644-1 및 HACCP' : zh ? 'ISO 14644-1 与 HACCP' : 'ISO 14644-1 & HACCP'}</span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* ──────────────────────────────────────────
             4. TIÊU CHUẨN XƯỞNG & BẢO CHỨNG CHẤT LƯỢNG
         ────────────────────────────────────────── */}
         <Certifications />
+
+        {/* ──────────────────────────────────────────
+            4 TRỤ CỘT NĂNG LỰC GIA CÔNG OEM / ODM
+        ────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-white border-b border-haq-border" id="nang-luc-oem-odm">
+          <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
+            <Reveal>
+              <div className="max-w-3xl mb-12 sm:mb-16">
+                <div className="inline-flex items-center gap-2 mb-3">
+                  <div className="h-px w-6 bg-[#064E3B]" />
+                  <span className="font-heading text-xs font-bold text-[#064E3B] uppercase tracking-[0.2em]">
+                    {en ? 'COMPREHENSIVE OEM / ODM' : ko ? 'OEM / ODM 종합 제조 역량' : zh ? '全方位 OEM / ODM 代工实力' : 'NĂNG LỰC GIA CÔNG TOÀN DIỆN'}
+                  </span>
+                </div>
+                <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug">
+                  {en ? (
+                    <>Turnkey OEM / ODM <span className="text-[#064E3B]">4-Pillar Solutions</span></>
+                  ) : ko ? (
+                    <>OEM / ODM 맞춤 위탁 제조 <span className="text-[#064E3B]">4대 핵심 기둥</span></>
+                  ) : zh ? (
+                    <>OEM / ODM 贴牌代工 <span className="text-[#064E3B]">4大核心支柱</span></>
+                  ) : (
+                    <>4 Trụ cột giải pháp gia công <span className="text-[#064E3B]">OEM / ODM trọn gói</span></>
+                  )}
+                </h2>
+                <p className="text-sm sm:text-base text-haq-text-secondary mt-4 leading-relaxed max-w-2xl">
+                  {en
+                    ? 'From exclusive formula R&D, versatile export-grade packaging, and international certification to flexible MOQ and NDA confidentiality.'
+                    : ko
+                    ? '독점 레시피 R&D, 다양한 수출 규격 포장, 국제 인증 지원부터 유연한 MOQ 및 철저한 NDA 기밀 유지까지 원스톱으로 지원합니다.'
+                    : zh
+                    ? '从独家风味配方研发、多样化外贸级包装工程、国际资质认证到极具弹性的起订量与严密 NDA 保密协议。'
+                    : 'Đồng hành trọn vẹn từ nghiên cứu công thức độc quyền, thiết kế quy cách bao bì, chứng nhận xuất khẩu đến chính sách MOQ linh hoạt và bảo mật tuyệt đối.'}
+                </p>
+              </div>
+            </Reveal>
+
+            {/* 4 Pillars Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              {/* Pillar 1 */}
+              <Reveal delay={80}>
+                <div className="border border-[#D5CDBC] bg-[#FAF8F5] hover:bg-white p-7 sm:p-8 rounded-2xl transition-all duration-300 shadow-2xs hover:shadow-md flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="flex items-center justify-between pb-4 border-b border-[#E5DECF]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-[#064E3B] text-white flex items-center justify-center font-mono font-bold text-xs">
+                          01
+                        </span>
+                        <span className="font-mono text-xs font-bold text-[#064E3B] uppercase tracking-wider">
+                          {en ? 'PILLAR // 01' : ko ? '기둥 // 01' : zh ? '核心支柱 // 01' : 'TRỤ CỘT // 01'}
+                        </span>
+                      </div>
+                      <Sparkles className="w-5 h-5 text-amber-500 group-hover:rotate-12 transition-transform" />
+                    </div>
+
+                    <h3 className="font-heading font-bold text-lg sm:text-xl text-slate-900 mt-5 mb-2 leading-snug">
+                      {en
+                        ? 'Exclusive Recipe R&D & Taste Customization'
+                        : ko
+                        ? '독점 레시피 R&D 및 국가별 맞춤 풍미 개발'
+                        : zh
+                        ? '独家配方研发与目标市场风味定制'
+                        : 'Nghiên cứu & Tùy biến công thức vị độc quyền (R&D)'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {en
+                        ? 'Dedicated food technology specialists adapt spice blends, spiciness tiers, crunchiness, and sweetness to match consumer preferences across Vietnam, Korea, Taiwan, North America, and Europe.'
+                        : ko
+                        ? '전문 식품 연구원이 베트남, 한국, 대만, 북미, 유럽 등 대상 시장의 소비자 입맛에 맞춰 양념 비율, 맵기 강도, 바삭함 및 단맛을 정밀하게 맞춤 개발합니다.'
+                        : zh
+                        ? '专业食品研发团队针对越南、韩国、中国台湾及欧美目标市场消费者偏好，精准调配香料比例、辣度层级、酥脆感与甜度平衡。'
+                        : 'Đội ngũ R&D chuyên môn cao linh hoạt hiệu chỉnh tỷ lệ gia vị, cấp độ cay, độ ngọt mặn và kết cấu độ giòn phù hợp với thị hiếu từng thị trường tiêu thụ.'}
+                    </p>
+
+                    <div className="mt-4 pt-3 border-t border-[#EAE4D7] space-y-1.5 text-xs text-slate-700">
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'Fast 3-5 day sampling kits' : ko ? '3~5일 내 신속한 샘플 제공' : zh ? '3-5个工作日快速打样寄送' : 'Gửi mẫu thử sampling nhanh 3 - 5 ngày'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'Flavors: Cheese, Seaweed, Lime-leaf Chicken, Seafood, Spicy' : ko ? '풍미 라인업: 치즈, 김, 라임치킨, 해물, 특제 매운맛 등' : zh ? '支持芝士、海苔、柠檬叶手撕鸡、海鲜及特辣风味' : 'Đa dạng vị: Rong biển, phô mai, gà lá chanh, tép sấy, hải sản...'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Pillar 2 */}
+              <Reveal delay={160}>
+                <div className="border border-[#D5CDBC] bg-[#FAF8F5] hover:bg-white p-7 sm:p-8 rounded-2xl transition-all duration-300 shadow-2xs hover:shadow-md flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="flex items-center justify-between pb-4 border-b border-[#E5DECF]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-[#064E3B] text-white flex items-center justify-center font-mono font-bold text-xs">
+                          02
+                        </span>
+                        <span className="font-mono text-xs font-bold text-[#064E3B] uppercase tracking-wider">
+                          {en ? 'PILLAR // 02' : ko ? '기둥 // 02' : zh ? '核心支柱 // 02' : 'TRỤ CỘT // 02'}
+                        </span>
+                      </div>
+                      <Layers className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                    </div>
+
+                    <h3 className="font-heading font-bold text-lg sm:text-xl text-slate-900 mt-5 mb-2 leading-snug">
+                      {en
+                        ? 'Packaging Engineering & Export Pallet Standards'
+                        : ko
+                        ? '다양한 포장 규격 설계 및 수출용 팔레트 표준'
+                        : zh
+                        ? '多元化包装工程设计与出口托盘装载规范'
+                        : 'Thiết kế bao bì đa dạng & Chuẩn đóng thùng Pallet'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {en
+                        ? 'Supporting multi-layer nitrogen-flushed foil pouches, stand-up zip pouches, food-grade PET jars with easy-open aluminum seals, gift sets, and 5-ply BC corrugated export cartons.'
+                        : ko
+                        ? '질소 충전 알루미늄 다층백, 스탠드형 지퍼백, 알루미늄 이지오픈 씰 PET 용기, 프리미엄 선물용 박스 및 수출용 5겹 BC 골판지 상자를 전격 지원합니다.'
+                        : zh
+                        ? '全面支持充氮多层铝箔自立袋、拉链袋、易拉铝盖食品级PET罐、礼品盒装以及 5 层 BC 瓦楞防潮出口纸箱。'
+                        : 'Gia công đa dạng: Túi zip đáy đứng, túi màng nhôm đa lớp bơm nitơ, hũ PET nắp nhôm xé, hộp quà tặng và thùng carton 5 lớp sóng BC chống ẩm.'}
+                    </p>
+
+                    <div className="mt-4 pt-3 border-t border-[#EAE4D7] space-y-1.5 text-xs text-slate-700">
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'ISPM 15 heat-treated export palletizing' : ko ? 'ISPM 15 열처리 수출용 팔레트 규격' : zh ? '符合 ISPM 15 国际热处理托盘标准' : 'Xếp pallet xuất khẩu chuẩn hun trùng ISPM 15'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'Barcode, QR Code & multi-lingual label printing' : ko ? '바코드, QR코드 및 다국어 라벨 인쇄 지원' : zh ? '支持条形码、防伪追溯二维码及多语种标签印刷' : 'In ấn mã vạch GS1, QR code truy xuất nguồn gốc'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Pillar 3 */}
+              <Reveal delay={240}>
+                <div className="border border-[#D5CDBC] bg-[#FAF8F5] hover:bg-white p-7 sm:p-8 rounded-2xl transition-all duration-300 shadow-2xs hover:shadow-md flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="flex items-center justify-between pb-4 border-b border-[#E5DECF]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-[#064E3B] text-white flex items-center justify-center font-mono font-bold text-xs">
+                          03
+                        </span>
+                        <span className="font-mono text-xs font-bold text-[#064E3B] uppercase tracking-wider">
+                          {en ? 'PILLAR // 03' : ko ? '기둥 // 03' : zh ? '核心支柱 // 03' : 'TRỤ CỘT // 03'}
+                        </span>
+                      </div>
+                      <FileCheck2 className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
+                    </div>
+
+                    <h3 className="font-heading font-bold text-lg sm:text-xl text-slate-900 mt-5 mb-2 leading-snug">
+                      {en
+                        ? 'Full Regulatory, Testing & Export Documentation'
+                        : ko
+                        ? '완벽한 인허가, 영양성분 검사 및 통관 서류 지원'
+                        : zh
+                        ? '全套法规合规备案、权威质检与出口通关文件'
+                        : 'Hồ sơ pháp lý, tự công bố & Chứng nhận xuất khẩu'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {en
+                        ? 'Turnkey compliance package: Product self-declarations, accredited Nutrition Facts testing (FDA, CFIA, MFDS format), Certificates of Origin (CO Form E/AK/AJ), and Phytosanitary Certificates.'
+                        : ko
+                        ? '완제품 자율공고, 공인 영양성분 시험성적서(FDA/CFIA/MFDS 규격), 원산지증명서(CO Form E/AK/AJ) 및 식물검역증 등 일괄 구비 지원.'
+                        : zh
+                        ? '全流程法务资质支持：官方自律备案、权威营养成分表检验（FDA/CFIA/MFDS格式）、原产地证（CO Form E/AK/AJ）及植物检疫证明。'
+                        : 'Hỗ trợ trọn gói thủ tục tự công bố ATTP, kiểm nghiệm dinh dưỡng theo chuẩn FDA/CFIA/MFDS, cấp CO xuất khẩu (Form E, AK, AJ, VK) và kiểm dịch thực vật.'}
+                    </p>
+
+                    <div className="mt-4 pt-3 border-t border-[#EAE4D7] space-y-1.5 text-xs text-slate-700">
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'ISO 22000:2018 & HACCP Codex certified factory' : ko ? 'ISO 22000:2018 및 HACCP 인증 제조 시설' : zh ? 'ISO 22000:2018 与 HACCP Codex 认证大厂' : 'Nhà máy đạt chuẩn ISO 22000:2018 & HACCP Codex'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'Full statutory VAT invoicing & customs declarations' : ko ? '정식 세금계산서 및 통관 신고서 완비' : zh ? '开具正规增值税发票与规范海关报关单据' : 'Hóa đơn tài chính VAT hợp lệ & hồ sơ hải quan minh bạch'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+
+              {/* Pillar 4 */}
+              <Reveal delay={320}>
+                <div className="border border-[#D5CDBC] bg-[#FAF8F5] hover:bg-white p-7 sm:p-8 rounded-2xl transition-all duration-300 shadow-2xs hover:shadow-md flex flex-col justify-between h-full group">
+                  <div>
+                    <div className="flex items-center justify-between pb-4 border-b border-[#E5DECF]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-[#064E3B] text-white flex items-center justify-center font-mono font-bold text-xs">
+                          04
+                        </span>
+                        <span className="font-mono text-xs font-bold text-[#064E3B] uppercase tracking-wider">
+                          {en ? 'PILLAR // 04' : ko ? '기둥 // 04' : zh ? '核心支柱 // 04' : 'TRỤ CỘT // 04'}
+                        </span>
+                      </div>
+                      <Lock className="w-5 h-5 text-amber-600 group-hover:scale-110 transition-transform" />
+                    </div>
+
+                    <h3 className="font-heading font-bold text-lg sm:text-xl text-slate-900 mt-5 mb-2 leading-snug">
+                      {en
+                        ? 'Flexible Order Quantities (MOQ) & Strict NDA Protection'
+                        : ko
+                        ? '유연한 최소 발주 수량(MOQ) 및 엄격한 NDA 기밀 보장'
+                        : zh
+                        ? '弹性起订量 (MOQ) 与严密 NDA 商业机密保护'
+                        : 'MOQ linh hoạt & Cam kết bảo mật tuyệt đối (NDA)'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {en
+                        ? 'Low minimum initial orders starting from 500kg for market testing, rapid scaling to multiple containers per month, backed by legally binding non-disclosure agreements.'
+                        : ko
+                        ? '시장 테스트를 위한 500kg 소량 주문부터 월 수십 개 컨테이너 대량 생산까지 신속하게 확장 가능하며, 법적 효력을 갖는 NDA 계약을 체결합니다.'
+                        : zh
+                        ? '支持初创及测试批次 500kg 弹性起订，具备每月多货柜快速扩产承接能力，签订具备法律效力的保密协议。'
+                        : 'Hỗ trợ các nhãn hàng test thị trường với MOQ linh hoạt từ 500kg - 1 tấn, năng lực scale up nhanh chóng lên hàng chục container/tháng kèm hợp đồng NDA bảo mật tuyệt đối.'}
+                    </p>
+
+                    <div className="mt-4 pt-3 border-t border-[#EAE4D7] space-y-1.5 text-xs text-slate-700">
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? '100% IP & formulation protection guarantee' : ko ? '100% 지적재산권 및 독점 레시피 보호 보장' : zh ? '100% 客户配方与知识产权独家归属保障' : 'Cam kết bảo mật 100% bí quyết công thức khách hàng'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-[#064E3B] shrink-0" />
+                        <span>{en ? 'Dedicated Account Manager & 24/7 technical support' : ko ? '전담 매니저 배정 및 상시 기술 지원' : zh ? '专属大客户经理与全程技术跟单响应' : 'Chuyên viên kỹ thuật theo sát từng mẻ sản xuất'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* B2B Consultation CTA Box */}
+            <Reveal delay={400}>
+              <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-[#0C1E15] text-white flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h4 className="font-heading font-bold text-xl sm:text-2xl text-white">
+                    {en 
+                      ? 'Looking for a Reliable OEM / ODM Manufacturing Partner?' 
+                      : ko 
+                      ? '신뢰할 수 있는 OEM / ODM 제조 파트너를 찾고 계신가요?' 
+                      : zh 
+                      ? '正在寻找实力雄厚且严谨靠谱的 OEM / ODM 代工伙伴？' 
+                      : 'Bạn đang tìm kiếm đối tác sản xuất OEM / ODM tin cậy?'}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-white/70 mt-1 max-w-xl">
+                    {en
+                      ? 'Contact HAQ FOOD today for free recipe consultation, sample kits, and factory audit scheduling.'
+                      : ko
+                      ? '지금 HAQ FOOD에 문의하여 무료 레시피 상담, 시식용 샘플 키트 및 공장 실사 예약을 진행해보세요.'
+                      : zh
+                      ? '立即联系 HAQ FOOD 商务团队，获取免费配方咨询、定制样品寄送及预约实地验厂。'
+                      : 'Liên hệ HAQ FOOD để nhận tư vấn công thức mẫu miễn phí, bảng báo giá gia công và đặt lịch thăm nhà máy.'}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <a
+                    href="tel:02423235656"
+                    className="inline-flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors shadow-md"
+                  >
+                    <span>{en ? 'Call Hotline' : ko ? '대표 번호' : zh ? '拨打热线' : 'Hotline Báo Giá'}</span>
+                  </a>
+                  <a
+                    href="/lien-he"
+                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors"
+                  >
+                    <span>{en ? 'Inquire Now' : ko ? '상담 신청' : zh ? '在线洽谈' : 'Gửi Yêu Cầu'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
 
 
         {/* ──────────────────────────────────────────

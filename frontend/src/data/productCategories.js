@@ -1,9 +1,11 @@
 import catAllImg from '../assets/herobanner/hero_banner_1.webp'
 import catBanhTrangImg from '../assets/categories/category_banh_trang.webp'
-import catBanhImg from '../assets/categories/category_banh.webp'
-import catDoAnVatImg from '../assets/categories/category_do_an_vat.webp'
-import catDoAnKhoImg from '../assets/categories/category_do_an_kho.webp'
 import { optimizeSupabaseImageUrl } from '../utils/imageOptimizer'
+
+// Fallback an toàn cho các danh mục trỏ về ảnh hợp lệ hiện có
+const catBanhImg = catBanhTrangImg
+const catDoAnVatImg = catBanhTrangImg
+const catDoAnKhoImg = catBanhTrangImg
 
 export const PRODUCT_IMAGE_MAP = {}
 

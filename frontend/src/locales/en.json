@@ -300,6 +300,14 @@
       "desc": "Continuously elevating product excellence and closed hygienic processing, HAQ FOOD proudly introduces genuine Vietnamese delicacies to demanding consumers across Asia.",
       "cta": "EXPLORE DISTRIBUTION NETWORK"
     },
+    "global_cta": {
+      "badge": "✦ Global Vision ✦",
+      "heading": "From Vietnamese Produce — Reaching Across Asia",
+      "vietnam": "Vietnam",
+      "korea": "South Korea",
+      "taiwan": "Taiwan",
+      "btn": "Partnership Inquiries"
+    },
     "cta_banner": {
       "badge": "HAQ FOOD · PARTNER & GROW",
       "title": "CREATING SUSTAINABLE VALUES TOGETHER",

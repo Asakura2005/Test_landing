@@ -33,6 +33,12 @@ function RouteSync() {
   // 1. Only scroll to top and track pageview when user actually navigates to a new route
   useEffect(() => {
     trackPageView(pathname)
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('config', 'G-HFEZD7WF4E', {
+        page_path: pathname,
+        page_location: window.location.href,
+      })
+    }
     if (prevPathRef.current !== pathname) {
       prevPathRef.current = pathname
       window.scrollTo(0, 0)
@@ -63,7 +69,7 @@ function AppRoutes() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
   const isProductRoute = pathname.includes('/san-pham') || pathname.includes('/products')
-  const containerBg = isAdmin ? 'bg-[#F4F8F4]' : isProductRoute ? 'bg-haq-cream' : 'bg-[#0C1E15]'
+  const containerBg = isAdmin ? 'bg-[#F4F8F4]' : isProductRoute ? 'bg-haq-cream' : 'bg-[#FAF9F6]'
 
   return (
     <>
@@ -71,11 +77,12 @@ function AppRoutes() {
       <SeoHead />
       <div className={`w-full overflow-x-clip relative min-h-screen ${containerBg}`}>
         <ErrorBoundary>
-          <Suspense fallback={<div className="min-h-screen bg-[#0C1E15]" />}>
+          <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6]" />}>
             <Routes>
               {/* ================= VIETNAMESE (Default) ================= */}
               <Route path="/" element={<Home />} />
             <Route path="/gioi-thieu" element={<CompanyProfilePage />} />
+            <Route path="/ho-so-cong-ty" element={<Navigate to="/gioi-thieu" replace />} />
             <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
             <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/lich-su" element={<HistoryPage />} />
@@ -92,6 +99,7 @@ function AppRoutes() {
             {/* ================= ENGLISH (B2B International) ================= */}
             <Route path="/en" element={<Home />} />
             <Route path="/en/about" element={<CompanyProfilePage />} />
+            <Route path="/en/company-profile" element={<Navigate to="/en/about" replace />} />
             <Route path="/en/history" element={<HistoryPage />} />
             <Route path="/en/capabilities" element={<CapabilitiesPage />} />
             <Route path="/en/products" element={<ProductsPage />} />
@@ -116,6 +124,7 @@ function AppRoutes() {
             {/* ================= KOREAN (B2B Korea) ================= */}
             <Route path="/ko" element={<Home />} />
             <Route path="/ko/about" element={<CompanyProfilePage />} />
+            <Route path="/ko/company-profile" element={<Navigate to="/ko/about" replace />} />
             <Route path="/ko/history" element={<HistoryPage />} />
             <Route path="/ko/capabilities" element={<CapabilitiesPage />} />
             <Route path="/ko/products" element={<ProductsPage />} />
@@ -140,6 +149,7 @@ function AppRoutes() {
             {/* ================= CHINESE (B2B China & Global Chinese) ================= */}
             <Route path="/zh" element={<Home />} />
             <Route path="/zh/about" element={<CompanyProfilePage />} />
+            <Route path="/zh/company-profile" element={<Navigate to="/zh/about" replace />} />
             <Route path="/zh/history" element={<HistoryPage />} />
             <Route path="/zh/capabilities" element={<CapabilitiesPage />} />
             <Route path="/zh/products" element={<ProductsPage />} />

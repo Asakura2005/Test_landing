@@ -190,6 +190,8 @@ export async function submitLead(leadData) {
   }
 }
 
+export const createLead = submitLead
+
 export async function getLeads() {
   // 1. Ưu tiên lấy danh sách leads qua Backend API (xác thực JWT, backend dùng Service Key an toàn)
   const token = typeof window !== 'undefined'
@@ -556,48 +558,79 @@ export function subscribeToLeads(onNewLead) {
   }
 }
 
+// In-memory cache & Promise deduplication for ultra-fast page loads
+const PRODUCTS_CACHE_TTL = 3 * 60 * 1000 // 3 minutes
+let _productsCache = null
+let _productsCacheTime = 0
+let _inFlightProductsPromise = null
+
+export function clearProductsCache() {
+  _productsCache = null
+  _productsCacheTime = 0
+  _inFlightProductsPromise = null
+}
+
 /**
  * Lấy danh sách sản phẩm (kèm variants, categories và provinces) trực tiếp từ database
+ * Hỗ trợ In-memory Cache & Promise Deduplication để chống tải trùng lặp
  */
-export async function getProducts() {
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        categories(*),
-        provinces(*),
-        variants:product_variants(*)
-      `)
-      .order('is_pinned', { ascending: false, nullsFirst: false })
-      .order('created_at', { ascending: false })
-
-    if (!error && Array.isArray(data)) {
-      return data
-    }
-  } catch (e) {
-    // Graceful fallback on DB query failure
+export async function getProducts(forceRefresh = false) {
+  if (!forceRefresh && _productsCache && (Date.now() - _productsCacheTime < PRODUCTS_CACHE_TTL)) {
+    return _productsCache
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        categories(*),
-        variants:product_variants(*)
-      `)
-      .order('is_pinned', { ascending: false, nullsFirst: false })
-      .order('created_at', { ascending: false })
-
-    if (!error && Array.isArray(data)) {
-      return data
-    }
-  } catch (e) {
-    // Graceful fallback
+  if (!forceRefresh && _inFlightProductsPromise) {
+    return _inFlightProductsPromise
   }
 
-  return []
+  _inFlightProductsPromise = (async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories(*),
+          provinces(*),
+          variants:product_variants(*)
+        `)
+        .order('is_pinned', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+
+      if (!error && Array.isArray(data)) {
+        _productsCache = data
+        _productsCacheTime = Date.now()
+        return data
+      }
+    } catch (e) {
+      // Graceful fallback on DB query failure
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories(*),
+          variants:product_variants(*)
+        `)
+        .order('is_pinned', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+
+      if (!error && Array.isArray(data)) {
+        _productsCache = data
+        _productsCacheTime = Date.now()
+        return data
+      }
+    } catch (e) {
+      // Graceful fallback
+    }
+
+    return []
+  })().finally(() => {
+    _inFlightProductsPromise = null
+  })
+
+  return _inFlightProductsPromise
 }
 
 /**
@@ -607,6 +640,14 @@ export async function getProductBySlug(slug) {
   if (!slug || typeof slug !== 'string') return null
   const cleanSlug = slug.trim().replace(/\/+$/, '')
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanSlug);
+
+  // Kiểm tra cache trước nếu đã có sản phẩm trong bộ nhớ
+  if (_productsCache && Array.isArray(_productsCache)) {
+    const cachedMatch = _productsCache.find(p =>
+      isUUID ? p.id === cleanSlug : (p.slug === cleanSlug || p.slug?.toLowerCase() === cleanSlug.toLowerCase())
+    )
+    if (cachedMatch) return cachedMatch
+  }
 
   try {
     let query = supabase
@@ -668,6 +709,7 @@ export async function deleteProduct(id) {
     .eq('id', id)
 
   if (error) throw error
+  clearProductsCache()
   return true
 }
 
@@ -768,6 +810,7 @@ export async function createProduct(productData, variantsData) {
     }
   }
 
+  clearProductsCache()
   return newProduct
 }
 
@@ -808,6 +851,7 @@ export async function updateProduct(id, productData, variantsData) {
     }
   }
 
+  clearProductsCache()
   return true
 }
 
@@ -853,18 +897,46 @@ export async function deleteProductImage(imageUrl) {
  * ==================================================
  */
 
-/**
- * Lấy danh sách danh mục
- */
-export async function getCategories() {
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false })
+// In-memory cache & Promise deduplication for categories
+const CATEGORIES_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+let _categoriesCache = null
+let _categoriesCacheTime = 0
+let _inFlightCategoriesPromise = null
 
-  if (error) throw error
-  return data
+export function clearCategoriesCache() {
+  _categoriesCache = null
+  _categoriesCacheTime = 0
+  _inFlightCategoriesPromise = null
+}
+
+/**
+ * Lấy danh sách danh mục (kèm In-memory Cache & Promise Deduplication)
+ */
+export async function getCategories(forceRefresh = false) {
+  if (!forceRefresh && _categoriesCache && (Date.now() - _categoriesCacheTime < CATEGORIES_CACHE_TTL)) {
+    return _categoriesCache
+  }
+
+  if (!forceRefresh && _inFlightCategoriesPromise) {
+    return _inFlightCategoriesPromise
+  }
+
+  _inFlightCategoriesPromise = (async () => {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    _categoriesCache = data
+    _categoriesCacheTime = Date.now()
+    return data
+  })().finally(() => {
+    _inFlightCategoriesPromise = null
+  })
+
+  return _inFlightCategoriesPromise
 }
 
 /**
@@ -878,6 +950,8 @@ export async function createCategory(categoryData) {
     .single()
 
   if (error) throw error
+  clearCategoriesCache()
+  clearProductsCache()
   return data
 }
 
@@ -893,6 +967,8 @@ export async function updateCategory(id, categoryData) {
     .single()
 
   if (error) throw error
+  clearCategoriesCache()
+  clearProductsCache()
   return data
 }
 
@@ -906,6 +982,8 @@ export async function deleteCategory(id) {
     .eq('id', id)
 
   if (error) throw error
+  clearCategoriesCache()
+  clearProductsCache()
   return true
 }
 
@@ -1091,28 +1169,62 @@ export async function uploadNewsImage(file) {
  * ==================================================
  */
 
+// In-memory cache & Promise deduplication for provinces
+const PROVINCES_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+const _provincesCache = new Map()
+const _provincesCacheTime = new Map()
+const _inFlightProvincesPromise = new Map()
+
+export function clearProvincesCache() {
+  _provincesCache.clear()
+  _provincesCacheTime.clear()
+  _inFlightProvincesPromise.clear()
+}
+
 /**
  * Lấy danh sách tất cả các tỉnh/thành (kèm các sản phẩm liên kết)
+ * Hỗ trợ In-memory Cache & Promise Deduplication
  * @param {boolean} onlyActive - Nếu true chỉ lấy tỉnh đang active (dùng cho map)
  */
-export async function getProvinces(onlyActive = false) {
-  let query = supabase
-    .from('provinces')
-    .select(`
-      *,
-      products:products(id, name, slug, tag, images, is_pinned)
-    `)
-    .order('sort_order', { ascending: true })
-    .order('name', { ascending: true })
+export async function getProvinces(onlyActive = false, forceRefresh = false) {
+  const cacheKey = onlyActive ? 'active' : 'all'
+  const cachedData = _provincesCache.get(cacheKey)
+  const cachedTime = _provincesCacheTime.get(cacheKey) || 0
 
-  if (onlyActive) {
-    query = query.eq('is_active', true)
+  if (!forceRefresh && cachedData && (Date.now() - cachedTime < PROVINCES_CACHE_TTL)) {
+    return cachedData
   }
 
-  const { data, error } = await query
+  if (!forceRefresh && _inFlightProvincesPromise.has(cacheKey)) {
+    return _inFlightProvincesPromise.get(cacheKey)
+  }
 
-  if (error) throw error
-  return data
+  const promise = (async () => {
+    let query = supabase
+      .from('provinces')
+      .select(`
+        *,
+        products:products(id, name, slug, tag, images, is_pinned)
+      `)
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true })
+
+    if (onlyActive) {
+      query = query.eq('is_active', true)
+    }
+
+    const { data, error } = await query
+
+    if (error) throw error
+    _provincesCache.set(cacheKey, data)
+    _provincesCacheTime.set(cacheKey, Date.now())
+    return data
+  })().finally(() => {
+    _inFlightProvincesPromise.delete(cacheKey)
+  })
+
+  _inFlightProvincesPromise.set(cacheKey, promise)
+  return promise
 }
 
 /**
@@ -1147,6 +1259,8 @@ export async function createProvince(provinceData) {
     .single()
 
   if (error) throw error
+  clearProvincesCache()
+  clearProductsCache()
   return data
 }
 
@@ -1162,6 +1276,8 @@ export async function updateProvince(id, provinceData) {
     .single()
 
   if (error) throw error
+  clearProvincesCache()
+  clearProductsCache()
   return data
 }
 
@@ -1175,6 +1291,8 @@ export async function deleteProvince(id) {
     .eq('id', id)
 
   if (error) throw error
+  clearProvincesCache()
+  clearProductsCache()
   return true
 }
 

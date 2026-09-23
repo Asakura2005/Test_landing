@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAQ FOOD — Homepage v6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Earthy/Handmade + HAQ brand palette */
+  --terracotta:#C67B5C;--sand:#D4C4A8;--warm-clay:#B5651D;
+  --soft-cream:#F5F0E1;--olive:#6B7B3C;
+  --green:#16A34A;--green-dark:#0F5132;--deep:#0C1E15;
+  --cream:#FFF8EE;--warm-bg:#FFFAF2;
+  --gold:#C8A355;--gold-light:#E8D5A8;--gold-pale:#F5ECD4;
+  /* Organic Biophilic */
+  --forest:#228B22;--earth:#8B4513;
+  --organic-radius:20px;--shadow-soft:0 8px 32px rgba(0,0,0,0.08);
+  /* Typography */
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Be Vietnam Pro',system-ui,sans-serif;
+  /* Base */
+  --ink:#1a2e1a;--text:#3D3D3D;--text-light:#8A7D6D;--border:#E4D9C8;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--text);background:var(--warm-bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1rem,4vw,3rem);height:64px;background:rgba(255,248,238,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,163,85,0.15)}
+.nav-logo{font-family:var(--font-display);font-weight:900;font-size:1.3rem;color:var(--deep);text-decoration:none}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{font-size:0.75rem;font-weight:600;color:var(--text-light);text-decoration:none;transition:color 0.2s;cursor:pointer}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{background:var(--green)!important;color:#fff!important;padding:0.45rem 1.1rem;border-radius:999px;font-size:0.7rem!important;font-weight:700!important;cursor:pointer;transition:background 0.2s}
+.nav-cta:hover{background:var(--green-dark)!important}
+
+/* ═══ HERO ═══ */
+.hero{margin-top:64px;position:relative;overflow:hidden;min-height:85vh;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover}
+.hero-grain{position:absolute;inset:0;z-index:1;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:5;width:100%;max-width:1200px;margin:0 auto;padding:0 clamp(2rem,5vw,4rem);display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.hero-left{will-change:transform}
+.hero-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(12,30,21,0.06);border:1px solid rgba(12,30,21,0.1);border-radius:999px;padding:0.35rem 0.9rem;font-size:0.62rem;font-weight:700;color:var(--green-dark);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem}
+.hero-badge svg{width:14px;height:14px;color:var(--gold)}
+.hero-title{font-family:var(--font-display);font-weight:900;font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.12;color:var(--deep);margin-bottom:0.8rem}
+.hero-title em{font-style:italic;color:var(--green);display:inline-block;position:relative}
+.hero-title em::after{content:'';position:absolute;bottom:2px;left:0;width:100%;height:8px;background:var(--gold-pale);z-index:-1;border-radius:2px}
+.hero-desc{font-size:0.88rem;color:var(--text-light);line-height:1.75;margin-bottom:1.5rem;max-width:420px}
+.hero-btns{display:flex;gap:0.6rem;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:0.4rem;background:var(--green);color:#fff;padding:0.75rem 1.6rem;border-radius:var(--organic-radius);font-size:0.78rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all 0.25s;box-shadow:0 4px 16px rgba(22,163,74,0.2)}
+.btn-primary:hover{background:var(--green-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(22,163,74,0.3)}
+.btn-outline{display:inline-flex;align-items:center;gap:0.4rem;background:transparent;color:var(--deep);padding:0.75rem 1.6rem;border-radius:var(--organic-radius);font-size:0.78rem;font-weight:600;text-decoration:none;border:1.5px solid var(--border);cursor:pointer;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+/* Hero right — floating product composition */
+.hero-right{position:relative;height:450px}
+.hero-product{position:absolute;border-radius:var(--organic-radius);overflow:hidden;box-shadow:var(--shadow-soft);background:#fff;border:1px solid var(--border);cursor:pointer;transition:transform 0.4s cubic-bezier(0.23,1,0.32,1)}
+.hero-product:hover{transform:scale(1.05)!important}
+.hero-product img{width:100%;height:100%;object-fit:cover}
+.hp-1{width:220px;height:260px;top:5%;left:15%;z-index:3;transform:rotate(-3deg)}
+.hp-2{width:170px;height:200px;top:35%;right:5%;z-index:2;transform:rotate(4deg)}
+.hp-3{width:150px;height:180px;bottom:5%;left:5%;z-index:1;transform:rotate(-6deg)}
+/* Floating organic shapes */
+.hero-blob{position:absolute;border-radius:50%;opacity:0.06;z-index:0;pointer-events:none}
+.blob-1{width:300px;height:300px;background:var(--green);top:-50px;right:-80px}
+.blob-2{width:200px;height:200px;background:var(--gold);bottom:-40px;left:-60px}
+
+/* ═══ MARQUEE ═══ */
+.marquee{overflow:hidden;background:var(--deep);padding:0.65rem 0;border-bottom:2px solid var(--gold-pale)}
+.marquee-inner{display:flex;gap:2.5rem;animation:scroll 35s linear infinite;width:max-content}
+.marquee-inner span{font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;gap:0.5rem;white-space:nowrap}
+.marquee-inner .sep{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:0.5;flex-shrink:0}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ PRODUCTS ═══ */
+.products{padding:clamp(4rem,8vh,6rem) clamp(1rem,4vw,3rem);background:var(--cream);position:relative}
+/* Earthy texture */
+.products::before{content:'';position:absolute;inset:0;opacity:0.015;background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='%23C8A355'/%3E%3C/svg%3E")}
+.sec-header{text-align:center;margin-bottom:3rem;position:relative;z-index:2}
+.sec-tag{font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.sec-title{font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--ink);line-height:1.3}
+.sec-sub{font-size:0.8rem;color:var(--text-light);line-height:1.7;max-width:460px;margin:0.4rem auto 0}
+.ornament{display:flex;align-items:center;justify-content:center;gap:0.6rem;margin-top:0.7rem}
+.ornament::before,.ornament::after{content:'';width:30px;height:1px;background:var(--gold)}
+.ornament svg{width:16px;height:16px;color:var(--gold)}
+
+/* Asymmetric product grid */
+.p-grid{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:auto;gap:1.2rem;position:relative;z-index:2}
+.p-card{background:#fff;border-radius:var(--organic-radius);overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;transition:all 0.4s cubic-bezier(0.23,1,0.32,1)}
+.p-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,0.08);border-color:var(--gold)}
+/* Asymmetric sizes */
+.p-card:nth-child(1){grid-column:1/6;grid-row:1/3}
+.p-card:nth-child(2){grid-column:6/13;grid-row:1/2}
+.p-card:nth-child(3){grid-column:6/9;grid-row:2/3}
+.p-card:nth-child(4){grid-column:9/13;grid-row:2/3}
+.p-img{overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--soft-cream),var(--cream));padding:clamp(0.8rem,2vw,1.5rem)}
+.p-card:nth-child(1) .p-img{aspect-ratio:3/4}
+.p-card:nth-child(2) .p-img{aspect-ratio:16/9}
+.p-card:nth-child(3) .p-img,.p-card:nth-child(4) .p-img{aspect-ratio:1}
+.p-img img{max-width:82%;max-height:82%;object-fit:contain;transition:transform 0.5s;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.06))}
+.p-card:hover .p-img img{transform:scale(1.08) rotate(-2deg)}
+.p-body{padding:0.9rem 1.1rem 1.1rem}
+.p-cat{font-size:0.56rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.15rem}
+.p-name{font-weight:700;font-size:0.85rem;color:var(--ink);line-height:1.3;margin-bottom:0.15rem}
+.p-desc{font-size:0.7rem;color:var(--text-light);line-height:1.4}
+.p-hover{position:absolute;bottom:0.7rem;right:0.7rem;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;opacity:0;transform:scale(0.6);transition:all 0.3s}
+.p-card:hover .p-hover{opacity:1;transform:scale(1)}
+.p-cta{text-align:center;margin-top:2.5rem;position:relative;z-index:2}
+.btn-gold{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--gold);padding:0.65rem 1.6rem;border-radius:var(--organic-radius);font-size:0.75rem;font-weight:700;text-decoration:none;border:1.5px solid var(--gold);cursor:pointer;transition:all 0.25s}
+.btn-gold:hover{background:var(--gold);color:#fff;transform:translateY(-1px)}
+
+/* ═══ STATS ═══ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--deep);position:relative;overflow:hidden}
+.stats::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(22,163,74,0.06),transparent 50%,rgba(200,163,85,0.04))}
+.stat{padding:clamp(1.8rem,3.5vh,3rem) 1rem;text-align:center;border-right:1px solid rgba(255,255,255,0.05);position:relative;z-index:2}
+.stat:last-child{border:none}
+.stat-n{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:#fff;line-height:1}
+.stat-n i{font-style:normal;color:var(--gold-light);font-size:0.6em}
+.stat-l{font-size:0.62rem;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.3rem}
+
+/* ═══ MAP ═══ */
+.map{padding:clamp(4rem,8vh,6rem) clamp(1rem,4vw,3rem);background:var(--warm-bg);position:relative}
+.map::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 10%,var(--gold-pale) 40%,var(--gold) 50%,var(--gold-pale) 60%,transparent 90%)}
+.map-wrap{max-width:1140px;margin:0 auto;background:var(--deep);border-radius:1.5rem;overflow:hidden;position:relative;min-height:520px;padding:clamp(2rem,4vh,3.5rem)}
+.map-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(22,163,74,0.1),transparent 60%),radial-gradient(ellipse at 75% 25%,rgba(200,163,85,0.06),transparent 50%)}
+.map-wrap::after{content:'';position:absolute;inset:0;opacity:0.02;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23C8A355' stroke-width='0.5'/%3E%3C/svg%3E")}
+.map-z{position:relative;z-index:2;color:#fff}
+.map .sec-tag{color:var(--gold-light)}
+.map .sec-title{color:#fff}
+.map .sec-sub{color:rgba(255,255,255,0.45)}
+.map-grid{display:grid;grid-template-columns:1fr 250px;gap:2rem;margin-top:2rem;align-items:start}
+.map-vis{position:relative;display:flex;justify-content:center;min-height:380px}
+.map-svg{width:230px;filter:drop-shadow(0 0 50px rgba(22,163,74,0.12))}
+.map-pin{position:absolute;display:flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:0.6rem;padding:0.4rem 0.55rem;font-size:0.68rem;color:#fff;cursor:pointer;transition:all 0.3s;min-width:140px}
+.map-pin:hover{background:rgba(255,255,255,0.12);transform:scale(1.04);border-color:var(--gold)}
+.map-pin img{width:32px;height:32px;border-radius:5px;object-fit:cover;background:rgba(255,255,255,0.08)}
+.map-pin-t span{display:block;font-size:0.52rem;color:var(--gold-light)}
+.map-pin-t strong{font-weight:600;font-size:0.68rem}
+.mp-1{top:6%;left:2%}.mp-2{top:30%;right:0}.mp-3{bottom:25%;left:0}
+.map-side{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:0.8rem;padding:1rem;backdrop-filter:blur(12px)}
+.map-side-tag{font-size:0.55rem;font-weight:700;color:var(--gold-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem}
+.map-side h3{font-size:0.95rem;font-weight:700;margin-bottom:0.6rem}
+.map-side-g{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem}
+.msi{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:0.45rem;padding:0.35rem;text-align:center;font-size:0.6rem;cursor:pointer;transition:border-color 0.2s}
+.msi:hover{border-color:var(--gold)}
+.msi .msi-img{width:100%;aspect-ratio:1;border-radius:0.3rem;background:rgba(255,255,255,0.06);margin-bottom:0.2rem;overflow:hidden}
+.msi .msi-img img{width:100%;height:100%;object-fit:cover}
+
+/* ═══ ABOUT ═══ */
+.about{padding:clamp(4rem,8vh,6rem) clamp(1rem,4vw,3rem);background:var(--cream);position:relative;overflow:hidden}
+.about::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 10%,var(--gold-pale),var(--gold),var(--gold-pale),transparent 90%)}
+.about-wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:5fr 6fr;gap:0;align-items:center;position:relative}
+.about-photos{position:relative;z-index:2}
+.about-main-img{border-radius:var(--organic-radius);overflow:hidden;aspect-ratio:4/3;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+.about-main-img img{width:100%;height:100%;object-fit:cover}
+.about-float-img{position:absolute;bottom:-1.2rem;right:-2rem;width:130px;aspect-ratio:1;border-radius:12px;overflow:hidden;border:4px solid var(--cream);box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:3}
+.about-float-img img{width:100%;height:100%;object-fit:cover}
+.about-photos::before{content:'';position:absolute;top:-10px;left:-10px;right:10px;bottom:10px;border:2px solid var(--gold-pale);border-radius:var(--organic-radius);z-index:1}
+.about-card{background:#fff;border-radius:var(--organic-radius);padding:clamp(1.5rem,3vw,2.5rem);margin-left:-2.5rem;position:relative;z-index:4;box-shadow:0 4px 24px rgba(0,0,0,0.04);border:1px solid var(--border)}
+.about-ey{font-size:0.6rem;font-weight:700;color:var(--gold);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.3rem}
+.about-h{font-family:var(--font-display);font-weight:700;font-size:clamp(1.1rem,2vw,1.35rem);color:var(--ink);line-height:1.35;margin-bottom:0.5rem}
+.about-p{font-size:0.8rem;color:var(--text-light);line-height:1.8;margin-bottom:1rem}
+.about-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.8rem}
+.about-tag{display:inline-flex;align-items:center;gap:0.3rem;background:var(--soft-cream);border:1px solid var(--border);border-radius:999px;padding:0.3rem 0.7rem;font-size:0.64rem;font-weight:600;color:var(--ink)}
+.about-tag svg{width:12px;height:12px;color:var(--green)}
+.about-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;padding-top:0.8rem;border-top:1px solid var(--border)}
+.about-num{text-align:center}
+.about-num strong{display:block;font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--green)}
+.about-num span{font-size:0.52rem;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.04em}
+
+/* ═══ PARTNERS ═══ */
+.partners{padding:1.8rem 0;background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+.ptr{display:flex;gap:3rem;animation:ptrs 28s linear infinite;width:max-content;align-items:center}
+.ptr span{font-size:1.05rem;font-weight:800;color:var(--ink);opacity:0.12;white-space:nowrap;transition:opacity 0.3s;cursor:pointer}
+.ptr span:hover{opacity:0.4}
+@keyframes ptrs{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ CTA ═══ */
+.cta{padding:clamp(4rem,8vh,6rem) clamp(1rem,4vw,3rem);background:var(--deep);color:#fff;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23C8A355' stroke-width='0.5'/%3E%3C/svg%3E")}
+.cta::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.cta-z{position:relative;z-index:2}
+.cta .sec-tag{color:var(--gold-light)}
+.cta .sec-title{color:#fff}
+.cta-flags{display:flex;align-items:center;justify-content:center;gap:0.4rem;margin:1rem 0 1.5rem}
+.cflag{display:inline-flex;align-items:center;gap:0.3rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:999px;padding:0.3rem 0.7rem;font-size:0.66rem;color:rgba(255,255,255,0.65)}
+
+/* ═══ FOOTER ═══ */
+.footer{background:#0a1a10;color:rgba(255,255,255,0.38);padding:2.5rem clamp(1rem,4vw,3rem) 1.2rem}
+.f-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:2rem}
+.f-logo{font-family:var(--font-display);font-weight:900;font-size:1.1rem;color:#fff;margin-bottom:0.4rem}.f-logo span{color:var(--green)}
+.footer p{font-size:0.7rem;line-height:1.7}
+.footer h4{font-size:0.58rem;font-weight:700;color:rgba(255,255,255,0.18);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem}
+.footer a{display:block;font-size:0.72rem;color:rgba(255,255,255,0.38);text-decoration:none;margin-bottom:0.3rem;transition:color 0.2s;cursor:pointer}
+.footer a:hover{color:var(--green)}
+.f-bot{max-width:1100px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05);font-size:0.62rem;text-align:center}
+
+/* GSAP sets initial states via JS — content visible by default as fallback */
+
+/* ═══ Responsive ═══ */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hero-content{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .p-grid{grid-template-columns:1fr 1fr}
+  .p-card:nth-child(1){grid-column:1/3;grid-row:auto}
+  .p-card:nth-child(2){grid-column:1/3}
+  .p-card:nth-child(3){grid-column:1/2}.p-card:nth-child(4){grid-column:2/3}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-right:none;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .map-grid{grid-template-columns:1fr}
+  .map-vis{min-height:auto}
+  .map-pin{position:relative;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important}
+  .map-vis{flex-direction:column;gap:0.5rem}
+  .about-wrap{grid-template-columns:1fr}
+  .about-card{margin-left:0;margin-top:-1.5rem}
+  .about-float-img{display:none}
+  .f-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">HAQ<span>FOOD</span></a>
+  <div class="nav-links">
+    <a>Sản phẩm</a><a>Về chúng tôi</a><a>Năng lực</a><a>Tin tức</a>
+    <a class="nav-cta">Hợp tác B2B →</a>
+  </div>
+</nav>
+
+<!-- HERO — FULL PRODUCT IMAGE SLIDER -->
+<section class="hero" style="min-height:auto;display:block;position:relative;overflow:hidden">
+  <div class="hero-slides" style="position:relative;width:100%;height:calc(100vh - 64px)">
+    <img class="hero-slide active" src="../assets/herobanner/hero_banner_1.webp" alt="HAQ FOOD sản phẩm" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease">
+    <img class="hero-slide" src="../assets/herobanner/hero_banner_2.webp" alt="HAQ FOOD sản phẩm" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease">
+    <img class="hero-slide" src="../assets/herobanner/hero_banner_3.webp" alt="HAQ FOOD sản phẩm" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease">
+  </div>
+  <!-- Dots -->
+  <div style="position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:0.5rem">
+    <button class="hdot active" data-s="0" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;cursor:pointer;transition:all 0.3s"></button>
+    <button class="hdot" data-s="1" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;cursor:pointer;transition:all 0.3s"></button>
+    <button class="hdot" data-s="2" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;cursor:pointer;transition:all 0.3s"></button>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-inner">
+    <span><i class="sep"></i>ISO 22000 & HACCP</span><span><i class="sep"></i>Nhà Máy Chuẩn Quốc Tế</span><span><i class="sep"></i>50+ Sản Phẩm</span><span><i class="sep"></i>Xuất Khẩu 🇰🇷 🇹🇼</span><span><i class="sep"></i>7+ Chuỗi Bán Lẻ</span><span><i class="sep"></i>OEM / ODM</span><span><i class="sep"></i>Since 2021 · Hà Nội</span>
+    <span><i class="sep"></i>ISO 22000 & HACCP</span><span><i class="sep"></i>Nhà Máy Chuẩn Quốc Tế</span><span><i class="sep"></i>50+ Sản Phẩm</span><span><i class="sep"></i>Xuất Khẩu 🇰🇷 🇹🇼</span><span><i class="sep"></i>7+ Chuỗi Bán Lẻ</span><span><i class="sep"></i>OEM / ODM</span><span><i class="sep"></i>Since 2021 · Hà Nội</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products">
+  <div class="sec-header gs-fade">
+    <div class="sec-tag">✦ Sản phẩm chủ lực ✦</div>
+    <h2 class="sec-title">Dòng Sản Phẩm Nổi Bật</h2>
+    <p class="sec-sub">Công thức độc quyền · Dây chuyền khép kín · Hương vị truyền thống Việt Nam</p>
+    <div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 8v8M8 12h8"/></svg></div>
+  </div>
+  <div class="p-grid">
+    <div class="p-card gs-scale"><div class="p-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg" alt=""></div><div class="p-body"><div class="p-cat">★ Signature</div><div class="p-name">Bánh Tráng Trộn Vị Sa Tế Tôm</div><div class="p-desc">Hũ 100g · Vị sa tế tôm khô đậm đà</div></div><div class="p-hover">→</div></div>
+    <div class="p-card gs-scale"><div class="p-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg" alt=""></div><div class="p-body"><div class="p-cat">Sấy giòn</div><div class="p-name">Sấy Giòn Vị Tôm</div><div class="p-desc">Gói 50g · Giòn rụm tiện lợi</div></div><div class="p-hover">→</div></div>
+    <div class="p-card gs-scale"><div class="p-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg" alt=""></div><div class="p-body"><div class="p-cat">Sấy giòn</div><div class="p-name">Sa Tế Bò</div></div><div class="p-hover">→</div></div>
+    <div class="p-card gs-scale" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--green),var(--green-dark));border:none;min-height:160px"><div style="text-align:center;color:#fff;padding:0.8rem"><div style="font-family:var(--font-display);font-size:2.2rem;font-weight:700">50+</div><div style="font-size:0.68rem;font-weight:600;opacity:0.7;margin:0.2rem 0 0.5rem">Sản Phẩm</div><div style="font-size:0.62rem;font-weight:700;opacity:0.6;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer">Xem tất cả →</div></div></div>
+  </div>
+  <div class="p-cta gs-fade"><a href="#" class="btn-gold">Khám phá toàn bộ bộ sưu tập →</a></div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat gs-fade"><div class="stat-n" data-target="2021">0</div><div class="stat-l">Năm thành lập</div></div>
+  <div class="stat gs-fade"><div class="stat-n" data-target="50">0<i>+</i></div><div class="stat-l">Sản phẩm</div></div>
+  <div class="stat gs-fade"><div class="stat-n" data-target="7">0<i>+</i></div><div class="stat-l">Chuỗi bán lẻ</div></div>
+  <div class="stat gs-fade"><div class="stat-n" data-target="3">0</div><div class="stat-l">Thị trường XK</div></div>
+</div>
+
+<!-- MAP -->
+<section class="map">
+  <div class="map-wrap">
+    <div class="map-z">
+      <div class="sec-header gs-fade">
+        <div class="sec-tag">✦ Trải nghiệm khám phá ✦</div>
+        <h2 class="sec-title">Bản Đồ Đặc Sản Việt Nam</h2>
+        <p class="sec-sub">Hệ sinh thái sản phẩm trải dài khắp các vùng miền</p>
+        <div class="ornament"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 8v8M8 12h8"/></svg></div>
+      </div>
+      <div class="map-grid">
+        <div class="map-vis">
+          <svg class="map-svg" viewBox="0 0 200 500" fill="none">
+            <path d="M100 10 C85 30,60 50,55 80 C50 110,70 130,80 150 C90 170,75 200,70 230 C65 260,80 280,90 300 C100 320,95 350,100 380 C105 410,110 430,115 450 C120 470,130 485,140 490 C145 480,135 460,130 440 C125 420,130 400,135 380 C140 360,135 340,130 320 C125 300,135 280,140 260 C145 240,135 220,130 200 C125 180,135 160,140 140 C145 120,140 100,135 80 C130 60,120 40,110 20 C105 12,102 10,100 10Z" fill="url(#mg)" stroke="rgba(200,163,85,0.2)" stroke-width="1"/>
+            <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#16A34A" stop-opacity="0.4"/><stop offset="100%" stop-color="#0F5132" stop-opacity="0.25"/></linearGradient></defs>
+            <circle cx="95" cy="60" r="5" fill="#C8A355"><animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="110" cy="130" r="5" fill="#C8A355"><animate attributeName="r" values="4;6;4" dur="3s" begin="0.8s" repeatCount="indefinite"/></circle>
+            <circle cx="85" cy="260" r="5" fill="#C8A355"><animate attributeName="r" values="4;6;4" dur="3s" begin="1.6s" repeatCount="indefinite"/></circle>
+          </svg>
+          <div class="map-pin mp-1"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg" alt=""><div class="map-pin-t"><strong>Bánh Tráng Trộn</strong><span>📍 Bắc Giang</span></div></div>
+          <div class="map-pin mp-2"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg" alt=""><div class="map-pin-t"><strong>Sấy Giòn Tôm</strong><span>📍 Hà Nội</span></div></div>
+          <div class="map-pin mp-3"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg" alt=""><div class="map-pin-t"><strong>Sấy Giòn Bò</strong><span>📍 Đà Nẵng</span></div></div>
+        </div>
+        <div class="map-side">
+          <div class="map-side-tag">Đang chọn</div>
+          <h3>🏔️ Bắc Giang</h3>
+          <div class="map-side-g">
+            <div class="msi"><div class="msi-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-tron-vi-sa-te-tom/1789025201710-bt9n5.jpeg" alt=""></div>Tráng trộn</div>
+            <div class="msi"><div class="msi-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-tom/1789090933242-ihmh3s.jpg" alt=""></div>Sấy tôm</div>
+            <div class="msi"><div class="msi-img"><img src="https://yknnmkocgqbfkmonbvbn.supabase.co/storage/v1/object/public/assets/banh-trang-say-gion-vi-sa-te-bo/1789091146363-zuoruv.jpg" alt=""></div>Sấy bò</div>
+            <div class="msi"><div class="msi-img"></div>Bánh dẻo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-wrap">
+    <div class="about-photos gs-left">
+      <div class="about-main-img"><img src="https://images.unsplash.com/photo-1581093458791-9d42e3c7e117?w=800&q=80" alt="Nhà máy" loading="lazy"></div>
+      <div class="about-float-img"><img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&q=80" alt="Sản phẩm" loading="lazy"></div>
+    </div>
+    <div class="about-card gs-right">
+      <div class="about-ey">✦ Về HAQ Food ✦</div>
+      <h2 class="about-h">Doanh Nghiệp Thực Phẩm Việt — Từ Nội Địa Đến Quốc Tế</h2>
+      <p class="about-p">Thành lập năm 2021 tại Hà Nội, HAQ FOOD chuyên sản xuất & phân phối thực phẩm đạt chuẩn quốc tế. Mang hương vị truyền thống Việt Nam đến các thị trường châu Á.</p>
+      <div class="about-tags">
+        <span class="about-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>ISO 22000</span>
+        <span class="about-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>HACCP</span>
+        <span class="about-tag">🇰🇷🇹🇼 Xuất khẩu</span>
+      </div>
+      <div class="about-nums">
+        <div class="about-num"><strong>2021</strong><span>Thành lập</span></div>
+        <div class="about-num"><strong>50+</strong><span>Sản phẩm</span></div>
+        <div class="about-num"><strong>7+</strong><span>Đối tác</span></div>
+        <div class="about-num"><strong>3</strong><span>Thị trường</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<div class="partners"><div class="ptr">
+  <span>WinMart</span><span>GO!</span><span>Circle K</span><span>GS25</span><span>LOTTE</span><span>K-Market</span><span>Bách Hoá Xanh</span>
+  <span>WinMart</span><span>GO!</span><span>Circle K</span><span>GS25</span><span>LOTTE</span><span>K-Market</span><span>Bách Hoá Xanh</span>
+</div></div>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-z">
+    <div class="sec-header gs-fade"><div class="sec-tag">✦ Tầm nhìn quốc tế ✦</div><h2 class="sec-title">Từ Nông Sản Việt — Vươn Tầm Châu Á</h2></div>
+    <div class="cta-flags gs-fade"><span class="cflag">🇻🇳 Việt Nam</span><span class="cflag">🇰🇷 Hàn Quốc</span><span class="cflag">🇹🇼 Đài Loan</span></div>
+    <a href="#" class="btn-primary gs-fade">Liên hệ hợp tác →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="f-grid">
+    <div><div class="f-logo">HAQ <span>FOOD</span></div><p>Công ty Cổ phần HAQ Hà Nội — Nhà sản xuất & phân phối thực phẩm đạt chuẩn quốc tế.</p></div>
+    <div><h4>Sản phẩm</h4><a>Bánh tráng trộn</a><a>Sấy giòn</a><a>Bánh dẻo</a><a>Tất cả SP</a></div>
+    <div><h4>Công ty</h4><a>Về chúng tôi</a><a>Năng lực</a><a>Tin tức</a><a>Liên hệ</a></div>
+    <div><h4>Hợp tác</h4><a>OEM / ODM</a><a>Đại lý</a><a>Xuất khẩu</a><a>Báo giá</a></div>
+  </div>
+  <div class="f-bot">© 2025 HAQ FOOD · Công ty Cổ phần HAQ Hà Nội</div>
+</footer>
+
+<script>
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+  const mm = gsap.matchMedia();
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+
+    // Set initial states via JS
+    gsap.set('.gs-fade', { opacity:0, y:24 });
+    gsap.set('.gs-left', { opacity:0, x:-40 });
+    gsap.set('.gs-right', { opacity:0, x:40 });
+    gsap.set('.gs-scale', { opacity:0, scale:0.9 });
+
+    // Hero entrance
+    gsap.to('.hero-left', { opacity:1, x:0, duration:1, ease:'power2.out', delay:0.3 });
+    gsap.to('.hero-right', { opacity:1, x:0, duration:1, ease:'power2.out', delay:0.5 });
+    
+    // Floating hero products
+    gsap.to('.hp-1', { y:-12, rotation:-1, duration:3, ease:'sine.inOut', yoyo:true, repeat:-1 });
+    gsap.to('.hp-2', { y:10, rotation:2, duration:3.5, ease:'sine.inOut', yoyo:true, repeat:-1, delay:0.5 });
+    gsap.to('.hp-3', { y:-8, rotation:-3, duration:4, ease:'sine.inOut', yoyo:true, repeat:-1, delay:1 });
+
+    // Scroll reveals
+    gsap.utils.toArray('.gs-fade').forEach(el => {
+      gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 88%', toggleActions:'play none none none' }
+      });
+    });
+    
+    gsap.utils.toArray('.gs-left').forEach(el => {
+      gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 85%' }
+      });
+    });
+    
+    gsap.utils.toArray('.gs-right').forEach(el => {
+      gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 85%' }
+      });
+    });
+
+    // Product cards stagger
+    gsap.to('.p-card', { opacity:1, scale:1, y:0, duration:0.4,
+      stagger:{ each:0.08, from:'start' }, ease:'back.out(1.4)',
+      scrollTrigger:{ trigger:'.p-grid', start:'top 85%' }
+    });
+
+    // Stats counter
+    gsap.utils.toArray('.stat-n[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.querySelector('i')?.outerHTML || '';
+      ScrollTrigger.create({
+        trigger: el, start:'top 90%',
+        onEnter: () => {
+          gsap.to({ val:0 }, {
+            val:target, duration:1.5, ease:'power2.out',
+            onUpdate: function(){ el.innerHTML = Math.floor(this.targets()[0].val).toLocaleString() + suffix; }
+          });
+        }, once:true
+      });
+    });
+
+    // Parallax blobs
+    gsap.to('.blob-1', { yPercent:8, ease:'none', scrollTrigger:{ trigger:'.hero', scrub:0.5 }});
+    gsap.to('.blob-2', { yPercent:-10, ease:'none', scrollTrigger:{ trigger:'.hero', scrub:0.5 }});
+  });
+}
+
+// Hero slider
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.hdot');
+let cur = 0;
+if (slides.length) {
+  slides[0].style.opacity = '1';
+  dots[0].style.background = '#16A34A';
+  dots[0].style.transform = 'scale(1.3)';
+  function goSlide(n) {
+    slides[cur].style.opacity = '0';
+    dots[cur].style.background = 'rgba(255,255,255,0.4)';
+    dots[cur].style.transform = 'scale(1)';
+    cur = n;
+    slides[cur].style.opacity = '1';
+    dots[cur].style.background = '#16A34A';
+    dots[cur].style.transform = 'scale(1.3)';
+  }
+  setInterval(() => goSlide((cur + 1) % slides.length), 5000);
+  dots.forEach(d => d.addEventListener('click', () => goSlide(+d.dataset.s)));
+}
+</script>
+</body>
+</html>
