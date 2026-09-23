@@ -38,8 +38,10 @@ export default function DbFeaturedProducts() {
     cats.set('ALL', language === 'en' ? 'All Products' : language === 'ko' ? '모든 제품' : language === 'zh' ? '全部产品' : 'Tất Cả Sản Phẩm')
     
     allProducts.forEach((p) => {
-      const catName = p.categories?.name || p.category || ''
-      const catSlug = p.categories?.slug || ''
+      const catObj = Array.isArray(p.categories) ? p.categories[0] : p.categories
+      const catLocalized = catObj ? getLocalizedCategory(catObj, language) : null
+      const catName = catLocalized?.name || catObj?.name || p.category || ''
+      const catSlug = catObj?.slug || (typeof p.category === 'string' ? p.category.toLowerCase().replace(/\s+/g, '-') : '')
       if (catSlug && catName && !cats.has(catSlug)) {
         cats.set(catSlug, catName)
       }
@@ -52,7 +54,8 @@ export default function DbFeaturedProducts() {
     let list = allProducts
     if (selectedCategory !== 'ALL') {
       list = list.filter((p) => {
-        const catSlug = p.categories?.slug || ''
+        const catObj = Array.isArray(p.categories) ? p.categories[0] : p.categories
+        const catSlug = catObj?.slug || (typeof p.category === 'string' ? p.category.toLowerCase().replace(/\s+/g, '-') : '')
         return catSlug === selectedCategory
       })
     }
@@ -68,36 +71,54 @@ export default function DbFeaturedProducts() {
     >
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 sm:pb-12 border-b border-[#D8E5DA]">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-[#0F5132] font-bold text-xs uppercase tracking-wider mb-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A]" />
-              <span>{t('products.catalog_badge', 'HỆ SINH THÁI NÔNG SẢN & ĐẶC SẢN CHỦ LỰC')}</span>
+        <div className="pb-6 sm:pb-8 border-b border-[#D8E5DA]">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 text-[#0F5132] font-bold text-xs uppercase tracking-wider mb-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] animate-pulse" />
+                <span>{t('products.catalog_badge', 'HỆ SINH THÁI NÔNG SẢN & ĐẶC SẢN CHỦ LỰC')}</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0C1E15] tracking-tight">
+                {t('products.catalog_title', 'Sản Phẩm Nổi Bật')}
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0C1E15] tracking-tight">
-              {t('products.catalog_title', 'Sản Phẩm Nổi Bật')}
-            </h2>
-            <p className="text-[#52665A] text-xs sm:text-sm lg:text-base mt-2">
-              {t('products.catalog_desc', 'Dòng sản phẩm đồ ăn vặt và nông sản đóng gói đạt chuẩn ISO 22000 & HACCP, được phân phối rộng rãi tại các hệ thống siêu thị lớn.')}
-            </p>
+
+            {/* Quick Catalog Link */}
+            <Link
+              to={getProductsPageUrl(language)}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#0F5132] hover:text-[#16A34A] transition-colors pb-1 self-start sm:self-end group cursor-pointer"
+            >
+              <span>{language === 'en' ? 'View all products' : language === 'ko' ? '전체 제품 보기' : language === 'zh' ? '查看全部产品' : 'Xem toàn bộ catalog'}</span>
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
 
-          {/* Dynamic Category Filter Tabs from Real Database */}
+          {/* Dynamic Category Filter Tabs - Dedicated Full-Width Row */}
           {categories.length > 1 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none max-w-full">
-              {categories.slice(0, 5).map((cat) => (
-                <button
-                  key={cat.slug}
-                  onClick={() => setSelectedCategory(cat.slug)}
-                  className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs whitespace-nowrap transition-all cursor-pointer ${
-                    selectedCategory === cat.slug
-                      ? 'bg-[#0F5132] text-white shadow-md'
-                      : 'bg-white hover:bg-neutral-100 text-[#52665A] border border-[#D8E5DA]'
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
+            <div className="mt-5 pt-4 border-t border-[#D8E5DA]/60">
+              <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 scrollbar-none overscroll-x-contain">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#52665A] shrink-0 mr-1.5 hidden md:inline-flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5 text-[#0F5132]" />
+                  <span>{language === 'en' ? 'Filter:' : language === 'ko' ? '분류:' : language === 'zh' ? '筛选:' : 'Lọc danh mục:'}</span>
+                </span>
+                {categories.map((cat) => {
+                  const isActive = selectedCategory === cat.slug
+                  return (
+                    <button
+                      key={cat.slug}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.slug)}
+                      className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0 select-none ${
+                        isActive
+                          ? 'bg-[#0F5132] text-white shadow-md shadow-[#0F5132]/25 scale-[1.02]'
+                          : 'bg-white hover:bg-[#F0F5F2] text-[#52665A] hover:text-[#0C1E15] border border-[#D8E5DA] shadow-2xs hover:border-[#0F5132]/40'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           )}
         </div>
