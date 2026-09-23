@@ -177,8 +177,6 @@ function AppRoutes() {
           <Route path="/chinh-sach-doi-tra-hoan-tien" element={<RefundPolicyPage />} />
           <Route path="/chinh-sach-bao-mat" element={<PrivacyPolicyPage />} />
           <Route path="/dieu-khoan-su-dung" element={<TermsOfServicePage />} />
-          
-          <Route path="/heritage" element={<HeritagePage />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/company-profile" element={<Navigate to="/gioi-thieu" replace />} />
 
