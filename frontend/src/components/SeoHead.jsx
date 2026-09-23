@@ -93,11 +93,29 @@ const SEO_DESCRIPTIONS = {
     ko: '베트남 농산물의 가치를 글로벌 시장으로 확장하는 HAQ FOOD의 기업 사명, 미래 비전 및 5대 핵심 가치를 소개합니다.',
     zh: '了解 HAQ FOOD 的企业使命、战略愿景与五大核心价值观，携手将越南优质农产品推向国际市场。',
   },
+  history: {
+    vi: 'Lịch sử phát triển và hành trình 2021 — 2026 của HAQ FOOD: từ khát vọng hiện đại hóa nông sản Việt đến hệ thống phủ sóng 3.000+ điểm bán và xuất khẩu quốc tế.',
+    en: 'History and milestones (2021 — 2026) of HAQ FOOD: from modernizing Vietnamese agricultural snacks with clean convective drying to 3,000+ retail outlets and global exports.',
+    ko: '2021년부터 2026년까지 HAQ FOOD의 성장 연혁: 청정 건조 기술을 통한 전통 스낵의 현대화, 전국 3,000개 이상 매장 입점 및 글로벌 수출 개척.',
+    zh: 'HAQ FOOD 2021 — 2026 年发展历程与里程碑：立足洁净热风烘干工艺将越南传统农食现代化，覆盖全国 3,000+ 终端并扬帆海外出口。',
+  },
+  products: {
+    vi: 'Khám phá danh mục đặc sản nông sản chế biến sạch HAQ FOOD: Bánh tráng sấy giòn, Bánh đậu xanh tươi, Bắp rang bơ, Thịt khô thượng hạng đạt chuẩn ISO 22000 & HACCP.',
+    en: 'Explore HAQ FOOD premium clean snack catalog: Crispy dried rice paper, fresh mung bean cookies, caramel popcorn, and cured dried meats under ISO 22000 & HACCP standards.',
+    ko: 'HAQ FOOD 프리미엄 클린 스낵 카탈로그: 바삭 건조 라이스페이퍼, 신선 녹두 케이크, 카라멜 팝콘, 수제 건조 육류 (ISO 22000 및 HACCP 인증).',
+    zh: '探索 HAQ FOOD 优质洁净休闲食品目录：香脆烤米纸、新鲜绿豆糕、焦糖爆米花及精品肉类干制品，严守 ISO 22000 与 HACCP 国际标准。',
+  },
   capabilities: {
     vi: 'Hệ thống nhà xưởng hiện đại, dây chuyền sấy giòn khép kín và năng lực gia công thực phẩm OEM/ODM theo tiêu chuẩn xuất khẩu.',
     en: 'State-of-the-art manufacturing facility, closed-loop clean drying line, cleanrooms, and OEM/ODM private-label food processing capabilities.',
     ko: '최첨단 제조 공장, 밀폐식 청정 건조 라인, 클린룸 및 글로벌 수출 기준에 맞춘 식품 OEM/ODM 프라이빗 라벨 수탁 역량.',
     zh: '现代化生产园区、全封闭洁净干燥生产线、ISO 级洁净车间及符合国际出口标准的食品 OEM/ODM 代工定制能力。',
+  },
+  news: {
+    vi: 'Cập nhật tin tức hoạt động doanh nghiệp, sự kiện hội chợ triển lãm giao thương quốc tế, hợp tác cung ứng B2B và xuất khẩu chính ngạch của HAQ FOOD.',
+    en: 'Latest corporate news, international trade fairs, B2B distribution partnerships, and official food exports of HAQ FOOD.',
+    ko: 'HAQ FOOD의 최신 기업 소식, 국제 무역 박람회 참가, B2B 대리점 공급 계약 및 정식 통관 수출 업데이트.',
+    zh: '获取 HAQ FOOD 最新企业资讯、国际经贸博览会动态、全国 B2B 渠道供货合作与正规通关出口业务进展。',
   },
   contact: {
     vi: 'Liên hệ phòng kinh doanh B2B HAQ FOOD để nhận bảng giá đại lý toàn quốc, chính sách gia công OEM/ODM hoặc tư vấn xuất khẩu.',
@@ -140,7 +158,7 @@ const SEO_DESCRIPTIONS = {
 function resolveSectionKey(pathname) {
   const p = pathname.toLowerCase().replace(/\/$/, '') || '/'
   if (p.includes('/about') || p.includes('/gioi-thieu') || p.includes('/ve-chung-toi')) return 'about'
-  if (p.includes('/history') || p.includes('/lich-su')) return 'history'
+  if (p.includes('/history') || p.includes('/lich-su') || p.includes('/di-san')) return 'history'
   if (p.includes('/capabilities') || p.includes('/nang-luc')) return 'capabilities'
   if (p.includes('/products') || p.includes('/san-pham')) return 'products'
   if (p.includes('/careers') || p.includes('/tuyen-dung')) return 'careers'
@@ -209,7 +227,7 @@ export default function SeoHead() {
         const descObj = SEO_DESCRIPTIONS[sectionKey] || SEO_DESCRIPTIONS.home
         const metaDesc = descObj[language] || descObj.vi
         const pageUrl = `${SITE_ORIGIN}${cleanPath}`
-        const fallbackImage = 'https://haq.com.vn/favicon.jpg'
+        const fallbackImage = 'https://haq.com.vn/assets/herobanner/hero_banner_1.webp'
 
         setMetaTag('name', 'description', metaDesc)
         setMetaTag('property', 'og:title', pageTitle)

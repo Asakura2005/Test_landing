@@ -8,7 +8,6 @@ const HistoryPage = lazy(() => import('./pages/HistoryPage.jsx'))
 const CapabilitiesPage = lazy(() => import('./pages/CapabilitiesPage.jsx'))
 const ProductsPage = lazy(() => import('./pages/ProductsPage.jsx'))
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage.jsx'))
-const HeritagePage = lazy(() => import('./pages/HeritagePage.jsx'))
 const NewsPage = lazy(() => import('./pages/NewsPage.jsx'))
 const NewsDetailPage = lazy(() => import('./pages/NewsDetailPage.jsx'))
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'))
@@ -86,6 +85,8 @@ function AppRoutes() {
             <Route path="/ve-chung-toi" element={<CompanyProfilePage />} />
             <Route path="/ve-chung-toi/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/lich-su" element={<HistoryPage />} />
+            <Route path="/di-san" element={<Navigate to="/lich-su" replace />} />
+            <Route path="/heritage" element={<Navigate to="/lich-su" replace />} />
             <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
             <Route path="/nang-luc" element={<CapabilitiesPage />} />
             <Route path="/san-pham" element={<ProductsPage />} />

@@ -20,7 +20,9 @@
     { "source": "/gioithieu", "destination": "/gioi-thieu", "permanent": true },
     { "source": "/lienhe", "destination": "/lien-he", "permanent": true },
     { "source": "/tintuc", "destination": "/tin-tuc", "permanent": true },
-    { "source": "/nangluc", "destination": "/nang-luc", "permanent": true }
+    { "source": "/nangluc", "destination": "/nang-luc", "permanent": true },
+    { "source": "/di-san", "destination": "/lich-su", "permanent": true },
+    { "source": "/heritage", "destination": "/lich-su", "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
