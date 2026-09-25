@@ -35,6 +35,13 @@ const SMTP_PASS = (process.env.SMTP_PASS || '').replace(/\s+/g, '')
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'HAQ FOOD CRM'
 const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || ''
 
+// Cấu hình URL website và portal quản trị (Ưu tiên tên miền chính thức haq.com.vn)
+const SITE_URL = (process.env.SITE_URL || process.env.CLIENT_URL || 'https://haq.com.vn')
+  .split(',')[0]
+  .trim()
+  .replace(/\/+$/, '')
+const ADMIN_PORTAL_URL = `${SITE_URL}/admin`
+
 if (!SMTP_USER) {
   console.warn('WARNING: SMTP_USER not configured. SMTP email sending will fail.')
 }
@@ -221,14 +228,12 @@ export function buildAdminNotificationHtml(lead) {
                   </tr>
                   <tr style="border-bottom: 1px solid #E5E7EB;">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Số điện thoại</td>
-                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">
-                      <a href="tel:${safePhone}" style="color: #111827; text-decoration: none;">${safePhone}</a>
-                    </td>
+                    <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">${safePhone}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #E5E7EB;">
                     <td style="padding: 10px 14px; font-size: 13px; color: #6B7280; width: 140px; background-color: #F9FAFB;">Email</td>
                     <td style="padding: 10px 14px; font-size: 13px; color: #111827; font-weight: 600;">
-                      ${safeEmail && safeEmail !== 'Chưa cung cấp' ? `<a href="mailto:${safeEmail}" style="color: #111827; text-decoration: none;">${safeEmail}</a>` : '<span style="color: #9CA3AF;">Chưa cung cấp</span>'}
+                      ${safeEmail && safeEmail !== 'Chưa cung cấp' ? safeEmail : '<span style="color: #9CA3AF; font-weight: normal;">Chưa cung cấp</span>'}
                     </td>
                   </tr>
                   <tr style="border-bottom: 1px solid #E5E7EB;">
@@ -276,7 +281,7 @@ export function buildAdminNotificationHtml(lead) {
               <table border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center" style="background-color: #0F5132; border-radius: 4px;">
-                    <a href="https://test-landing-five-blond.vercel.app/admin" target="_blank" style="display: inline-block; padding: 10px 22px; font-size: 13px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 4px;">
+                    <a href="${ADMIN_PORTAL_URL}" target="_blank" style="display: inline-block; padding: 10px 22px; font-size: 13px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 4px; background-color: #0F5132;">
                       Xem Lead trong CRM
                     </a>
                   </td>
