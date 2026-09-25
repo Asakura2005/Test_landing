@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState } from 'react'
 import { useReveal } from '../hooks/useReveal'
@@ -189,7 +189,7 @@ export default function Certifications({ className = '' }) {
     <section className={`bg-white py-20 sm:py-28 border-t border-haq-border font-sans ${className}`}>
       <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
         {/* Header */}
-        <div ref={ref} className="reveal max-w-3xl mb-14">
+        <div ref={ref} className="reveal max-w-4xl lg:max-w-5xl mb-14">
           <p className="font-heading text-xs tracking-[0.25em] uppercase text-[#16A34A] font-bold mb-3">
             {language === 'en'
               ? 'QUALITY ASSURANCE · CERTIFICATIONS'
@@ -199,14 +199,14 @@ export default function Certifications({ className = '' }) {
               ? '生产车间标准与国际权威资质'
               : 'TIÊU CHUẨN XƯỞNG & BẢO CHỨNG CHẤT LƯỢNG'}
           </p>
-          <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-haq-ink uppercase leading-snug">
+          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-haq-ink uppercase leading-snug">
             {language === 'en'
               ? 'ISO & HACCP COMPLIANCE ACROSS ALL LINES'
               : language === 'ko'
               ? '인증 포트폴리오 및 공인 시험 증빙'
               : language === 'zh'
               ? '资质认证档案与出厂质检凭证'
-              : 'HỒ SƠ CHỨNG NHẬN & BẰNG CHỨNG KIỂM ĐỊNH'}
+              : <>HỒ SƠ CHỨNG NHẬN &amp; BẰNG CHỨNG <span className="whitespace-nowrap">KIỂM ĐỊNH</span></>}
           </h2>
           <div className="mt-3 h-0.5 w-16 bg-[#16A34A]" />
           <p className="mt-4 text-sm text-haq-text-secondary leading-relaxed max-w-2xl">

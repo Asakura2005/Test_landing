@@ -13,6 +13,7 @@
     "dompurify": "^3.4.15",
     "framer-motion": "^13.1.1",
     "lucide-react": "^0.462.0",
+    "page-flip": "^2.0.7",
     "posthog-js": "^1.422.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

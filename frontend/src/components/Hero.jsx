@@ -164,7 +164,7 @@ export default function Hero() {
                   height="1080"
                   className="w-full h-full object-cover object-[center_35%] scale-100 transition-transform duration-1000 ease-out"
                   loading={idx === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={idx === 0 ? 'high' : 'low'}
+                  fetchpriority={idx === 0 ? 'high' : 'low'}
                   decoding={idx === 0 ? 'sync' : 'async'}
                 />
               ) : null}

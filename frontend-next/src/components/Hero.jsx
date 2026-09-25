@@ -134,7 +134,7 @@ export default function Hero() {
               alt={slide.alt}
               className="w-full h-full object-cover object-[center_35%]"
               loading={idx === 0 ? "eager" : "lazy"}
-              fetchPriority={idx === 0 ? "high" : "low"}
+              fetchpriority={idx === 0 ? "high" : "low"}
               decoding={idx === 0 ? "sync" : "async"}
             />
           </div>

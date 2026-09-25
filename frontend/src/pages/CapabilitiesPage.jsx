@@ -319,10 +319,10 @@ export default function CapabilitiesPage() {
         {/* ──────────────────────────────────────────
             4 TRỤ CỘT NĂNG LỰC GIA CÔNG OEM / ODM
         ────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 bg-white border-b border-haq-border" id="nang-luc-oem-odm">
+        <section className="pt-8 sm:pt-10 pb-16 sm:pb-24 bg-white border-b border-haq-border" id="nang-luc-oem-odm">
           <div className="mx-auto max-w-site px-4 sm:px-6 lg:px-12">
             <Reveal>
-              <div className="max-w-3xl mb-12 sm:mb-16">
+              <div className="max-w-3xl mb-8 sm:mb-10">
                 <div className="inline-flex items-center gap-2 mb-3">
                   <div className="h-px w-6 bg-[#064E3B]" />
                   <span className="font-heading text-xs font-bold text-[#064E3B] uppercase tracking-[0.2em]">
@@ -331,13 +331,13 @@ export default function CapabilitiesPage() {
                 </div>
                 <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-haq-ink leading-snug">
                   {en ? (
-                    <>Turnkey OEM / ODM <span className="text-[#064E3B]">4-Pillar Solutions</span></>
+                    <>Turnkey <span className="text-[#064E3B]">4-Pillar Solutions</span></>
                   ) : ko ? (
-                    <>OEM / ODM 맞춤 위탁 제조 <span className="text-[#064E3B]">4대 핵심 기둥</span></>
+                    <>맞춤 위탁 제조 <span className="text-[#064E3B]">4대 핵심 기둥</span></>
                   ) : zh ? (
-                    <>OEM / ODM 贴牌代工 <span className="text-[#064E3B]">4大核心支柱</span></>
+                    <>专业代工制造 <span className="text-[#064E3B]">4大核心支柱</span></>
                   ) : (
-                    <>4 Trụ cột giải pháp gia công <span className="text-[#064E3B]">OEM / ODM trọn gói</span></>
+                    <>4 Trụ cột <span className="text-[#064E3B]">giải pháp gia công</span></>
                   )}
                 </h2>
                 <p className="text-sm sm:text-base text-haq-text-secondary mt-4 leading-relaxed max-w-2xl">
