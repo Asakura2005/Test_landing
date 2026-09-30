@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { getProductBySlug, getProducts, createLead } from '../services/supabase'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { CheckCircle, Package, Calendar, ArrowRight, Home, ChevronRight, Plus, Minus, Search, X, Download, FileText, CheckCircle2, Building2, Phone, Mail } from 'lucide-react'
@@ -8,7 +8,7 @@ import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedCategory } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl, getContactUrl } from '../utils/routeI18n'
-import { PRODUCT_IMAGE_MAP } from '../data/productCategories'
+import { PRODUCT_IMAGE_MAP, isCategorySlug, getProductRootCategorySlug } from '../data/productCategories'
 import { generateProductSchema } from '../utils/productSchema'
 
 /**
@@ -34,7 +34,10 @@ function formatTitleName(name) {
 }
 
 export default function ProductDetailPage() {
-  const { slug } = useParams()
+  const params = useParams()
+  const navigate = useNavigate()
+  const slug = params.slug || params.secondSlug || (isCategorySlug(params.categorySlug) ? null : params.categorySlug)
+  const categorySlugParam = params.categorySlug
   const { t, language } = useLanguage()
   const { trackProductView, trackContactClick, trackProductClick } = useAnalytics()
   const [product, setProduct] = useState(null)
@@ -42,6 +45,27 @@ export default function ProductDetailPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeImage, setActiveImage] = useState('')
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0)
+
+  // Danh mục chuẩn SEO của sản phẩm (danh mục gốc)
+  const canonicalCategorySlug = useMemo(() => {
+    if (categorySlugParam && isCategorySlug(categorySlugParam)) {
+      return categorySlugParam
+    }
+    if (product) {
+      return getProductRootCategorySlug(product)
+    }
+    return 'do-an-vat-cach-tan'
+  }, [categorySlugParam, product])
+
+  // Tự động chuyển hướng link cũ 1 cấp (/san-pham/:productSlug) sang URL phân cấp chuẩn SEO
+  useEffect(() => {
+    if (product && !params.secondSlug && !params.slug) {
+      const targetUrl = getProductDetailUrl(product, language, canonicalCategorySlug)
+      if (typeof window !== 'undefined' && window.location.pathname !== targetUrl) {
+        navigate(targetUrl, { replace: true })
+      }
+    }
+  }, [product, params.secondSlug, params.slug, language, canonicalCategorySlug, navigate])
   
   // For zoom effect
   const [backgroundPosition, setBackgroundPosition] = useState('0% 0%')
@@ -300,9 +324,7 @@ export default function ProductDetailPage() {
       prodImage = `https://haq.com.vn${prodImage.startsWith('/') ? '' : '/'}${prodImage}`
     }
 
-    const currentUrl = typeof window !== 'undefined'
-      ? `https://haq.com.vn${window.location.pathname.replace(/\/+$/, '')}`
-      : `https://haq.com.vn/san-pham/${product.slug}`
+    const currentUrl = `https://haq.com.vn${getProductDetailUrl(product, language, canonicalCategorySlug)}`
 
     updateMetaTag('property', 'og:title', pageTitle)
     updateMetaTag('property', 'og:description', finalDesc)
@@ -365,7 +387,7 @@ export default function ProductDetailPage() {
         '@type': 'ListItem',
         position: breadcrumbItems.length + 1,
         name: locCat.name,
-        item: `https://haq.com.vn${getProductsPageUrl(language)}`
+        item: `https://haq.com.vn${getProductsPageUrl(language, canonicalCategorySlug)}`
       })
     }
 
@@ -398,7 +420,7 @@ export default function ProductDetailPage() {
         robots.setAttribute('content', 'index, follow')
       }
     }
-  }, [product, localizedProduct, activeImage, selectedVariantIndex, slug, language, isLoading])
+  }, [product, localizedProduct, activeImage, selectedVariantIndex, slug, language, isLoading, canonicalCategorySlug])
 
   const handleSelectVariant = (idx) => {
     setSelectedVariantIndex(idx)
@@ -539,7 +561,9 @@ export default function ProductDetailPage() {
           {localizedCategory && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-haq-border" />
-              <span className="text-haq-ink font-medium">{localizedCategory.name}</span>
+              <Link to={getProductsPageUrl(language, canonicalCategorySlug)} className="text-haq-ink hover:text-haq-green-dark transition-colors font-medium">
+                {localizedCategory.name}
+              </Link>
             </>
           )}
           <ChevronRight className="w-3.5 h-3.5 text-haq-border" />
@@ -1052,7 +1076,7 @@ export default function ProductDetailPage() {
                 const recImg = resolveSafeProductImage(p.images?.[0] || p.variants?.[0]?.img || p.image_url || p.image)
                 return (
                   <Link 
-                    to={getProductDetailUrl(p.slug || p.id, language)} 
+                    to={getProductDetailUrl(p, language)} 
                     key={p.id}
                     onClick={() => trackProductClick(p, 'product_detail_similar')}
                     data-product-click="true"

@@ -286,8 +286,8 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
     if (selectedProvinceId === "hanoi") {
       return {
         code: "VN-HN-01",
-        title: "HÀ NỘI - THỦ PHỦ R&D & TINH HOA BÁNH ĐẬU XANH TƯƠI",
-        desc: "Hà Nội là trung tâm nghiên cứu công thức độc quyền và điều phối chuỗi cung ứng của HAQ Food. Nơi đây gìn giữ tinh hoa ẩm thực truyền thống như bánh đậu xanh tươi, kết hợp dây chuyền tiệt trùng khép kín hiện đại đạt chuẩn quốc tế ISO 22000 & HACCP.",
+        title: "HÀ NỘI - TRỤ SỞ ĐIỀU HÀNH & TRUNG TÂM R&D",
+        desc: "Hà Nội là nơi đặt trụ sở chính, trung tâm điều hành và nghiên cứu phát triển công thức độc quyền (R&D) của HAQ Food. Tại đây, chúng tôi phụ trách chiến lược sản phẩm, kiểm soát quy chuẩn chất lượng và điều phối mạng lưới sản xuất liên kết cùng hệ thống phân phối hơn 10.000 điểm bán trên toàn quốc.",
       };
     }
 

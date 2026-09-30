@@ -184,16 +184,6 @@ export default function Hero() {
       {/* 3. NỘI DUNG CHỮ & NÚT BẤM CHUẨN THIẾT KẾ STITCH */}
       <div className="relative z-20 max-w-[1400px] w-full mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center py-10 lg:py-16">
         <div className="max-w-3xl flex flex-col gap-4 sm:gap-6">
-          {/* Eyebrow Tag với đèn radar nhấp nháy */}
-          <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-xl border border-white/20 px-3.5 sm:px-4 py-1.5 rounded-full w-fit shadow-xl">
-            <span className="flex h-2.5 w-2.5 relative shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#fe932c] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#fe932c]" />
-            </span>
-            <span className="font-bold text-[10px] sm:text-xs tracking-[0.16em] uppercase text-[#b0f0d6] truncate">
-              {currentSlide.badge}
-            </span>
-          </div>
 
           {/* Monumental Headline với gradient ánh vàng Stitch */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.14] tracking-tight">

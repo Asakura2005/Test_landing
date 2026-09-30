@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ArrowRight, BookOpen, Download, FileText, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, BookOpen, Eye, FileText, CheckCircle2 } from 'lucide-react'
 
 const ALL_PRODUCTS = [
   {
@@ -193,19 +193,15 @@ export default function FlagshipFeaturedProducts({ onOpenRfq }) {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#fe932c] text-white flex items-center justify-center shrink-0 shadow-lg">
               <BookOpen className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <div>
               <h4 className="text-lg sm:text-2xl font-bold">
-                Tải Toàn Bộ Hồ Sơ Danh Mục Sản Phẩm
+                Xem Toàn Bộ Danh Mục Sản Phẩm
               </h4>
-              <p className="text-xs sm:text-sm text-white/80 mt-0.5">
-                (HAQ Food B2B Product Catalog 2025 • Đầy đủ quy cách đóng gói, thông số thùng &amp; giá sỉ)
-              </p>
-            </div>
           </div>
 
           <a
-            href="/assets/stitch/logo_haq.png"
-            download="HAQ_FOOD_Catalog_2025.png"
+            href="/documents/danh-sach-san-pham-haq-food.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => {
               if (onOpenRfq) {
                 // Also optionally trigger RFQ modal
@@ -213,8 +209,8 @@ export default function FlagshipFeaturedProducts({ onOpenRfq }) {
             }}
             className="inline-flex items-center gap-2.5 bg-white text-[#003527] hover:bg-[#fe932c] hover:text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all shadow-lg shrink-0 relative z-10 cursor-pointer"
           >
-            <span>Tải Catalog B2B (PDF 18MB)</span>
-            <Download className="w-4 h-4" />
+            <span>Xem Nhanh (PDF)</span>
+            <Eye className="w-4 h-4" />
           </a>
         </div>
       </div>

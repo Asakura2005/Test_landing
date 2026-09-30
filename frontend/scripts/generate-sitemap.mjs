@@ -115,6 +115,133 @@ const POLICY_SECTIONS = [
   },
 ]
 
+// Category and Subcategory SEO sections
+const CATEGORY_SECTIONS = [
+  // 3 Root Categories
+  {
+    vi: '/san-pham/do-an-vat-cach-tan',
+    en: '/en/products/do-an-vat-cach-tan',
+    ko: '/ko/products/do-an-vat-cach-tan',
+    zh: '/zh/products/do-an-vat-cach-tan',
+    priority: '0.8',
+    changefreq: 'daily',
+  },
+  {
+    vi: '/san-pham/do-an-vat-hien-dai',
+    en: '/en/products/do-an-vat-hien-dai',
+    ko: '/ko/products/do-an-vat-hien-dai',
+    zh: '/zh/products/do-an-vat-hien-dai',
+    priority: '0.8',
+    changefreq: 'daily',
+  },
+  {
+    vi: '/san-pham/do-an-vat-truyen-thong',
+    en: '/en/products/do-an-vat-truyen-thong',
+    ko: '/ko/products/do-an-vat-truyen-thong',
+    zh: '/zh/products/do-an-vat-truyen-thong',
+    priority: '0.8',
+    changefreq: 'daily',
+  },
+  // Subcategories of Đồ Ăn Vặt Cách Tân
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/banh-trang-tron',
+    en: '/en/products/do-an-vat-cach-tan/banh-trang-tron',
+    ko: '/ko/products/do-an-vat-cach-tan/banh-trang-tron',
+    zh: '/zh/products/do-an-vat-cach-tan/banh-trang-tron',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/banh-trang-say',
+    en: '/en/products/do-an-vat-cach-tan/banh-trang-say',
+    ko: '/ko/products/do-an-vat-cach-tan/banh-trang-say',
+    zh: '/zh/products/do-an-vat-cach-tan/banh-trang-say',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/banh-cookies',
+    en: '/en/products/do-an-vat-cach-tan/banh-cookies',
+    ko: '/ko/products/do-an-vat-cach-tan/banh-cookies',
+    zh: '/zh/products/do-an-vat-cach-tan/banh-cookies',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/banh-sua',
+    en: '/en/products/do-an-vat-cach-tan/banh-sua',
+    ko: '/ko/products/do-an-vat-cach-tan/banh-sua',
+    zh: '/zh/products/do-an-vat-cach-tan/banh-sua',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/banh-deo',
+    en: '/en/products/do-an-vat-cach-tan/banh-deo',
+    ko: '/ko/products/do-an-vat-cach-tan/banh-deo',
+    zh: '/zh/products/do-an-vat-cach-tan/banh-deo',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-cach-tan/thit-kho',
+    en: '/en/products/do-an-vat-cach-tan/thit-kho',
+    ko: '/ko/products/do-an-vat-cach-tan/thit-kho',
+    zh: '/zh/products/do-an-vat-cach-tan/thit-kho',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  // Subcategories of Đồ Ăn Vặt Hiện Đại
+  {
+    vi: '/san-pham/do-an-vat-hien-dai/banh-cha',
+    en: '/en/products/do-an-vat-hien-dai/banh-cha',
+    ko: '/ko/products/do-an-vat-hien-dai/banh-cha',
+    zh: '/zh/products/do-an-vat-hien-dai/banh-cha',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  // Subcategories of Đồ Ăn Vặt Truyền Thống
+  {
+    vi: '/san-pham/do-an-vat-truyen-thong/bap-rang-bo',
+    en: '/en/products/do-an-vat-truyen-thong/bap-rang-bo',
+    ko: '/ko/products/do-an-vat-truyen-thong/bap-rang-bo',
+    zh: '/zh/products/do-an-vat-truyen-thong/bap-rang-bo',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-truyen-thong/banh-dau-xanh',
+    en: '/en/products/do-an-vat-truyen-thong/banh-dau-xanh',
+    ko: '/ko/products/do-an-vat-truyen-thong/banh-dau-xanh',
+    zh: '/zh/products/do-an-vat-truyen-thong/banh-dau-xanh',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+  {
+    vi: '/san-pham/do-an-vat-truyen-thong/banh-hanh-nhan',
+    en: '/en/products/do-an-vat-truyen-thong/banh-hanh-nhan',
+    ko: '/ko/products/do-an-vat-truyen-thong/banh-hanh-nhan',
+    zh: '/zh/products/do-an-vat-truyen-thong/banh-hanh-nhan',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
+]
+
+function getProductCatSlug(prod) {
+  if (prod.categories) {
+    if (['do-an-vat-cach-tan', 'do-an-vat-hien-dai', 'do-an-vat-truyen-thong'].includes(prod.categories.slug)) {
+      return prod.categories.slug
+    }
+  }
+  const cat = (prod.category || '').toLowerCase()
+  if (['banh-cha', 'do-an-vat-hien-dai'].includes(cat)) return 'do-an-vat-hien-dai'
+  if (['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan', 'do-an-vat-truyen-thong'].includes(cat)) return 'do-an-vat-truyen-thong'
+  const nameLower = (prod.name || '').toLowerCase()
+  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha')) return 'do-an-vat-hien-dai'
+  if (nameLower.includes('bắp') || nameLower.includes('đậu xanh') || nameLower.includes('hạnh nhân')) return 'do-an-vat-truyen-thong'
+  return 'do-an-vat-cach-tan'
+}
+
 function xmlEscape(str) {
   if (!str) return ''
   return String(str)
@@ -200,7 +327,7 @@ async function generateSitemap() {
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     
     const [prodsRes, newsRes] = await Promise.all([
-      supabase.from('products').select('slug, created_at, name'),
+      supabase.from('products').select('slug, created_at, name, category, categories(id, name, slug, parent_id)'),
       supabase.from('news').select('slug, created_at, published_at, title, category')
     ])
 
@@ -231,21 +358,27 @@ async function generateSitemap() {
     addMultilingualSectionEntries(entries, pol)
   }
 
-  // 3. Dynamic Products
+  // 3. Category pages (multilingual)
+  for (const cat of CATEGORY_SECTIONS) {
+    addMultilingualSectionEntries(entries, cat)
+  }
+
+  // 4. Dynamic Products (Hierarchical E-commerce URLs)
   for (const prod of products) {
     const cleanSlug = safeSlug(prod.slug)
+    const catSlug = getProductCatSlug(prod)
     const pDate = (prod.created_at ? new Date(prod.created_at).toISOString().split('T')[0] : TODAY)
     const alternates = [
-      { lang: 'vi', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
-      { lang: 'en', href: `${SITE_ORIGIN}/en/products/${cleanSlug}` },
-      { lang: 'ko', href: `${SITE_ORIGIN}/ko/products/${cleanSlug}` },
-      { lang: 'zh-Hans', href: `${SITE_ORIGIN}/zh/products/${cleanSlug}` },
-      { lang: 'x-default', href: `${SITE_ORIGIN}/san-pham/${cleanSlug}` },
+      { lang: 'vi', href: `${SITE_ORIGIN}/san-pham/${catSlug}/${cleanSlug}` },
+      { lang: 'en', href: `${SITE_ORIGIN}/en/products/${catSlug}/${cleanSlug}` },
+      { lang: 'ko', href: `${SITE_ORIGIN}/ko/products/${catSlug}/${cleanSlug}` },
+      { lang: 'zh-Hans', href: `${SITE_ORIGIN}/zh/products/${catSlug}/${cleanSlug}` },
+      { lang: 'x-default', href: `${SITE_ORIGIN}/san-pham/${catSlug}/${cleanSlug}` },
     ]
 
     // VI (Primary product page)
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/san-pham/${cleanSlug}`,
+      loc: `${SITE_ORIGIN}/san-pham/${catSlug}/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'weekly',
@@ -254,7 +387,7 @@ async function generateSitemap() {
 
     // EN (B2B Export variant)
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/en/products/${cleanSlug}`,
+      loc: `${SITE_ORIGIN}/en/products/${catSlug}/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'monthly',
@@ -263,7 +396,7 @@ async function generateSitemap() {
 
     // KO (B2B Korea variant)
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/ko/products/${cleanSlug}`,
+      loc: `${SITE_ORIGIN}/ko/products/${catSlug}/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'monthly',
@@ -272,7 +405,7 @@ async function generateSitemap() {
 
     // ZH-HANS (B2B China variant)
     entries.push(renderUrlEntry({
-      loc: `${SITE_ORIGIN}/zh/products/${cleanSlug}`,
+      loc: `${SITE_ORIGIN}/zh/products/${catSlug}/${cleanSlug}`,
       alternates,
       lastmod: pDate,
       changefreq: 'monthly',

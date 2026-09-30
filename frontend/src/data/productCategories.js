@@ -334,3 +334,72 @@ export function getCategoryBySlug(slug) {
 export function filterProductsByCategory(products = [], categorySlug = 'all') {
   return filterProductsByDbCategory(products, categorySlug, null, PRODUCT_CATEGORIES)
 }
+
+/**
+ * Lấy Root Category Slug cho một sản phẩm bất kỳ
+ * Trả về: 'do-an-vat-cach-tan' | 'do-an-vat-hien-dai' | 'do-an-vat-truyen-thong'
+ */
+export function getProductRootCategorySlug(product) {
+  if (!product) return 'do-an-vat-cach-tan'
+  
+  // 1. Nếu có category_id
+  if (product.category_id) {
+    const cat = DEFAULT_DB_CATEGORIES.find((c) => c.id === product.category_id)
+    if (cat) {
+      if (!cat.parent_id) return cat.slug
+      const parent = DEFAULT_DB_CATEGORIES.find((c) => c.id === cat.parent_id)
+      if (parent) return parent.slug
+    }
+  }
+
+  // 2. Nếu có categories relation
+  if (product.categories) {
+    if (product.categories.parent_id) {
+      const parent = DEFAULT_DB_CATEGORIES.find((c) => c.id === product.categories.parent_id)
+      if (parent) return parent.slug
+    }
+    if (product.categories.slug) {
+      const cat = DEFAULT_DB_CATEGORIES.find((c) => c.slug === product.categories.slug)
+      if (cat?.parent_id) {
+        const parent = DEFAULT_DB_CATEGORIES.find((c) => c.id === cat.parent_id)
+        if (parent) return parent.slug
+      }
+      if (['do-an-vat-cach-tan', 'do-an-vat-hien-dai', 'do-an-vat-truyen-thong'].includes(product.categories.slug)) {
+        return product.categories.slug
+      }
+    }
+  }
+
+  // 3. Nếu có chuỗi category
+  const catSlug = product.category || ''
+  if (['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho', 'do-an-vat-cach-tan'].includes(catSlug)) {
+    return 'do-an-vat-cach-tan'
+  }
+  if (['banh-cha', 'do-an-vat-hien-dai'].includes(catSlug)) {
+    return 'do-an-vat-hien-dai'
+  }
+  if (['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan', 'do-an-vat-truyen-thong'].includes(catSlug)) {
+    return 'do-an-vat-truyen-thong'
+  }
+
+  // 4. Fallback theo tên sản phẩm
+  const nameLower = (product.name || '').toLowerCase()
+  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha')) return 'do-an-vat-hien-dai'
+  if (nameLower.includes('bắp') || nameLower.includes('đậu xanh') || nameLower.includes('hạnh nhân')) return 'do-an-vat-truyen-thong'
+
+  return 'do-an-vat-cach-tan'
+}
+
+/**
+ * Danh sách toàn bộ Category Slugs (cả root và children)
+ */
+export const ALL_CATEGORY_SLUGS = DEFAULT_DB_CATEGORIES.map((c) => c.slug).filter(Boolean)
+
+/**
+ * Kiểm tra xem 1 slug có phải là Category Slug hay không
+ */
+export function isCategorySlug(slug) {
+  if (!slug) return false
+  return ALL_CATEGORY_SLUGS.includes(slug) || ['all', 'banh-trang', 'cac-loai-banh'].includes(slug)
+}
+

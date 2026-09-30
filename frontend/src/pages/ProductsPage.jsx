@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom'
 import {
   Home,
   ChevronRight,
@@ -56,9 +56,9 @@ export default function ProductsPage() {
   const { t, language } = useLanguage()
   const { trackProductClick } = useAnalytics()
   const en = language === 'en', ko = language === 'ko', zh = language === 'zh'
-  const [searchParams, setSearchParams] = useSearchParams()
-  const currentCategorySlug = searchParams.get('category') || 'all'
-  const currentSubCategorySlug = searchParams.get('sub') || null
+  const params = useParams()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const [dbCategories, setDbCategories] = useState(DEFAULT_DB_CATEGORIES)
   const [dbProducts, setDbProducts] = useState([])
@@ -70,6 +70,16 @@ export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   const productsSectionRef = useRef(null)
+
+  // Tự động chuyển hướng từ query param cũ (?category=... &sub=...) sang URL phân cấp chuẩn SEO
+  useEffect(() => {
+    const queryCat = searchParams.get('category')
+    const querySub = searchParams.get('sub')
+    if (queryCat && !params.categorySlug) {
+      const cleanUrl = getProductsPageUrl(language, queryCat, querySub)
+      navigate(cleanUrl, { replace: true })
+    }
+  }, [searchParams, params.categorySlug, language, navigate])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -106,6 +116,23 @@ export default function ProductsPage() {
     })
   }, [dbCategories, language])
 
+  // Phân giải slug danh mục gốc và danh mục con từ URL params (hoặc fallback query params)
+  const { currentCategorySlug, currentSubCategorySlug } = useMemo(() => {
+    let cat = params.categorySlug || searchParams.get('category') || 'all'
+    let sub = params.secondSlug || searchParams.get('sub') || null
+
+    // Nếu chỉ truyền 1 slug nhưng slug đó lại là danh mục con (VD: /san-pham/banh-trang-tron),
+    // tự động tìm danh mục cha làm root
+    if (cat !== 'all' && !sub) {
+      for (const root of categoryTree) {
+        if (root.children && root.children.some((c) => c.slug === cat)) {
+          return { currentCategorySlug: root.slug, currentSubCategorySlug: cat }
+        }
+      }
+    }
+    return { currentCategorySlug: cat, currentSubCategorySlug: sub }
+  }, [params.categorySlug, params.secondSlug, searchParams, categoryTree])
+
   const activeRootCategory = useMemo(() => {
     for (const root of categoryTree) {
       if (root.slug === currentCategorySlug) return root
@@ -128,15 +155,21 @@ export default function ProductsPage() {
   }, [categoryTree, currentCategorySlug, currentSubCategorySlug])
 
   const handleRootCategoryChange = (slug) => {
-    if (slug === 'all') setSearchParams({})
-    else setSearchParams({ category: slug })
     setCurrentPage(1)
+    if (slug === 'all') {
+      navigate(getProductsPageUrl(language))
+    } else {
+      navigate(getProductsPageUrl(language, slug))
+    }
   }
 
   const handleSubCategoryChange = (subSlug) => {
-    if (!subSlug) setSearchParams({ category: activeRootCategory.slug })
-    else setSearchParams({ category: activeRootCategory.slug, sub: subSlug })
     setCurrentPage(1)
+    if (!subSlug) {
+      navigate(getProductsPageUrl(language, activeRootCategory.slug))
+    } else {
+      navigate(getProductsPageUrl(language, activeRootCategory.slug, subSlug))
+    }
   }
 
   // Filter and sort products
@@ -238,13 +271,12 @@ export default function ProductsPage() {
               {activeRootCategory?.slug !== 'all' && (
                 <>
                   <ChevronRight className="w-3 h-3 text-haq-border" />
-                  <button
-                    type="button"
-                    onClick={() => handleSubCategoryChange(null)}
-                    className={`hover:text-haq-red transition-colors cursor-pointer ${!currentSubCategorySlug ? 'text-haq-red font-bold' : ''}`}
+                  <Link
+                    to={getProductsPageUrl(language, activeRootCategory?.slug)}
+                    className={`hover:text-haq-red transition-colors ${!currentSubCategorySlug ? 'text-haq-red font-bold' : ''}`}
                   >
                     {activeRootCategory?.name}
-                  </button>
+                  </Link>
                 </>
               )}
               {currentSubCategorySlug && activeCategoryNode && (
@@ -491,7 +523,7 @@ export default function ProductsPage() {
                     return (
                       <Reveal key={prod.id} delay={Math.min(idx * 50, 300)} className="h-full">
                         <Link
-                          to={getProductDetailUrl(detailSlug, language)}
+                          to={getProductDetailUrl(prod, language, activeRootCategory?.slug)}
                           onClick={() => trackProductClick(prod, 'product_grid')}
                           data-product-click="true"
                           data-product-id={prod.id}

@@ -1,6 +1,7 @@
 /**
  * Route mapping table for multilingual SEO & seamless client-side switching
  */
+import { getProductRootCategorySlug } from '../data/productCategories'
 
 export const ROUTE_DEFINITIONS = [
   {
@@ -108,7 +109,18 @@ export function getEquivalentRoute(currentPath = '/', targetLang = 'vi') {
   const normalized = (currentPath || '/').replace(/\/+$/, '') || '/'
   const lowerNormalized = normalized.toLowerCase()
 
-  // 1. Check dynamic product detail (/san-pham/:slug, /en/products/:slug, /ko/products/:slug, /zh/products/:slug)
+  // 1a. Check hierarchical product detail (/san-pham/:categorySlug/:slug, /en/products/:categorySlug/:slug, etc.)
+  const nestedProductMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/zh\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham|\/zh\/san-pham)\/([^/]+)\/([^/]+)$/i)
+  if (nestedProductMatch) {
+    const catSlug = nestedProductMatch[1]
+    const slug = nestedProductMatch[2]
+    if (targetLang === 'en') return `/en/products/${catSlug}/${slug}`
+    if (targetLang === 'ko') return `/ko/products/${catSlug}/${slug}`
+    if (targetLang === 'zh') return `/zh/products/${catSlug}/${slug}`
+    return `/san-pham/${catSlug}/${slug}`
+  }
+
+  // 1b. Check category or 1-level product detail (/san-pham/:slug, /en/products/:slug, etc.)
   const productDetailMatch = normalized.match(/^(?:\/en\/products|\/ko\/products|\/zh\/products|\/san-pham|\/en\/san-pham|\/ko\/san-pham|\/zh\/san-pham)\/([^/]+)$/i)
   if (productDetailMatch) {
     const slug = productDetailMatch[1]
@@ -169,23 +181,54 @@ export function getAlternateHreflangUrls(currentPath = '/', origin = 'https://ha
 
 /**
  * Helper sinh đường dẫn chi tiết sản phẩm theo ngôn ngữ hiện tại
+ * Hỗ trợ phân cấp chuẩn SEO E-commerce: /san-pham/:categorySlug/:productSlug
  */
-export function getProductDetailUrl(slug, language = 'vi') {
-  const cleanSlug = slug || ''
-  if (language === 'en') return `/en/products/${cleanSlug}`
-  if (language === 'ko') return `/ko/products/${cleanSlug}`
-  if (language === 'zh') return `/zh/products/${cleanSlug}`
-  return `/san-pham/${cleanSlug}`
+export function getProductDetailUrl(productOrSlug, language = 'vi', explicitCategorySlug = null) {
+  let slug = ''
+  let categorySlug = explicitCategorySlug
+
+  if (typeof productOrSlug === 'object' && productOrSlug !== null) {
+    slug = productOrSlug.slug || ''
+    if (!categorySlug) {
+      categorySlug = getProductRootCategorySlug(productOrSlug)
+    }
+  } else {
+    slug = productOrSlug || ''
+  }
+
+  if (!categorySlug) {
+    categorySlug = 'do-an-vat-cach-tan'
+  }
+
+  const cleanSlug = encodeURI(String(slug).trim())
+  const cleanCat = encodeURI(String(categorySlug).trim())
+
+  if (language === 'en') return `/en/products/${cleanCat}/${cleanSlug}`
+  if (language === 'ko') return `/ko/products/${cleanCat}/${cleanSlug}`
+  if (language === 'zh') return `/zh/products/${cleanCat}/${cleanSlug}`
+  return `/san-pham/${cleanCat}/${cleanSlug}`
 }
 
 /**
  * Helper sinh đường dẫn trang danh mục sản phẩm theo ngôn ngữ
+ * Hỗ trợ:
+ * - getProductsPageUrl(lang) -> '/san-pham'
+ * - getProductsPageUrl(lang, 'do-an-vat-cach-tan') -> '/san-pham/do-an-vat-cach-tan'
+ * - getProductsPageUrl(lang, 'do-an-vat-cach-tan', 'banh-trang-tron') -> '/san-pham/do-an-vat-cach-tan/banh-trang-tron'
  */
-export function getProductsPageUrl(language = 'vi') {
-  if (language === 'en') return '/en/products'
-  if (language === 'ko') return '/ko/products'
-  if (language === 'zh') return '/zh/products'
-  return '/san-pham'
+export function getProductsPageUrl(language = 'vi', categorySlug = null, subCategorySlug = null) {
+  let basePath = '/san-pham'
+  if (language === 'en') basePath = '/en/products'
+  else if (language === 'ko') basePath = '/ko/products'
+  else if (language === 'zh') basePath = '/zh/products'
+
+  if (!categorySlug || categorySlug === 'all') return basePath
+
+  const cleanCat = encodeURI(String(categorySlug).trim())
+  if (subCategorySlug) {
+    return `${basePath}/${cleanCat}/${encodeURI(String(subCategorySlug).trim())}`
+  }
+  return `${basePath}/${cleanCat}`
 }
 
 /**

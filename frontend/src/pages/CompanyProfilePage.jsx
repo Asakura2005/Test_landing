@@ -13,7 +13,6 @@ import {
   Heart,
   Eye,
   ShieldCheck,
-  Maximize2,
   X,
   ChevronLeft,
   ChevronRight,
@@ -31,6 +30,7 @@ import bakingImg from '../assets/factory/san-xuat-banh-nuong.webp'
 import packagingImg from '../assets/factory/factory_production.webp'
 import warehouseImg from '../assets/factory/nha-kho.webp'
 import congtacImg from '../assets/business/congtac.webp'
+import trungBayBanhImg from '../assets/business/trung-bay-banh.webp'
 
 import winmartLogo from '../assets/pictures_doitac/winmart.webp'
 import goLogo from '../assets/pictures_doitac/go!.webp'
@@ -52,25 +52,25 @@ const RETAIL_PARTNERS = [
 ]
 
 // Realistic Corporate Assets from Stitch & Production
-const boothImg = '/assets/stitch/about_exhibition_booth.png'
+const boothImg = trungBayBanhImg
 const teamPhotoImg = congtacImg
 
 /* ─── Dữ liệu Thư viện Ảnh Thực tế HAQ FOOD (Mở Modal phóng to) ─── */
 const GALLERY_ITEMS_DATA = [
   {
     src: boothImg,
-    fallback: '/assets/business/trung-bay-sp.webp',
+    fallback: trungBayBanhImg,
     title: {
-      vi: 'Gian hàng trưng bày sản phẩm HAQ Food tại Hội chợ Triển lãm Quốc tế',
-      en: 'HAQ Food Exhibition Booth at International Food Expo',
-      ko: '국제 식품 박람회 HAQ Food 제품 전시 부스',
-      zh: '国际食品博览会 HAQ Food 特色产品展示专区',
+      vi: 'Gian hàng trưng bày & giới thiệu sản phẩm thực tế HAQ Food',
+      en: 'HAQ Food Official Product Showcase & Exhibition Booth',
+      ko: 'HAQ Food 공식 제품 전시 및 홍보 부스 현장',
+      zh: 'HAQ Food 官方产品实物展区与推介现场',
     },
     category: {
-      vi: 'Triển lãm & Quảng bá Quốc tế',
-      en: 'International Exhibition',
-      ko: '국제 박람회 및 홍보',
-      zh: '国际展会与品牌推广',
+      vi: 'Trưng bày & Giới thiệu sản phẩm',
+      en: 'Product Showcase & Promotion',
+      ko: '제품 전시 및 홍보',
+      zh: '产品陈列与推广',
     },
   },
   {
@@ -227,22 +227,22 @@ const PROFILE_I18N = {
 
   // Booth Card Caption
   booth_badge: {
-    vi: 'Hình ảnh thực tế • Triển lãm Quốc tế',
-    en: 'Real Photography • International Expo',
-    ko: '현장 실사 • 국제 식품 박람회',
-    zh: '真实现场实拍 • 国际食品博览会',
+    vi: 'Hình ảnh thực tế • Trưng bày sản phẩm',
+    en: 'Real Photography • Product Showcase',
+    ko: '현장 실사 • 제품 전시 및 홍보',
+    zh: '真实现场实拍 • 产品陈列展示',
   },
   booth_title: {
     vi: 'HÌNH ẢNH GIAN HÀNG THỰC TẾ HAQ FOOD',
-    en: 'HAQ FOOD OFFICIAL EXHIBITION BOOTH',
-    ko: 'HAQ FOOD 공식 박람회 전시 부스',
-    zh: 'HAQ FOOD 官方国际展区实景',
+    en: 'HAQ FOOD REAL SHOWCASE BOOTH',
+    ko: 'HAQ FOOD 실제 부스 현장',
+    zh: 'HAQ FOOD 官方实景展台',
   },
   booth_caption: {
-    vi: 'Không gian trưng bày và giới thiệu trực tiếp các dòng sản phẩm bánh tráng đặc sản đóng gói chuẩn hóa tại Hội chợ Triển lãm Thương mại Thực phẩm Quốc tế. Thu hút đông đảo người tiêu dùng trong nước và đối tác xuất nhập khẩu B2B.',
-    en: 'Showcase booth presenting standardized specialty packaged rice paper lines at the International Food Trade Expo, attracting domestic retail consumers and global B2B import partners.',
-    ko: '국제 식품 무역 박람회에서 표준화된 특산 포장 라이스페이퍼 라인업을 직접 선보이는 공식 전시 부스로, 국내 소비자 및 글로벌 B2B 바이어들의 높은 관심을 받고 있습니다.',
-    zh: '在国际食品贸易博览会上全面陈列与推介标准化包装的特色米纸与特产零食，深受海内外广大消费者与 B2B 进出口战略采购商的高度瞩目。',
+    vi: 'Không gian trưng bày và giới thiệu trực tiếp các dòng sản phẩm bánh đặc sản đóng gói chuẩn hóa của HAQ FOOD tại các điểm bán lẻ và sự kiện thương mại.',
+    en: 'Showcase booth presenting standardized specialty packaged products of HAQ FOOD at retail outlets and trade events.',
+    ko: '유통 매장 및 무역 행사에서 HAQ FOOD의 표준화된 특산 포장 제품 라인업을 직접 선보이는 공식 부스 현장입니다.',
+    zh: '在零售终端及商贸展销活动中全面陈列与推介 HAQ FOOD 标准化包装特色产品的官方实景展台。',
   },
   booth_retail_badge: {
     vi: 'Hệ quầy kệ đạt chuẩn bán lẻ hiện đại',
@@ -670,20 +670,6 @@ export default function CompanyProfilePage() {
       <FloatingContactBar />
 
       <main className="flex-1 pt-[72px] sm:pt-[76px]">
-        {/* ════════════════════════════════════════════════════
-            BREADCRUMB & METADATA BAR (STITCH EDITORIAL)
-            ════════════════════════════════════════════════════ */}
-        <div className="border-b border-[#E8E2D5] bg-[#F4EFE6]/70">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center text-xs text-slate-500">
-            <div className="flex items-center gap-2">
-              <Link to={getHomeUrl(language)} className="hover:text-[#064E3B] transition-colors font-medium">
-                {getText('breadcrumb_home')}
-              </Link>
-              <span>/</span>
-              <span className="text-slate-800 font-bold">{getText('breadcrumb_about')}</span>
-            </div>
-          </div>
-        </div>
 
         {/* ════════════════════════════════════════════════════
             SECTION 1 — HERO & TUYÊN NGÔN THƯƠNG HIỆU
@@ -761,18 +747,9 @@ export default function CompanyProfilePage() {
                           e.currentTarget.onerror = null
                           e.currentTarget.src = galleryItems[0].fallback
                         }}
-                        className="w-full h-auto object-cover max-h-[440px] group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="eager"
                       />
-                      {/* Verification Stamp */}
-                      <div className="absolute top-3 left-3 bg-[#022B20]/90 text-amber-300 text-[10px] font-bold tracking-widest uppercase px-3 py-1 border border-amber-400/40 backdrop-blur-xs">
-                        {getText('booth_badge')}
-                      </div>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs px-3.5 py-1.5 rounded-full font-medium flex items-center gap-1.5 shadow-md">
-                          <Maximize2 className="w-3.5 h-3.5" /> {getText('click_enlarge')}
-                        </span>
-                      </div>
                     </div>
 
                     {/* Editorial Photo Description & Caption */}
@@ -1006,7 +983,7 @@ export default function CompanyProfilePage() {
                     <div className="space-y-4 border-t border-[#E8E2D5] pt-5 text-sm text-slate-700">
                       <div className="flex items-start gap-3">
                         <span className="font-mono text-xs font-bold text-[#B45309] bg-amber-100/70 px-2 py-0.5 rounded-xs mt-0.5">
-                          A
+                          01
                         </span>
                         <div>
                           <h4 className="font-bold text-slate-900">{getText('mission_1_title')}</h4>
@@ -1016,7 +993,7 @@ export default function CompanyProfilePage() {
 
                       <div className="flex items-start gap-3">
                         <span className="font-mono text-xs font-bold text-[#B45309] bg-amber-100/70 px-2 py-0.5 rounded-xs mt-0.5">
-                          B
+                          02
                         </span>
                         <div>
                           <h4 className="font-bold text-slate-900">{getText('mission_2_title')}</h4>
@@ -1026,7 +1003,7 @@ export default function CompanyProfilePage() {
 
                       <div className="flex items-start gap-3">
                         <span className="font-mono text-xs font-bold text-[#B45309] bg-amber-100/70 px-2 py-0.5 rounded-xs mt-0.5">
-                          C
+                          03
                         </span>
                         <div>
                           <h4 className="font-bold text-slate-900">{getText('mission_3_title')}</h4>
@@ -1166,16 +1143,16 @@ export default function CompanyProfilePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
               {/* Cột trái: Ảnh Thật Đội ngũ & Trích dẫn Lãnh đạo (5 cột) */}
-              <div className="lg:col-span-5 space-y-4">
+              <div className="lg:col-span-5">
                 <Reveal>
-                  <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#B45309] uppercase mb-1">
+                  <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-[#B45309] uppercase">
                     <span className="w-5 h-[2px] bg-[#B45309]" />
                     <span>{getText('team_tag')}</span>
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
                     {getText('team_title')}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-1">
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-2">
                     {getText('team_desc')}
                   </p>
 
@@ -1196,11 +1173,6 @@ export default function CompanyProfilePage() {
                         className="w-full h-auto object-cover object-center max-h-[460px] group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center pointer-events-none">
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs px-3.5 py-1.5 rounded-full font-medium flex items-center gap-1.5 shadow-md">
-                          <Maximize2 className="w-3.5 h-3.5" /> {getText('click_enlarge')}
-                        </span>
-                      </div>
                     </div>
                   </div>
 
@@ -1218,8 +1190,9 @@ export default function CompanyProfilePage() {
               <div className="lg:col-span-7">
                 <Reveal delay={40}>
                   <div className="border-b border-[#D5CDBC] pb-4 mb-6">
-                    <div className="text-xs font-bold tracking-widest text-[#064E3B] uppercase">
-                      {getText('commit_tag')}
+                    <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-[#064E3B] uppercase">
+                      <span className="w-5 h-[2px] bg-[#064E3B]" />
+                      <span>{getText('commit_tag')}</span>
                     </div>
                     <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
                       {getText('commit_title')}

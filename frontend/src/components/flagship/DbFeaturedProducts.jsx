@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, BookOpen, Download, Sparkles, Tag, ShieldCheck, MapPin } from 'lucide-react'
+import { ArrowRight, BookOpen, Eye, Sparkles, Tag, ShieldCheck, MapPin } from 'lucide-react'
 import { getProducts } from '../../services/supabase'
 import { useLanguage } from '../../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedCategory, getLocalizedProvince } from '../../utils/i18nData'
@@ -145,7 +145,7 @@ export default function DbFeaturedProducts() {
             {displayedProducts.map((p) => {
               const loc = getLocalizedProduct(p, language)
               const imgSrc = resolveProductImage(p)
-              const detailUrl = getProductDetailUrl(p.slug || p.id, language)
+              const detailUrl = getProductDetailUrl(p, language)
 
               const catObj = Array.isArray(p.categories) ? p.categories[0] : p.categories
               const catLocalized = catObj ? getLocalizedCategory(catObj, language) : null
@@ -247,23 +247,19 @@ export default function DbFeaturedProducts() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#fe932c] text-white flex items-center justify-center shrink-0 shadow-lg">
               <BookOpen className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <div>
               <h4 className="text-lg sm:text-2xl font-bold">
-                Tải Toàn Bộ Hồ Sơ Danh Mục Sản Phẩm
+                Xem Toàn Bộ Danh Mục Sản Phẩm
               </h4>
-              <p className="text-xs sm:text-sm text-white/80 mt-0.5">
-                (HAQ Food B2B Product Catalog 2025 • Đầy đủ quy cách đóng gói, thông số thùng &amp; giá sỉ đối tác)
-              </p>
-            </div>
           </div>
 
           <a
-            href="/assets/stitch/logo_haq.png"
-            download="HAQ_FOOD_Catalog_2025.png"
+            href="/documents/danh-sach-san-pham-haq-food.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 bg-white text-[#003527] hover:bg-[#fe932c] hover:text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all shadow-lg shrink-0 relative z-10 cursor-pointer"
           >
-            <span>Tải Catalog B2B (PDF 18MB)</span>
-            <Download className="w-4 h-4" />
+            <span>Xem Nhanh (PDF)</span>
+            <Eye className="w-4 h-4" />
           </a>
         </div>
       </div>

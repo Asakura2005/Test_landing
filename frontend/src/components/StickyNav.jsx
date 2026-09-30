@@ -20,6 +20,7 @@ import { buildCategoryTree, DEFAULT_DB_CATEGORIES, resolveProductImage, filterPr
 import { getCategories, getProducts } from '../services/supabase'
 import { useLanguage, LANGUAGES } from '../context/LanguageContext'
 import { getLocalizedCategory, getLocalizedProduct } from '../utils/i18nData'
+import { getProductDetailUrl, getProductsPageUrl } from '../utils/routeI18n'
 import { FlagIcon } from './LanguageSwitcher'
 import { useAnalytics } from '../hooks/useAnalytics'
 
@@ -453,10 +454,7 @@ export default function StickyNav() {
   const careersPath = language === 'en' ? '/en/careers' : language === 'ko' ? '/ko/careers' : language === 'zh' ? '/zh/careers' : '/tuyen-dung'
 
   const getProductsPath = (categorySlug, subSlug) => {
-    const base = language === 'en' ? '/en/products' : language === 'ko' ? '/ko/products' : language === 'zh' ? '/zh/products' : '/san-pham'
-    if (!categorySlug || categorySlug === 'all') return base
-    if (subSlug) return `${base}?category=${categorySlug}&sub=${subSlug}`
-    return `${base}?category=${categorySlug}`
+    return getProductsPageUrl(language, categorySlug, subSlug)
   }
 
   const handleMapClick = (e) => {
@@ -498,7 +496,7 @@ export default function StickyNav() {
           className="hidden lg:flex items-center gap-2.5 xl:gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-green-dark rounded-lg shrink-0"
           title="HAQ FOOD"
         >
-          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shrink-0 shadow-2xs">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 shrink-0 flex items-center justify-center">
             <img
               src={logoImg}
               alt="HAQ FOOD Logo"
@@ -728,7 +726,7 @@ export default function StickyNav() {
                             return (
                               <Link
                                 key={p.id}
-                                to={language === 'en' ? `/en/products/${p.slug}` : language === 'ko' ? `/ko/products/${p.slug}` : language === 'zh' ? `/zh/products/${p.slug}` : `/san-pham/${p.slug}`}
+                                to={getProductDetailUrl(p, language, hoveredCategory?.slug)}
                                 onClick={() => {
                                   trackProductClick(localizedProd, 'nav_megamenu')
                                   setActiveMenu(null)
@@ -971,7 +969,7 @@ export default function StickyNav() {
             className="flex items-center gap-2.5 focus:outline-none py-1 shrink-0"
             title="HAQ FOOD"
           >
-            <div className="h-9 w-9 rounded-xl overflow-hidden border border-haq-border bg-white p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
+            <div className="h-9 w-9 shrink-0 flex items-center justify-center">
               <img src={logoImg} alt="HAQ FOOD Logo" className="h-full w-full object-contain" />
             </div>
             <span className="font-heading font-extrabold text-lg tracking-tight text-haq-ink whitespace-nowrap">

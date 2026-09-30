@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 
 // Dynamic Route Splitting to avoid monolithic bundles and exclude Admin/heavy libraries from landing page
@@ -22,6 +22,33 @@ import { initPostHog, recordSessionVisit, trackPageView } from './services/posth
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import SeoHead from './components/SeoHead'
 import ErrorBoundary from './components/ErrorBoundary'
+import { isCategorySlug } from './data/productCategories'
+
+/**
+ * Dispatcher cho URL cấp 1: /san-pham/:categorySlug
+ * - Nếu :categorySlug là slug danh mục (VD: do-an-vat-cach-tan, banh-trang-tron, all) -> Render ProductsPage
+ * - Nếu :categorySlug là slug sản phẩm (link cũ) -> Render ProductDetailPage
+ */
+function CategoryOrProductDispatcher() {
+  const { categorySlug } = useParams()
+  if (isCategorySlug(categorySlug)) {
+    return <ProductsPage />
+  }
+  return <ProductDetailPage />
+}
+
+/**
+ * Dispatcher cho URL cấp 2: /san-pham/:categorySlug/:secondSlug
+ * - Nếu :secondSlug là slug danh mục con -> Render ProductsPage
+ * - Ngược lại :secondSlug là slug sản phẩm -> Render ProductDetailPage
+ */
+function NestedCategoryOrProductDispatcher() {
+  const { secondSlug } = useParams()
+  if (isCategorySlug(secondSlug)) {
+    return <ProductsPage />
+  }
+  return <ProductDetailPage />
+}
 
 // Scroll to top and track session visit ONLY on genuine page navigations
 function RouteSync() {
@@ -90,7 +117,9 @@ function AppRoutes() {
             <Route path="/ve-chung-toi/lich-su" element={<HistoryPage />} />
             <Route path="/nang-luc" element={<CapabilitiesPage />} />
             <Route path="/san-pham" element={<ProductsPage />} />
-            <Route path="/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/san-pham/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/san-pham/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/san-pham/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/tin-tuc" element={<NewsPage />} />
             <Route path="/tin-tuc/:slug" element={<NewsDetailPage />} />
             <Route path="/tuyen-dung" element={<NewsPage defaultTab="tuyen-dung" />} />
@@ -104,7 +133,9 @@ function AppRoutes() {
             <Route path="/en/history" element={<HistoryPage />} />
             <Route path="/en/capabilities" element={<CapabilitiesPage />} />
             <Route path="/en/products" element={<ProductsPage />} />
-            <Route path="/en/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/en/products/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/en/products/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/en/products/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/en/news" element={<NewsPage />} />
             <Route path="/en/news/:slug" element={<NewsDetailPage />} />
             <Route path="/en/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
@@ -119,7 +150,9 @@ function AppRoutes() {
             <Route path="/en/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/en/gioi-thieu/*" element={<CompanyProfilePage />} />
             <Route path="/en/san-pham" element={<ProductsPage />} />
-            <Route path="/en/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/en/san-pham/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/en/san-pham/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/en/san-pham/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/en/lien-he" element={<ContactPage />} />
 
             {/* ================= KOREAN (B2B Korea) ================= */}
@@ -129,7 +162,9 @@ function AppRoutes() {
             <Route path="/ko/history" element={<HistoryPage />} />
             <Route path="/ko/capabilities" element={<CapabilitiesPage />} />
             <Route path="/ko/products" element={<ProductsPage />} />
-            <Route path="/ko/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/ko/products/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/ko/products/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/ko/products/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/ko/news" element={<NewsPage />} />
             <Route path="/ko/news/:slug" element={<NewsDetailPage />} />
             <Route path="/ko/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
@@ -144,7 +179,9 @@ function AppRoutes() {
             <Route path="/ko/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/ko/gioi-thieu/*" element={<CompanyProfilePage />} />
             <Route path="/ko/san-pham" element={<ProductsPage />} />
-            <Route path="/ko/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/ko/san-pham/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/ko/san-pham/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/ko/san-pham/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/ko/lien-he" element={<ContactPage />} />
 
             {/* ================= CHINESE (B2B China & Global Chinese) ================= */}
@@ -154,7 +191,9 @@ function AppRoutes() {
             <Route path="/zh/history" element={<HistoryPage />} />
             <Route path="/zh/capabilities" element={<CapabilitiesPage />} />
             <Route path="/zh/products" element={<ProductsPage />} />
-            <Route path="/zh/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/zh/products/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/zh/products/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/zh/products/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/zh/news" element={<NewsPage />} />
             <Route path="/zh/news/:slug" element={<NewsDetailPage />} />
             <Route path="/zh/careers" element={<NewsPage defaultTab="tuyen-dung" />} />
@@ -169,7 +208,9 @@ function AppRoutes() {
             <Route path="/zh/gioi-thieu" element={<CompanyProfilePage />} />
             <Route path="/zh/gioi-thieu/*" element={<CompanyProfilePage />} />
             <Route path="/zh/san-pham" element={<ProductsPage />} />
-            <Route path="/zh/san-pham/:slug" element={<ProductDetailPage />} />
+            <Route path="/zh/san-pham/:categorySlug" element={<CategoryOrProductDispatcher />} />
+            <Route path="/zh/san-pham/:categorySlug/:secondSlug" element={<NestedCategoryOrProductDispatcher />} />
+            <Route path="/zh/san-pham/:categorySlug/:subCategorySlug/:slug" element={<ProductDetailPage />} />
             <Route path="/zh/lien-he" element={<ContactPage />} />
 
           {/* Legal & Policy Pages (Vietnamese) */}

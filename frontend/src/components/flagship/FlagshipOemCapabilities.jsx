@@ -6,7 +6,6 @@ import {
   Palette,
   Network,
   Store,
-  CheckCircle2,
   FileText,
   ArrowRight,
   ShieldCheck,
@@ -28,29 +27,30 @@ export default function FlagshipOemCapabilities() {
           <div className="max-w-3xl xl:max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-700/10 border border-emerald-700/20 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-3">
               <Factory className="w-3.5 h-3.5 text-emerald-800" />
-              <span>GIẢI PHÁP ĐỒ ĂN VẶT &amp; ĐẶC SẢN TOÀN DIỆN</span>
+              <span>DỊCH VỤ SẢN XUẤT THEO YÊU CẦU CHO DOANH NGHIỆP</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0c1e15] tracking-tight leading-tight">
-              <span className="whitespace-nowrap">Năng Lực OBM &amp; ODM</span>
-              <span className="text-neutral-400 font-light mx-2 hidden sm:inline">—</span>
-              <span className="text-[#003527] block sm:inline mt-1 sm:mt-0">
-                Từ Ý Tưởng Đến Kệ Hàng Siêu Thị &amp; Xuất Khẩu
+              <span>Đồng Hành Cùng Bạn</span>{' '}
+              <span className="text-[#003527]">
+                Tạo Dựng Thương Hiệu Đồ Ăn Vặt Riêng
               </span>
             </h2>
             <p className="text-[#52665a] text-xs sm:text-sm lg:text-base mt-3 leading-relaxed max-w-2xl">
-              HAQ Food đóng vai trò hạt nhân Brand Owner &amp; R&amp;D sáng tạo, kết nối nguồn đặc sản địa phương với mạng lưới nhà máy gia công công nghệ cao đạt chuẩn quốc tế. Chúng tôi giúp đối tác sở hữu sản phẩm ăn vặt tinh hoa, bao bì hiện đại và thương mại hóa thần tốc.
+              Bạn có ý tưởng nhưng gặp rào cản về công thức, bao bì hay thủ tục pháp lý? HAQ Food cung cấp giải pháp gia công và phát triển thương hiệu toàn diện: thử nghiệm mẫu nhanh, hồ sơ tự công bố đầy đủ và chính sách đặt hàng linh hoạt từ lô thử nghiệm đến quy mô lớn.
             </p>
           </div>
 
           {/* Action CTAs */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
-            <Link
-              to={getContactPageUrl(language)}
+            <a
+              href="/documents/ho-so-nang-luc-haq-food.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#003527] hover:bg-[#064e3b] text-white font-semibold text-xs md:text-sm px-5 py-3 rounded-xl transition-all shadow-md cursor-pointer whitespace-nowrap"
             >
               <FileText className="w-4 h-4" />
               <span>Hồ Sơ Năng Lực OBM/ODM (PDF)</span>
-            </Link>
+            </a>
             <Link
               to={getContactPageUrl(language)}
               className="inline-flex items-center gap-2 bg-white border border-neutral-300 text-[#0c1e15] hover:bg-neutral-100 font-semibold text-xs md:text-sm px-4 py-3 rounded-xl transition-colors cursor-pointer whitespace-nowrap"
@@ -78,21 +78,10 @@ export default function FlagshipOemCapabilities() {
               <p className="text-xs text-[#52665a] mt-2 leading-relaxed">
                 Nghiên cứu khẩu vị bắt trend giới trẻ, tinh chỉnh gia vị đậm đà đặc sản vùng miền; ứng dụng công nghệ sấy chân không giòn rụm, giảm dầu tồn dư.
               </p>
-              <div className="mt-4 space-y-2 bg-[#FAF9F6] p-3 rounded-xl border border-neutral-200/60 text-xs">
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                  <span>Vị mực cay, sa tế tôm, phô mai caramel</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                  <span>Thử nghiệm mẫu nhanh trong 72 giờ</span>
-                </div>
-              </div>
             </div>
-
             <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500">
-              <span className="font-medium">Công thức độc quyền</span>
-              <span className="font-bold text-emerald-800 uppercase">100% RIÊNG BIỆT</span>
+              <span className="font-medium text-[#0c1e15]">Công thức độc quyền</span>
+              <span className="font-bold text-emerald-800 uppercase">Theo yêu cầu</span>
             </div>
           </div>
 
@@ -111,21 +100,10 @@ export default function FlagshipOemCapabilities() {
               <p className="text-xs text-[#52665a] mt-2 leading-relaxed">
                 Quy chuẩn bao bì hiện đại (túi zip, hũ pet nhôm, hộp quà tặng), tối ưu khả năng bảo quản tự nhiên; hoàn thiện hồ sơ tự công bố &amp; giấy tờ pháp lý xuất khẩu.
               </p>
-              <div className="mt-4 space-y-2 bg-[#FAF9F6] p-3 rounded-xl border border-neutral-200/60 text-xs">
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
-                  <span>Thiết kế nhận diện bao bì thu hút kệ hàng</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
-                  <span>Hồ sơ tự công bố ATTP, mã vạch, dinh dưỡng</span>
-                </div>
-              </div>
             </div>
-
             <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500">
-              <span className="font-medium">Quy chuẩn pháp lý</span>
-              <span className="font-bold text-[#b45309] uppercase">CHUẨN HOÁ OBM</span>
+              <span className="font-medium text-[#0c1e15]">Quy chuẩn pháp lý</span>
+              <span className="font-bold text-[#b45309] uppercase">Hồ sơ công bố</span>
             </div>
           </div>
 
@@ -144,21 +122,10 @@ export default function FlagshipOemCapabilities() {
               <p className="text-xs text-[#52665a] mt-2 leading-relaxed">
                 Liên kết các cơ sở &amp; nhà máy gia công đối tác hiện đại đạt chuẩn ISO 22000, HACCP; kiểm soát gắt gao nguyên liệu đầu vào và sản lượng linh hoạt theo đơn hàng.
               </p>
-              <div className="mt-4 space-y-2 bg-[#FAF9F6] p-3 rounded-xl border border-neutral-200/60 text-xs">
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-800 shrink-0" />
-                  <span>Nhà máy đối tác đạt chuẩn ISO 22000 / HACCP</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-800 shrink-0" />
-                  <span>Linh hoạt MOQ từ lô nhỏ đến xuất khẩu cont</span>
-                </div>
-              </div>
             </div>
-
             <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500">
-              <span className="font-medium">Chất lượng kiểm định</span>
-              <span className="font-bold text-emerald-800 uppercase">ISO &amp; HACCP AUDIT</span>
+              <span className="font-medium text-[#0c1e15]">Chất lượng kiểm định</span>
+              <span className="font-bold text-emerald-800 uppercase">Chuẩn ATTP</span>
             </div>
           </div>
 
@@ -177,21 +144,10 @@ export default function FlagshipOemCapabilities() {
               <p className="text-xs text-[#52665a] mt-2 leading-relaxed">
                 Kinh nghiệm vận hành thành công nhãn hàng HOKI phủ sóng 7+ chuỗi siêu thị hàng đầu (WinMart, GO!, Circle K, Tops Market, GS25) và xúc tiến xuất khẩu quốc tế.
               </p>
-              <div className="mt-4 space-y-2 bg-[#FAF9F6] p-3 rounded-xl border border-neutral-200/60 text-xs">
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#c25e00] shrink-0" />
-                  <span>Hiện diện tại 10.000+ điểm bán toàn quốc</span>
-                </div>
-                <div className="flex items-center gap-2 text-[#0c1e15]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#c25e00] shrink-0" />
-                  <span>Kinh nghiệm xuất khẩu Hàn Quốc, Đài Loan</span>
-                </div>
-              </div>
             </div>
-
             <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-500">
-              <span className="font-medium">Bảo chứng thị trường</span>
-              <span className="font-bold text-[#c25e00] uppercase">HOKI ECOSYSTEM</span>
+              <span className="font-medium text-[#0c1e15]">Bảo chứng thị trường</span>
+              <span className="font-bold text-[#c25e00] uppercase">10.000+ Điểm bán</span>
             </div>
           </div>
         </div>

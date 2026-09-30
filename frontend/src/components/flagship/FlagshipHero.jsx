@@ -36,17 +36,6 @@ export default function FlagshipHero({ onOpenRfq }) {
       {/* Hero Main Content Center Container */}
       <div className="relative z-20 max-w-[1400px] w-full mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center py-8 lg:py-12">
         <div className="max-w-3xl flex flex-col gap-5 sm:gap-6">
-          {/* Editorial Eyebrow Tag */}
-          <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-xl border border-white/20 px-3.5 sm:px-4 py-1.5 rounded-full w-fit shadow-xl">
-            <span className="flex h-2.5 w-2.5 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#fe932c] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#fe932c]" />
-            </span>
-            <span className="font-bold text-[10px] sm:text-xs tracking-[0.16em] uppercase text-[#b0f0d6]">
-              GIẢI PHÁP TOÀN DIỆN OBM &amp; ODM • ĐỒ ĂN VẶT &amp; NÔNG SẢN VIỆT NAM
-            </span>
-          </div>
-
           {/* Monumental Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.14] tracking-tight">
             Nâng Tầm Tinh Hoa <br />
