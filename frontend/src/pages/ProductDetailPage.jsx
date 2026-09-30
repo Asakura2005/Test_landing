@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { getProductBySlug, getProducts, createLead } from '../services/supabase'
+import { getProductBySlug, getProducts, getCategories, createLead } from '../services/supabase'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { CheckCircle, Package, Calendar, ArrowRight, Home, ChevronRight, Plus, Minus, Search, X, Download, FileText, CheckCircle2, Building2, Phone, Mail } from 'lucide-react'
 import Footer from '../components/Footer'
@@ -8,7 +8,7 @@ import StickyNav from '../components/StickyNav'
 import { useLanguage } from '../context/LanguageContext'
 import { getLocalizedProduct, getLocalizedCategory } from '../utils/i18nData'
 import { getProductDetailUrl, getProductsPageUrl, getHomeUrl, getContactUrl } from '../utils/routeI18n'
-import { PRODUCT_IMAGE_MAP, isCategorySlug, getProductRootCategorySlug } from '../data/productCategories'
+import { PRODUCT_IMAGE_MAP, isCategorySlug, getProductRootCategorySlug, registerCategorySlugs } from '../data/productCategories'
 import { generateProductSchema } from '../utils/productSchema'
 
 /**
@@ -168,6 +168,24 @@ export default function ProductDetailPage() {
 
         if (!isMounted) return
 
+        // Nếu không tìm thấy sản phẩm, kiểm tra xem slug có phải là một Category trong DB hay không
+        if (!data && slug) {
+          try {
+            const allCats = await getCategories().catch(() => [])
+            const matchedCat = allCats.find((c) => c && (c.slug === slug || c.id === slug || c.slug === categorySlugParam))
+            if (matchedCat && isMounted) {
+              registerCategorySlugs(allCats)
+              const rootSlug = matchedCat.parent_id
+                ? (allCats.find((c) => c.id === matchedCat.parent_id)?.slug || categorySlugParam || 'do-an-vat-hien-dai')
+                : matchedCat.slug
+              const subSlug = matchedCat.parent_id ? matchedCat.slug : null
+              const targetUrl = getProductsPageUrl(language, rootSlug, subSlug)
+              navigate(targetUrl, { replace: true })
+              return
+            }
+          } catch (catErr) {}
+        }
+
         setProduct(data)
 
         if (data) {
@@ -273,9 +291,12 @@ export default function ProductDetailPage() {
       removeScript()
       if (!isLoading) {
         document.title = `${language === 'en' ? 'Product Not Found' : language === 'ko' ? '제품을 찾을 수 없습니다' : language === 'zh' ? '产品不存在' : 'Sản phẩm không tồn tại'} | HAQ FOOD`
-        const robotsMeta = document.querySelector('meta[name="robots"]')
-        if (robotsMeta) {
-          robotsMeta.setAttribute('content', 'noindex, nofollow')
+        // Chỉ đặt noindex nếu slug này thực sự không phải là danh mục hợp lệ
+        if (!isCategorySlug(slug)) {
+          const robotsMeta = document.querySelector('meta[name="robots"]')
+          if (robotsMeta) {
+            robotsMeta.setAttribute('content', 'noindex, nofollow')
+          }
         }
       }
       return

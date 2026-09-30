@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
 import { getAlternateHreflangUrls, getEquivalentRoute } from '../utils/routeI18n'
+import { isCategorySlug } from '../data/productCategories'
 
 const SITE_ORIGIN = 'https://haq.com.vn'
 
@@ -216,7 +217,12 @@ export default function SeoHead() {
       else if (cleanPath.startsWith('/zh/') || cleanPath === '/zh') routeLang = 'zh'
 
       // 4. Resolve section & update title & OpenGraph (skip detail pages which manage their own dynamic SEO & Schema)
-      const isDetailPage = /^\/(en|ko|zh)?\/?(san-pham|products|tin-tuc|news|tuyen-dung|careers)\/[^/]+$/i.test(cleanPath)
+      const pathParts = cleanPath.split('/').filter(Boolean)
+      const lastSegment = pathParts[pathParts.length - 1] || ''
+      const isProductPath = /^\/(en|ko|zh)?\/?(san-pham|products)/i.test(cleanPath)
+      const isNewsOrCareerDetail = /^\/(en|ko|zh)?\/?(tin-tuc|news|tuyen-dung|careers)\/[^/]+$/i.test(cleanPath)
+      const isProductDetail = isProductPath && pathParts.length >= 2 && !isCategorySlug(lastSegment)
+      const isDetailPage = isNewsOrCareerDetail || isProductDetail
       if (!isDetailPage) {
         const sectionKey = resolveSectionKey(cleanPath)
         const titleObj = SEO_TITLES[sectionKey] || SEO_TITLES.home

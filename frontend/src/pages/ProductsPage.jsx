@@ -154,6 +154,13 @@ export default function ProductsPage() {
     return findCategoryBySlug(categoryTree, targetSlug)
   }, [categoryTree, currentCategorySlug, currentSubCategorySlug])
 
+  // Cập nhật Document Title theo Danh mục đang chọn (nếu khác 'all')
+  useEffect(() => {
+    if (activeCategoryNode && activeCategoryNode.slug !== 'all' && activeCategoryNode.name) {
+      document.title = `${activeCategoryNode.name} | HAQ FOOD`
+    }
+  }, [activeCategoryNode])
+
   const handleRootCategoryChange = (slug) => {
     setCurrentPage(1)
     if (slug === 'all') {

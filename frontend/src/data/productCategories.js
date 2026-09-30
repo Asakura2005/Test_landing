@@ -139,6 +139,12 @@ export const CATEGORY_VISUALS = {
     featured: 'Bánh đậu xanh tươi',
     featuredDesc: 'Ngọt bùi thanh tao, thưởng thức trọn vẹn cùng chén trà sen ấm nóng.',
   },
+  'keo-squid-game': {
+    image: catDoAnVatImg,
+    desc: 'Kẹo Dalgona Squid Game đường thắng giòn xốp thơm ngon chuẩn vị trò chơi dân gian hiện đại.',
+    featured: 'Kẹo đường Dalgona Squid Game',
+    featuredDesc: 'Kẹo Dalgona giòn thơm tạo hình sáng tạo, an toàn vệ sinh thực phẩm ISO 22000.',
+  },
 }
 
 /**
@@ -159,7 +165,8 @@ export const DEFAULT_DB_CATEGORIES = [
   { id: '47daa91e-063c-45c4-a686-598e551033d3', name: 'Thịt Khô', slug: 'thit-kho', parent_id: '1e953d88-e338-4eba-baf7-246c25a70ba9', sort_order: 5 },
 
   // Danh mục Con của "Đồ Ăn Vặt Hiện Đại"
-  { id: '46d23453-12b5-46e8-b3af-74aca32d42bf', name: 'Bánh Chả', slug: 'banh-cha', parent_id: '299ff047-323a-4802-aef4-fdb93c8aa9ae', sort_order: 0 },
+  { id: '46d23453-12b5-46e8-b3af-74aca32d42bf', name: 'Bánh Chả', slug: 'banh-cha', parent_id: '299ff047-323a-4802-aef4-fdb93c8aa9ae', sort_order: 12 },
+  { id: '5c8710dd-208f-46aa-8a17-96e2010c38ac', name: 'Kẹo SQUID GAME', slug: 'keo-squid-game', parent_id: '299ff047-323a-4802-aef4-fdb93c8aa9ae', sort_order: 13 },
 
   // Danh mục Con của "Đồ Ăn Vặt Truyền Thống"
   { id: 'a6be5c29-23f8-443f-92c8-fd5124913ba2', name: 'Bắp Rang Bơ', slug: 'bap-rang-bo', parent_id: 'f3209c71-5042-4492-baa7-3ca48e48b480', sort_order: 0 },
@@ -294,7 +301,7 @@ export function filterProductsByDbCategory(products = [], activeSlug = 'all', su
       if (matchingIds && matchingIds.includes(p.categories.id)) return true
       if (p.categories.slug === effectiveSlug) return true
       if (effectiveSlug === 'do-an-vat-cach-tan' && ['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho'].includes(p.categories.slug)) return true
-      if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha'].includes(p.categories.slug)) return true
+      if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha', 'keo-squid-game'].includes(p.categories.slug)) return true
       if (effectiveSlug === 'do-an-vat-truyen-thong' && ['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan'].includes(p.categories.slug)) return true
       if (effectiveSlug === 'banh-trang' && (p.categories.slug === 'banh-trang-say' || p.categories.slug === 'banh-trang-say-gion' || p.categories.slug === 'banh-trang-tron' || p.categories.slug === 'bnh-trng-trn')) return true
       if (effectiveSlug === 'cac-loai-banh' && (p.categories.slug === 'banh-dau-xanh' || p.categories.slug === 'banh-hanh-nhan' || p.categories.slug === 'banh-sua' || p.categories.slug === 'banh-deo' || p.categories.slug === 'banh-khac')) return true
@@ -303,7 +310,7 @@ export function filterProductsByDbCategory(products = [], activeSlug = 'all', su
     // 3. Fallback theo chuỗi slug trực tiếp
     if (p.category === effectiveSlug) return true
     if (effectiveSlug === 'do-an-vat-cach-tan' && ['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho'].includes(p.category)) return true
-    if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha'].includes(p.category)) return true
+    if (effectiveSlug === 'do-an-vat-hien-dai' && ['banh-cha', 'keo-squid-game'].includes(p.category)) return true
     if (effectiveSlug === 'do-an-vat-truyen-thong' && ['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan'].includes(p.category)) return true
     if (effectiveSlug === 'banh-trang' && (p.category === 'banh-trang-say' || p.category === 'banh-trang-say-gion' || p.category === 'banh-trang-tron' || p.category === 'bnh-trng-trn')) return true
     if (effectiveSlug === 'cac-loai-banh' && (p.category === 'banh-dau-xanh' || p.category === 'banh-hanh-nhan' || p.category === 'banh-sua' || p.category === 'banh-deo' || p.category === 'banh-khac')) return true
@@ -375,7 +382,7 @@ export function getProductRootCategorySlug(product) {
   if (['banh-trang', 'banh-trang-say', 'banh-trang-say-gion', 'banh-trang-tron', 'bnh-trng-trn', 'banh-cookies', 'banh-sua', 'banh-deo', 'thit-kho', 'thot-kho', 'do-an-vat-cach-tan'].includes(catSlug)) {
     return 'do-an-vat-cach-tan'
   }
-  if (['banh-cha', 'do-an-vat-hien-dai'].includes(catSlug)) {
+  if (['banh-cha', 'keo-squid-game', 'do-an-vat-hien-dai'].includes(catSlug)) {
     return 'do-an-vat-hien-dai'
   }
   if (['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan', 'do-an-vat-truyen-thong'].includes(catSlug)) {
@@ -384,10 +391,53 @@ export function getProductRootCategorySlug(product) {
 
   // 4. Fallback theo tên sản phẩm
   const nameLower = (product.name || '').toLowerCase()
-  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha')) return 'do-an-vat-hien-dai'
+  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha') || nameLower.includes('squid')) return 'do-an-vat-hien-dai'
   if (nameLower.includes('bắp') || nameLower.includes('đậu xanh') || nameLower.includes('hạnh nhân')) return 'do-an-vat-truyen-thong'
 
   return 'do-an-vat-cach-tan'
+}
+
+/**
+ * Dynamic registry cho Category Slugs (lấy từ default static + DB realtime updates)
+ */
+const dynamicCategorySlugs = new Set([
+  ...DEFAULT_DB_CATEGORIES.map((c) => c.slug).filter(Boolean),
+  'all',
+  'banh-trang',
+  'cac-loai-banh',
+  'keo-squid-game',
+])
+
+// Tải bổ sung các category slug đã lưu trong localStorage (nếu có)
+if (typeof window !== 'undefined') {
+  try {
+    const cached = localStorage.getItem('haq_known_category_slugs')
+    if (cached) {
+      const parsed = JSON.parse(cached)
+      if (Array.isArray(parsed)) {
+        parsed.forEach((s) => s && dynamicCategorySlugs.add(s))
+      }
+    }
+  } catch (e) {}
+}
+
+/**
+ * Đăng ký bổ sung danh mục mới vào bộ nhớ động (gọi khi getCategories tải từ Supabase)
+ */
+export function registerCategorySlugs(categories = []) {
+  if (!Array.isArray(categories)) return
+  let updated = false
+  categories.forEach((c) => {
+    if (c?.slug && !dynamicCategorySlugs.has(c.slug)) {
+      dynamicCategorySlugs.add(c.slug)
+      updated = true
+    }
+  })
+  if (updated && typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('haq_known_category_slugs', JSON.stringify(Array.from(dynamicCategorySlugs)))
+    } catch (e) {}
+  }
 }
 
 /**
@@ -400,6 +450,8 @@ export const ALL_CATEGORY_SLUGS = DEFAULT_DB_CATEGORIES.map((c) => c.slug).filte
  */
 export function isCategorySlug(slug) {
   if (!slug) return false
-  return ALL_CATEGORY_SLUGS.includes(slug) || ['all', 'banh-trang', 'cac-loai-banh'].includes(slug)
+  const clean = String(slug).trim().toLowerCase()
+  return dynamicCategorySlugs.has(clean) || dynamicCategorySlugs.has(slug)
 }
+
 

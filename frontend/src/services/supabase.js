@@ -7,6 +7,7 @@ import {
   decryptObject 
 } from './security.js'
 import { sendLeadEmailNotification } from './email.js'
+import { registerCategorySlugs } from '../data/productCategories.js'
 
 // Sensitive customer PII fields requiring AES-256-GCM encryption
 export const LEAD_SENSITIVE_FIELDS = ['full_name', 'name', 'company', 'phone', 'email', 'note', 'notes', 'lost_note', 'customer_name', 'customer_phone', 'company_name']
@@ -931,6 +932,9 @@ export async function getCategories(forceRefresh = false) {
     if (error) throw error
     _categoriesCache = data
     _categoriesCacheTime = Date.now()
+    if (Array.isArray(data)) {
+      registerCategorySlugs(data)
+    }
     return data
   })().finally(() => {
     _inFlightCategoriesPromise = null

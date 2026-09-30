@@ -200,6 +200,14 @@ const CATEGORY_SECTIONS = [
     priority: '0.7',
     changefreq: 'weekly',
   },
+  {
+    vi: '/san-pham/do-an-vat-hien-dai/keo-squid-game',
+    en: '/en/products/do-an-vat-hien-dai/keo-squid-game',
+    ko: '/ko/products/do-an-vat-hien-dai/keo-squid-game',
+    zh: '/zh/products/do-an-vat-hien-dai/keo-squid-game',
+    priority: '0.7',
+    changefreq: 'weekly',
+  },
   // Subcategories of Đồ Ăn Vặt Truyền Thống
   {
     vi: '/san-pham/do-an-vat-truyen-thong/bap-rang-bo',
@@ -234,10 +242,10 @@ function getProductCatSlug(prod) {
     }
   }
   const cat = (prod.category || '').toLowerCase()
-  if (['banh-cha', 'do-an-vat-hien-dai'].includes(cat)) return 'do-an-vat-hien-dai'
+  if (['banh-cha', 'keo-squid-game', 'do-an-vat-hien-dai'].includes(cat)) return 'do-an-vat-hien-dai'
   if (['bap-rang-bo', 'banh-dau-xanh', 'banh-dau-xanh-tuoi', 'banh-hanh-nhan', 'do-an-vat-truyen-thong'].includes(cat)) return 'do-an-vat-truyen-thong'
   const nameLower = (prod.name || '').toLowerCase()
-  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha')) return 'do-an-vat-hien-dai'
+  if (nameLower.includes('bánh chả') || nameLower.includes('banh cha') || nameLower.includes('squid')) return 'do-an-vat-hien-dai'
   if (nameLower.includes('bắp') || nameLower.includes('đậu xanh') || nameLower.includes('hạnh nhân')) return 'do-an-vat-truyen-thong'
   return 'do-an-vat-cach-tan'
 }
