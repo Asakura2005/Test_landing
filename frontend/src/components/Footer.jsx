@@ -227,31 +227,31 @@ export default function Footer() {
             {t('home.footer.legal_license_detail', 'Ngày cấp: 11/03/2021 Sở KHĐT TP Hà Nội')}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-white/80">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-white/80">
             <Link
               to={getRefundPolicyUrl(language)}
-              className="hover:text-white hover:underline transition-colors"
+              className="py-1 hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_refund', 'Chính sách đổi trả hàng và hoàn tiền')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
               to={getPrivacyPolicyUrl(language)}
-              className="hover:text-white hover:underline transition-colors"
+              className="py-1 hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_privacy', 'Chính sách bảo mật')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
               to={getTermsUrl(language)}
-              className="hover:text-white hover:underline transition-colors"
+              className="py-1 hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_terms', 'Điều khoản sử dụng')}
             </Link>
             <span className="text-white/30">|</span>
             <Link
               to={getPolicyUrl(language)}
-              className="hover:text-white hover:underline transition-colors"
+              className="py-1 hover:text-white hover:underline transition-colors"
             >
               {t('home.footer.policy_compliance', 'Công bố sản phẩm')}
             </Link>

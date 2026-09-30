@@ -199,20 +199,20 @@ export default function Hero() {
           </p>
 
           {/* Dual CTAs: Khám Phá Bản Đồ Vùng Nguyên Liệu & Hợp Tác B2B OBM/ODM */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
             <a
               href="#he-sinh-thai-dac-san"
-              className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#fe932c] to-[#e07b1a] hover:from-[#e07b1a] hover:to-[#c8660e] text-white font-bold text-xs sm:text-sm md:text-base px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl shadow-[0_8px_25px_rgba(254,147,44,0.4)] hover:shadow-[0_12px_32px_rgba(254,147,44,0.6)] hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer"
+              className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#fe932c] to-[#e07b1a] hover:from-[#e07b1a] hover:to-[#c8660e] text-white font-bold text-xs sm:text-sm md:text-base px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl shadow-[0_8px_25px_rgba(254,147,44,0.4)] hover:shadow-[0_12px_32px_rgba(254,147,44,0.6)] hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer text-center"
             >
               <span>Khám Phá Bản Đồ Vùng Nguyên Liệu</span>
-              <Compass className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-45 transition-transform" />
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-45 transition-transform shrink-0" />
             </a>
 
             <Link
               to={getContactPageUrl(language)}
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/25 text-white font-semibold text-xs sm:text-sm md:text-base px-5 sm:px-7 py-3.5 sm:py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/25 text-white font-semibold text-xs sm:text-sm md:text-base px-5 sm:px-7 py-3.5 sm:py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-center"
             >
-              <Handshake className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffdcc3]" />
+              <Handshake className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffdcc3] shrink-0" />
               <span>Hợp Tác Phát Triển OBM &amp; ODM</span>
             </Link>
           </div>
@@ -240,13 +240,13 @@ export default function Hero() {
 
       {/* 5. THANH ĐIỀU HƯỚNG SLIDE BÊN DƯỚI (Chấm dot + thanh tiến trình) */}
       <div className="relative z-30 max-w-[1400px] w-full mx-auto px-5 sm:px-8 pb-6 sm:pb-8 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {SLIDES.map((_, i) => (
             <button
               key={i}
               type="button"
               onClick={(e) => goTo(i, e)}
-              className="p-1 cursor-pointer transition-all"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center p-1 cursor-pointer transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fe932c]"
               aria-label={`Chuyển tới slide ${i + 1}`}
             >
               <span

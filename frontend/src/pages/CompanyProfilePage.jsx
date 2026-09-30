@@ -712,19 +712,19 @@ export default function CompanyProfilePage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="pt-4 flex flex-wrap items-center gap-3.5">
+                  <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                     <a
                       href="#tam-nhin-su-menh"
-                      className="inline-flex items-center gap-2 bg-[#064E3B] hover:bg-[#022B20] text-white text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-sm"
+                      className="inline-flex items-center justify-center gap-2 bg-[#064E3B] hover:bg-[#022B20] text-white text-xs font-bold uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-sm text-center"
                     >
                       <span>{getText('btn_explore_standards')}</span>
-                      <ArrowDown className="w-4 h-4" />
+                      <ArrowDown className="w-4 h-4 shrink-0" />
                     </a>
                     <a
                       href="#doi-ngu-cam-ket"
-                      className="inline-flex items-center gap-2 bg-transparent hover:bg-[#EAE4D7] text-slate-800 border border-[#C5BCAB] text-xs font-bold uppercase tracking-wider px-5 py-3.5 rounded-sm transition-all"
+                      className="inline-flex items-center justify-center gap-2 bg-transparent hover:bg-[#EAE4D7] text-slate-800 border border-[#C5BCAB] text-xs font-bold uppercase tracking-wider px-5 py-3.5 rounded-sm transition-all text-center"
                     >
-                      <ShieldCheck className="w-4 h-4 text-[#B45309]" />
+                      <ShieldCheck className="w-4 h-4 text-[#B45309] shrink-0" />
                       <span>{getText('btn_5_commitments')}</span>
                     </a>
                   </div>
@@ -1295,10 +1295,10 @@ export default function CompanyProfilePage() {
                 {/* Nút Đóng nổi góc trên */}
                 <button
                   onClick={() => setSelectedImgIndex(null)}
-                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center transition-colors text-base font-bold cursor-pointer shadow-lg border border-white/20"
+                  className="absolute top-4 right-4 z-30 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center transition-colors text-base font-bold cursor-pointer shadow-lg border border-white/20"
                   title={getText('close_esc')}
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
 
                 {/* Khung ảnh chính */}

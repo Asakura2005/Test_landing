@@ -135,6 +135,8 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (!isLightboxOpen && !isRfqModalOpen) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setIsLightboxOpen(false)
@@ -142,7 +144,10 @@ export default function ProductDetailPage() {
       }
     }
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [isLightboxOpen, isRfqModalOpen])
 
   useEffect(() => {
@@ -497,7 +502,7 @@ export default function ProductDetailPage() {
     return (
       <main className="min-h-screen bg-haq-cream font-sans">
         <StickyNav />
-        <div className="max-w-site mx-auto px-6 md:px-12 pt-32 pb-20">
+        <div className="max-w-site mx-auto px-4 sm:px-6 md:px-12 pt-32 pb-20">
           <div className="bg-white rounded-3xl border border-haq-border shadow-xl p-8 md:p-12 animate-pulse flex flex-col lg:flex-row gap-10">
             <div className="w-full lg:w-1/2 aspect-square bg-haq-sage/20 rounded-2xl flex items-center justify-center">
               <Package className="w-16 h-16 text-[#16A34A]/30 animate-bounce" />
@@ -550,7 +555,7 @@ export default function ProductDetailPage() {
       <StickyNav />
       {/* Breadcrumbs */}
       <div className="bg-white/90 border-b border-haq-border">
-        <div className="max-w-site mx-auto px-6 md:px-12 py-3.5 flex items-center gap-2 text-xs sm:text-sm text-haq-text-secondary overflow-x-auto whitespace-nowrap">
+        <div className="max-w-site mx-auto px-4 sm:px-6 md:px-12 py-3.5 flex items-center gap-2 text-xs sm:text-sm text-haq-text-secondary overflow-x-auto whitespace-nowrap">
           <Link to={getHomeUrl(language)} className="hover:text-haq-green-dark flex items-center gap-1">
             <Home className="w-4 h-4"/> {t('product_detail.breadcrumb_home', 'Trang chủ')}
           </Link>
@@ -571,11 +576,11 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-site mx-auto px-6 md:px-12 py-12 md:py-16">
+      <div className="max-w-site mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16">
         <div className="bg-white rounded-3xl border border-haq-border shadow-xl overflow-hidden flex flex-col lg:flex-row mb-16">
           
           {/* Cột Trái: Ảnh */}
-          <div className="w-full lg:w-1/2 p-6 md:p-12 flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-haq-border">
+          <div className="w-full lg:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-haq-border">
             {/* Main Image with Zoom */}
             <div 
               className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-white border border-haq-border cursor-crosshair shadow-sm group"
@@ -600,11 +605,11 @@ export default function ProductDetailPage() {
                     e.stopPropagation()
                     setIsLightboxOpen(true)
                   }}
-                  className="absolute bottom-4 right-4 z-30 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-haq-ink hover:text-[#16A34A] border border-haq-border shadow-md flex items-center justify-center backdrop-blur-md transition-all cursor-pointer hover:scale-110 active:scale-95"
+                  className="absolute bottom-4 right-4 z-30 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/95 hover:bg-white text-haq-ink hover:text-[#16A34A] border border-haq-border shadow-md flex items-center justify-center backdrop-blur-md transition-all cursor-pointer hover:scale-110 active:scale-95"
                   title={language === 'en' ? 'Enlarge image' : 'Phóng to ảnh'}
                   aria-label="Phóng to ảnh"
                 >
-                  <Search className="w-4 h-4" />
+                  <Search className="w-4.5 h-4.5" />
                 </button>
               )}
               
@@ -686,7 +691,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Cột Phải: Thông tin sản phẩm */}
-          <div className="w-full lg:w-1/2 p-6 md:p-10 lg:p-12 flex flex-col justify-between bg-white">
+          <div className="w-full lg:w-1/2 p-4 sm:p-6 md:p-10 lg:p-12 flex flex-col justify-between bg-white">
             <div>
               {/* Category & Tag Badges */}
               <div className="flex items-center gap-2 flex-wrap mb-3">
@@ -766,7 +771,7 @@ export default function ProductDetailPage() {
                             key={idx}
                             type="button"
                             onClick={() => handleSelectVariant(idx)}
-                            className={`rounded-full px-3.5 py-1 text-xs transition-all cursor-pointer select-none border ${
+                            className={`min-h-[44px] min-w-[44px] rounded-full px-3.5 py-2 text-xs transition-all cursor-pointer select-none border flex items-center justify-center ${
                               isSelected
                                 ? 'border-haq-ink text-haq-ink bg-neutral-100 font-semibold shadow-2xs'
                                 : 'border-haq-border text-haq-text-secondary hover:border-haq-ink/40 bg-white font-medium'
@@ -815,7 +820,7 @@ export default function ProductDetailPage() {
                         data-product-canonical-name={localizedProduct.canonical_name || product.name}
                         data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
                         data-product-location="marketplace_shopee"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#EE4D2D]/30 text-[#EE4D2D] bg-[#EE4D2D]/5 hover:bg-[#EE4D2D] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
+                        className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[#EE4D2D]/30 text-[#EE4D2D] bg-[#EE4D2D]/5 hover:bg-[#EE4D2D] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
                         title="Mua hàng trên Shopee"
                       >
                         <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
@@ -839,7 +844,7 @@ export default function ProductDetailPage() {
                         data-product-canonical-name={localizedProduct.canonical_name || product.name}
                         data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
                         data-product-location="marketplace_lazada"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#0F146D]/30 text-[#0F146D] bg-[#0F146D]/5 hover:bg-[#0F146D] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
+                        className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[#0F146D]/30 text-[#0F146D] bg-[#0F146D]/5 hover:bg-[#0F146D] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
                         title="Mua hàng trên Lazada"
                       >
                         <span className="font-bold text-[10px] uppercase">Lazada</span>
@@ -860,7 +865,7 @@ export default function ProductDetailPage() {
                         data-product-canonical-name={localizedProduct.canonical_name || product.name}
                         data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
                         data-product-location="marketplace_tiktok"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-neutral-300 text-neutral-800 bg-neutral-50 hover:bg-black hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
+                        className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-neutral-300 text-neutral-800 bg-neutral-50 hover:bg-black hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
                         title="Mua hàng trên TikTok Shop"
                       >
                         <svg className="w-3 h-3 fill-current shrink-0" viewBox="0 0 24 24">
@@ -884,7 +889,7 @@ export default function ProductDetailPage() {
                         data-product-canonical-name={localizedProduct.canonical_name || product.name}
                         data-product-category={localizedProduct.categories?.name || localizedProduct.category || ''}
                         data-product-location="marketplace_facebook"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#1877F2]/30 text-[#1877F2] bg-[#1877F2]/5 hover:bg-[#1877F2] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
+                        className="min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[#1877F2]/30 text-[#1877F2] bg-[#1877F2]/5 hover:bg-[#1877F2] hover:text-white text-xs font-medium transition-all shadow-2xs hover:shadow-sm"
                         title="Đặt mua qua Facebook"
                       >
                         <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
@@ -1152,17 +1157,17 @@ export default function ProductDetailPage() {
       {/* RFQ B2B Wholesale Quote Modal */}
       {isRfqModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 sm:p-6 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center min-h-full animate-in fade-in duration-200"
           onClick={() => setIsRfqModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-haq-border max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl border border-haq-border my-auto max-h-[90dvh] sm:max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setIsRfqModalOpen(false)}
-              className="absolute top-5 right-5 w-9 h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 text-haq-ink flex items-center justify-center transition-colors cursor-pointer"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-neutral-100 hover:bg-neutral-200 text-haq-ink flex items-center justify-center transition-colors cursor-pointer"
               title="Đóng"
             >
               <X className="w-5 h-5" />

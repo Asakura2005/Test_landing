@@ -371,7 +371,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                     key={r.id}
                     type="button"
                     onClick={() => handleSelectRegion(r.id as any)}
-                    className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer select-none ${
+                    className={`min-h-[44px] flex items-center justify-center px-3.5 sm:px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer select-none ${
                       isActive
                         ? "bg-gradient-to-r from-[#fe932c] to-[#e07b1a] text-white shadow-lg shadow-[#fe932c]/20"
                         : "bg-white/10 hover:bg-white/20 text-white/80 hover:text-white"
@@ -399,7 +399,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                 <button
                   type="button"
                   onClick={handleClearProvince}
-                  className="text-xs font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  className="min-h-[40px] flex items-center text-xs font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                   title="Xem toàn quốc"
                 >
                   ↺ Toàn quốc
@@ -448,9 +448,9 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
             </div>
 
             {/* Map Footnote */}
-            <div className="pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-xs text-white/70">
-              <span className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#fe932c] animate-ping" />
+            <div className="pt-3 sm:pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs text-white/70">
+              <span className="flex items-center gap-2 min-w-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#fe932c] animate-ping shrink-0" />
                 <span className="truncate max-w-[210px] sm:max-w-none">
                   Vùng đang chọn:{" "}
                   <strong className="text-white font-bold">{currentSelectedLabel}</strong>
@@ -460,7 +460,7 @@ export const VietnamSpecialtyMap: React.FC<VietnamSpecialtyMapProps> = ({
                 <button
                   type="button"
                   onClick={handleClearProvince}
-                  className="text-xs text-[#fe932c] hover:underline cursor-pointer font-semibold shrink-0"
+                  className="min-h-[36px] flex items-center text-xs text-[#fe932c] hover:underline cursor-pointer font-semibold shrink-0 py-1.5 px-2"
                 >
                   Xem toàn quốc
                 </button>

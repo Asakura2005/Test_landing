@@ -921,7 +921,8 @@ export default function LegalFlipbook() {
 
       {/* ── BOTTOM CONTROL BAR: Thanh điều khiển hợp nhất ── */}
       <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-1.5 mt-2 px-2 overflow-hidden">
-        <div className="inline-flex items-center gap-1.5 sm:gap-2 p-1.5 bg-white/95 backdrop-blur-sm rounded-full border border-stone-200/90 shadow-sm max-w-full">
+        <div className="w-full flex justify-start sm:justify-center overflow-x-auto scrollbar-none py-1 overscroll-x-contain">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1.5 bg-white/95 backdrop-blur-sm rounded-full border border-stone-200/90 shadow-sm shrink-0">
           <button
             type="button"
             onClick={handlePrevPage}
@@ -993,6 +994,7 @@ export default function LegalFlipbook() {
             <span className="inline md:hidden">PDF</span>
           </a>
         </div>
+      </div>
 
         {/* Spread Quick Indicators */}
         <div className="flex items-center gap-1.5 mt-0.5 flex-wrap justify-center max-w-full">

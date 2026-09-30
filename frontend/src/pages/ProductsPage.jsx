@@ -570,21 +570,21 @@ export default function ProductsPage() {
 
                           {/* Content */}
                           <div className="p-3 sm:p-4 lg:p-5 flex-1 flex flex-col">
-                            <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2">
-                              <span className="text-[10px] sm:text-[11px] font-heading font-bold text-haq-red uppercase tracking-wider truncate">
+                            <div className="flex flex-wrap items-center justify-between gap-1 mb-1.5 sm:mb-2">
+                              <span className="text-[10px] sm:text-[11px] font-heading font-bold text-haq-red uppercase tracking-wider truncate max-w-[65%] sm:max-w-none">
                                 {displayCategory}
                               </span>
                               {provName && (
                                 <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] text-haq-text-secondary font-medium bg-haq-cream px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
                                   <MapPin className="w-2.5 h-2.5 shrink-0" />
-                                  <span className="truncate max-w-[65px] sm:max-w-none">
+                                  <span className="truncate max-w-[55px] sm:max-w-none">
                                     {provName}
                                   </span>
                                 </span>
                               )}
                             </div>
 
-                            <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-haq-red transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] lg:min-h-[2.75rem]">
+                            <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-haq-red transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] lg:min-h-[2.75rem] break-words">
                               {prod.name}
                             </h3>
 
@@ -614,16 +614,16 @@ export default function ProductsPage() {
                       {en ? 'pages' : ko ? '페이지' : zh ? '页' : 'trang'}
                     </p>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 max-w-full">
                       {/* Previous Page */}
                       <button
                         type="button"
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(currentPage - 1)}
-                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
+                        className="min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center justify-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
                         aria-label={en ? 'Previous page' : ko ? '이전 페이지' : zh ? '上一页' : 'Trang trước'}
                       >
-                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <ChevronLeft className="w-3.5 h-3.5 shrink-0" />
                         <span className="hidden sm:inline">
                           {en ? 'Prev' : ko ? '이전' : zh ? '上一页' : 'Trước'}
                         </span>
@@ -655,7 +655,7 @@ export default function ProductsPage() {
                             onClick={() => handlePageChange(pageNum)}
                             aria-label={`${en ? 'Page' : ko ? '페이지' : zh ? '第' : 'Trang'} ${pageNum}`}
                             aria-current={isActive ? 'page' : undefined}
-                            className={`w-9 h-9 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1 ${
+                            className={`min-w-[44px] min-h-[44px] px-2.5 py-1.5 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1 ${
                               isActive
                                 ? 'bg-haq-red text-white shadow-sm'
                                 : 'bg-white border border-haq-border text-haq-ink hover:border-haq-red/50'
@@ -671,13 +671,13 @@ export default function ProductsPage() {
                         type="button"
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(currentPage + 1)}
-                        className="px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
+                        className="min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg border border-haq-border text-xs font-heading font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white hover:border-haq-red/50 transition-colors flex items-center justify-center gap-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-haq-red focus-visible:ring-offset-1"
                         aria-label={en ? 'Next page' : ko ? '다음 페이지' : zh ? '下一页' : 'Trang sau'}
                       >
                         <span className="hidden sm:inline">
                           {en ? 'Next' : ko ? '다음' : zh ? '下一页' : 'Sau'}
                         </span>
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-3.5 h-3.5 shrink-0" />
                       </button>
                     </div>
                   </div>

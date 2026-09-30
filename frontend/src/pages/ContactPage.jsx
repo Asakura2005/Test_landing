@@ -563,7 +563,7 @@ export default function ContactPage() {
               {/* Right Column: Streamlined & Frictionless Business Inquiry Form */}
               <div ref={formRef} className="w-full lg:col-span-7">
                 <Reveal direction="up" delay={150}>
-                  <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
+                  <div className="bg-white rounded-2xl sm:rounded-3xl p-4.5 sm:p-8 lg:p-10 border border-haq-border shadow-lg shadow-black/[0.03] relative">
                   
                   {/* Form Header */}
                   <div className="border-b border-haq-border pb-6 mb-6">

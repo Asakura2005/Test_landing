@@ -1,10 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Phone, MessageCircle, Mail, Sparkles, X, MapPin } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 
 export default function FloatingContactBar() {
   const { language } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false)
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside, { passive: true })
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen])
 
   const contactItems = [
     {
@@ -48,8 +71,9 @@ export default function FloatingContactBar() {
 
   return (
     <aside
+      ref={containerRef}
       aria-label={language === 'en' ? 'Quick contact' : language === 'ko' ? '빠른 문의' : language === 'zh' ? '快速咨询' : 'Liên hệ nhanh'}
-      className="fixed right-3 sm:right-5 bottom-5 sm:bottom-6 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-2.5 pointer-events-none"
+      className="fixed right-3 sm:right-5 bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] z-50 flex flex-col items-end gap-2.5 pointer-events-none"
     >
       {/* Collapsible Contact Items */}
       <div

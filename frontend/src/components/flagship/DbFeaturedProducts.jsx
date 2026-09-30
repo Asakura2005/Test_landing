@@ -197,21 +197,21 @@ export default function DbFeaturedProducts() {
                   {/* Content Details */}
                   <div className="p-3.5 sm:p-4 lg:p-5 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2">
-                        <span className="text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132] uppercase tracking-wider truncate">
+                      <div className="flex flex-wrap items-center justify-between gap-1 mb-1.5 sm:mb-2">
+                        <span className="text-[10px] sm:text-[11px] font-heading font-bold text-[#0F5132] uppercase tracking-wider truncate max-w-[65%] sm:max-w-none">
                           {displayCategory}
                         </span>
                         {provName && (
                           <span className="inline-flex items-center gap-0.5 text-[9px] sm:text-[10px] text-haq-text-secondary font-medium bg-haq-cream px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
                             <MapPin className="w-2.5 h-2.5 shrink-0 text-[#0F5132]" />
-                            <span className="truncate max-w-[65px] sm:max-w-none">
+                            <span className="truncate max-w-[55px] sm:max-w-none">
                               {provName}
                             </span>
                           </span>
                         )}
                       </div>
 
-                      <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem]">
+                      <h3 className="font-heading font-bold text-xs sm:text-sm lg:text-base text-haq-ink group-hover:text-[#0F5132] transition-colors leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] break-words">
                         {loc.name}
                       </h3>
                     </div>
@@ -256,7 +256,7 @@ export default function DbFeaturedProducts() {
             href="/documents/danh-sach-san-pham-haq-food.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 bg-white text-[#003527] hover:bg-[#fe932c] hover:text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all shadow-lg shrink-0 relative z-10 cursor-pointer"
+            className="w-full md:w-auto justify-center inline-flex items-center gap-2.5 bg-white text-[#003527] hover:bg-[#fe932c] hover:text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all shadow-lg shrink-0 relative z-10 cursor-pointer text-center"
           >
             <span>Xem Nhanh (PDF)</span>
             <Eye className="w-4 h-4" />

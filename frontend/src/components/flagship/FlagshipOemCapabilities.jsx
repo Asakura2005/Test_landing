@@ -41,22 +41,22 @@ export default function FlagshipOemCapabilities() {
           </div>
 
           {/* Action CTAs */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <a
               href="/documents/ho-so-nang-luc-haq-food.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#003527] hover:bg-[#064e3b] text-white font-semibold text-xs md:text-sm px-5 py-3 rounded-xl transition-all shadow-md cursor-pointer whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 bg-[#003527] hover:bg-[#064e3b] text-white font-semibold text-xs md:text-sm px-5 py-3 rounded-xl transition-all shadow-md cursor-pointer whitespace-nowrap text-center"
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-4 h-4 shrink-0" />
               <span>Hồ Sơ Năng Lực OBM/ODM (PDF)</span>
             </a>
             <Link
               to={getContactPageUrl(language)}
-              className="inline-flex items-center gap-2 bg-white border border-neutral-300 text-[#0c1e15] hover:bg-neutral-100 font-semibold text-xs md:text-sm px-4 py-3 rounded-xl transition-colors cursor-pointer whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 bg-white border border-neutral-300 text-[#0c1e15] hover:bg-neutral-100 font-semibold text-xs md:text-sm px-4 py-3 rounded-xl transition-colors cursor-pointer whitespace-nowrap text-center"
             >
               <span>Tư Vấn Nhãn Riêng Private Label</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </Link>
           </div>
         </div>

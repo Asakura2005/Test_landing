@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import StickyNav from '../components/StickyNav'
 import Footer from '../components/Footer'
 import FloatingContactBar from '../components/FloatingContactBar'
 import { useLanguage } from '../context/LanguageContext'
+import { getContactUrl } from '../utils/routeI18n'
 import Certifications from '../components/Certifications'
 import {
   Play,
@@ -574,20 +576,20 @@ export default function CapabilitiesPage() {
                       : 'Liên hệ HAQ FOOD để nhận tư vấn công thức mẫu miễn phí, bảng báo giá gia công và đặt lịch thăm nhà máy.'}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
                   <a
                     href="tel:02423235656"
-                    className="inline-flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors shadow-md"
+                    className="inline-flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors shadow-md text-center"
                   >
                     <span>{en ? 'Call Hotline' : ko ? '대표 번호' : zh ? '拨打热线' : 'Hotline Báo Giá'}</span>
                   </a>
-                  <a
-                    href="/lien-he"
-                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors"
+                  <Link
+                    to={getContactUrl(language)}
+                    className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-heading font-bold text-xs uppercase tracking-wider py-3.5 px-6 rounded-lg transition-colors text-center"
                   >
                     <span>{en ? 'Inquire Now' : ko ? '상담 신청' : zh ? '在线洽谈' : 'Gửi Yêu Cầu'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
+                    <ArrowRight className="w-4 h-4 shrink-0" />
+                  </Link>
                 </div>
               </div>
             </Reveal>

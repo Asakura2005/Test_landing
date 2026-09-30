@@ -985,7 +985,7 @@ export default function StickyNav() {
                 setMobileOpen(false)
                 setIsSearchOpen(true)
               }}
-              className="w-10 h-10 flex items-center justify-center text-haq-ink hover:text-haq-green-dark hover:bg-haq-sage/30 active:scale-95 transition-all rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-haq-ink hover:text-haq-green-dark hover:bg-haq-sage/30 active:scale-95 transition-all rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer"
               aria-label={language === 'en' ? 'Search' : language === 'ko' ? '검색' : language === 'zh' ? '搜索' : 'Tìm kiếm'}
             >
               <Search className="w-5 h-5" />
@@ -994,7 +994,7 @@ export default function StickyNav() {
             <button
               type="button"
               onClick={() => setMobileOpen(prev => !prev)}
-              className={`w-10 h-10 flex items-center justify-center rounded-xl active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer ${
+              className={`w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] cursor-pointer ${
                 mobileOpen
                   ? 'bg-haq-sage/60 text-haq-green-dark'
                   : 'text-haq-ink hover:text-haq-green-dark hover:bg-haq-sage/30'
@@ -1044,7 +1044,7 @@ export default function StickyNav() {
             <div className="flex items-center gap-1 z-10">
               <a
                 href="tel:02423235656"
-                className="w-10 h-10 flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/15 border border-amber-400/30 cursor-pointer"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/15 border border-amber-400/30 cursor-pointer"
                 aria-label="Gọi hotline 024 2323 5656"
                 title="024 2323 5656"
               >
@@ -1076,7 +1076,7 @@ export default function StickyNav() {
                   setMobileOpen(false)
                   setIsSearchOpen(true)
                 }}
-                className="w-10 h-10 flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-xl hover:bg-white/10 cursor-pointer"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/90 hover:text-white active:scale-95 transition-all rounded-xl hover:bg-white/10 cursor-pointer"
                 aria-label={language === 'en' ? 'Search' : language === 'ko' ? '검색' : language === 'zh' ? '搜索' : 'Tìm kiếm'}
               >
                 <Search className="w-5 h-5" />
@@ -1085,7 +1085,7 @@ export default function StickyNav() {
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="w-10 h-10 flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/20 border border-amber-400/40 cursor-pointer"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-amber-300 hover:text-white active:scale-95 transition-all rounded-xl bg-white/10 hover:bg-white/20 border border-amber-400/40 cursor-pointer"
                 aria-label="Đóng menu"
               >
                 <X className="w-6 h-6" />
@@ -1301,12 +1301,12 @@ export default function StickyNav() {
             {/* Bottom Quick Contact & Actions */}
             <div className="pt-5 pb-8 space-y-3">
               {/* Language Switcher Bar */}
-              <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-white/10 border border-white/15">
-                <div className="flex items-center gap-2 text-white/80 text-xs font-heading font-semibold">
+              <div className="flex items-center justify-between gap-1.5 py-2 px-2.5 sm:px-3 rounded-xl bg-white/10 border border-white/15">
+                <div className="flex items-center gap-1.5 text-white/80 text-xs font-heading font-semibold shrink-0">
                   <Globe className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span>{language === 'vi' ? 'Ngôn ngữ' : language === 'en' ? 'Language' : language === 'ko' ? '언어' : '语言'}</span>
+                  <span className="hidden xs:inline sm:inline">{language === 'vi' ? 'Ngôn ngữ' : language === 'en' ? 'Language' : language === 'ko' ? '언어' : '语言'}</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   {LANGUAGES.map((item) => (
                     <button
                       key={item.code}
@@ -1315,7 +1315,7 @@ export default function StickyNav() {
                         switchLanguage(item.code, navigate, location.pathname)
                         setMobileOpen(false)
                       }}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer ${
+                      className={`min-h-[44px] min-w-[44px] px-2.5 py-2 rounded-lg text-xs font-heading font-bold transition-all cursor-pointer flex items-center justify-center ${
                         language === item.code
                           ? 'bg-amber-400 text-[#0C1E15] shadow-xs'
                           : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -1331,7 +1331,7 @@ export default function StickyNav() {
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="tel:02423235656"
-                  className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
+                  className="min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
                 >
                   <Phone className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                   <span>024 23 23 56 56</span>
@@ -1340,7 +1340,7 @@ export default function StickyNav() {
                   href="https://zalo.me/1361851474644984696"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-white border border-[#0068FF]/40 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
+                  className="min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#0068FF]/20 hover:bg-[#0068FF]/30 text-white border border-[#0068FF]/40 text-xs font-heading font-bold tracking-tight active:scale-95 transition-all"
                 >
                   <MessageCircle className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
                   <span>Chat Zalo OA</span>
