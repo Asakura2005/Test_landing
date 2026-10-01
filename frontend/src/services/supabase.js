@@ -642,10 +642,21 @@ export async function getProductBySlug(slug) {
   const cleanSlug = slug.trim().replace(/\/+$/, '')
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanSlug);
 
+  const SLUG_ALIASES = {
+    'banh-cha': 'banh-cha-huong-vi-co-truyen',
+    'banh-cookies': 'banh-cookies-hat-ca-phe'
+  }
+  const targetSlug = SLUG_ALIASES[cleanSlug.toLowerCase()] || cleanSlug
+
   // Kiểm tra cache trước nếu đã có sản phẩm trong bộ nhớ
   if (_productsCache && Array.isArray(_productsCache)) {
     const cachedMatch = _productsCache.find(p =>
-      isUUID ? p.id === cleanSlug : (p.slug === cleanSlug || p.slug?.toLowerCase() === cleanSlug.toLowerCase())
+      isUUID ? p.id === cleanSlug : (
+        p.slug === targetSlug || 
+        p.slug?.toLowerCase() === targetSlug.toLowerCase() ||
+        p.slug === cleanSlug || 
+        p.slug?.toLowerCase() === cleanSlug.toLowerCase()
+      )
     )
     if (cachedMatch) return cachedMatch
   }
@@ -662,11 +673,13 @@ export async function getProductBySlug(slug) {
 
     if (isUUID) {
       query = query.eq('id', cleanSlug)
+    } else if (targetSlug !== cleanSlug) {
+      query = query.or(`slug.ilike.${cleanSlug},slug.ilike.${targetSlug}`)
     } else {
       query = query.ilike('slug', cleanSlug)
     }
 
-    const { data, error } = await query.single()
+    const { data, error } = await query.limit(1).maybeSingle()
     if (!error && data) {
       return data
     }
@@ -685,11 +698,13 @@ export async function getProductBySlug(slug) {
 
     if (isUUID) {
       fallbackQuery = fallbackQuery.eq('id', cleanSlug)
+    } else if (targetSlug !== cleanSlug) {
+      fallbackQuery = fallbackQuery.or(`slug.ilike.${cleanSlug},slug.ilike.${targetSlug}`)
     } else {
       fallbackQuery = fallbackQuery.ilike('slug', cleanSlug)
     }
 
-    const { data, error } = await fallbackQuery.single()
+    const { data, error } = await fallbackQuery.limit(1).maybeSingle()
     if (!error && data) {
       return data
     }
